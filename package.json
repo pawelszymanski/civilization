@@ -1,0 +1,19 @@
+{
+  "name": "civilization",
+  "description": "Paweł Szymański. Civilization for web.",
+  "version": "0.0.1",
+  "private": true,
+  "author": "Pawel Szymanski",
+  "licence": "copyright",
+  "devDependencies": {
+    "coffeescript": "2.5.1",
+    "del": "5.1.0",
+    "gulp": "4.0.2",
+    "gulp-sass": "4.0.2",
+    "gulp-coffee": "3.0.3",
+    "gulp-concat": "2.6.1",
+    "gulp-connect": "5.7.0",
+    "gulp-sourcemaps": "2.6.5",
+    "gulp-minify": "3.1.0"
+  }
+}

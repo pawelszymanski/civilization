@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Map</title>
+    <script src="assets/scripts/vendor.js"></script>
+    <script src="assets/scripts/app.js"></script>
+    <link rel="stylesheet" href="assets/styles/styles.css">
+</head>
+<body>
+
+<form id="map-generation-form">
+    <h2>Generate map</h2>
+    <label for="rows">rows</label>
+    <input type="rows" id="rows" value="10" width="20">
+    <label for="columns">columns</label>
+    <input type="columns" id="columns" value="15">
+    <button type="button" id="generate-map-button">Generate</button>
+</form>
+
+<div id="map-viewport">
+    <div id="map-wrapper"></div>
+</div>
+
+</body>
+</html>
