@@ -1,0 +1,33 @@
+@import '../mixins'
+@import '../variables'
+
+#map-viewport
+  width: 60%
+  height: 60%
+  margin: 5% 20%
+  background: pink
+  overflow: hidden
+  transition: all .08s linear
+
+  #map-wrapper
+    position: relative
+    top: 0
+    left: 0
+
+    .map-row
+      display: flex
+      position: relative
+      &:nth-child(2n)
+        position: relative
+        left: $tile-width / 2
+
+      .map-tile
+        flex: $tile-width 0 0
+        line-height: 100px
+        text-align: center
+        clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)
+        background: red
+        margin-bottom: -$tile-size/4
+        +disable-selection
+        &:hover
+          background: rgba(255, 100, 100, 0.4)

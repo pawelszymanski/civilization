@@ -1,6 +1,8 @@
-class MapDrag
+class MapDragService
 
   constructor: ->
+    console.info 'MapDragService'
+
     @isMouseDownMoving = false
     @isDraggingMap = false
     @dragStartCoords = undefined
@@ -49,8 +51,3 @@ class MapDrag
         top: top
         left: @dragStartCoords.mapWrapperElemLeft + offsetX
       @$mapWrapper.css newPosition
-
-
-
-$ ->
-  window.MapDrag = new MapDrag()

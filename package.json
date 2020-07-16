@@ -6,7 +6,6 @@
   "author": "Pawel Szymanski",
   "licence": "copyright",
   "devDependencies": {
-    "coffeescript": "2.5.1",
     "del": "5.1.0",
     "gulp": "4.0.2",
     "gulp-sass": "4.0.2",

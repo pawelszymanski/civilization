@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="civApp">
 <head>
     <meta charset="UTF-8">
     <title>Map</title>
@@ -7,20 +7,41 @@
     <script src="assets/scripts/app.js"></script>
     <link rel="stylesheet" href="assets/styles/styles.css">
 </head>
+
 <body>
 
-<form id="map-generation-form">
-    <h2>Generate map</h2>
-    <label for="rows">rows</label>
-    <input type="rows" id="rows" value="10" width="20">
-    <label for="columns">columns</label>
-    <input type="columns" id="columns" value="15">
-    <button type="button" id="generate-map-button">Generate</button>
-</form>
+    <form id="dev-tools" ng-controller="devToolsCtrl">
+        <h2>Map generator</h2>
+        <label for="map-size">Map size: <span>{{ mapGenerator.mapSize }}</span></label>
+        <select id="map-size" ng-model="mapGenerator.mapSize">
+            <ng-option></ng-option>
+        </select>
 
-<div id="map-viewport">
-    <div id="map-wrapper"></div>
-</div>
+        <label for="rows">Rows: <span>{{ mapGenerator.rows }}</span></label>
+        <input type="range" id="rows" min="20" max="80" step="1" ng-model="mapGenerator.rows">
+        <br/>
+        <label for="columns">Columns: <span>{{ mapGenerator.columns }}</span></label>
+        <input type="range" id="columns" min="40" max="120" step="1" ng-model="mapGenerator.columns">
+        <br/>
+        <button type="button" id="generate-map-button">Generate</button>
+        <br/>
+        <h2>Zoom control</h2>
+        <label for="tile-size">Tile size (px): <span>{{ zoomControl.tileSize }}</span></label>
+        <input type="range" id="tile-size" min="10" max="300" step="10" ng-model="zoomControl.tileSize">
+        <br/>
+        <label for="perspective">Perspective (px): <span>{{ zoomControl.perspective }}</span></label>
+        <input type="range" id="perspective" min="100" max="10000" step="100" ng-model="zoomControl.perspective">
+        <br/>
+        <label for="rotate-x">RotateX (deg): <span>{{ zoomControl.rotateX }}</span></label>
+        <input type="range" id="rotate-x" min="0" max="50" step="1" ng-model="zoomControl.rotateX">
+        <br/>
+        <label for="scale">Scale: <span>{{ zoomControl.scale }}</span></label>
+        <input type="range" id="scale" min="0.3" max="3" step=".01" ng-model="zoomControl.scale">
+    </form>
+
+    <div id="map-viewport">
+        <div id="map-wrapper"></div>
+    </div>
 
 </body>
 </html>

@@ -1,6 +1,7 @@
-class MapGenerator
-
+class MapGeneratorService
   constructor: ->
+    console.info('MapGeneratorService')
+
     @$mapViewport = $('#map-viewport')
     @$mapWrapper = $('#map-wrapper')
 
@@ -33,7 +34,3 @@ class MapGenerator
 
   createTileElem: (rowId, columnId) =>
     $("<div class='map-tile'></div>").text("#{columnId}, #{rowId}")
-
-
-$ ->
-  window.MapGenerator = new MapGenerator()
