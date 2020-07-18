@@ -1,0 +1,40 @@
+<div class="dev-tools">
+
+  <form>
+    <h3>Map generator</h3>
+    <label>Map size</label>
+    <select (change)="onMapConfigurationIdChange($event.target.value)">
+      <option>Please select...</option>
+      <option *ngFor="let mapConfig of mapConfigurations" [value]="mapConfig.id">{{ mapConfig.name }}</option>
+    </select>
+    <label>Width: <span>{{ mapGeneratorSettings.width }}</span></label>
+    <input type="range" name="width" min="20" max="120" step="1" [(ngModel)]="mapGeneratorSettings.width">
+    <label>Height: <span>{{ mapGeneratorSettings.height }}</span></label>
+    <input type="range" name="height" min="20" max="80" step="1" [(ngModel)]="mapGeneratorSettings.height">
+    <button type="button" (click)="onGenerateMapClick()">Generate map</button>
+  </form>
+
+  <form>
+    <h3>Auto zoom (mouse wheel)</h3>
+    <label>Zoom level: <span>{{ camera.zoomLevel }}</span></label>
+    <input type="range" name="tileSize" min="-10" max="10" step="1" disabled [ngModel]="camera.zoomLevel">
+  </form>
+
+  <form>
+    <h3>Manual zoom (override)</h3>
+    <label>Tile size (px): <span>{{ camera.tileSize }}</span></label>
+    <input type="range" name="tileSize" min="10" max="300" step="10"
+           [ngModel]="camera.tileSize" (ngModelChange)="onTileSizeChange($event)" disabled>
+    <label>Perspective (px): <span>{{ camera.perspective }}</span></label>
+    <input type="range" name="perspective" min="100" max="10000" step="100"
+           [ngModel]="camera.perspective" (ngModelChange)="onPerspectiveChange($event)">
+    <label>RotateX (deg): <span>{{ camera.rotateX }}</span></label>
+    <input type="range" name="rotateX" min="0" max="75" step="1"
+           [ngModel]="camera.rotateX" (ngModelChange)="onRotateXChange($event)">
+    <label>Scale: <span>{{ camera.scale }}</span></label>
+    <input type="range" name="scale" min="0.3" max="3" step=".01"
+           [ngModel]="camera.scale" (ngModelChange)="onScaleChange($event)">
+    <button type="button" (click)="onResetZoomClick()">Reset zoom</button>
+  </form>
+
+</div>
