@@ -4,8 +4,8 @@ import {Yield} from './yield';
 
 export interface GameMapTile {
   coords: Coords;
-  terrain: Terrain;
-  yield: Yield;
+  terrain?: Terrain;
+  yield?: Yield;
 }
 
 export interface GameMapRow {

@@ -21,7 +21,7 @@
 
       .tile
         flex: $tile-width 0 0
-        height: $tile-height
+        height: 97px
         line-height: 100px
         text-align: center
         clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)
@@ -29,4 +29,37 @@
         margin-bottom: -$tile-size/4
         +disable-selection
         &:hover
-          background: rgba(255, 100, 100, 0.4)
+          opacity: .7
+
+        &.m-terrain-0  // grassland
+          background: #708735
+        &.m-terrain-1  // plains
+          background: #9fa036
+        &.m-terrain-2  // desert
+          background: #efca73
+        &.m-terrain-3  // tundra
+          background: #918f63
+        &.m-terrain-4  // snow
+          background: #d2e4f5
+        &.m-terrain-5  // lake
+          background: #2e5878
+        &.m-terrain-6  // coast
+          background: #2e5878
+        &.m-terrain-7  // ocean
+          background: #2b2f55
+        &.m-terrain-8  // ice
+          background: #c1daec
+
+//export enum TerrainElevationId {
+//  FLAT,
+//  HILL,
+//  MOUNTAIN
+//
+//export enum TerrainFeatureId {
+//  NONE,
+//  WOODS,
+//  RAINFOREST,
+//  MARSH,
+//  FLOODPLAINS,
+//  OASIS,
+//  REEF

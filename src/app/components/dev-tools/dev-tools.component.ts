@@ -1,7 +1,13 @@
 import {Component} from '@angular/core';
 
-import {MapSizeConfiguration, MapSizeConfigurationId} from '../../models/map-size-configuration';
-import {MapGeneratorSettings} from '../../models/map-generator-settings';
+import {MapSizeConfigurationId} from '../../models/map-size-configuration';
+import {
+  LandmassValueId,
+  MapGeneratorSettings,
+  RainfallId,
+  TemperatureId,
+  WorldAgeId
+} from '../../models/map-generator-settings';
 import {Camera} from '../../models/camera';
 
 import {MAP_SIZE_CONFIGURATIONS} from '../../consts/map-size-configurations.const';
@@ -18,11 +24,20 @@ import {CameraStore} from '../../stores/camera.store';
 })
 export class DevToolsComponent {
 
-  readonly mapConfigurations: MapSizeConfiguration[] = MAP_SIZE_CONFIGURATIONS;
+  readonly MAP_SIZE_CONFIGURATIONS = MAP_SIZE_CONFIGURATIONS;
+  readonly DEFAULT_SIZE_CONFIGURATION = MAP_SIZE_CONFIGURATIONS[MapSizeConfigurationId.SMALL];
+
+  mapConfigurationId = this.DEFAULT_SIZE_CONFIGURATION.id;
 
   mapGeneratorSettings: MapGeneratorSettings = {
-    width: MAP_SIZE_CONFIGURATIONS[0].width,
-    height:  MAP_SIZE_CONFIGURATIONS[0].height
+    width: this.DEFAULT_SIZE_CONFIGURATION.width,
+    height:  this.DEFAULT_SIZE_CONFIGURATION.height,
+    continents: this.DEFAULT_SIZE_CONFIGURATION.continents,
+    islands: this.DEFAULT_SIZE_CONFIGURATION.islands,
+    landmass: LandmassValueId.STANDARD,
+    worldAge: WorldAgeId.STANDARD,
+    temperature: TemperatureId.STANDARD,
+    rainfall: RainfallId.STANDARD
   }
 
   camera: Camera;
@@ -38,10 +53,12 @@ export class DevToolsComponent {
   }
 
   onMapConfigurationIdChange(mapConfigurationId: MapSizeConfigurationId) {
-    const mapConfig = this.mapConfigurations.find(mc => mc.id === Number(mapConfigurationId));
+    const mapConfig = MAP_SIZE_CONFIGURATIONS.find(mc => mc.id === Number(mapConfigurationId));
     if (mapConfig) {
       this.mapGeneratorSettings.width = mapConfig.width;
       this.mapGeneratorSettings.height = mapConfig.height;
+      this.mapGeneratorSettings.continents = mapConfig.continents;
+      this.mapGeneratorSettings.islands = mapConfig.islands;
     }
   }
 

@@ -19,4 +19,5 @@ export interface MapSizeConfiguration {
   religionsMax: number;
   naturalWonders: number;
   continents: number;
+  islands: number;
 }

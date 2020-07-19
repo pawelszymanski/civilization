@@ -13,6 +13,7 @@ export const MAP_SIZE_CONFIGURATIONS: MapSizeConfiguration[] = [
     religionsMax: 2,
     naturalWonders: 2,
     continents: 1,
+    islands: 1
   },
   {
     id: MapSizeConfigurationId.TINY,
@@ -26,6 +27,7 @@ export const MAP_SIZE_CONFIGURATIONS: MapSizeConfiguration[] = [
     religionsMax: 3,
     naturalWonders: 3,
     continents: 2,
+    islands: 2
   },
   {
     id: MapSizeConfigurationId.SMALL,
@@ -39,6 +41,7 @@ export const MAP_SIZE_CONFIGURATIONS: MapSizeConfiguration[] = [
     religionsMax: 4,
     naturalWonders: 4,
     continents: 3,
+    islands: 3
   },
   {
     id: MapSizeConfigurationId.STANDARD,
@@ -52,6 +55,7 @@ export const MAP_SIZE_CONFIGURATIONS: MapSizeConfiguration[] = [
     religionsMax: 5,
     naturalWonders: 5,
     continents: 4,
+    islands: 4
   },
   {
     id: MapSizeConfigurationId.LARGE,
@@ -65,6 +69,7 @@ export const MAP_SIZE_CONFIGURATIONS: MapSizeConfiguration[] = [
     religionsMax: 6,
     naturalWonders: 6,
     continents: 5,
+    islands: 5
   },
   {
     id: MapSizeConfigurationId.HUGE,
@@ -78,5 +83,6 @@ export const MAP_SIZE_CONFIGURATIONS: MapSizeConfiguration[] = [
     religionsMax: 7,
     naturalWonders: 7,
     continents: 6,
+    islands: 6
   }
 ]

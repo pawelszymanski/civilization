@@ -1,7 +1,7 @@
 <div class="viewport" [ngStyle]="viewportElemStyle">
   <div class="map" *ngIf="gameMap" [ngStyle]="mapElemStyle">
     <div class="row" [style.z-index]="gameMap.rows.length - i -1" *ngFor="let row of gameMap.rows; index as i">
-      <div class="tile" *ngFor="let tile of row.tiles">{{ tile.coords.x }}, {{ tile.coords.y }}</div>
+      <div class="tile" [ngClass]="tileClass(tile)" *ngFor="let tile of row.tiles">{{ tile.coords.x }}, {{ tile.coords.y }}</div>
     </div>
   </div>
 </div>

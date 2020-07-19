@@ -1,6 +1,6 @@
 import {Component, HostListener} from '@angular/core';
 
-import {GameMap} from '../../models/game-map';
+import {GameMap, GameMapTile} from '../../models/game-map';
 import {Camera} from '../../models/camera';
 import {Coords} from '../../models/coords';
 
@@ -42,6 +42,10 @@ export class GameMapComponent {
       left: this.camera.offset.x + 'px',
       top: this.camera.offset.y + 'px'
     };
+  }
+
+  tileClass(tile: GameMapTile): string {
+    return `m-terrain-${tile.terrain.base}`;
   }
 
   @HostListener('wheel', ['$event.deltaY'])
