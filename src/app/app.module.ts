@@ -5,7 +5,7 @@ import {FormsModule} from '@angular/forms';
 import {AppComponent} from './components/app/app.component';
 import {BoardComponent} from './components/board/board.component';
 import {DevToolsComponent} from './components/dev-tools/dev-tools.component';
-import {YieldComponent} from './components/yiled/yield.component';
+import {YieldComponent} from './components/yield/yield.component';
 
 import {BoardGeneratorService} from './services/board-generator.service';
 import {YieldCalculatorService} from './services/yield-calculator.service';

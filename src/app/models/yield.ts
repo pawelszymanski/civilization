@@ -9,6 +9,22 @@ export enum YieldId {
   TOURISM = 'TOURISM'
 }
 
+export const YIELD_IDS_IN_ORDER = [
+  YieldId.FOOD,
+  YieldId.PRODUCTION,
+  YieldId.GOLD,
+  YieldId.SCIENCE,
+  YieldId.CULTURE,
+  YieldId.RELIGION,
+  YieldId.POWER,
+  YieldId.TOURISM
+]
+
 export type Yield = {
   [key in YieldId]: number;
+}
+
+export interface YieldOfType {
+  type: YieldId;
+  value: number;
 }
