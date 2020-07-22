@@ -1,20 +1,20 @@
 import {Component, HostListener} from '@angular/core';
 
-import {GameMap, GameMapTile} from '../../models/game-map';
+import {Board} from '../../models/board';
 import {Camera} from '../../models/camera';
 import {Coords} from '../../models/coords';
 
-import {GameMapStore} from '../../stores/game-map.store';
+import {BoardStore} from '../../stores/board.store';
 import {CameraStore} from '../../stores/camera.store';
 
 @Component({
-  selector: 'map',
-  templateUrl: './game-map.component.html',
-  styleUrls: ['./game-map.component.sass']
+  selector: 'board',
+  templateUrl: './board.component.html',
+  styleUrls: ['./board.component.sass']
 })
-export class GameMapComponent {
+export class BoardComponent {
 
-  gameMap: GameMap = null;
+  board: Board = null;
   camera: Camera = null;
 
   dragStartCoords: Coords = null;  // Page x, y when mouse was pressed down
@@ -22,12 +22,12 @@ export class GameMapComponent {
   isDragging = false;
 
   constructor(
-    private gameMapStoreService: GameMapStore,
+    private boardStoreService: BoardStore,
     private cameraStore: CameraStore
   ) {}
 
   ngOnInit() {
-    this.gameMapStoreService.gameMap.subscribe(gameMap => this.gameMap = gameMap);
+    this.boardStoreService.board.subscribe(board => this.board = board);
     this.cameraStore.camera.subscribe(camera => this.camera = camera);
   }
 
@@ -42,10 +42,6 @@ export class GameMapComponent {
       left: this.camera.offset.x + 'px',
       top: this.camera.offset.y + 'px'
     };
-  }
-
-  tileClass(tile: GameMapTile): string {
-    return `m-terrain-${tile.terrain.base}`;
   }
 
   @HostListener('wheel', ['$event.deltaY'])

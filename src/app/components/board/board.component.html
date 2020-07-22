@@ -1,0 +1,10 @@
+<div class="viewport" [ngStyle]="viewportElemStyle">
+  <div class="board" *ngIf="board" [ngStyle]="mapElemStyle">
+    <div class="row" [style.z-index]="board.rows.length - i -1" *ngFor="let row of board.rows; index as i">
+      <div class="tile" [ngClass]="tile.cssClass" *ngFor="let tile of row.tiles">
+<!--        <span>{{ tile.coords.x }}, {{ tile.coords.y }}</span>-->
+        <yield [yield]="tile.yield"></yield>
+      </div>
+    </div>
+  </div>
+</div>

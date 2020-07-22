@@ -3,18 +3,18 @@ import {Component} from '@angular/core';
 import {MapSizeConfigurationId} from '../../models/map-size-configuration';
 import {
   LandmassValueId,
-  MapGeneratorSettings,
+  BoardGeneratorSettings,
   RainfallId,
   TemperatureId,
   WorldAgeId
-} from '../../models/map-generator-settings';
+} from '../../models/board-generator-settings';
 import {Camera} from '../../models/camera';
 
 import {MAP_SIZE_CONFIGURATIONS} from '../../consts/map-size-configurations.const';
 
-import {MapGeneratorService} from '../../services/map-generator.service';
+import {BoardGeneratorService} from '../../services/board-generator.service';
 
-import {GameMapStore} from '../../stores/game-map.store';
+import {BoardStore} from '../../stores/board.store';
 import {CameraStore} from '../../stores/camera.store';
 
 @Component({
@@ -25,11 +25,11 @@ import {CameraStore} from '../../stores/camera.store';
 export class DevToolsComponent {
 
   readonly MAP_SIZE_CONFIGURATIONS = MAP_SIZE_CONFIGURATIONS;
-  readonly DEFAULT_SIZE_CONFIGURATION = MAP_SIZE_CONFIGURATIONS[MapSizeConfigurationId.SMALL];
+  readonly DEFAULT_SIZE_CONFIGURATION = MAP_SIZE_CONFIGURATIONS[MapSizeConfigurationId.DUEL];
 
   mapConfigurationId = this.DEFAULT_SIZE_CONFIGURATION.id;
 
-  mapGeneratorSettings: MapGeneratorSettings = {
+  boardGeneratorSettings: BoardGeneratorSettings = {
     width: this.DEFAULT_SIZE_CONFIGURATION.width,
     height:  this.DEFAULT_SIZE_CONFIGURATION.height,
     continents: this.DEFAULT_SIZE_CONFIGURATION.continents,
@@ -43,8 +43,8 @@ export class DevToolsComponent {
   camera: Camera;
 
   constructor(
-    private mapGeneratorService: MapGeneratorService,
-    private gameMapStore: GameMapStore,
+    private boardGeneratorService: BoardGeneratorService,
+    private boardStore: BoardStore,
     private cameraStore: CameraStore
   ) {}
 
@@ -55,16 +55,16 @@ export class DevToolsComponent {
   onMapConfigurationIdChange(mapConfigurationId: MapSizeConfigurationId) {
     const mapConfig = MAP_SIZE_CONFIGURATIONS.find(mc => mc.id === Number(mapConfigurationId));
     if (mapConfig) {
-      this.mapGeneratorSettings.width = mapConfig.width;
-      this.mapGeneratorSettings.height = mapConfig.height;
-      this.mapGeneratorSettings.continents = mapConfig.continents;
-      this.mapGeneratorSettings.islands = mapConfig.islands;
+      this.boardGeneratorSettings.width = mapConfig.width;
+      this.boardGeneratorSettings.height = mapConfig.height;
+      this.boardGeneratorSettings.continents = mapConfig.continents;
+      this.boardGeneratorSettings.islands = mapConfig.islands;
     }
   }
 
   onGenerateMapClick() {
-    const map = this.mapGeneratorService.generateNewGameMap(this.mapGeneratorSettings);
-    this.gameMapStore.setGameMap(map);
+    const map = this.boardGeneratorService.generateNewBoard(this.boardGeneratorSettings);
+    this.boardStore.setBoard(map);
   }
 
   onTileSizeChange(tileSize: number) {

@@ -1,18 +1,17 @@
 export enum TerrainBaseId {
   GRASSLAND,
+  GRASSLAND_HILLS,
   PLAINS,
+  PLAINS_HILLS,
   DESERT,
+  DESERT_HILLS,
   TUNDRA,
+  TUNDRA_HILLS,
   SNOW,
+  SNOW_HILLS,
   LAKE,
   COAST,
   OCEAN,
-  ICE
-}
-
-export enum TerrainElevationId {
-  FLAT,
-  HILL,
   MOUNTAIN
 }
 
@@ -23,7 +22,8 @@ export enum TerrainFeatureId {
   MARSH,
   FLOODPLAINS,
   OASIS,
-  REEF
+  REEF,
+  ICE
 }
 
 export enum TerrainResourceId {
@@ -33,7 +33,6 @@ export enum TerrainResourceId {
 
 export interface Terrain {
   base: TerrainBaseId;
-  elevation: TerrainElevationId;
   feature: TerrainFeatureId;
-  resource: TerrainResourceId;
+  resource?: TerrainResourceId;
 }

@@ -6,22 +6,22 @@
     <select name="mapConfigurationId" [ngModel]="mapConfigurationId" (change)="onMapConfigurationIdChange($event.target.value)">
       <option *ngFor="let mapConfig of MAP_SIZE_CONFIGURATIONS" [value]="mapConfig.id">{{ mapConfig.name }}</option>
     </select>
-    <label>Width: <span>{{ mapGeneratorSettings.width }}</span></label>
-    <input type="range" name="width" min="20" max="120" step="1" [(ngModel)]="mapGeneratorSettings.width">
-    <label>Height: <span>{{ mapGeneratorSettings.height }}</span></label>
-    <input type="range" name="height" min="20" max="80" step="1" [(ngModel)]="mapGeneratorSettings.height">
-    <label>Continents: <span>{{ mapGeneratorSettings.continents }}</span></label>
-    <input type="range" name="continents" min="1" max="10" step="1" [(ngModel)]="mapGeneratorSettings.continents">
-    <label>Islands: <span>{{ mapGeneratorSettings.islands }}</span></label>
-    <input type="range" name="islands" min="0" max="30" step="1" [(ngModel)]="mapGeneratorSettings.islands" disabled>
-    <label>Landmass: <span>{{ mapGeneratorSettings.landmass }}</span></label>
-    <input type="range" name="landmass" min="0" max="4" step="1" [(ngModel)]="mapGeneratorSettings.landmass" disabled>
-    <label>World age: <span>{{ mapGeneratorSettings.worldAge }}</span></label>
-    <input type="range" name="worldAge" min="0" max="2" step="1" [(ngModel)]="mapGeneratorSettings.worldAge" disabled>
-    <label>Temperature: <span>{{ mapGeneratorSettings.temperature }}</span></label>
-    <input type="range" name="temperature" min="0" max="2" step="1" [(ngModel)]="mapGeneratorSettings.temperature" disabled>
-    <label>Rainfall: <span>{{ mapGeneratorSettings.rainfall }}</span></label>
-    <input type="range" name="rainfall" min="0" max="2" step="1" [(ngModel)]="mapGeneratorSettings.rainfall" disabled>
+    <label>Width: <span>{{ boardGeneratorSettings.width }}</span></label>
+    <input type="range" name="width" min="20" max="120" step="1" [(ngModel)]="boardGeneratorSettings.width">
+    <label>Height: <span>{{ boardGeneratorSettings.height }}</span></label>
+    <input type="range" name="height" min="20" max="80" step="1" [(ngModel)]="boardGeneratorSettings.height">
+    <label>Continents: <span>{{ boardGeneratorSettings.continents }}</span></label>
+    <input type="range" name="continents" min="1" max="10" step="1" [(ngModel)]="boardGeneratorSettings.continents">
+    <label>Islands: <span>{{ boardGeneratorSettings.islands }}</span></label>
+    <input type="range" name="islands" min="0" max="30" step="1" [(ngModel)]="boardGeneratorSettings.islands" disabled>
+    <label>Landmass: <span>{{ boardGeneratorSettings.landmass }}</span></label>
+    <input type="range" name="landmass" min="0" max="4" step="1" [(ngModel)]="boardGeneratorSettings.landmass" disabled>
+    <label>World age: <span>{{ boardGeneratorSettings.worldAge }}</span></label>
+    <input type="range" name="worldAge" min="0" max="2" step="1" [(ngModel)]="boardGeneratorSettings.worldAge" disabled>
+    <label>Temperature: <span>{{ boardGeneratorSettings.temperature }}</span></label>
+    <input type="range" name="temperature" min="0" max="2" step="1" [(ngModel)]="boardGeneratorSettings.temperature" disabled>
+    <label>Rainfall: <span>{{ boardGeneratorSettings.rainfall }}</span></label>
+    <input type="range" name="rainfall" min="0" max="2" step="1" [(ngModel)]="boardGeneratorSettings.rainfall" disabled>
 
 
     <button type="button" (click)="onGenerateMapClick()">Generate map</button>

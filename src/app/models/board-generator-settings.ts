@@ -24,7 +24,7 @@ export enum RainfallId {
   COLD
 }
 
-export interface MapGeneratorSettings {
+export interface BoardGeneratorSettings {
   width: number;
   height: number;
   landmass: LandmassValueId;

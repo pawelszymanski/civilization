@@ -3,31 +3,39 @@ import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 
 import {AppComponent} from './components/app/app.component';
+import {BoardComponent} from './components/board/board.component';
 import {DevToolsComponent} from './components/dev-tools/dev-tools.component';
-import {GameMapComponent} from './components/game-map/game-map.component';
+import {YieldComponent} from './components/yiled/yield.component';
 
-import {MapGeneratorService} from './services/map-generator.service';
-import {GameMapStore} from './stores/game-map.store';
+import {BoardGeneratorService} from './services/board-generator.service';
+import {YieldCalculatorService} from './services/yield-calculator.service';
+
+import {BoardStore} from './stores/board.store';
 import {CameraStore} from './stores/camera.store';
 
 const COMPONENTS = [
   AppComponent,
+  BoardComponent,
   DevToolsComponent,
-  GameMapComponent,
+  YieldComponent
 ]
 
 const SERVICES = [
-  MapGeneratorService
+  BoardGeneratorService,
+  YieldCalculatorService
 ]
 
 const STORES = [
-  GameMapStore,
+  BoardStore,
   CameraStore
 ]
 
+const PIPES = []
+
 @NgModule({
   declarations: [
-    ...COMPONENTS
+    ...COMPONENTS,
+    ...PIPES
   ],
   imports: [
     BrowserModule,
@@ -35,7 +43,8 @@ const STORES = [
   ],
   providers: [
     ...SERVICES,
-    ...STORES
+    ...STORES,
+    ...PIPES
   ],
   bootstrap: [AppComponent]
 })
