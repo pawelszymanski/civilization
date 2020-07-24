@@ -3,7 +3,7 @@
     <div class="row" [style.z-index]="board.rows.length - i -1" *ngFor="let row of board.rows; index as i">
       <div class="tile" [ngClass]="tile.cssClass" *ngFor="let tile of row.tiles">
 <!--        <span *ngIf="tile.coords.x === 7 && tile.coords.y === 5">{{ tile.coords.x }}, {{ tile.coords.y }}</span>-->
-        <yield [yield]="tile.yield"></yield>
+        <yield *ngIf="ui.isYieldShown" [yield]="tile.yield"></yield>
       </div>
     </div>
   </div>

@@ -6,7 +6,7 @@ export const YIELD_ICONS = {
   [YieldId.GOLD]: 'fa-btc',
   [YieldId.SCIENCE]: 'fa-flask',
   [YieldId.CULTURE]: 'fa-music',
-  [YieldId.RELIGION]: 'fa-fire',
+  [YieldId.FAITH]: 'fa-fire',
   [YieldId.POWER]: 'fa-bolt',
   [YieldId.TOURISM]: 'fa-suitcase'
 }

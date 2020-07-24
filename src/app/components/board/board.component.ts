@@ -1,21 +1,25 @@
-import {Component, HostListener} from '@angular/core';
+import {Component, HostListener, ViewEncapsulation} from '@angular/core';
 
 import {Board} from '../../models/board';
 import {Camera} from '../../models/camera';
 import {Coords} from '../../models/coords';
+import {Ui} from '../../models/ui';
 
 import {BoardStore} from '../../stores/board.store';
 import {CameraStore} from '../../stores/camera.store';
+import {UiStore} from '../../stores/ui.store';
 
 @Component({
   selector: 'board',
   templateUrl: './board.component.html',
-  styleUrls: ['./board.component.sass']
+  styleUrls: ['./board.component.sass'],
+  encapsulation: ViewEncapsulation.None
 })
 export class BoardComponent {
 
   board: Board = null;
   camera: Camera = null;
+  ui: Ui;
 
   dragStartCoords: Coords = null;  // Page x, y when mouse was pressed down
   dragStartOffset: Coords = null;  // Map element x, y when mouse was pressed down
@@ -23,12 +27,14 @@ export class BoardComponent {
 
   constructor(
     private boardStoreService: BoardStore,
-    private cameraStore: CameraStore
+    private cameraStore: CameraStore,
+    private uiStore: UiStore
   ) {}
 
   ngOnInit() {
     this.boardStoreService.board.subscribe(board => this.board = board);
     this.cameraStore.camera.subscribe(camera => this.camera = camera);
+    this.uiStore.ui.subscribe(ui => this.ui = ui);
   }
 
   get viewportElemStyle(): {[key:string]: string} {

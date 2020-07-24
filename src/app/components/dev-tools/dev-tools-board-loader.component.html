@@ -1,0 +1,8 @@
+<form>
+  <h3>Board loader</h3>
+  <label>Board size</label>
+  <select name="predefinedBoardName" [(ngModel)]="predefinedBoardName">
+    <option *ngFor="let board of PREDEFINED_BOARDS" [value]="board.name">{{ board.name }}</option>
+  </select>
+  <button type="button" (click)="onLoadBoardClick()" [disabled]="!predefinedBoardName">Load board</button>
+</form>

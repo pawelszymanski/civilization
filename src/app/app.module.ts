@@ -4,7 +4,9 @@ import {FormsModule} from '@angular/forms';
 
 import {AppComponent} from './components/app/app.component';
 import {BoardComponent} from './components/board/board.component';
-import {DevToolsComponent} from './components/dev-tools/dev-tools.component';
+import {DevToolsBoardLoaderComponent} from './components/dev-tools/dev-tools-board-loader.component';
+import {DevToolsBoardGeneratorComponent} from './components/dev-tools/dev-tools-board-generator.component';
+import {DevToolsCameraControllerComponent} from './components/dev-tools/dev-tools-camera-controller.component';
 import {YieldComponent} from './components/yield/yield.component';
 
 import {BoardGeneratorService} from './services/board-generator.service';
@@ -12,11 +14,14 @@ import {YieldCalculatorService} from './services/yield-calculator.service';
 
 import {BoardStore} from './stores/board.store';
 import {CameraStore} from './stores/camera.store';
+import {UiStore} from './stores/ui.store';
 
 const COMPONENTS = [
   AppComponent,
   BoardComponent,
-  DevToolsComponent,
+  DevToolsBoardLoaderComponent,
+  DevToolsBoardGeneratorComponent,
+  DevToolsCameraControllerComponent,
   YieldComponent
 ]
 
@@ -27,7 +32,8 @@ const SERVICES = [
 
 const STORES = [
   BoardStore,
-  CameraStore
+  CameraStore,
+  UiStore
 ]
 
 const PIPES = []

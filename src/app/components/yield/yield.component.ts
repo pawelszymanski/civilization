@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, ViewEncapsulation} from '@angular/core';
 
 import {Yield, YieldId, YieldOfType, YIELD_IDS_IN_ORDER} from '../../models/yield';
 
@@ -7,7 +7,8 @@ import {YIELD_ICONS} from '../../consts/yield-icons.const';
 @Component({
   selector: 'yield',
   templateUrl: './yield.component.html',
-  styleUrls: ['./yield.component.sass']
+  styleUrls: ['./yield.component.sass'],
+  encapsulation: ViewEncapsulation.None
 })
 export class YieldComponent {
 
@@ -19,19 +20,19 @@ export class YieldComponent {
     return {type: yieldId, value: this.yield[yieldId]};
   }
 
-  private filterOutZeroYields(yieldOfType: YieldOfType): boolean {
+  private static filterOutZeroYields(yieldOfType: YieldOfType): boolean {
     return yieldOfType.value > 0;
   }
 
-  private yieldToIconCssClasses(yieldOfType: YieldOfType): YieldId[] {
+  private static yieldToIconCssClasses(yieldOfType: YieldOfType): YieldId[] {
     return new Array(yieldOfType.value).fill('fa ' + YIELD_ICONS[yieldOfType.type]);
   }
 
-  ngOnChanges() {
+  ngOnChanges(e) {
     this.iconCssClasses = YIELD_IDS_IN_ORDER
       .map( yieldId => this.extractYieldOfType(yieldId) )
-      .filter( yieldOfType => this.filterOutZeroYields(yieldOfType) )
-      .map( yieldOfType => this.yieldToIconCssClasses(yieldOfType) )
+      .filter( yieldOfType => YieldComponent.filterOutZeroYields(yieldOfType) )
+      .map( yieldOfType => YieldComponent.yieldToIconCssClasses(yieldOfType) )
   }
 
 }

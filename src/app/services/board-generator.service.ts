@@ -13,6 +13,10 @@ export class BoardGeneratorService {
     private yieldCalculatorService: YieldCalculatorService
   ) {}
 
+  public getTerrainCssClass(tile: BoardTile): string {
+    return 'm-terrain-' + TerrainBaseId[tile.terrain.base].toLowerCase()
+  }
+
   private createBoardTile(x: number, y: number): BoardTile {
     const tile = {
       coords: {
@@ -25,7 +29,7 @@ export class BoardGeneratorService {
         resource: TerrainResourceId.NONE
       }
     } as BoardTile;
-    tile.cssClass = 'm-terrain-' + TerrainBaseId[tile.terrain.base].toLowerCase();
+    tile.cssClass = this.getTerrainCssClass(tile);
     tile.yield = this.yieldCalculatorService.calculateTileYield(tile);
     return tile;
   }

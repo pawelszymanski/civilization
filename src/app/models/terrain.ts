@@ -28,11 +28,77 @@ export enum TerrainFeatureId {
 
 export enum TerrainResourceId {
   NONE,
-  // ...HORSES, IRON....
+  BANANAS,
+  CATTLE,
+  COPPER,
+  CRABS,
+  DEER,
+  FISH,
+  RICE,
+  SHEEP,
+  STONE,
+  WHEAT,
+  ALUMINUM,
+  COAL,
+  HORSES,
+  IRON,
+  NITER,
+  OIL,
+  URANIUM,
+  CITRUS,
+  COCOA,
+  COFFEE,
+  COTTON,
+  DIAMONDS,
+  DYES,
+  FURS,
+  GYPSUM,
+  INCENSE,
+  IVORY,
+  JADE,
+  MARBLE,
+  MERCURY,
+  PEARLS,
+  SALT,
+  SILK,
+  SILVER,
+  SPICES,
+  SUGAR,
+  TEA,
+  TOBACCO,
+  TRUFFLES,
+  WHALES,
+  WINE
+  // CINNAMON,
+  // CLOVES,
+  // COSMETICS,
+  // JEANS,
+  // PERFUME,
+  // TOYS,
+}
+
+export enum TerrainImprovementId {
+  NONE,
+  FARM,
+  CAMP,
+  PASTURE,
+  MINE,
+  QUARRY,
+  PLANTATION,
+  LUMBER_MILL,
+  FISHING_BOATS,
+  SEASIDE_RESORT,
+  OIL_WELL,
+  OFFSHORE_PLATFORM
+  // FORT,
+  // ROADS,
+  // AIRSTRIP,
+  // MISSILE_SILO,
 }
 
 export interface Terrain {
   base: TerrainBaseId;
   feature: TerrainFeatureId;
-  resource?: TerrainResourceId;
+  resource: TerrainResourceId;
+  improvement: TerrainImprovementId;
 }

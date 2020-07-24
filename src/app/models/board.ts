@@ -16,3 +16,8 @@ export interface BoardRow {
 export interface Board {
   rows: BoardRow[];
 }
+
+export interface PredefinedBoard {
+  name: string;
+  board: Board;
+}

@@ -4,7 +4,7 @@ export enum YieldId {
   GOLD = 'GOLD',
   SCIENCE = 'SCIENCE',
   CULTURE = 'CULTURE',
-  RELIGION = 'RELIGION',
+  FAITH = 'FAITH',
   POWER = 'POWER',
   TOURISM = 'TOURISM'
 }
@@ -15,9 +15,10 @@ export const YIELD_IDS_IN_ORDER = [
   YieldId.GOLD,
   YieldId.SCIENCE,
   YieldId.CULTURE,
-  YieldId.RELIGION,
+  YieldId.FAITH,
   YieldId.POWER,
   YieldId.TOURISM
+
 ]
 
 export type Yield = {

@@ -1,8 +1,8 @@
-import {MapSizeConfiguration, MapSizeConfigurationId} from '../models/map-size-configuration';
+import {BoardSizeConfiguration, BoardSizeConfigurationId} from '../models/board-size-configuration';
 
-export const MAP_SIZE_CONFIGURATIONS: MapSizeConfiguration[] = [
+export const BOARD_SIZE_CONFIGURATIONS: BoardSizeConfiguration[] = [
   {
-    id: MapSizeConfigurationId.DUEL,
+    id: BoardSizeConfigurationId.DUEL,
     name: 'Duel',
     width: 44,
     height: 26,
@@ -16,7 +16,7 @@ export const MAP_SIZE_CONFIGURATIONS: MapSizeConfiguration[] = [
     islands: 1
   },
   {
-    id: MapSizeConfigurationId.TINY,
+    id: BoardSizeConfigurationId.TINY,
     name: 'Tiny',
     width: 60,
     height: 38,
@@ -30,7 +30,7 @@ export const MAP_SIZE_CONFIGURATIONS: MapSizeConfiguration[] = [
     islands: 2
   },
   {
-    id: MapSizeConfigurationId.SMALL,
+    id: BoardSizeConfigurationId.SMALL,
     name: 'Small',
     width: 74,
     height: 46,
@@ -44,7 +44,7 @@ export const MAP_SIZE_CONFIGURATIONS: MapSizeConfiguration[] = [
     islands: 3
   },
   {
-    id: MapSizeConfigurationId.STANDARD,
+    id: BoardSizeConfigurationId.STANDARD,
     name: 'Standard',
     width: 84,
     height: 54,
@@ -58,7 +58,7 @@ export const MAP_SIZE_CONFIGURATIONS: MapSizeConfiguration[] = [
     islands: 4
   },
   {
-    id: MapSizeConfigurationId.LARGE,
+    id: BoardSizeConfigurationId.LARGE,
     name: 'Large',
     width: 96,
     height: 60,
@@ -72,7 +72,7 @@ export const MAP_SIZE_CONFIGURATIONS: MapSizeConfiguration[] = [
     islands: 5
   },
   {
-    id: MapSizeConfigurationId.HUGE,
+    id: BoardSizeConfigurationId.HUGE,
     name: 'Huge',
     width: 106,
     height: 66,

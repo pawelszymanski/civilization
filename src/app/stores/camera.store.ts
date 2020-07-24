@@ -10,7 +10,7 @@ export class CameraStore {
   readonly MAX_ZOOM_LEVEL = 10;
   readonly MIN_ZOOM_LEVEL = -10;
 
-  readonly CAMERA: Camera = {
+  readonly DEFAULT_CAMERA: Camera = {
     zoomLevel: 0,
     tileSize: 100,
     perspective: 1000,
@@ -22,7 +22,7 @@ export class CameraStore {
     }
   }
 
-  private _camera: BehaviorSubject<Camera> = new BehaviorSubject(this.CAMERA);
+  private _camera: BehaviorSubject<Camera> = new BehaviorSubject(this.DEFAULT_CAMERA);
 
   public readonly camera: Observable<Camera> = this._camera.asObservable();
 
@@ -42,8 +42,8 @@ export class CameraStore {
     this._camera.next({...this._camera.value, scale});
   }
 
-  public reset() {
-    this._camera.next({...this.CAMERA});
+  public resetAll() {
+    this._camera.next({...this.DEFAULT_CAMERA});
   }
 
   private calcPerspective(zoomLevel: number): number {

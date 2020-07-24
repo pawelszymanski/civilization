@@ -1,16 +1,20 @@
-@import '../../../styles/mixins'
+@import ./../../../styles/mixins
 
 .dev-tools
   width: 300px
   position: absolute
   top: 0
-  left: 0
+  left: -300px
   bottom: 0
   z-index: 100
-  padding: 20px
-  background: rgba(128, 128, 128, .9)
+  background: rgba(84, 106, 48, 0.9)
+  overflow: hidden
+  transition: all 0.15s ease-in-out
+  &.active
+    left: 0
 
   form
+    padding: 10px
     +clearfix
 
   form + form
@@ -35,6 +39,6 @@
     margin-bottom: 5px
 
   button
-    float: right
     padding: 5px 10px
     cursor: pointer
+    float: right
