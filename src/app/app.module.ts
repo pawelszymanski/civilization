@@ -16,6 +16,11 @@ import {BoardStore} from './stores/board.store';
 import {CameraStore} from './stores/camera.store';
 import {UiStore} from './stores/ui.store';
 
+import {TerrainBaseNamePipe} from './pipes/terrain-base-name.pipe';
+import {TerrainFeatureNamePipe} from './pipes/terrain-feature-name.pipe';
+import {TerrainImprovementNamePipe} from './pipes/terrain-improvement-name.pipe';
+import {TerrainResourceNamePipe} from './pipes/terrain-resource-name.pipe';
+
 const COMPONENTS = [
   AppComponent,
   BoardComponent,
@@ -36,7 +41,12 @@ const STORES = [
   UiStore
 ]
 
-const PIPES = []
+const PIPES = [
+  TerrainBaseNamePipe,
+  TerrainFeatureNamePipe,
+  TerrainImprovementNamePipe,
+  TerrainResourceNamePipe
+]
 
 @NgModule({
   declarations: [

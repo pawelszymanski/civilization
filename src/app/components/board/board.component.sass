@@ -28,18 +28,29 @@
         background: gray
         margin-bottom: -$tile-size/4
         +disable-selection
+        position: relative
         &:hover
-          opacity: .7
+          opacity: .95
 
         &.m-terrain-grassland
           background: #708735
+        &.m-terrain-grassland-hills
+          background: #708735
         &.m-terrain-plains
+          background: #9fa036
+        &.m-terrain-plains-hills
           background: #9fa036
         &.m-terrain-desert
           background: #efca73
+        &.m-terrain-desert-hills
+          background: #efca73
         &.m-terrain-tundra
           background: #918f63
+        &.m-terrain-tundra-hills
+          background: #918f63
         &.m-terrain-snow
+          background: #d2e4f5
+        &.m-terrain-snow-hills
           background: #d2e4f5
         &.m-terrain-lake
           background: #2e5878
@@ -50,16 +61,18 @@
         &.m-terrain-ice
           background: #c1daec
 
-//export enum TerrainElevationId {
-//  FLAT,
-//  HILL,
-//  MOUNTAIN
-//
-//export enum TerrainFeatureId {
-//  NONE,
-//  WOODS,
-//  RAINFOREST,
-//  MARSH,
-//  FLOODPLAINS,
-//  OASIS,
-//  REEF
+      .tile-text-info
+        display: none
+        position: absolute
+        left: 0
+        right: 0
+        bottom: 0
+        padding-bottom: 8px
+        font-size: 10px
+        line-height: 10px
+        font-weight: bold
+        text-transform: uppercase
+        color: #aaa
+        text-shadow: 0.75px 0.5px black
+        &.active
+          display: block

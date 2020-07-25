@@ -14,6 +14,7 @@ export enum TerrainBaseId {
   OCEAN,
   MOUNTAIN
 }
+export const TERRAIN_BASE_ID_LENGTH = Object.keys(TerrainBaseId).length / 2;
 
 export enum TerrainFeatureId {
   NONE,
@@ -25,6 +26,7 @@ export enum TerrainFeatureId {
   REEF,
   ICE
 }
+export const TERRAIN_FEATURE_ID_LENGTH = Object.keys(TerrainFeatureId).length / 2;
 
 export enum TerrainResourceId {
   NONE,
@@ -76,6 +78,7 @@ export enum TerrainResourceId {
   // PERFUME,
   // TOYS,
 }
+export const TERRAIN_RESOURCE_ID_LENGTH = Object.keys(TerrainResourceId).length / 2;
 
 export enum TerrainImprovementId {
   NONE,
@@ -95,6 +98,7 @@ export enum TerrainImprovementId {
   // AIRSTRIP,
   // MISSILE_SILO,
 }
+export const TERRAIN_IMPROVEMENT_ID_LENGTH = Object.keys(TerrainImprovementId).length / 2;
 
 export interface Terrain {
   base: TerrainBaseId;

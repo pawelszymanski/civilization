@@ -14,7 +14,9 @@ export class BoardGeneratorService {
   ) {}
 
   public getTerrainCssClass(tile: BoardTile): string {
-    return 'm-terrain-' + TerrainBaseId[tile.terrain.base].toLowerCase()
+    return 'm-terrain-' + TerrainBaseId[tile.terrain.base]
+      .toLowerCase()
+      .replace('_', '-');
   }
 
   private createBoardTile(x: number, y: number): BoardTile {
@@ -43,8 +45,8 @@ export class BoardGeneratorService {
   }
 
   public generateNewBoard(params: BoardGeneratorSettings): Board {
-    const map = this.createBoard(params);
-    return map;
+    const board = this.createBoard(params);
+    return board;
   }
 
 }

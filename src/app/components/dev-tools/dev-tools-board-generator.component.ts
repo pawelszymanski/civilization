@@ -42,18 +42,18 @@ export class DevToolsBoardGeneratorComponent {
   ) {}
 
   onBoardConfigurationIdChange(boardConfigurationId: BoardSizeConfigurationId) {
-    const mapConfig = BOARD_SIZE_CONFIGURATIONS.find(mc => mc.id === Number(boardConfigurationId));
-    if (mapConfig) {
-      this.settings.width = mapConfig.width;
-      this.settings.height = mapConfig.height;
-      this.settings.continents = mapConfig.continents;
-      this.settings.islands = mapConfig.islands;
+    const boardConfig = BOARD_SIZE_CONFIGURATIONS.find(mc => mc.id === Number(boardConfigurationId));
+    if (boardConfig) {
+      this.settings.width = boardConfig.width;
+      this.settings.height = boardConfig.height;
+      this.settings.continents = boardConfig.continents;
+      this.settings.islands = boardConfig.islands;
     }
   }
 
   onGenerateBoardClick() {
-    const map = this.boardGeneratorService.generateNewBoard(this.settings);
-    this.boardStore.setBoard(map);
+    const board = this.boardGeneratorService.generateNewBoard(this.settings);
+    this.boardStore.setBoard(board);
   }
 
 }

@@ -1,9 +1,15 @@
 <div class="viewport" [ngStyle]="viewportElemStyle">
-  <div class="board" *ngIf="board" [ngStyle]="mapElemStyle">
+  <div class="board" *ngIf="board" [ngStyle]="boardElemStyle">
     <div class="row" [style.z-index]="board.rows.length - i -1" *ngFor="let row of board.rows; index as i">
-      <div class="tile" [ngClass]="tile.cssClass" *ngFor="let tile of row.tiles">
-<!--        <span *ngIf="tile.coords.x === 7 && tile.coords.y === 5">{{ tile.coords.x }}, {{ tile.coords.y }}</span>-->
-        <yield *ngIf="ui.isYieldShown" [yield]="tile.yield"></yield>
+      <div class="tile" [ngClass]="tile.cssClass" *ngFor="let tile of row.tiles" (wheel)="onTileWheel($event, tile)">
+        <yield *ngIf="ui.yield" [yield]="tile.yield"></yield>
+        <div class="tile-text-info" [class.active]="ui.devTools">
+          <p>{{ tile.terrain.base | terrainBaseName }}</p>
+          <p>{{ tile.terrain.feature | terrainFeatureName }}</p>
+          <p>{{ tile.terrain.resource | terrainResourceName }}</p>
+          <p>{{ tile.terrain.improvement | terrainImprovementName }}</p>
+          <p>{{ tile.coords.x }}, {{ tile.coords.y }}</p>
+        </div>
       </div>
     </div>
   </div>

@@ -1,4 +1,4 @@
-import {Component, HostListener, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 
 import {Ui} from '../../models/ui';
 
@@ -19,18 +19,41 @@ export class AppComponent {
   ) {}
 
   ngOnInit() {
+    this.subscribeToData();
+    this.addEventListeners();
+  }
+
+  subscribeToData() {
     this.uiStore.ui.subscribe(ui => this.ui = ui);
   }
 
-  @HostListener('window:keypress', ['$event'])
-  onWindowKeypress(event: KeyboardEvent) {
+  addEventListeners() {
+    // Using listeners rather than @HostListener since they could be called with .stopPropagation()
+    document.addEventListener('wheel', this.documentOnWheel.bind(this), {passive: false});
+    document.addEventListener('contextmenu', this.documentOnContextMenu.bind(this));
+    document.addEventListener('keypress', this.documentOnKeypress.bind(this));
+  }
+
+  documentOnWheel(event) {
+    if (event.ctrlKey) {
+      event.preventDefault();
+    }
+  }
+
+  documentOnContextMenu(event: MouseEvent) {
+    if (!this.ui.devTools) {
+      event.preventDefault();
+    }
+  }
+
+  documentOnKeypress(event: KeyboardEvent) {
 
     if (event.key === '`' && !event.shiftKey) {
-      this.uiStore.setIsDevToolsShown(!this.ui.isDevToolsShown);
+      this.uiStore.setIsDevToolsShown(!this.ui.devTools);
     }
 
     if (event.key === 'y') {
-      this.uiStore.setIsYieldShown(!this.ui.isYieldShown);
+      this.uiStore.setYield(!this.ui.yield);
     }
 
   }

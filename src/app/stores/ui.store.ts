@@ -7,19 +7,20 @@ import {Ui} from '../models/ui';
 export class UiStore {
 
   readonly DEFAULT_UI: Ui = {
-    isDevToolsShown: true,
-    isYieldShown: true
+    devTools: true,
+    yield: true
   }
+
   private _ui: BehaviorSubject<Ui> = new BehaviorSubject(this.DEFAULT_UI);
 
   public readonly ui: Observable<Ui> = this._ui.asObservable();
 
-  public setIsYieldShown(isYieldShown: boolean) {
-    this._ui.next({...this._ui.value, isYieldShown});
+  public setYield(_yield: boolean) {
+    this._ui.next({...this._ui.value, yield: _yield});
   }
 
   public setIsDevToolsShown(isDevToolsShown: boolean) {
-    this._ui.next({...this._ui.value, isDevToolsShown});
+    this._ui.next({...this._ui.value, devTools: isDevToolsShown});
   }
 
 }
