@@ -2,55 +2,55 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 
 import {Step} from '../models/step';
-import {Board, BoardTile} from '../models/board';
+import {GameMap, GameMapTile} from '../models/game-map';
 import {TERRAIN_BASE_ID_LENGTH, TERRAIN_FEATURE_ID_LENGTH, TERRAIN_RESOURCE_ID_LENGTH, TERRAIN_IMPROVEMENT_ID_LENGTH} from '../models/terrain';
 
-import {BoardGeneratorService} from '../services/board-generator.service';
+import {GameMapGeneratorService} from '../services/game-map-generator.service';
 import {YieldCalculatorService} from '../services/yield-calculator.service';
 
 @Injectable()
-export class BoardStore {
+export class GameMapStore {
 
-  private _board: BehaviorSubject<Board> = new BehaviorSubject(undefined);
+  private _gameMap: BehaviorSubject<GameMap> = new BehaviorSubject(undefined);
 
-  public readonly board: Observable<Board> = this._board.asObservable();
+  public readonly gameMap: Observable<GameMap> = this._gameMap.asObservable();
 
   constructor(
-    private boardGeneratorService: BoardGeneratorService,
+    private gameMapGeneratorService: GameMapGeneratorService,
     private yieldCalculatorService: YieldCalculatorService
   ) {}
 
-  public setBoard(board: Board) {
-    this._board.next(board);
+  public next(gameMap: GameMap) {
+    this._gameMap.next(gameMap);
   }
 
-  public cycleTileTerrainBase(tile: BoardTile, step: Step) {
+  public cycleTileTerrainBase(tile: GameMapTile, step: Step) {
     tile.terrain.base = (tile.terrain.base + step + TERRAIN_BASE_ID_LENGTH) % TERRAIN_BASE_ID_LENGTH;
     this.updateTile(tile);
   }
 
-  public cycleTileTerrainFeature(tile: BoardTile, step: Step) {
+  public cycleTileTerrainFeature(tile: GameMapTile, step: Step) {
     tile.terrain.feature = (tile.terrain.feature + step + TERRAIN_FEATURE_ID_LENGTH) % TERRAIN_FEATURE_ID_LENGTH;
     this.updateTile(tile);
   }
 
-  public cycleTileTerrainResource(tile: BoardTile, step: Step) {
+  public cycleTileTerrainResource(tile: GameMapTile, step: Step) {
     tile.terrain.resource = (tile.terrain.resource + step + TERRAIN_RESOURCE_ID_LENGTH) % TERRAIN_RESOURCE_ID_LENGTH;
     this.updateTile(tile);
   }
 
-  public cycleTileTerrainImprovement(tile: BoardTile, step: Step) {
+  public cycleTileTerrainImprovement(tile: GameMapTile, step: Step) {
     tile.terrain.improvement = (tile.terrain.improvement + step + TERRAIN_IMPROVEMENT_ID_LENGTH) % TERRAIN_IMPROVEMENT_ID_LENGTH;
     this.updateTile(tile);
   }
 
   // public updateTile(coords: Coords, terrain: Terrain) {
-  public updateTile(tile: BoardTile) {
-    const board = this._board.value;
-    tile.cssClass = this.boardGeneratorService.getTerrainCssClass(tile);
+  public updateTile(tile: GameMapTile) {
+    const gameMap = this._gameMap.value;
+    tile.cssClass = this.gameMapGeneratorService.getTerrainCssClass(tile);
     tile.yield = this.yieldCalculatorService.calculateTileYield(tile);
-    board.rows[tile.coords.y].tiles[tile.coords.x] = tile;
-    this._board.next(board);
+    gameMap.rows[tile.coords.y].tiles[tile.coords.x] = tile;
+    this._gameMap.next(gameMap);
   }
 
 }

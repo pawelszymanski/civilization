@@ -1,14 +1,14 @@
 import {Component} from '@angular/core';
 
-import {Camera} from '../../models/camera';
+import {Camera} from '../../../models/camera';
 
-import {CameraStore} from '../../stores/camera.store';
+import {CameraStore} from '../../../stores/camera.store';
 
 @Component({
-  selector: 'dev-tools-camera-controller',
-  templateUrl: './dev-tools-camera-controller.component.html'
+  selector: 'camera-form',
+  templateUrl: './camera-form.component.html'
 })
-export class DevToolsCameraControllerComponent {
+export class CameraFormComponent {
 
   camera: Camera;
 

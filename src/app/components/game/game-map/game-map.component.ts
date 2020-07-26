@@ -1,25 +1,24 @@
 import {Component, HostListener, ViewEncapsulation} from '@angular/core';
 
-import {Board, BoardTile} from '../../models/board';
-import {Camera} from '../../models/camera';
-import {Coords} from '../../models/coords';
-import {Ui} from '../../models/ui';
+import {GameMap, GameMapTile} from '../../../models/game-map';
+import {Camera} from '../../../models/camera';
+import {Coords} from '../../../models/coords';
+import {Ui} from '../../../models/ui';
+import {Step} from '../../../models/step';
 
-import {BoardStore} from '../../stores/board.store';
-import {CameraStore} from '../../stores/camera.store';
-import {UiStore} from '../../stores/ui.store';
-import {TERRAIN_BASE_ID_LENGTH, TERRAIN_FEATURE_ID_LENGTH, TERRAIN_RESOURCE_ID_LENGTH, TERRAIN_IMPROVEMENT_ID_LENGTH} from '../../models/terrain';
-import {Step} from '../../models/step';
+import {GameMapStore} from '../../../stores/game-map.store';
+import {CameraStore} from '../../../stores/camera.store';
+import {UiStore} from '../../../stores/ui.store';
 
 @Component({
-  selector: 'board',
-  templateUrl: './board.component.html',
-  styleUrls: ['./board.component.sass'],
+  selector: 'game-map',
+  templateUrl: './game-map.component.html',
+  styleUrls: ['./game-map.component.sass'],
   encapsulation: ViewEncapsulation.None
 })
-export class BoardComponent {
+export class GameMapComponent {
 
-  board: Board = null;
+  gameMap: GameMap = null;
   camera: Camera = null;
   ui: Ui;
 
@@ -30,13 +29,13 @@ export class BoardComponent {
   dragHandler: Function;
 
   constructor(
-    private boardStoreService: BoardStore,
+    private gameMapStoreService: GameMapStore,
     private cameraStore: CameraStore,
     private uiStore: UiStore
   ) {}
 
   subscribeToData() {
-    this.boardStoreService.board.subscribe(board => this.board = board);
+    this.gameMapStoreService.gameMap.subscribe(gameMap => this.gameMap = gameMap);
     this.cameraStore.camera.subscribe(camera => this.camera = camera);
     this.uiStore.ui.subscribe(ui => this.ui = ui);
   }
@@ -45,11 +44,11 @@ export class BoardComponent {
     this.subscribeToData();
   }
 
-  get viewportElemStyle(): Record<string, string> {
+  get gameMapViewportElemStyle(): Record<string, string> {
     return {perspective: this.camera.perspective + 'px'};
   }
 
-  get boardElemStyle(): Record<string, string> {
+  get gameMapElemStyle(): Record<string, string> {
     return {
       transition: this.isDragging ? 'none' : 'all .08s linear',
       transform: `rotateX(${this.camera.rotateX}deg) scale(${this.camera.scale})`,
@@ -86,15 +85,16 @@ export class BoardComponent {
     this.cameraStore.setZoomLevel(newZoomLevel);
   }
 
-  manipulateTile(event: WheelEvent, tile: BoardTile) {
+  manipulateTile(event: WheelEvent, tile: GameMapTile) {
     const step = (Math.abs(event.deltaY) / event.deltaY) as Step;
-    if (event.shiftKey && !event.ctrlKey) { this.boardStoreService.cycleTileTerrainBase(tile, step); }
-    if (event.ctrlKey && !event.shiftKey) { this.boardStoreService.cycleTileTerrainFeature(tile, step); }
-    if (event.shiftKey && event.ctrlKey)  { this.boardStoreService.cycleTileTerrainResource(tile, step); }
+    if (event.shiftKey && !event.ctrlKey) { this.gameMapStoreService.cycleTileTerrainBase(tile, step); }
+    if (event.ctrlKey && !event.shiftKey) { this.gameMapStoreService.cycleTileTerrainFeature(tile, step); }
+    if (event.shiftKey && event.ctrlKey)  { this.gameMapStoreService.cycleTileTerrainImprovement(tile, step); }
   }
 
   @HostListener('mousedown', ['$event'])
   onMouseDown(event: MouseEvent) {
+    if (this.isDragging) { this.stopDrag(); }  // Unfortunately sometimes dragging is not disabled properly
     if (event.button === 0) {
       this.startDrag(event)
     }
@@ -114,7 +114,7 @@ export class BoardComponent {
     }
   }
 
-  onTileWheel(event: WheelEvent, tile: BoardTile) {
+  onTileWheel(event: WheelEvent, tile: GameMapTile) {
     if (this.ui.devTools && (event.shiftKey || event.ctrlKey)) {
       this.manipulateTile(event, tile)
     } else {

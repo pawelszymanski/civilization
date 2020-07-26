@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 
-import {BoardTile} from '../models/board';
+import {GameMapTile} from '../models/game-map';
 import {Yield, YieldId} from '../models/yield';
 
 import {TERRAIN_BASE_YIELD, TERRAIN_FEATURE_YIELD, TERRAIN_RESOURCE_YIELD} from '../consts/terrain-yield.const';
@@ -8,7 +8,7 @@ import {TERRAIN_BASE_YIELD, TERRAIN_FEATURE_YIELD, TERRAIN_RESOURCE_YIELD} from 
 @Injectable({providedIn: 'root'})
 export class YieldCalculatorService {
 
-  public calculateTileYield(tile: BoardTile): Yield {
+  public calculateTileYield(tile: GameMapTile): Yield {
     const result = {
       [YieldId.FOOD]: 0,
       [YieldId.PRODUCTION]: 0,

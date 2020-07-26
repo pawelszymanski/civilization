@@ -1,25 +1,25 @@
-@import '../../../styles/mixins'
-@import '../../../styles/variables'
+@import '../../../../styles/mixins'
+@import '../../../../styles/variables'
 
-.viewport
+.game-map-viewport
   width: 100%
   height: 100%
   position: absolute
   overflow: hidden
   transition: all .08s linear
 
-  .board
+  .game-map
     position: relative
     transition: all .08s linear
 
-    .row
+    .game-map-row
       display: flex
       position: relative
       &:nth-child(2n)
         position: relative
         left: $tile-width / 2
 
-      .tile
+      .game-map-tile
         flex: $tile-width 0 0
         height: $tile-height - 3px
         text-align: center
@@ -67,11 +67,14 @@
         right: 0
         bottom: 0
         padding-bottom: 10px
-        font-size: 10px
-        line-height: 10px
         font-weight: bold
         text-transform: uppercase
         color: #aaa
         text-shadow: 0.75px 0.5px black
         &.active
           display: block
+
+        p
+          height: 10px
+          font-size: 10px
+          line-height: 10px

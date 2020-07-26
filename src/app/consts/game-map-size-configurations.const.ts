@@ -1,8 +1,8 @@
-import {BoardSizeConfiguration, BoardSizeConfigurationId} from '../models/board-size-configuration';
+import {GameMapSizeConfiguration, GameMapSizeConfigurationId} from '../models/game-map-size-configuration';
 
-export const BOARD_SIZE_CONFIGURATIONS: BoardSizeConfiguration[] = [
+export const GAME_MAP_SIZE_CONFIGURATIONS: GameMapSizeConfiguration[] = [
   {
-    id: BoardSizeConfigurationId.DUEL,
+    id: GameMapSizeConfigurationId.DUEL,
     name: 'Duel',
     width: 44,
     height: 26,
@@ -16,7 +16,7 @@ export const BOARD_SIZE_CONFIGURATIONS: BoardSizeConfiguration[] = [
     islands: 1
   },
   {
-    id: BoardSizeConfigurationId.TINY,
+    id: GameMapSizeConfigurationId.TINY,
     name: 'Tiny',
     width: 60,
     height: 38,
@@ -30,7 +30,7 @@ export const BOARD_SIZE_CONFIGURATIONS: BoardSizeConfiguration[] = [
     islands: 2
   },
   {
-    id: BoardSizeConfigurationId.SMALL,
+    id: GameMapSizeConfigurationId.SMALL,
     name: 'Small',
     width: 74,
     height: 46,
@@ -44,7 +44,7 @@ export const BOARD_SIZE_CONFIGURATIONS: BoardSizeConfiguration[] = [
     islands: 3
   },
   {
-    id: BoardSizeConfigurationId.STANDARD,
+    id: GameMapSizeConfigurationId.STANDARD,
     name: 'Standard',
     width: 84,
     height: 54,
@@ -58,7 +58,7 @@ export const BOARD_SIZE_CONFIGURATIONS: BoardSizeConfiguration[] = [
     islands: 4
   },
   {
-    id: BoardSizeConfigurationId.LARGE,
+    id: GameMapSizeConfigurationId.LARGE,
     name: 'Large',
     width: 96,
     height: 60,
@@ -72,7 +72,7 @@ export const BOARD_SIZE_CONFIGURATIONS: BoardSizeConfiguration[] = [
     islands: 5
   },
   {
-    id: BoardSizeConfigurationId.HUGE,
+    id: GameMapSizeConfigurationId.HUGE,
     name: 'Huge',
     width: 106,
     height: 66,

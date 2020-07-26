@@ -1,8 +1,8 @@
 <form>
-  <h3>Board generator</h3>
-  <label>Board size</label>
-  <select name="boardConfigurationId" [ngModel]="boardConfigurationId" (change)="onBoardConfigurationIdChange($event.target.value)">
-    <option *ngFor="let boardConfig of BOARD_SIZE_CONFIGURATIONS" [value]="boardConfig.id">{{ boardConfig.name }}</option>
+  <h3>Generate map</h3>
+  <label>Map size</label>
+  <select name="gameMapConfigurationId" [ngModel]="gameMapConfigurationId" (change)="onGameMapConfigurationIdChange($event.target.value)">
+    <option *ngFor="let gameMapConfig of GAME_MAP_SIZE_CONFIGURATIONS" [value]="gameMapConfig.id">{{ gameMapConfig.name }}</option>
   </select>
   <label>Width: <span>{{ settings.width }}</span></label>
   <input type="range" name="width" min="20" max="120" step="1" [(ngModel)]="settings.width" disabled>
@@ -20,5 +20,5 @@
   <input type="range" name="temperature" min="0" max="2" step="1" [(ngModel)]="settings.temperature" disabled>
   <label>Rainfall: <span>{{ settings.rainfall }}</span></label>
   <input type="range" name="rainfall" min="0" max="2" step="1" [(ngModel)]="settings.rainfall" disabled>
-  <button type="button" (click)="onGenerateBoardClick()">Generate board</button>
+  <button type="button" (click)="onGenerateGameMapClick()">Generate map</button>
 </form>

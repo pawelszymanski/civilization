@@ -1,4 +1,4 @@
-export enum BoardSizeConfigurationId {
+export enum GameMapSizeConfigurationId {
   DUEL,
   TINY,
   SMALL,
@@ -7,8 +7,8 @@ export enum BoardSizeConfigurationId {
   HUGE
 }
 
-export interface BoardSizeConfiguration {
-  id: BoardSizeConfigurationId;
+export interface GameMapSizeConfiguration {
+  id: GameMapSizeConfigurationId;
   name: string;
   width: number;
   height: number;

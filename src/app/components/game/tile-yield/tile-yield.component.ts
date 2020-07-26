@@ -1,16 +1,16 @@
 import {Component, Input, ViewEncapsulation} from '@angular/core';
 
-import {Yield, YieldId, YieldOfType, YIELD_IDS_IN_ORDER} from '../../models/yield';
+import {Yield, YieldId, YieldOfType, YIELD_IDS_IN_ORDER} from '../../../models/yield';
 
-import {YIELD_ICONS} from '../../consts/yield-icons.const';
+import {YIELD_ICONS} from '../../../consts/yield-icons.const';
 
 @Component({
-  selector: 'yield',
-  templateUrl: './yield.component.html',
-  styleUrls: ['./yield.component.sass'],
+  selector: 'tile-yield',
+  templateUrl: './tile-yield.component.html',
+  styleUrls: ['./tile-yield.component.sass'],
   encapsulation: ViewEncapsulation.None
 })
-export class YieldComponent {
+export class TileYieldComponent {
 
   @Input() yield: Yield;
 
@@ -31,8 +31,8 @@ export class YieldComponent {
   ngOnChanges(e) {
     this.iconCssClasses = YIELD_IDS_IN_ORDER
       .map( yieldId => this.extractYieldOfType(yieldId) )
-      .filter( yieldOfType => YieldComponent.filterOutZeroYields(yieldOfType) )
-      .map( yieldOfType => YieldComponent.yieldToIconCssClasses(yieldOfType) )
+      .filter( yieldOfType => TileYieldComponent.filterOutZeroYields(yieldOfType) )
+      .map( yieldOfType => TileYieldComponent.yieldToIconCssClasses(yieldOfType) )
   }
 
 }
