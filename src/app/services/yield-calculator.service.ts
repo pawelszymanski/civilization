@@ -3,7 +3,12 @@ import {Injectable} from '@angular/core';
 import {GameMapTile} from '../models/game-map';
 import {Yield, YieldId} from '../models/yield';
 
-import {TERRAIN_BASE_YIELD, TERRAIN_FEATURE_YIELD, TERRAIN_RESOURCE_YIELD} from '../consts/terrain-yield.const';
+import {
+  TERRAIN_BASE_YIELD,
+  TERRAIN_FEATURE_YIELD,
+  TERRAIN_RESOURCE_YIELD,
+  TERRAIN_IMPROVEMENT_YIELD
+} from '../consts/terrain-yield.const';
 
 @Injectable({providedIn: 'root'})
 export class YieldCalculatorService {
@@ -34,7 +39,7 @@ export class YieldCalculatorService {
     }
 
     if (tile.terrain.improvement) {
-      const tileImprovementYield = TERRAIN_RESOURCE_YIELD[tile.terrain.resource];
+      const tileImprovementYield = TERRAIN_IMPROVEMENT_YIELD[tile.terrain.improvement];
       Object.keys(tileImprovementYield).forEach(yieldId => {result[yieldId] += tileImprovementYield[yieldId]});
     }
 

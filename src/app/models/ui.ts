@@ -1,4 +1,5 @@
 export interface Ui {
-  devTools: boolean;
-  yield: boolean;
+  showDevTools: boolean;
+  showTileYield: boolean;
+  showTileInfo: boolean;
 }

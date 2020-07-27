@@ -7,6 +7,7 @@ import {TERRAIN_BASE_ID_LENGTH, TERRAIN_FEATURE_ID_LENGTH, TERRAIN_RESOURCE_ID_L
 
 import {GameMapGeneratorService} from '../services/game-map-generator.service';
 import {YieldCalculatorService} from '../services/yield-calculator.service';
+import {UtilsService} from '../services/utils.service';
 
 @Injectable()
 export class GameMapStore {
@@ -17,11 +18,20 @@ export class GameMapStore {
 
   constructor(
     private gameMapGeneratorService: GameMapGeneratorService,
-    private yieldCalculatorService: YieldCalculatorService
+    private yieldCalculatorService: YieldCalculatorService,
+    private utilsService: UtilsService
   ) {}
 
   public next(gameMap: GameMap) {
     this._gameMap.next(gameMap);
+  }
+
+  public randomizeTileTerrain(tile: GameMapTile) {
+    tile.terrain.base = this.utilsService.randomPositiveInteger(TERRAIN_BASE_ID_LENGTH) - 1;
+    tile.terrain.feature = this.utilsService.randomPositiveInteger(TERRAIN_FEATURE_ID_LENGTH) - 1;
+    tile.terrain.resource = this.utilsService.randomPositiveInteger(TERRAIN_RESOURCE_ID_LENGTH) - 1;
+    tile.terrain.improvement = this.utilsService.randomPositiveInteger(TERRAIN_IMPROVEMENT_ID_LENGTH) - 1;
+    this.updateTile(tile);
   }
 
   public cycleTileTerrainBase(tile: GameMapTile, step: Step) {

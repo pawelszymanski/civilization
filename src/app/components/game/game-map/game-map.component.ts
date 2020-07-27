@@ -1,4 +1,4 @@
-import {Component, HostListener, ViewEncapsulation} from '@angular/core';
+import {Component, HostListener} from '@angular/core';
 
 import {GameMap, GameMapTile} from '../../../models/game-map';
 import {Camera} from '../../../models/camera';
@@ -12,9 +12,7 @@ import {UiStore} from '../../../stores/ui.store';
 
 @Component({
   selector: 'game-map',
-  templateUrl: './game-map.component.html',
-  styleUrls: ['./game-map.component.sass'],
-  encapsulation: ViewEncapsulation.None
+  templateUrl: './game-map.component.html'
 })
 export class GameMapComponent {
 
@@ -87,9 +85,14 @@ export class GameMapComponent {
 
   manipulateTile(event: WheelEvent, tile: GameMapTile) {
     const step = (Math.abs(event.deltaY) / event.deltaY) as Step;
-    if (event.shiftKey && !event.ctrlKey) { this.gameMapStoreService.cycleTileTerrainBase(tile, step); }
-    if (event.ctrlKey && !event.shiftKey) { this.gameMapStoreService.cycleTileTerrainFeature(tile, step); }
-    if (event.shiftKey && event.ctrlKey)  { this.gameMapStoreService.cycleTileTerrainImprovement(tile, step); }
+    const shift = event.shiftKey;
+    const ctrl = event.ctrlKey;
+    const alt = event.altKey;
+    if (shift && !ctrl && !alt) { this.gameMapStoreService.cycleTileTerrainBase(tile, step); }
+    if (shift && ctrl && !alt) { this.gameMapStoreService.cycleTileTerrainFeature(tile, step); }
+    if (shift && !ctrl && alt) { this.gameMapStoreService.cycleTileTerrainResource(tile, step); }
+    if (!shift && ctrl && alt) { this.gameMapStoreService.cycleTileTerrainImprovement(tile, step); }
+    if (shift && ctrl && alt) { this.gameMapStoreService.randomizeTileTerrain(tile); }
   }
 
   @HostListener('mousedown', ['$event'])
@@ -109,13 +112,13 @@ export class GameMapComponent {
 
   @HostListener('wheel', ['$event'])
   onWheel(event: WheelEvent) {
-    if (!this.ui.devTools) {
+    if (!this.ui.showDevTools) {
       this.changeZoomLevel(event)
     }
   }
 
   onTileWheel(event: WheelEvent, tile: GameMapTile) {
-    if (this.ui.devTools && (event.shiftKey || event.ctrlKey)) {
+    if (this.ui.showDevTools && (event.shiftKey || event.ctrlKey || event.altKey)) {
       this.manipulateTile(event, tile)
     } else {
       this.changeZoomLevel(event)

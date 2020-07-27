@@ -20,5 +20,5 @@
   <input type="range" name="temperature" min="0" max="2" step="1" [(ngModel)]="settings.temperature" disabled>
   <label>Rainfall: <span>{{ settings.rainfall }}</span></label>
   <input type="range" name="rainfall" min="0" max="2" step="1" [(ngModel)]="settings.rainfall" disabled>
-  <button type="button" (click)="onGenerateGameMapClick()">Generate map</button>
+  <button type="button" class="float-right" (click)="onGenerateGameMapClick()">Generate map</button>
 </form>

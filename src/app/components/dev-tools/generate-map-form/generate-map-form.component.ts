@@ -51,6 +51,10 @@ export class GenerateMapFormComponent {
     }
   }
 
+  onRandomizeTilesClick() {
+
+  }
+
   onGenerateGameMapClick() {
     const gameMap = this.gameMapGeneratorService.generateNewGameMap(this.settings);
     this.gameMapStore.next(gameMap);

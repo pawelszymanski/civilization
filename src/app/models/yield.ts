@@ -18,7 +18,6 @@ export const YIELD_IDS_IN_ORDER = [
   YieldId.FAITH,
   YieldId.POWER,
   YieldId.TOURISM
-
 ]
 
 export type Yield = {
@@ -27,5 +26,5 @@ export type Yield = {
 
 export interface YieldOfType {
   type: YieldId;
-  value: number;
+  count: number;
 }

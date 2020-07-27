@@ -17,4 +17,8 @@ export class UtilsService {
     return (new Date().toISOString()) as Timestamp;
   }
 
+  public randomPositiveInteger(range: number): number {
+    return Math.ceil(Math.random() * range);
+  }
+
 }

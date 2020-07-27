@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component} from '@angular/core';
 
 import {Ui} from '../../models/ui';
 
@@ -6,9 +6,7 @@ import {UiStore} from '../../stores/ui.store';
 
 @Component({
   selector: 'app',
-  templateUrl: 'app.component.html',
-  styleUrls: ['app.component.sass'],
-  encapsulation: ViewEncapsulation.None
+  templateUrl: 'app.component.html'
 })
 export class AppComponent {
 
@@ -41,19 +39,24 @@ export class AppComponent {
   }
 
   documentOnContextMenu(event: MouseEvent) {
-    if (!this.ui.devTools) {
+    if (!this.ui.showDevTools) {
       event.preventDefault();
     }
   }
 
   documentOnKeypress(event: KeyboardEvent) {
+    const isBody = (<Element>event.target).tagName === 'BODY';
 
-    if (event.key === '`' && !event.shiftKey) {
-      this.uiStore.setIsDevToolsShown(!this.ui.devTools);
+    if (isBody && event.key === '`' && !event.shiftKey) {
+      this.uiStore.setShowDevTools(!this.ui.showDevTools);
     }
 
-    if (event.key === 'y') {
-      this.uiStore.setYield(!this.ui.yield);
+    if (isBody && event.key === 'y') {
+      this.uiStore.setShowTileYield(!this.ui.showTileYield);
+    }
+
+    if (isBody && event.key === 'i') {
+      this.uiStore.setShowTileInfo(!this.ui.showTileInfo);
     }
 
   }
