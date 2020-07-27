@@ -47,17 +47,15 @@ export class GameMapComponent {
   }
 
   get gameMapElemStyle(): Record<string, string> {
-    return {
-      transition: this.isDragging ? 'none' : 'all .08s linear',
-      transform: `rotateX(${this.camera.rotateX}deg) scale(${this.camera.scale})`,
-      left: this.camera.offset.x + 'px',
-      top: this.camera.offset.y + 'px'
-    };
+    const translate = `translate3d(${this.camera.translate.x}px, ${this.camera.translate.y}px, ${this.camera.translate.z}px)`;
+    const perspective = `perspective(${this.camera.perspective}px)`;
+    const rotate = `rotateX(${this.camera.rotate.x}deg) rotateY(${this.camera.rotate.y}deg) rotateZ(${this.camera.rotate.z}deg)`;
+    return {transform: translate + ' ' + perspective + ' ' + rotate};
   }
 
   startDrag(event: MouseEvent) {
     this.dragStartCoords = {x: event.pageX, y: event.pageY};
-    this.dragStartOffset = {x: this.camera.offset.x, y: this.camera.offset.y};
+    this.dragStartOffset = {x: this.camera.translate.x, y: this.camera.translate.y};
 
     // Need to store drag handler since .bind(this) changes the reference
     this.isDragging = true;
@@ -66,9 +64,10 @@ export class GameMapComponent {
   }
 
   continueDrag(event: MouseEvent): any {
-    this.cameraStore.setOffset({
+    this.cameraStore.setTranslate({
       x: this.dragStartOffset.x + event.pageX - this.dragStartCoords.x,
-      y: this.dragStartOffset.y + event.pageY - this.dragStartCoords.y
+      y: this.dragStartOffset.y + event.pageY - this.dragStartCoords.y,
+      z: 0
     });
   }
 

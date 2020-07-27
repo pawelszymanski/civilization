@@ -21,14 +21,4 @@ export class LocalStorageService {
     this.localStorage.removeItem(key);
   }
 
-  list(): Record<string, string>[] {
-    const result = [];
-    for (let i = 0; i < this.localStorage.length; i++) {
-      const key = this.localStorage.key(i);
-      const value = this.localStorage.getItem(key);
-      result.push( {key: value} );
-    }
-    return result;
-  }
-
 }

@@ -1,20 +1,31 @@
 <form>
   <h3>Auto zoom (mouse wheel)</h3>
   <label>Zoom level: <span>{{ camera.zoomLevel }}</span></label>
-  <input type="range" name="tileSize" min="-10" max="10" step="1" disabled [ngModel]="camera.zoomLevel">
+  <input type="range" name="zoomLevel" [min]="CAMERA_MIN_ZOOM_LEVEL" [max]="CAMERA_MAX_ZOOM_LEVEL" step="1"
+         [ngModel]="camera.zoomLevel" (ngModelChange)="onZoomLevelChange($event)">
 
   <h3>Manual zoom (override)</h3>
   <label>Tile size (px): <span>{{ camera.tileSize }}</span></label>
-  <input type="range" name="tileSize" min="40" max="300" step="20"
+  <input type="range" name="tileSize" [min]="CAMERA_MIN_TILE_SIZE" [max]="CAMERA_MAX_TILE_SIZE" [step]="CAMERA_TILE_SIZE_STEP"
          [ngModel]="camera.tileSize" (ngModelChange)="onTileSizeChange($event)">
+
+  <label>Translate X (px): <span>{{ camera.translate.x }}</span></label>
+  <input type="number" name="translateX" [ngModel]="camera.translate.x" (ngModelChange)="onTranslateXChange($event)">
+  <label>Translate Y (px): <span>{{ camera.translate.y }}</span></label>
+  <input type="number" name="translateY" [ngModel]="camera.translate.y" (ngModelChange)="onTranslateYChange($event)">
+  <label>Translate Z (px): <span>{{ camera.translate.z }}</span></label>
+  <input type="number" name="translateZ" [ngModel]="camera.translate.z" (ngModelChange)="onTranslateZChange($event)">
+
   <label>Perspective (px): <span>{{ camera.perspective }}</span></label>
   <input type="range" name="perspective" min="100" max="10000" step="100"
          [ngModel]="camera.perspective" (ngModelChange)="onPerspectiveChange($event)">
-  <label>RotateX (deg): <span>{{ camera.rotateX }}</span></label>
-  <input type="range" name="rotateX" min="0" max="75" step="1"
-         [ngModel]="camera.rotateX" (ngModelChange)="onRotateXChange($event)">
-  <label>Scale: <span>{{ camera.scale }}</span></label>
-  <input type="range" name="scale" min="0.3" max="3" step=".01"
-         [ngModel]="camera.scale" (ngModelChange)="onScaleChange($event)">
+
+  <label>Rotate X (deg): <span>{{ camera.rotate.x }}</span></label>
+  <input type="range" name="rotateX" min="0" max="75" step="1" [ngModel]="camera.rotate.x" (ngModelChange)="onRotateXChange($event)">
+  <label>Rotate Y (deg): <span>{{ camera.rotate.y }}</span></label>
+  <input type="range" name="rotateY" min="-45" max="45" step="1" [ngModel]="camera.rotate.y" (ngModelChange)="onRotateYChange($event)">
+  <label>Rotate Z (deg): <span>{{ camera.rotate.z }}</span></label>
+  <input type="range" name="rotateZ" min="-90" max="90" step="1" [ngModel]="camera.rotate.z" (ngModelChange)="onRotateZChange($event)">
+
   <button type="button" class="float-right" (click)="onResetCameraClick()">Reset camera</button>
 </form>
