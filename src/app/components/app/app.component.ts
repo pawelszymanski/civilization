@@ -59,6 +59,10 @@ export class AppComponent {
       this.uiStore.setShowTileInfo(!this.ui.showTileInfo);
     }
 
+    if (isBody && event.key === 't') {
+      this.uiStore.setShowTechTree(!this.ui.showTechTree);
+    }
+
   }
 
 }

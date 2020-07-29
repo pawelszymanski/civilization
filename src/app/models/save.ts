@@ -1,6 +1,6 @@
-import {GameMap} from './game-map';
-import {Timestamp} from './timestamp';
-import {Uuid} from './uuid';
+import {GameMap} from './game-map/game-map';
+import {Timestamp} from './utils/timestamp';
+import {Uuid} from './utils/uuid';
 
 export interface Save {
   uuid: Uuid;

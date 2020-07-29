@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 
-import {GameMap, GameMapRow, GameMapTile} from '../models/game-map';
-import {TerrainBaseId, TerrainFeatureId, TerrainImprovementId, TerrainResourceId} from '../models/terrain';
-import {GameMapGeneratorSettings} from '../models/game-map-generator-settings';
+import {GameMap, GameMapRow, GameMapTile} from '../models/game-map/game-map';
+import {TerrainBaseId, TerrainFeatureId, TerrainImprovementId, TerrainResourceId} from '../models/game-map/terrain';
+import {MapGeneratorSettings} from '../models/map-generator/map-generator-settings';
 
 import {YieldCalculatorService} from './yield-calculator.service';
 
@@ -41,11 +41,11 @@ export class GameMapGeneratorService {
     return {tiles: [...Array(width).keys()].map(x => this.createGameMapTile(x, rowId))}
   }
 
-  private createGameMap(params: GameMapGeneratorSettings): GameMap {
+  private createGameMap(params: MapGeneratorSettings): GameMap {
     return {rows: [...Array(params.height).keys()].map(y => this.createGameMapRow(y, params.width))}
   }
 
-  public generateNewGameMap(params: GameMapGeneratorSettings): GameMap {
+  public generateNewGameMap(params: MapGeneratorSettings): GameMap {
     const gameMap = this.createGameMap(params);
     return gameMap;
   }

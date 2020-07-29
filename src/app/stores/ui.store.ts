@@ -7,25 +7,30 @@ import {Ui} from '../models/ui';
 export class UiStore {
 
   readonly DEFAULT_UI: Ui = {
-    showDevTools: true,
+    showDevTools: false,
     showTileYield: false,
-    showTileInfo: false
+    showTileInfo: false,
+    showTechTree: true
   }
 
   private _ui: BehaviorSubject<Ui> = new BehaviorSubject(this.DEFAULT_UI);
 
   public readonly ui: Observable<Ui> = this._ui.asObservable();
 
-  public setShowTileYield(_yield: boolean) {
-    this._ui.next({...this._ui.value, showTileYield: _yield});
+  public setShowTileYield(showTileYield: boolean) {
+    this._ui.next({...this._ui.value, showTileYield});
   }
 
-  public setShowTileInfo(_yield: boolean) {
-    this._ui.next({...this._ui.value, showTileInfo: _yield});
+  public setShowTileInfo(showTileInfo: boolean) {
+    this._ui.next({...this._ui.value, showTileInfo});
+  }
+
+  public setShowTechTree(showTechTree: boolean) {
+    this._ui.next({...this._ui.value, showTechTree});
   }
 
   public setShowDevTools(showDevTools: boolean) {
-    this._ui.next({...this._ui.value, showDevTools: showDevTools});
+    this._ui.next({...this._ui.value, showDevTools});
   }
 
 }
