@@ -41,7 +41,7 @@ export class TechTreeComponent {
   }
 
   onCloseButtonClick() {
-    this.uiStore.setShowTechTree(false);
+    this.uiStore.hideTechTree();
   }
 
 }

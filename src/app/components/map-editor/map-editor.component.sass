@@ -1,0 +1,15 @@
+@import './../../../styles/mixins'
+@import './../../../styles/variables'
+
+.map-editor
+  width: 300px
+  position: absolute
+  top: 0
+  right: -300px
+  bottom: 0
+  z-index: 10
+  background: rgba(84, 106, 48, 0.9)
+  overflow-y: auto
+  transition: all 0.15s ease-in-out
+  &.active
+    right: 0

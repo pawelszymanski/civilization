@@ -1,6 +1,11 @@
 export interface Ui {
-  showDevTools: boolean;
+  showMainMenu: boolean;
+  // GAME MAP
   showTileYield: boolean;
   showTileInfo: boolean;
+  // DETAIL SCREENS
   showTechTree: boolean;
+  // DEV TOOLS
+  showMapEditor: boolean;
+  showDevTools: boolean;
 }

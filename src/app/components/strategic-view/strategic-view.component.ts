@@ -11,12 +11,12 @@ import {CameraStore} from '../../stores/camera.store';
 import {UiStore} from '../../stores/ui.store';
 
 @Component({
-  selector: 'game-map',
-  templateUrl: './game-map.component.html',
-  styleUrls: ['./game-map.component.sass'],
+  selector: 'strategic-view',
+  templateUrl: './strategic-view.component.html',
+  styleUrls: ['./strategic-view.component.sass'],
   encapsulation: ViewEncapsulation.None
 })
-export class GameMapComponent {
+export class StrategicViewComponent {
 
   gameMap: GameMap = null;
   camera: Camera = null;

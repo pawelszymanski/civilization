@@ -4,10 +4,12 @@ import {FormsModule} from '@angular/forms';
 
 import {AppComponent} from './components/app/app.component';
 
+import {MainMenuComponent} from './components/main-menu/main-menu.component';
+
 import {
-  GameMapComponent,
+  StrategicViewComponent,
   TileYieldComponent
-} from './components/game-map';
+} from './components/strategic-view';
 
 import {
   DevToolsComponent,
@@ -16,6 +18,10 @@ import {
   GenerateMapFormComponent,
   CameraFormComponent
 } from './components/dev-tools';
+
+import {
+  MapEditorComponent
+} from './components/map-editor';
 
 import {
   TechTreeComponent
@@ -41,11 +47,15 @@ import {TechnologyNamePipe} from './pipes/technology-name.pipe';
 const COMPONENTS = [
   // APP
   AppComponent,
-  // GAME MAP
-  GameMapComponent,
+  // MAIN MENU
+  MainMenuComponent,
+  // STRATEGIC VIEW
+  StrategicViewComponent,
   TileYieldComponent,
-  // GAME MAP
+  // TECH TREE
   TechTreeComponent,
+  // MAP EDITOR
+  MapEditorComponent,
   // DEV TOOLS
   DevToolsComponent,
   CameraFormComponent,

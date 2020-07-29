@@ -47,20 +47,26 @@ export class AppComponent {
   documentOnKeypress(event: KeyboardEvent) {
     const isBody = (<Element>event.target).tagName === 'BODY';
 
-    if (isBody && event.key === '`' && !event.shiftKey) {
-      this.uiStore.setShowDevTools(!this.ui.showDevTools);
-    }
-
     if (isBody && event.key === 'y') {
-      this.uiStore.setShowTileYield(!this.ui.showTileYield);
+      this.uiStore.toggleShowTileYield();
     }
 
     if (isBody && event.key === 'i') {
-      this.uiStore.setShowTileInfo(!this.ui.showTileInfo);
+      this.uiStore.toggleShowTileInfo();
     }
 
     if (isBody && event.key === 't') {
-      this.uiStore.setShowTechTree(!this.ui.showTechTree);
+      this.uiStore.toggleShowTechTree();
+    }
+
+    if (isBody && event.key === 'm') {
+      this.uiStore.hideDevTools();
+      this.uiStore.toggleShowMapEditor();
+    }
+
+    if (isBody && event.key === '`') {
+      this.uiStore.hideMapEditor();
+      this.uiStore.toggleShowDevTools();
     }
 
   }
