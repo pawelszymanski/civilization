@@ -4,24 +4,23 @@ import {FormsModule} from '@angular/forms';
 
 // COMPONENTS
 import {AppComponent} from './components/app/app.component';
-import {MainMenuComponent} from './components/main-menu/main-menu.component';
-import {MapEditorComponent} from './components/game/sidebars/map-editor/map-editor.component';
-import {DevToolsComponent} from './components/game/sidebars/dev-tools/dev-tools.component';
-import {CameraFormComponent} from './components/game/sidebars/dev-tools/components/camera-form/camera-form.component';
-import {GenerateMapFormComponent} from './components/game/sidebars/dev-tools/components/generate-map-form/generate-map-form.component';
-import {LoadGameFormComponent} from './components/game/sidebars/dev-tools/components/load-game-form/load-game-form.component';
-import {SaveGameFormComponent} from './components/game/sidebars/dev-tools/components/save-game-form/save-game-form.component';
-import {GameComponent} from './components/game/game.component';
-import {StrategicViewComponent} from './components/game/maps/strategic-view/strategic-view.component';
-import {TileYieldComponent} from './components/game/maps/tile-yield/tile-yield.component';
-import {TileTextComponent} from './components/game/maps/tile-text/tile-text.component';
-import {IsometricViewComponent} from './components/game/maps/isometric-view/isometric-view.component';
-import {StatusBarComponent} from './components/game/hud/status-bar/status-bar.component';
-import {MiniMapComponent} from './components/game/hud/mini-map/mini-map.component';
-import {QuickLinksComponent} from './components/game/hud/quick-links/quick-links.component';
-import {CivicsTreeComponent} from './components/game/modals/civics-tree/civics-tree.component';
-import {TechTreeComponent} from './components/game/modals/tech-tree/tech-tree.component';
-import {GameMenuComponent} from './components/game/modals/game-menu/game-menu.component';
+import {MainMenuComponent} from './components/app/components/main-menu/main-menu.component';
+import {MapEditorComponent} from './components/app/components/sidebars/map-editor/map-editor.component';
+import {DevToolsComponent} from './components/app/components/sidebars/dev-tools/dev-tools.component';
+import {CameraFormComponent} from './components/app/components/sidebars/dev-tools/components/camera-form/camera-form.component';
+import {GenerateMapFormComponent} from './components/app/components/sidebars/dev-tools/components/generate-map-form/generate-map-form.component';
+import {LoadGameFormComponent} from './components/app/components/sidebars/dev-tools/components/load-game-form/load-game-form.component';
+import {SaveGameFormComponent} from './components/app/components/sidebars/dev-tools/components/save-game-form/save-game-form.component';
+import {StrategicViewComponent} from './components/app/components/maps/strategic-view/strategic-view.component';
+import {TileYieldComponent} from './components/app/components/maps/tile-yield/tile-yield.component';
+import {TileTextComponent} from './components/app/components/maps/tile-text/tile-text.component';
+import {IsometricViewComponent} from './components/app/components/maps/isometric-view/isometric-view.component';
+import {StatusBarComponent} from './components/app/components/hud/status-bar/status-bar.component';
+import {MiniMapComponent} from './components/app/components/hud/mini-map/mini-map.component';
+import {QuickLinksComponent} from './components/app/components/hud/quick-links/quick-links.component';
+import {CivicsTreeComponent} from './components/app/components/modals/civics-tree/civics-tree.component';
+import {TechTreeComponent} from './components/app/components/modals/tech-tree/tech-tree.component';
+import {InGameMenuComponent} from './components/app/components/modals/in-game-menu/in-game-menu.component';
 
 // SERVICES
 import {GameMapGeneratorService} from './services/game-map-generator.service';
@@ -54,7 +53,6 @@ const COMPONENTS = [
   GenerateMapFormComponent,
   LoadGameFormComponent,
   SaveGameFormComponent,
-  GameComponent,
   StrategicViewComponent,
   TileYieldComponent,
   TileTextComponent,
@@ -64,7 +62,7 @@ const COMPONENTS = [
   QuickLinksComponent,
   CivicsTreeComponent,
   TechTreeComponent,
-  GameMenuComponent,
+  InGameMenuComponent,
 ]
 
 const SERVICES = [

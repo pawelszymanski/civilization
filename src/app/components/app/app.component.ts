@@ -1,16 +1,22 @@
-import {Component} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 
+import {ModalId, ScreenId, SidebarId, TileOverlayId, Ui} from '../../models/ui/ui';
 import {KeyBindings} from '../../models/ui/key-bindings';
-import {ModalId, SidebarId, TileOverlayId, Ui} from '../../models/ui/ui';
 
 import {KeyBindingsStore} from '../../stores/key-bindings.store';
 import {UiStore} from '../../stores/ui.store';
 
 @Component({
-  selector: 'app',
-  templateUrl: 'app.component.html'
+  selector: '[app]',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.sass'],
+  encapsulation: ViewEncapsulation.None
 })
 export class AppComponent {
+
+  ModalId = ModalId;
+  ScreenId = ScreenId;
+  SidebarId = SidebarId;
 
   keyBindings: KeyBindings;
   ui: Ui;
@@ -61,13 +67,13 @@ export class AppComponent {
       case this.keyBindings.toggleTileText:
         this.uiStore.toggleTileOverlay(TileOverlayId.TEXT); break;
       case this.keyBindings.toggleTechTree:
-        this.uiStore.toggleTileOverlay(ModalId.TECH_TREE); break;
+        this.uiStore.toggleModal(ModalId.TECH_TREE); break;
       case this.keyBindings.toggleCivicsTree:
-        this.uiStore.toggleTileOverlay(ModalId.CIVICS_TREE); break;
+        this.uiStore.toggleModal(ModalId.CIVICS_TREE); break;
       case this.keyBindings.toggleMapEditor:
-        this.uiStore.toggleTileOverlay(SidebarId.MAP_EDITOR); break;
+        this.uiStore.toggleSidebar(SidebarId.MAP_EDITOR); break;
       case this.keyBindings.toggleDevTools:
-        this.uiStore.toggleTileOverlay(SidebarId.DEV_TOOLS); break;
+        this.uiStore.toggleSidebar(SidebarId.DEV_TOOLS); break;
     }
   }
 

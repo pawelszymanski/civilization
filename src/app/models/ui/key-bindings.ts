@@ -1,10 +1,10 @@
-import {KeyCodeId} from './key-code';
+import {KeyboardEventCodeId} from './keyboard-event-code';
 
 export interface KeyBindings {
-  toggleTileYield: KeyCodeId;
-  toggleTileText: KeyCodeId;
-  toggleTechTree: KeyCodeId,
-  toggleCivicsTree: KeyCodeId,
-  toggleMapEditor: KeyCodeId;
-  toggleDevTools: KeyCodeId;
+  toggleTileYield: KeyboardEventCodeId;
+  toggleTileText: KeyboardEventCodeId;
+  toggleTechTree: KeyboardEventCodeId,
+  toggleCivicsTree: KeyboardEventCodeId,
+  toggleMapEditor: KeyboardEventCodeId;
+  toggleDevTools: KeyboardEventCodeId;
 }

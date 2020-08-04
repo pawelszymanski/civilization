@@ -1,3 +1,20 @@
-<main-menu></main-menu>
+<!-- // MAIN_MENU -->
+<div main-menu id="main-menu" *ngIf="ui.screen === ScreenId.MAIN_MENU"></div>
 
-<game></game>
+<!-- // MAPS -->
+<div isometric-view id="isometric-view" [class.active]="ui.screen === ScreenId.ISOMETRIC_VIEW"></div>
+<div strategic-view id="strategic-view" [class.active]="ui.screen === ScreenId.STRATEGIC_VIEW"></div>
+
+<!-- // HUD -->
+<div status-bar id="status-bar"></div>
+<div quick-links id="quick-links"></div>
+<div mini-map id="mini-map"></div>
+
+<!-- // MODALS -->
+<div in-game-menu id="in-game-menu" [class.active]="ui.modal === ModalId.IN_GAME_MENU"></div>
+<div civics-tree id="civics-tree" [class.active]="ui.modal === ModalId.CIVICS_TREE"></div>
+<div tech-tree id="tech-tree" [class.active]="ui.modal === ModalId.TECH_TREE"></div>
+
+<!-- // SIDEBARS -->
+<div dev-tools id="dev-tools" class="sidebar" [class.active]="ui.sidebar === SidebarId.DEV_TOOLS"></div>
+<div map-editor id="map-editor" class="sidebar" [class.active]="ui.sidebar === SidebarId.MAP_EDITOR"></div>

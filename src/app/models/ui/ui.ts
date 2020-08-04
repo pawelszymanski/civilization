@@ -1,4 +1,5 @@
 export enum ScreenId {
+  NONE,
   MAIN_MENU,
   STRATEGIC_VIEW,
   ISOMETRIC_VIEW
@@ -8,7 +9,7 @@ export enum ModalId {
   NONE,
   TECH_TREE,
   CIVICS_TREE,
-  GAME_OPTIONS
+  IN_GAME_MENU
 }
 
 export enum SidebarId {
