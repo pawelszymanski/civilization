@@ -69,3 +69,9 @@ export enum TechnologyId {
   NUCLEAR_FUSION,
   NANOTECHNOLOGY
 }
+
+export interface Technology {
+  id: TechnologyId;
+  prerequisites: TechnologyId[];
+  cost: number;
+}

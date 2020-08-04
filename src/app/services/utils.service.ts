@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 
-import {Uuid} from '../models/utils/uuid';
 import {Timestamp} from '../models/utils/timestamp';
+import {Uuid} from '../models/utils/uuid';
 
 @Injectable({providedIn: 'root'})
 export class UtilsService {

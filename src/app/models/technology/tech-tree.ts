@@ -1,6 +1,6 @@
-import {TechnologyId} from './technology';
 import {Coords} from '../utils/coords';
 import {EraId} from '../era';
+import {TechnologyId} from './technology';
 
 export interface TechIdWithEraCoords {
   id: TechnologyId;

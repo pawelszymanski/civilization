@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 
-import {Step} from '../models/utils/step';
 import {GameMap, GameMapTile} from '../models/game-map/game-map';
+import {Step} from '../models/utils/step';
+
 import {TERRAIN_BASE_ID_LENGTH, TERRAIN_FEATURE_ID_LENGTH, TERRAIN_RESOURCE_ID_LENGTH, TERRAIN_IMPROVEMENT_ID_LENGTH} from '../models/game-map/terrain';
 
 import {GameMapGeneratorService} from '../services/game-map-generator.service';

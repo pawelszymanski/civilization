@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 
-import {Ui} from '../models/ui';
+import {ModalId, ScreenId, SidebarId, TileOverlayId, Ui} from '../models/ui/ui';
 
-import {DEFAULT_UI} from '../consts/ui.const';
+import {DEFAULT_UI} from '../consts/ui/ui.const';
 
 @Injectable()
 export class UiStore {
@@ -12,68 +12,33 @@ export class UiStore {
 
   public readonly ui: Observable<Ui> = this._ui.asObservable();
 
-  // SHOW
-  public showTileYield() {
-    this._ui.next({...this._ui.value, showTileYield: true});
-  }
-
-  public showTileInfo() {
-    this._ui.next({...this._ui.value, showTileInfo: true});
-  }
-
-  public showTechTree() {
-    this._ui.next({...this._ui.value, showTechTree: true});
-  }
-
-  public showMapEditor() {
-    this._ui.next({...this._ui.value, showMapEditor: true});
-  }
-
-  public showDevTools() {
-    this._ui.next({...this._ui.value, showDevTools: true});
-  }
-
-  // HIDE
-  public hideTileYield() {
-    this._ui.next({...this._ui.value, showTileYield: false});
-  }
-
-  public hideTileInfo() {
-    this._ui.next({...this._ui.value, showTileInfo: false});
-  }
-
-  public hideTechTree() {
-    this._ui.next({...this._ui.value, showTechTree: false});
-  }
-
-  public hideMapEditor() {
-    this._ui.next({...this._ui.value, showMapEditor: false});
-  }
-
-  public hideDevTools() {
-    this._ui.next({...this._ui.value, showDevTools: false});
-  }
-
   // TOGGLE
-  public toggleShowTileYield() {
-    this._ui.next({...this._ui.value, showTileYield: !this._ui.value.showTileYield});
+
+  public setScreen(screenId: ScreenId) {
+    this._ui.next({...this._ui.value, screen: screenId});
   }
 
-  public toggleShowTileInfo() {
-    this._ui.next({...this._ui.value, showTileInfo: !this._ui.value.showTileInfo});
+  public toggleModal(modalId: ModalId) {
+    const newModalId = this._ui.value.modal === modalId ? ModalId.NONE : modalId;
+    this._ui.next({...this._ui.value, modal: newModalId});
   }
 
-  public toggleShowTechTree() {
-    this._ui.next({...this._ui.value, showTechTree: !this._ui.value.showTechTree});
+  public closeModal() {
+    this._ui.next({...this._ui.value, modal: ModalId.NONE});
   }
 
-  public toggleShowMapEditor() {
-    this._ui.next({...this._ui.value, showMapEditor: !this._ui.value.showMapEditor});
+  public toggleSidebar(sidebarId: SidebarId) {
+    const newSidebarId = this._ui.value.sidebar === sidebarId ? SidebarId.NONE : sidebarId;
+    this._ui.next({...this._ui.value, sidebar: newSidebarId});
   }
 
-  public toggleShowDevTools() {
-    this._ui.next({...this._ui.value, showDevTools: !this._ui.value.showDevTools});
+  public closeSidebar() {
+    this._ui.next({...this._ui.value, sidebar: SidebarId.NONE});
   }
 
+  public toggleTileOverlay(tileOverlayId) {
+    const newTileOverlayId = this._ui.value.tileOverlay === tileOverlayId ? TileOverlayId.NONE : tileOverlayId;
+    this._ui.next({...this._ui.value, tileOverlay: newTileOverlayId});
+  }
 
 }

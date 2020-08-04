@@ -1,22 +1,33 @@
-<div class="main-menu" [class.active]="ui.showMainMenu">
-  SINGLE PLAYER
-  - Resume Game
-  - Load Game
-  - Play Now
-  - Create Game
+<div class="main-menu-wrapper" [class.visible]="ui.screen === SCREEN_ID.MAIN_MENU">
 
-  OPTIONS:
-  - GAME:
-  -- Auto end turn
-  -- Turns between autosaves
-  -- Number of autosaves to keep
-  - INTERFACE:
-  -- Clock format
-  -- Scroll when mouse at edge
-  -- Plot tooltip delay
-  - KEY BINDINGS
+  <h1 class="game-title">CIVILIZATION</h1>
 
-  EXIT TO GOOGLE
+  <ul class="primary-menu" [class.active]="showSinglePlayerMenu">
+    <li class="primary-menu-item" [class.active]="showSinglePlayerMenu" (click)="onSinglePlayerClick()">Single player</li>
+    <li class="primary-menu-item disabled" (click)="onOptionsClick()">Options</li>
+    <li class="primary-menu-item disabled" (click)="onExitToGoogleClick()">Exit to Google</li>
+  </ul>
+
+  <ul class="secondary-menu" [class.active]="showSinglePlayerMenu">
+    <li class="secondary-menu-item" [class.disabled]="saves.length === 0" (click)="onResumeGameClick()">Resume Game</li>
+    <li class="secondary-menu-item disabled" (click)="onLoadGameClick()">Load Game</li>
+    <li class="secondary-menu-item disabled" (click)="onPlayNowClick()">Play Now</li>
+    <li class="secondary-menu-item disabled" (click)="onCreateGameClick()">Create Game</li>
+  </ul>
 
 </div>
 
+<!--  // OPTIONS-->
+<!--  <div>-->
+<!--    - GAME:<br/>-->
+<!--    &#45;&#45; Auto end turn<br/>-->
+<!--    &#45;&#45; Turns between autosaves<br/>-->
+<!--    &#45;&#45; Number of autosaves to keep<br/>-->
+<!--    <br/>-->
+<!--    - INTERFACE:<br/>-->
+<!--    &#45;&#45; Clock format<br/>-->
+<!--    &#45;&#45; Scroll when mouse at edge<br/>-->
+<!--    &#45;&#45; Plot tooltip delay<br/>-->
+<!--    <br/>-->
+<!--    - KEY BINDINGS-->
+<!--  </div>-->

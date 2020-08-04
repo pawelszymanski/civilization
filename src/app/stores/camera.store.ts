@@ -4,12 +4,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {Camera} from '../models/camera/camera';
 import {Coords3d} from '../models/utils/coords';
 
-import {
-  CAMERA_MAX_ZOOM_LEVEL,
-  CAMERA_MIN_ZOOM_LEVEL,
-  CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP,
-  DEFAULT_CAMERA
-} from '../consts/camera/camera.const';
+import {CAMERA_MAX_ZOOM_LEVEL, CAMERA_MIN_ZOOM_LEVEL, CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP, DEFAULT_CAMERA} from '../consts/camera/camera.const';
 
 @Injectable()
 export class CameraStore {

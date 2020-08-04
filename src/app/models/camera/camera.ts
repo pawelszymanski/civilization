@@ -1,4 +1,4 @@
-import {Coords3d} from '../utils/coords';
+import {Coords3d} from '../../models/utils/coords';
 
 export interface Camera {
   // Primary variable, affected by mouse wheel

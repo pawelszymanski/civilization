@@ -1,10 +1,4 @@
-import {TechnologyId} from '../../models/technology/technology';
-
-export interface Technology {
-  id: TechnologyId;
-  prerequisites: TechnologyId[];
-  cost: number;
-}
+import {Technology, TechnologyId} from '../../models/technology/technology';
 
 export const TECHNOLOGIES: Technology[] = [
   // ANCIENT ERA

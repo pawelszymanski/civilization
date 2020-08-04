@@ -1,7 +1,9 @@
 import {Component} from '@angular/core';
 
-import {Ui} from '../../models/ui';
+import {KeyBindings} from '../../models/ui/key-bindings';
+import {ModalId, SidebarId, TileOverlayId, Ui} from '../../models/ui/ui';
 
+import {KeyBindingsStore} from '../../stores/key-bindings.store';
 import {UiStore} from '../../stores/ui.store';
 
 @Component({
@@ -10,9 +12,11 @@ import {UiStore} from '../../stores/ui.store';
 })
 export class AppComponent {
 
+  keyBindings: KeyBindings;
   ui: Ui;
 
   constructor(
+    private keyBindingsStore: KeyBindingsStore,
     private uiStore: UiStore
   ) {}
 
@@ -22,6 +26,7 @@ export class AppComponent {
   }
 
   subscribeToData() {
+    this.keyBindingsStore.keyBindings.subscribe(keyBindings => this.keyBindings = keyBindings);
     this.uiStore.ui.subscribe(ui => this.ui = ui);
   }
 
@@ -29,7 +34,7 @@ export class AppComponent {
     // Using listeners rather than @HostListener since they could be called with .stopPropagation()
     document.addEventListener('wheel', this.documentOnWheel.bind(this), {passive: false});
     document.addEventListener('contextmenu', this.documentOnContextMenu.bind(this));
-    document.addEventListener('keypress', this.documentOnKeypress.bind(this));
+    document.addEventListener('keydown', this.documentOnKeydown.bind(this));
   }
 
   documentOnWheel(event) {
@@ -39,36 +44,31 @@ export class AppComponent {
   }
 
   documentOnContextMenu(event: MouseEvent) {
-    if (!this.ui.showDevTools) {
+    if (this.ui.sidebar !== SidebarId.DEV_TOOLS) {
       event.preventDefault();
     }
   }
 
-  documentOnKeypress(event: KeyboardEvent) {
-    const isBody = (<Element>event.target).tagName === 'BODY';
+  documentOnKeydown(event: KeyboardEvent) {
+    event.preventDefault();
 
-    if (isBody && event.key === 'y') {
-      this.uiStore.toggleShowTileYield();
+    // const isBody = (<Element>event.target).tagName === 'BODY';
+    // if (!isBody) { return; }
+
+    switch (event.code) {
+      case this.keyBindings.toggleTileYield:
+        this.uiStore.toggleTileOverlay(TileOverlayId.YIELD); break;
+      case this.keyBindings.toggleTileText:
+        this.uiStore.toggleTileOverlay(TileOverlayId.TEXT); break;
+      case this.keyBindings.toggleTechTree:
+        this.uiStore.toggleTileOverlay(ModalId.TECH_TREE); break;
+      case this.keyBindings.toggleCivicsTree:
+        this.uiStore.toggleTileOverlay(ModalId.CIVICS_TREE); break;
+      case this.keyBindings.toggleMapEditor:
+        this.uiStore.toggleTileOverlay(SidebarId.MAP_EDITOR); break;
+      case this.keyBindings.toggleDevTools:
+        this.uiStore.toggleTileOverlay(SidebarId.DEV_TOOLS); break;
     }
-
-    if (isBody && event.key === 'i') {
-      this.uiStore.toggleShowTileInfo();
-    }
-
-    if (isBody && event.key === 't') {
-      this.uiStore.toggleShowTechTree();
-    }
-
-    if (isBody && event.key === 'm') {
-      this.uiStore.hideDevTools();
-      this.uiStore.toggleShowMapEditor();
-    }
-
-    if (isBody && event.key === '`') {
-      this.uiStore.hideMapEditor();
-      this.uiStore.toggleShowDevTools();
-    }
-
   }
 
 }
