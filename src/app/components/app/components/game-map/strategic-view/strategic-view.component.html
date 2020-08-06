@@ -1,0 +1,10 @@
+<!-- Tried making it only UL + LIs, yet for some reason it renders much slower when scrolling -->
+
+<div class="game-map" *ngIf="gameMap" [ngStyle]="gameMapElemStyle">
+  <div class="game-map-row" [style.z-index]="gameMap.rows.length - i -1" *ngFor="let row of gameMap.rows; index as i">
+    <div class="game-map-tile" [ngClass]="tile.cssClass" *ngFor="let tile of row.tiles" (wheel)="onTileWheel($event, tile)">
+      <div class="tile-yield-component" *ngIf="ui.tileOverlay === TileOverlayId.YIELD" [yield]="tile.yield"></div>
+      <div class="tile-text-component" *ngIf="ui.tileOverlay === TileOverlayId.TEXT" [tile]="tile"></div>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 
 import {ModalId, Ui} from '../../../../../models/ui/ui';
 import {YieldId} from '../../../../../models/game-map/yield';
@@ -8,8 +8,10 @@ import {YIELD_ICONS} from '../../../../../consts/game-map/yield-icons.const';
 import {UiStore} from '../../../../../stores/ui.store';
 
 @Component({
-  selector: '[quick-links]',
-  templateUrl: './quick-links.component.html'
+  selector: '.quick-links-component',
+  templateUrl: './quick-links.component.html',
+  styleUrls: ['./quick-links.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class QuickLinksComponent {
 
@@ -33,11 +35,11 @@ export class QuickLinksComponent {
   }
 
   onScienceIconClick() {
-    this.uiStore.toggleModal(ModalId.TECH_TREE);
+    this.uiStore.toggleModal(ModalId.TECHNOLOGY_TREE);
   }
 
   onCultureIconClick() {
-    this.uiStore.toggleModal(ModalId.CIVICS_TREE);
+    this.uiStore.toggleModal(ModalId.CIVIC_TREE);
   }
 
 

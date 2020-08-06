@@ -1,0 +1,12 @@
+<h2 class="title">Civic tree</h2>
+<i class="close-button fa fa-close" (click)="onCloseButtonClick()"></i>
+<div class="tree-viewport">
+  <ul class="eras">
+    <li class="era" *ngFor="let era of CIVIC_TREE" [ngClass]="getEraElemClass(era)">
+      <div class="item" *ngFor="let civic of era.civics" [ngClass]="getTechnologyElemClass(civic)">
+        <div class="item-icon"></div>
+        <p class="item-name">{{ civic.id | civicName }}</p>
+      </div>
+    </li>
+  </ul>
+</div>

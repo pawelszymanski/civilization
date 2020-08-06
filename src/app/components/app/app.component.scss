@@ -1,0 +1,7 @@
+@import './../../../styles/mixins';
+@import './../../../styles/variables';
+
+.app-component {
+  @include size(100%);
+  position: relative;
+}

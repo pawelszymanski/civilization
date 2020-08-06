@@ -1,8 +1,6 @@
-<div class="status-bar">
-  <ul class="income-list">
-    <li class="income-item" *ngFor="let yieldId of YIELD_IDS_IN_ORDER">
-      <i class="fa" [ngClass]="YIELD_ICONS[yieldId]"></i>
-      <span>12.3</span>
-    </li>
-  </ul>
-</div>
+<ul>
+  <li *ngFor="let yieldId of YIELD_IDS_IN_ORDER">
+    <i class="fa" [ngClass]="YIELD_ICONS[yieldId]"></i>
+    <span>12.3</span>
+  </li>
+</ul>

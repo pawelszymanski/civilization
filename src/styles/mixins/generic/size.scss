@@ -1,0 +1,11 @@
+@mixin size($width, $arg-2: '') {
+
+  width: $width;
+
+  @if $arg-2 == '' {
+    height: $width;
+  } @else {
+    height: $arg-2;
+  }
+
+}

@@ -1,20 +1,15 @@
-<!-- // MAIN_MENU -->
-<div main-menu id="main-menu" *ngIf="ui.screen === ScreenId.MAIN_MENU"></div>
+<div class="main-menu-component" [class.active]="ui.mainMenu"></div>
 
-<!-- // MAPS -->
-<div isometric-view id="isometric-view" [class.active]="ui.screen === ScreenId.ISOMETRIC_VIEW"></div>
-<div strategic-view id="strategic-view" [class.active]="ui.screen === ScreenId.STRATEGIC_VIEW"></div>
+<div class="isometric-view-component" [class.active]="ui.mapType === MapTypeId.ISOMETRIC"></div>
+<div class="strategic-view-component" [class.active]="ui.mapType === MapTypeId.STRATEGIC"></div>
 
-<!-- // HUD -->
-<div status-bar id="status-bar"></div>
-<div quick-links id="quick-links"></div>
-<div mini-map id="mini-map"></div>
+<div class="status-bar-component"></div>
+<div class="quick-links-component"></div>
+<div class="mini-map-component"></div>
 
-<!-- // MODALS -->
-<div in-game-menu id="in-game-menu" [class.active]="ui.modal === ModalId.IN_GAME_MENU"></div>
-<div civics-tree id="civics-tree" [class.active]="ui.modal === ModalId.CIVICS_TREE"></div>
-<div tech-tree id="tech-tree" [class.active]="ui.modal === ModalId.TECH_TREE"></div>
+<div class="in-game-menu-component" [class.active]="ui.modal === ModalId.IN_GAME_MENU"></div>
+<div class="civic-tree-component research-tree-modal" [class.active]="ui.modal === ModalId.CIVIC_TREE"></div>
+<div class="technology-tree-component research-tree-modal" [class.active]="ui.modal === ModalId.TECHNOLOGY_TREE"></div>
 
-<!-- // SIDEBARS -->
-<div dev-tools id="dev-tools" class="sidebar" [class.active]="ui.sidebar === SidebarId.DEV_TOOLS"></div>
-<div map-editor id="map-editor" class="sidebar" [class.active]="ui.sidebar === SidebarId.MAP_EDITOR"></div>
+<div class="dev-tools-component sidebar" [class.active]="ui.sidebar === SidebarId.DEV_TOOLS"></div>
+<div class="map-editor-component sidebar" [class.active]="ui.sidebar === SidebarId.MAP_EDITOR"></div>

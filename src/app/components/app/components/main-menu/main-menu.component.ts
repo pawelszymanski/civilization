@@ -1,15 +1,17 @@
-import {Component} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 
 import {Save} from '../../../../models/save';
-import {ScreenId, Ui} from '../../../../models/ui/ui';
+import {MapTypeId, Ui} from '../../../../models/ui/ui';
 
 import {GameMapStore} from '../../../../stores/game-map.store';
 import {SavesStore} from '../../../../stores/saves.store';
 import {UiStore} from '../../../../stores/ui.store';
 
 @Component({
-  selector: '[main-menu]',
-  templateUrl: './main-menu.component.html'
+  selector: '.main-menu-component',
+  templateUrl: './main-menu.component.html',
+  styleUrls: ['./main-menu.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class MainMenuComponent {
 
@@ -38,7 +40,7 @@ export class MainMenuComponent {
   }
 
   onExitToGoogleClick() {
-    // TODO
+    window.location.href = 'http://google.com';
   }
 
   onResumeGameClick() {
@@ -46,7 +48,8 @@ export class MainMenuComponent {
     const latestTimestamp = this.saves.map(save => save.timestamp).sort().pop();
     const saveToBeLoaded = this.saves.find(save => save.timestamp === latestTimestamp);
     this.gameMapStore.next(saveToBeLoaded.gameMap);
-    this.uiStore.setScreen(ScreenId.STRATEGIC_VIEW);
+    this.uiStore.setMapType(MapTypeId.STRATEGIC);
+    this.uiStore.hideMainMenu();
   }
 
   onLoadGameClick() {

@@ -15,7 +15,7 @@ import {CameraStore} from '../../../../../../../stores/camera.store';
 @Component({
   selector: 'camera-form',
   templateUrl: './camera-form.component.html',
-  styleUrls: ['../dev-tools-form.sass']
+  styleUrls: ['../dev-tools-form.scss']
 })
 export class CameraFormComponent {
 

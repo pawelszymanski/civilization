@@ -1,7 +1,9 @@
-import {Component} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 
 @Component({
-  selector: '[dev-tools]',
-  templateUrl: './dev-tools.component.html'
+  selector: '.dev-tools-component',
+  templateUrl: './dev-tools.component.html',
+  styleUrls: ['./dev-tools.component.scss', './../sidebar.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class DevToolsComponent {}

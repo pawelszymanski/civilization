@@ -1,14 +1,12 @@
-export enum ScreenId {
-  NONE,
-  MAIN_MENU,
-  STRATEGIC_VIEW,
-  ISOMETRIC_VIEW
+export enum MapTypeId {
+  STRATEGIC,
+  ISOMETRIC
 }
 
 export enum ModalId {
   NONE,
-  TECH_TREE,
-  CIVICS_TREE,
+  TECHNOLOGY_TREE,
+  CIVIC_TREE,
   IN_GAME_MENU
 }
 
@@ -25,8 +23,9 @@ export enum TileOverlayId {
 }
 
 export interface Ui {
-  screen: ScreenId;
+  mainMenu: boolean;
+  mapType: MapTypeId;
+  tileOverlay: TileOverlayId;
   modal: ModalId;
   sidebar: SidebarId;
-  tileOverlay: TileOverlayId;
 }

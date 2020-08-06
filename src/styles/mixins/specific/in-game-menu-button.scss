@@ -1,0 +1,21 @@
+@import './../../../styles/variables';
+
+@mixin in-game-menu-button {
+  @include size($in-game-menu-button-width, $in-game-menu-button-height);
+  @include font(white, 24px, 38px, center);
+  background: cornflowerblue;
+  border: 1px solid white;
+  margin-bottom: $in-game-menu-button-height / 2;
+  cursor: pointer;
+  @include disable-selection;
+
+  &.active,
+  &:hover:not(.disabled) {
+    background: #9f9787;
+  }
+
+  &.disabled {
+    opacity: .3;
+    cursor: default;
+  }
+}

@@ -1,0 +1,50 @@
+@import './../../../../../styles/mixins';
+@import './../../../../../styles/variables';
+
+.main-menu-component {
+  @include position-block(absolute, 0, 0, 0, 0, 400);
+  background: #2e5878;
+  display: none;
+
+  &.active {
+    display: block;
+  }
+
+  .game-title {
+    @include position-top-left(absolute, 200px, 0);
+    width: 100%;
+    @include font(white, 60px, center, uppercase);
+    letter-spacing: 20px;
+    @include disable-selection;
+  }
+
+  .primary-menu,
+  .secondary-menu {
+    position: absolute;
+    top: 50%;
+    width: $in-game-menu-button-width;
+    transition: .3s all ease-in-out;
+  }
+
+  .primary-menu {
+    left: calc(50% - #{$in-game-menu-button-width / 2});
+    &.active {
+      left: calc(50% - #{$in-game-menu-button-width} - #{$in-game-menu-button-height / 2});
+    }
+  }
+
+  .secondary-menu {
+    left: calc(50% + #{$in-game-menu-button-width / 2} + #{$in-game-menu-button-height / 2});
+    opacity: 0;
+    &.active{
+      left: calc(50% + #{$in-game-menu-button-height / 2});
+      opacity: 1;
+    }
+  }
+
+  .primary-menu-item,
+  .secondary-menu-item {
+    @include in-game-menu-button;
+  }
+
+}

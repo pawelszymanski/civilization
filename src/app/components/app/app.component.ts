@@ -1,21 +1,21 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
-import {ModalId, ScreenId, SidebarId, TileOverlayId, Ui} from '../../models/ui/ui';
+import {ModalId, MapTypeId, SidebarId, TileOverlayId, Ui} from '../../models/ui/ui';
 import {KeyBindings} from '../../models/ui/key-bindings';
 
 import {KeyBindingsStore} from '../../stores/key-bindings.store';
 import {UiStore} from '../../stores/ui.store';
 
 @Component({
-  selector: '[app]',
+  selector: '.app-component',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.sass'],
+  styleUrls: ['./app.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class AppComponent {
 
   ModalId = ModalId;
-  ScreenId = ScreenId;
+  MapTypeId = MapTypeId;
   SidebarId = SidebarId;
 
   keyBindings: KeyBindings;
@@ -58,20 +58,19 @@ export class AppComponent {
   documentOnKeydown(event: KeyboardEvent) {
     event.preventDefault();
 
-    // const isBody = (<Element>event.target).tagName === 'BODY';
-    // if (!isBody) { return; }
-
     switch (event.code) {
+      case this.keyBindings.escapeView:
+        this.uiStore.escapeView(); break;
       case this.keyBindings.toggleTileYield:
         this.uiStore.toggleTileOverlay(TileOverlayId.YIELD); break;
       case this.keyBindings.toggleTileText:
         this.uiStore.toggleTileOverlay(TileOverlayId.TEXT); break;
       case this.keyBindings.toggleTechTree:
-        this.uiStore.toggleModal(ModalId.TECH_TREE); break;
+        this.uiStore.toggleModal(ModalId.TECHNOLOGY_TREE); break;
       case this.keyBindings.toggleCivicsTree:
-        this.uiStore.toggleModal(ModalId.CIVICS_TREE); break;
-      case this.keyBindings.toggleMapEditor:
-        this.uiStore.toggleSidebar(SidebarId.MAP_EDITOR); break;
+        this.uiStore.toggleModal(ModalId.CIVIC_TREE); break;
+      // case this.keyBindings.toggleMapEditor:
+      //   this.uiStore.toggleSidebar(SidebarId.MAP_EDITOR); break;
       case this.keyBindings.toggleDevTools:
         this.uiStore.toggleSidebar(SidebarId.DEV_TOOLS); break;
     }

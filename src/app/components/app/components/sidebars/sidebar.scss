@@ -1,0 +1,15 @@
+@import './../../../../../styles/mixins';
+@import './../../../../../styles/variables';
+
+.sidebar {
+  @include position-block(absolute, 0, -$sidebar-width, 0, auto, 500);
+  width: $sidebar-width;
+  background: rgba(84, 106, 48, 0.9);
+  overflow-y: auto;
+  transition: all 0.15s ease-in-out;
+
+  &.active {
+    right: 0;
+  }
+
+}

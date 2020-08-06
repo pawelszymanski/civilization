@@ -18,7 +18,7 @@ import {GameMapStore} from '../../../../../../../stores/game-map.store';
 @Component({
   selector: 'generate-map-form',
   templateUrl: './generate-map-form.component.html',
-  styleUrls: ['../dev-tools-form.sass']
+  styleUrls: ['../dev-tools-form.scss']
 })
 export class GenerateMapFormComponent {
 

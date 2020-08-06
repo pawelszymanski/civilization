@@ -1,7 +1,9 @@
-import {Component} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 
 @Component({
-  selector: '[mini-map]',
-  templateUrl: './mini-map.component.html'
+  selector: '.mini-map-component',
+  templateUrl: './mini-map.component.html',
+  styleUrls: ['./mini-map.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class MiniMapComponent {}

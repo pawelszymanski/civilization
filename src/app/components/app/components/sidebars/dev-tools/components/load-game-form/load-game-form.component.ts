@@ -9,7 +9,7 @@ import {SavesStore} from '../../../../../../../stores/saves.store';
 @Component({
   selector: 'load-game-form',
   templateUrl: './load-game-form.component.html',
-  styleUrls: ['../dev-tools-form.sass']
+  styleUrls: ['../dev-tools-form.scss']
 })
 export class LoadGameFormComponent {
 
