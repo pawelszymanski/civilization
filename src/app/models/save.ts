@@ -7,4 +7,5 @@ export interface Save {
   name: string;
   timestamp: Timestamp;
   gameMap: GameMap;
+  isAutosave: boolean;
 }

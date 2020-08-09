@@ -7,7 +7,10 @@ export enum ModalId {
   NONE,
   TECHNOLOGY_TREE,
   CIVIC_TREE,
-  IN_GAME_MENU
+  IN_GAME_MENU,
+  SAVE_GAME,
+  LOAD_GAME,
+  GAMEPLAY_OPTIONS_MENU
 }
 
 export enum SidebarId {

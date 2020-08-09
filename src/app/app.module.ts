@@ -1,6 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 // COMPONENTS
 import {AppComponent} from './components/app/app.component';
@@ -9,7 +9,6 @@ import {MapEditorComponent} from './components/app/components/sidebars/map-edito
 import {DevToolsComponent} from './components/app/components/sidebars/dev-tools/dev-tools.component';
 import {CameraFormComponent} from './components/app/components/sidebars/dev-tools/components/camera-form/camera-form.component';
 import {GenerateMapFormComponent} from './components/app/components/sidebars/dev-tools/components/generate-map-form/generate-map-form.component';
-import {LoadGameFormComponent} from './components/app/components/sidebars/dev-tools/components/load-game-form/load-game-form.component';
 import {SaveGameFormComponent} from './components/app/components/sidebars/dev-tools/components/save-game-form/save-game-form.component';
 import {StrategicViewComponent} from './components/app/components/game-map/strategic-view/strategic-view.component';
 import {TileYieldComponent} from './components/app/components/game-map/tile-yield/tile-yield.component';
@@ -21,6 +20,9 @@ import {QuickLinksComponent} from './components/app/components/hud/quick-links/q
 import {CivicTreeComponent} from './components/app/components/modals/civic-tree/civic-tree.component';
 import {TechnologyTreeComponent} from './components/app/components/modals/technology-tree/technology-tree.component';
 import {InGameMenuComponent} from './components/app/components/modals/in-game-menu/in-game-menu.component';
+import {SaveGameComponent} from './components/app/components/modals/save-game/save-game.component';
+import {LoadGameComponent} from './components/app/components/modals/load-game/load-game.component';
+import {GameOptionsMenuComponent} from './components/app/components/modals/game-options-menu/game-options-menu.component';
 
 // SERVICES
 import {GameMapGeneratorService} from './services/game-map-generator.service';
@@ -52,7 +54,6 @@ const COMPONENTS = [
   DevToolsComponent,
   CameraFormComponent,
   GenerateMapFormComponent,
-  LoadGameFormComponent,
   SaveGameFormComponent,
   StrategicViewComponent,
   TileYieldComponent,
@@ -64,6 +65,9 @@ const COMPONENTS = [
   CivicTreeComponent,
   TechnologyTreeComponent,
   InGameMenuComponent,
+  SaveGameComponent,
+  LoadGameComponent,
+  GameOptionsMenuComponent,
 ]
 
 const SERVICES = [
@@ -98,7 +102,8 @@ const PIPES = [
   ],
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     ...SERVICES,

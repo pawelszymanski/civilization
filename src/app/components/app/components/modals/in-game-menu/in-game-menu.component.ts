@@ -1,6 +1,7 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
 import {UiStore} from '../../../../../stores/ui.store';
+import {ModalId} from '../../../../../models/ui/ui';
 
 @Component({
   selector: '.in-game-menu-component',
@@ -14,29 +15,29 @@ export class InGameMenuComponent {
     private uiStore: UiStore
   ) {}
 
-
   onReturnToGameClick() {
     this.uiStore.closeModal();
   }
 
   onSaveGameClick() {
-    // TODO
+    this.uiStore.openModal(ModalId.SAVE_GAME);
   }
 
   onLoadGameClick() {
-    // TODO
+    this.uiStore.openModal(ModalId.LOAD_GAME);
   }
 
   onOptionsClick() {
-    // TODO
+    this.uiStore.openModal(ModalId.GAMEPLAY_OPTIONS_MENU);
   }
 
   onExitToMainMenuClick() {
-    // TODO
+    this.uiStore.closeModal();
+    this.uiStore.showMainMenu();
   }
 
   onExitToGoogleClick() {
-    // TODO
+    window.location.href = 'http://google.com';
   }
 
 

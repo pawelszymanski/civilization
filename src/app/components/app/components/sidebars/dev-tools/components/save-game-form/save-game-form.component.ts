@@ -40,7 +40,8 @@ export class SaveGameFormComponent {
       uuid: this.utilsService.generateUuid(),
       name: this.saveName,
       timestamp: this.utilsService.generateTimestamp(),
-      gameMap: this.gameMap
+      gameMap: this.gameMap,
+      isAutosave: false
     }
     this.savesStore.addSave(save);
     this.saveName = '';

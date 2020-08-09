@@ -12,6 +12,7 @@ export class UiStore {
 
   public readonly ui: Observable<Ui> = this._ui.asObservable();
 
+  // MAIN MENU
   public hideMainMenu() {
     this._ui.next({...this._ui.value, mainMenu: false});
   }
@@ -20,17 +21,12 @@ export class UiStore {
     this._ui.next({...this._ui.value, mainMenu: true});
   }
 
-  public escapeView() {
-    const ui = this._ui.value;
-    if (ui.sidebar !== SidebarId.NONE) { this.closeSidebar(); return; }
-    if (ui.modal !== ModalId.NONE) { this.closeModal(); return; }
-    if (!ui.mainMenu) { this.openModal(ModalId.IN_GAME_MENU); return; }
-  }
-
+  // MAP TYPE
   public setMapType(mapTypeId: MapTypeId) {
     this._ui.next({...this._ui.value, mapType: mapTypeId});
   }
 
+  // MODALS
   public openModal(modalId: ModalId) {
     this._ui.next({...this._ui.value, modal: modalId});
   }
@@ -44,18 +40,32 @@ export class UiStore {
     this._ui.next({...this._ui.value, modal: newModalId});
   }
 
-  public toggleSidebar(sidebarId: SidebarId) {
-    const newSidebarId = this._ui.value.sidebar === sidebarId ? SidebarId.NONE : sidebarId;
-    this._ui.next({...this._ui.value, sidebar: newSidebarId});
+  // SIDEBARS
+  public openSidebar(sidebarId: SidebarId) {
+    this._ui.next({...this._ui.value, sidebar: sidebarId});
   }
 
   public closeSidebar() {
     this._ui.next({...this._ui.value, sidebar: SidebarId.NONE});
   }
 
-  public toggleTileOverlay(tileOverlayId) {
+  public toggleSidebar(sidebarId: SidebarId) {
+    const newSidebarId = this._ui.value.sidebar === sidebarId ? SidebarId.NONE : sidebarId;
+    this._ui.next({...this._ui.value, sidebar: newSidebarId});
+  }
+
+  // TILE OVERLAY
+  public toggleTileOverlay(tileOverlayId: TileOverlayId) {
     const newTileOverlayId = this._ui.value.tileOverlay === tileOverlayId ? TileOverlayId.NONE : tileOverlayId;
     this._ui.next({...this._ui.value, tileOverlay: newTileOverlayId});
+  }
+
+  // OTHER
+  public escapeView() {
+    const ui = this._ui.value;
+    if (ui.sidebar !== SidebarId.NONE) { this.closeSidebar(); return; }
+    if (ui.modal !== ModalId.NONE) { this.closeModal(); return; }
+    if (!ui.mainMenu) { this.openModal(ModalId.IN_GAME_MENU); return; }
   }
 
 }

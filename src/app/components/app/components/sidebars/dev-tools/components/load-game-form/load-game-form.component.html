@@ -1,9 +1,0 @@
-<form>
-  <h3>Load game</h3>
-  <label>Select game to load</label>
-  <select name="saveName" [(ngModel)]="saveUuid">
-    <option *ngFor="let save of saves" [value]="save.uuid">{{ save.name }}</option>
-  </select>
-  <button type="button" class="float-right" (click)="onLoadGameClick()" [disabled]="!saveUuid">Load game</button>
-  <button type="button" class="float-left" (click)="onRemoveSaveClick()" [disabled]="!saveUuid">Remove save</button>
-</form>

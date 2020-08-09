@@ -1,0 +1,28 @@
+<form class="filters" [formGroup]="loadGameOptionsForm" novalidate>
+  <label for="show-autosaves">Autosaves</label>
+  <input type="checkbox" id="show-autosaves" formControlName="showAutosaves">
+  <label for="sort-order">Sort by</label>
+  <select id="sort-order" formControlName="sortOrder">
+    <option [value]="SortOrderId.NAME_ASCENDING">Name asc</option>
+    <option [value]="SortOrderId.NAME_DESCENDING">Name desc</option>
+    <option [value]="SortOrderId.DATE_ASCENDING">Date asc</option>
+    <option [value]="SortOrderId.DATE_DESCENDING">Date desc</option>
+  </select>
+</form>
+
+<ul class="save-game-list">
+  <li class="save-game-item" *ngFor="let save of filteredAndSortedSaves"
+      [class.active]="isSaveGameItemSelected(save)" (click)="onSaveGameItemClick(save.uuid)">{{ save.name }}</li>
+</ul>
+
+<div class="delete-button" [class.disabled]="!selectedSave" (click)="onDeleteClick()">Delete</div>
+
+<div class="selected-save">
+  <ng-container *ngIf="selectedSave">
+    <span>{{ selectedSave.name }}</span><br/>
+    <span>{{ selectedSave.timestamp }}</span><br/>
+    <span>{{ selectedSave.uuid }}</span><br/>
+  </ng-container>
+</div>
+
+<div class="load-game-button" [class.disabled]="!selectedSave" (click)="onLoadGameClick()">Load game</div>

@@ -5,15 +5,11 @@ $padding: $in-game-menu-button-height / 2;
 $popup-width: $in-game-menu-button-width + $padding + $padding;
 
 .in-game-menu-component {
-  @include position-block(absolute, 300px, auto, auto, calc(50% - #{$popup-width / 2}), 1000);
+  @include position-block(absolute, 300px, auto, auto, calc(50% - #{$popup-width / 2}), 500);
   @include size($popup-width, auto);
   padding: $padding;
   background: gray;
-  display: none;
-
-  &.active {
-    display: block;
-  }
+  @include display-block-when-active;
 
   .item {
     @include in-game-menu-button;

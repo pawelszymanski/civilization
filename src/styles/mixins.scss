@@ -5,5 +5,7 @@
 @import 'mixins/generic/position-block';
 @import 'mixins/generic/size';
 
+@import 'mixins/specific/display-block-when-active';
 @import 'mixins/specific/fade-in-out-based-on-active-class';
 @import 'mixins/specific/in-game-menu-button';
+@import 'mixins/specific/sits-on-overlay';

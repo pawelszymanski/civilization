@@ -1,0 +1,9 @@
+@mixin sits-on-overlay {
+  &:before {
+    content: '';
+    z-index: -1;
+    @include position-block(absolute, -9999px, -9999px, -9999px, -9999px, -1);
+    background: gray;
+    opacity: .5;
+  }
+}

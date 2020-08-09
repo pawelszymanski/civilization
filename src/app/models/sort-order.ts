@@ -1,0 +1,6 @@
+export enum SortOrderId {
+  DATE_ASCENDING,
+  DATE_DESCENDING,
+  NAME_ASCENDING,
+  NAME_DESCENDING
+}

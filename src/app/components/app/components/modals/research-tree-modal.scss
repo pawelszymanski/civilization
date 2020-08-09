@@ -14,21 +14,18 @@ $scrollbar-height: 16px;
 $popup-height: $header-height + $tech-tree-height + $scrollbar-height;
 
 .research-tree-modal {
-  display: none;
-  @include position-top-left(absolute, calc((100% - #{$popup-height}) / 2), 0, 300);
+  @include position-top-left(absolute, calc((100% - #{$popup-height}) / 2), 0, 500);
   @include size(100%, $popup-height);
   background: #9f9787;
   border-bottom: 16px solid gray;
-
-  &.active {
-    display: block;
-  }
+  @include display-block-when-active;
 
   .title {
     @include size(100%, 32px);
     @include font(white, 18px, 32px, center);
     font-weight: normal;
     background: #072740;
+    @include disable-selection;
   }
 
   .close-button {

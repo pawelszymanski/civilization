@@ -1,0 +1,7 @@
+@mixin display-block-when-active {
+  display: none;
+
+  &.active {
+    display: block;
+  }
+}

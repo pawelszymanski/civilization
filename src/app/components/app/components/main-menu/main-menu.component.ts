@@ -1,7 +1,7 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
 import {Save} from '../../../../models/save';
-import {MapTypeId, Ui} from '../../../../models/ui/ui';
+import {MapTypeId, ModalId, Ui} from '../../../../models/ui/ui';
 
 import {GameMapStore} from '../../../../stores/game-map.store';
 import {SavesStore} from '../../../../stores/saves.store';
@@ -31,12 +31,17 @@ export class MainMenuComponent {
     this.savesStore.saves.subscribe(saves => this.saves = saves);
   }
 
+  get noSavesPresent(): boolean {
+    return this.saves.length === 0;
+  }
+
   onSinglePlayerClick() {
     this.showSinglePlayerMenu = true;
   }
 
   onOptionsClick() {
     // TODO
+    this.showSinglePlayerMenu = false;
   }
 
   onExitToGoogleClick() {
@@ -44,25 +49,29 @@ export class MainMenuComponent {
   }
 
   onResumeGameClick() {
-    if (this.saves.length === 0) { return; }
+    if (this.noSavesPresent) { return; }
     const latestTimestamp = this.saves.map(save => save.timestamp).sort().pop();
     const saveToBeLoaded = this.saves.find(save => save.timestamp === latestTimestamp);
     this.gameMapStore.next(saveToBeLoaded.gameMap);
     this.uiStore.setMapType(MapTypeId.STRATEGIC);
     this.uiStore.hideMainMenu();
+    this.showSinglePlayerMenu = false;
   }
 
   onLoadGameClick() {
-    if (this.saves.length === 0) { return; }
+    if (this.noSavesPresent) { return; }
     // TODO
+    this.uiStore.openModal(ModalId.LOAD_GAME);
   }
 
   onPlayNowClick() {
     // TODO
+    this.showSinglePlayerMenu = false;
   }
 
   onCreateGameClick() {
     // TODO
+    this.showSinglePlayerMenu = false;
   }
 
 }
