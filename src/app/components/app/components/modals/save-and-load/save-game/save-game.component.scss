@@ -1,0 +1,17 @@
+@import '../../../../../../../styles/mixins';
+@import '../../../../../../../styles/variables';
+
+$button-width: $in-game-menu-button-width;
+$button-height: $in-game-menu-button-height;
+
+.save-game-component {
+  @include position-top-left(absolute, 10%, calc(50% - #{$button-width}), $z-index-modal);
+  @include size($button-width * 2, 70%);
+  background: #9f9787;
+  display: none;
+  flex-flow: column wrap;
+  &.active {
+    display: flex;
+  }
+
+}

@@ -1,16 +1,16 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
-import {TechnologyIdWithEraCoords, TechnologyTreeEra} from '../../../../../models/research/technology-tree';
-import {Ui} from '../../../../../models/ui/ui';
+import {TechnologyIdWithEraCoords, TechnologyTreeEra} from '../../../../../../models/research/technology-tree';
+import {Ui} from '../../../../../../models/ui/ui';
 
-import {TECHNOLOGY_TREE} from '../../../../../consts/research/technology-tree';
+import {TECHNOLOGY_TREE} from '../../../../../../consts/research/technology-tree';
 
-import {UiStore} from '../../../../../stores/ui.store';
+import {UiStore} from '../../../../../../stores/ui.store';
 
 @Component({
   selector: '.technology-tree-component',
   templateUrl: './technology-tree.component.html',
-  styleUrls: ['./technology-tree.component.scss', './../research-tree-modal.scss'],
+  styleUrls: ['./technology-tree.component.scss', '../research-tree-modal.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class TechnologyTreeComponent {

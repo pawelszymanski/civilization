@@ -1,14 +1,17 @@
+// 1. Combine form value and saves into stream of visible save games
+// 2. 
+
 import {Component, ViewEncapsulation} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 
-import {SortOrderId} from '../../../../../models/sort-order';
-import {Save} from '../../../../../models/save';
-import {Uuid} from '../../../../../models/utils/uuid';
-import {ModalId} from '../../../../../models/ui/ui';
+import {SortOrderId} from '../../../../../../models/sort-order';
+import {Save} from '../../../../../../models/save';
+import {Uuid} from '../../../../../../models/utils/uuid';
+import {ModalId} from '../../../../../../models/ui/ui';
 
-import {GameMapStore} from '../../../../../stores/game-map.store';
-import {SavesStore} from '../../../../../stores/saves.store';
-import {UiStore} from '../../../../../stores/ui.store';
+import {GameMapStore} from '../../../../../../stores/game-map.store';
+import {SavesStore} from '../../../../../../stores/saves.store';
+import {UiStore} from '../../../../../../stores/ui.store';
 
 interface LoadGameOptionsForm {
   showAutosaves: boolean;

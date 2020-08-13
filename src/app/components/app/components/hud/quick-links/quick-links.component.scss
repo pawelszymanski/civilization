@@ -2,7 +2,7 @@
 @import '../../../../../../styles/variables';
 
 .quick-links-component {
-  @include position-block(absolute, 28px, auto, auto, 0, 200);
+  @include position-block(absolute, 28px, auto, auto, 0, $z-index-hud);
   background: gray;
   padding: 4px;
   display: flex;

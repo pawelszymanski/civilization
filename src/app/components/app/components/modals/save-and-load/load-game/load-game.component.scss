@@ -1,12 +1,11 @@
-@import './../../../../../../styles/mixins';
-@import './../../../../../../styles/variables';
+@import '../../../../../../../styles/mixins';
+@import '../../../../../../../styles/variables';
 
 $button-width: $in-game-menu-button-width;
 $button-height: $in-game-menu-button-height;
 
-
 .load-game-component {
-  @include position-top-left(absolute, 10%, calc(50% - #{$button-width}), 500);
+  @include position-top-left(absolute, 10%, calc(50% - #{$button-width}), $z-index-modal);
   @include size($button-width * 2, 70%);
   background: #9f9787;
   display: none;
@@ -14,7 +13,6 @@ $button-height: $in-game-menu-button-height;
   &.active {
     display: flex;
   }
-
 
   form.filters {
     @include size($button-width, $button-height);

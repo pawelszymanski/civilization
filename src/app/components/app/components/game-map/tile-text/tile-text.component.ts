@@ -11,5 +11,6 @@ import {GameMapTile} from '../../../../../models/game-map/game-map';
 export class TileTextComponent {
 
   @Input() tile: GameMapTile;
+  @Input() showFullInfo: boolean;
 
 }

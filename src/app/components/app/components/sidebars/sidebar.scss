@@ -2,7 +2,7 @@
 @import './../../../../../styles/variables';
 
 .sidebar {
-  @include position-block(absolute, 0, -$sidebar-width, 0, auto, 500);
+  @include position-block(absolute, 0, -$sidebar-width, 0, auto, $z-index-sidebar);
   width: $sidebar-width;
   background: rgba(84, 106, 48, 0.9);
   overflow-y: auto;

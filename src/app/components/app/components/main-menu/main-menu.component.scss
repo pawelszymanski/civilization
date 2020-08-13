@@ -2,7 +2,7 @@
 @import './../../../../../styles/variables';
 
 .main-menu-component {
-  @include position-block(absolute, 0, 0, 0, 0, 400);
+  @include position-block(absolute, 0, 0, 0, 0, $z-index-main-menu);
   background: #2e5878;
   @include display-block-when-active;
 

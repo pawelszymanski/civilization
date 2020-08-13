@@ -1,5 +1,8 @@
-<p>{{ tile.terrain.base | terrainBaseName }}</p>
-<p>{{ tile.terrain.feature | terrainFeatureName }}</p>
-<p>{{ tile.terrain.improvement | terrainImprovementName }}</p>
-<p>{{ tile.terrain.resource | terrainResourceName }}</p>
+<ng-container *ngIf="showFullInfo">
+  <p>{{ tile.terrain.base | terrainBaseName }}</p>
+  <p>{{ tile.terrain.feature | terrainFeatureName }}</p>
+  <p>{{ tile.terrain.improvement | terrainImprovementName }}</p>
+  <p>{{ tile.terrain.resource | terrainResourceName }}</p>
+</ng-container>
+
 <p>{{ tile.coords.x }}, {{ tile.coords.y }}</p>

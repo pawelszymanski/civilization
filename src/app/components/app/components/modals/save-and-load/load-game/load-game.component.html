@@ -12,7 +12,9 @@
 
 <ul class="save-game-list">
   <li class="save-game-item" *ngFor="let save of filteredAndSortedSaves"
-      [class.active]="isSaveGameItemSelected(save)" (click)="onSaveGameItemClick(save.uuid)">{{ save.name }}</li>
+      [class.active]="isSaveGameItemSelected(save)"
+      (click)="onSaveGameItemClick(save.uuid)"
+      (dblclick)="onSaveGameItemDblClick">{{ save.name }}</li>
 </ul>
 
 <div class="delete-button" [class.disabled]="!selectedSave" (click)="onDeleteClick()">Delete</div>

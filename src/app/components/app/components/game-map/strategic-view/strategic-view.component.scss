@@ -3,7 +3,7 @@
 
 .strategic-view-component {
 
-  @include position-block(absolute, 0, 0, 0, 0, 100);
+  @include position-block(absolute, 0, 0, 0, 0, $z-index-game-map);
   .game-map {
 
     .game-map-row {

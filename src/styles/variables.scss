@@ -5,6 +5,11 @@ $sidebar-width: 300px;
 $in-game-menu-button-width: 300px;
 $in-game-menu-button-height: 40px;
 
+$z-index-game-map: 100;
+$z-index-hud: 200;
+$z-index-main-menu: 300;
+$z-index-modal: 400;
+$z-index-sidebar: 500;
 
 //$tile-size: 200px
 //$tile-width: $tile-size * 0.9

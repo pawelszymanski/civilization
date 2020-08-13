@@ -2,7 +2,7 @@
 @import '../../../../../../styles/variables';
 
 .status-bar-component {
-  @include position-block(absolute, 0, 0, auto, 0, 200);
+  @include position-block(absolute, 0, 0, auto, 0, $z-index-hud);
   height: 28px;
   padding: 4px 5px;
   background: gray;

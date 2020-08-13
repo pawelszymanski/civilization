@@ -1,16 +1,16 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
-import {CivicIdWithEraCoords, CivicTreeEra} from '../../../../../models/research/civic-tree';
-import {Ui} from '../../../../../models/ui/ui';
+import {CivicIdWithEraCoords, CivicTreeEra} from '../../../../../../models/research/civic-tree';
+import {Ui} from '../../../../../../models/ui/ui';
 
-import {CIVIC_TREE} from '../../../../../consts/research/civic-tree';
+import {CIVIC_TREE} from '../../../../../../consts/research/civic-tree';
 
-import {UiStore} from '../../../../../stores/ui.store';
+import {UiStore} from '../../../../../../stores/ui.store';
 
 @Component({
   selector: '.civic-tree-component',
   templateUrl: './civic-tree.component.html',
-  styleUrls: ['./civic-tree.component.scss', './../research-tree-modal.scss'],
+  styleUrls: ['./civic-tree.component.scss', '../research-tree-modal.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class CivicTreeComponent {

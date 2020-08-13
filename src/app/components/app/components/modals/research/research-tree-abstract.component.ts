@@ -1,6 +1,6 @@
-import {Ui} from '../../../../models/ui/ui';
+import {Ui} from '../../../../../models/ui/ui';
 
-import {UiStore} from '../../../../stores/ui.store';
+import {UiStore} from '../../../../../stores/ui.store';
 
 export class ResearchTreeAbstractComponent {
 

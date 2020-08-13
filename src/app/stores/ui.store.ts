@@ -65,6 +65,7 @@ export class UiStore {
     const ui = this._ui.value;
     if (ui.sidebar !== SidebarId.NONE) { this.closeSidebar(); return; }
     if (ui.modal !== ModalId.NONE) { this.closeModal(); return; }
+    if (ui.mainMenu) { this.openModal(ModalId.EXIT_GAME_CONFIRMATION); return; }
     if (!ui.mainMenu) { this.openModal(ModalId.IN_GAME_MENU); return; }
   }
 

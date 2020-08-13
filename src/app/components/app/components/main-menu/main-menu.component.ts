@@ -45,7 +45,7 @@ export class MainMenuComponent {
   }
 
   onExitToGoogleClick() {
-    window.location.href = 'http://google.com';
+    this.uiStore.openModal(ModalId.EXIT_GAME_CONFIRMATION);
   }
 
   onResumeGameClick() {

@@ -10,7 +10,8 @@ export enum ModalId {
   IN_GAME_MENU,
   SAVE_GAME,
   LOAD_GAME,
-  GAMEPLAY_OPTIONS_MENU
+  GAMEPLAY_OPTIONS_MENU,
+  EXIT_GAME_CONFIRMATION
 }
 
 export enum SidebarId {

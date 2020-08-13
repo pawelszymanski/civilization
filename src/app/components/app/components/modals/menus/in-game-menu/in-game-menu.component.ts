@@ -1,7 +1,7 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
-import {UiStore} from '../../../../../stores/ui.store';
-import {ModalId} from '../../../../../models/ui/ui';
+import {UiStore} from '../../../../../../stores/ui.store';
+import {ModalId} from '../../../../../../models/ui/ui';
 
 @Component({
   selector: '.in-game-menu-component',
@@ -37,8 +37,7 @@ export class InGameMenuComponent {
   }
 
   onExitToGoogleClick() {
-    window.location.href = 'http://google.com';
+    this.uiStore.openModal(ModalId.EXIT_GAME_CONFIRMATION);
   }
-
 
 }
