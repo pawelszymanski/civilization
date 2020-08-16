@@ -8,7 +8,7 @@ import {TERRAIN_BASE_ID_LENGTH, TERRAIN_FEATURE_ID_LENGTH, TERRAIN_RESOURCE_ID_L
 
 import {GameMapGeneratorService} from '../services/game-map-generator.service';
 import {YieldCalculatorService} from '../services/yield-calculator.service';
-import {UtilsService} from '../services/utils.service';
+import {GeneratorService} from '../services/generator.service';
 
 @Injectable()
 export class GameMapStore {
@@ -20,7 +20,7 @@ export class GameMapStore {
   constructor(
     private gameMapGeneratorService: GameMapGeneratorService,
     private yieldCalculatorService: YieldCalculatorService,
-    private utilsService: UtilsService
+    private generatorService: GeneratorService
   ) {}
 
   public next(gameMap: GameMap) {
@@ -28,10 +28,10 @@ export class GameMapStore {
   }
 
   public randomizeTileTerrain(tile: GameMapTile) {
-    tile.terrain.base = this.utilsService.randomPositiveInteger(TERRAIN_BASE_ID_LENGTH) - 1;
-    tile.terrain.feature = this.utilsService.randomPositiveInteger(TERRAIN_FEATURE_ID_LENGTH) - 1;
-    tile.terrain.resource = this.utilsService.randomPositiveInteger(TERRAIN_RESOURCE_ID_LENGTH) - 1;
-    tile.terrain.improvement = this.utilsService.randomPositiveInteger(TERRAIN_IMPROVEMENT_ID_LENGTH) - 1;
+    tile.terrain.base = this.generatorService.randomPositiveInteger(TERRAIN_BASE_ID_LENGTH) - 1;
+    tile.terrain.feature = this.generatorService.randomPositiveInteger(TERRAIN_FEATURE_ID_LENGTH) - 1;
+    tile.terrain.resource = this.generatorService.randomPositiveInteger(TERRAIN_RESOURCE_ID_LENGTH) - 1;
+    tile.terrain.improvement = this.generatorService.randomPositiveInteger(TERRAIN_IMPROVEMENT_ID_LENGTH) - 1;
     this.updateTile(tile);
   }
 

@@ -47,13 +47,17 @@ export enum CivicId {
   PROFESSIONAL_SPORTS,
   RAPID_DEPLOYMENT,
   SPACE_RACE,
+  ENVIRONMENTALISM,
   GLOBALIZATION,
   SOCIAL_MEDIA,
-  FUTURE_CIVIC
+  NEAR_FUTURE_GOVERNANCE,
+  VENTURE_POLITICS,
+  DISTRIBUTED_SOVEREIGNTY,
+  OPTIMIZATION_IMPERATIVE,
 }
 
 export interface Civic {
   id: CivicId;
-  prerequisites: Civic[];
+  prerequisites: CivicId[];
   cost: number;
 }

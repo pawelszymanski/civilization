@@ -1,6 +1,6 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
-import {Save} from '../../../../models/save';
+import {Save} from '../../../../models/saves/save';
 import {MapTypeId, ModalId, Ui} from '../../../../models/ui/ui';
 
 import {GameMapStore} from '../../../../stores/game-map.store';

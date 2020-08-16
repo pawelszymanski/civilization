@@ -21,14 +21,18 @@ import {TechnologyTreeComponent} from './components/app/components/modals/resear
 import {InGameMenuComponent} from './components/app/components/modals/menus/in-game-menu/in-game-menu.component';
 import {SaveGameComponent} from './components/app/components/modals/save-and-load/save-game/save-game.component';
 import {LoadGameComponent} from './components/app/components/modals/save-and-load/load-game/load-game.component';
+import {SaveDetailsComponent} from './components/app/components/modals/save-and-load/save-details/save-details.component';
 import {GameOptionsMenuComponent} from './components/app/components/modals/menus/game-options-menu/game-options-menu.component';
 import {ExitGameConfirmationComponent} from './components/app/components/modals/menus/exit-game-confirmation/exit-game-confirmation.component';
 
+// DIRECTIVES
+
 // SERVICES
 import {GameMapGeneratorService} from './services/game-map-generator.service';
+import {GeneratorService} from './services/generator.service';
 import {LocalStorageService} from './services/local-storage.service';
+import {SaveSorterService} from './services/save-sorter.service';
 import {YieldCalculatorService} from './services/yield-calculator.service';
-import {UtilsService} from './services/utils.service';
 
 // STORES
 import {CameraStore} from './stores/camera.store';
@@ -66,15 +70,20 @@ const COMPONENTS = [
   InGameMenuComponent,
   SaveGameComponent,
   LoadGameComponent,
+  SaveDetailsComponent,
   GameOptionsMenuComponent,
   ExitGameConfirmationComponent
 ]
 
+const DIRECTIVES = [
+]
+
 const SERVICES = [
   GameMapGeneratorService,
+  GeneratorService,
   LocalStorageService,
-  YieldCalculatorService,
-  UtilsService,
+  SaveSorterService,
+  YieldCalculatorService
 ]
 
 const STORES = [
@@ -98,6 +107,7 @@ const PIPES = [
 @NgModule({
   declarations: [
     ...COMPONENTS,
+    ...DIRECTIVES,
     ...PIPES
   ],
   imports: [

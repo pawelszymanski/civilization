@@ -5,13 +5,35 @@ $button-width: $in-game-menu-button-width;
 $button-height: $in-game-menu-button-height;
 
 .save-game-component {
-  @include position-top-left(absolute, 10%, calc(50% - #{$button-width}), $z-index-modal);
-  @include size($button-width * 2, 70%);
+  @include position-top-left(absolute, 10%, calc(50% - #{$button-width / 2}), $z-index-modal);
+  @include size($button-width, 70%);
   background: #9f9787;
   display: none;
-  flex-flow: column wrap;
+  flex-direction: column;
   &.active {
     display: flex;
+  }
+
+  form.save-options {
+    input {
+      @include size($button-width, $button-height);
+    }
+  }
+
+  .save-details-component {
+    @include size($button-width, calc(100% - #{$button-height * 2}));
+  }
+
+  .save-game-button {
+    @include size($button-width, $button-height);
+    @include font(white, 22px, $button-height, center);
+    background: #2e5878;
+    @include disable-selection;
+    cursor: pointer;
+    &.disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
   }
 
 }

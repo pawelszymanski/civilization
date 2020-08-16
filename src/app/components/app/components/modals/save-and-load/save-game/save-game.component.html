@@ -1,10 +1,7 @@
-<form class="filters" [formGroup]="saveGameOptionsForm" novalidate>
-  <input type="text" formControlName="saveName">
+<form class="save-options" novalidate>
+  <input type="text" name="saveName" [(ngModel)]="saveName">
 </form>
 
-<!--<form>-->
-<!--  <h3>Save game</h3>-->
-<!--  <label>Save name</label>-->
-<!--  <input type="text" name="saveName" [(ngModel)]="saveName">-->
-<!--  <button type="button" class="float-right" (click)="onSaveGameClick()" [disabled]="!canGameBeSaved()">Save game</button>-->
-<!--</form>-->
+<div class="save-details-component" [save]=""></div>
+
+<div class="save-game-button" [class.disabled]="!canGameBeSaved()" (click)="onSaveGameClick()">Save game</div>

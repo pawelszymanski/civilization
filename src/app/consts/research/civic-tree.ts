@@ -18,10 +18,10 @@ export const CIVIC_TREE: CivicTree = [
   {
     id: EraId.CLASSICAL,
     civics: [
-      {id: CivicId.CODE_OF_LAWS, eraCoords: {x: 0, y: 1}},
+      {id: CivicId.GAMES_AND_RECREATION, eraCoords: {x: 0, y: 1}},
       {id: CivicId.POLITICAL_PHILOSOPHY, eraCoords: {x: 0, y: 3}},
       {id: CivicId.DRAMA_AND_POETRY, eraCoords: {x: 0, y: 5}},
-      {id: CivicId.MILITARY_TRADITION, eraCoords: {x: 1, y: 0}},
+      {id: CivicId.MILITARY_TRAINING, eraCoords: {x: 1, y: 0}},
       {id: CivicId.DEFENSIVE_TACTICS, eraCoords: {x: 1, y: 2}},
       {id: CivicId.RECORDED_HISTORY, eraCoords: {x: 1, y: 4}},
       {id: CivicId.THEOLOGY, eraCoords: {x: 1, y: 6}}
@@ -89,9 +89,13 @@ export const CIVIC_TREE: CivicTree = [
   {
     id: EraId.INFORMATION,
     civics: [
+      {id: CivicId.ENVIRONMENTALISM, eraCoords: {x: 0, y: 1}},
       {id: CivicId.GLOBALIZATION, eraCoords: {x: 0, y: 3}},
       {id: CivicId.SOCIAL_MEDIA, eraCoords: {x: 0, y: 5}},
-      {id: CivicId.FUTURE_CIVIC, eraCoords: {x: 1, y: 4}},
+      {id: CivicId.NEAR_FUTURE_GOVERNANCE, eraCoords: {x: 1, y: 2}},
+      {id: CivicId.VENTURE_POLITICS, eraCoords: {x: 1, y: 3}},
+      {id: CivicId.DISTRIBUTED_SOVEREIGNTY, eraCoords: {x: 1, y: 4}},
+      {id: CivicId.OPTIMIZATION_IMPERATIVE, eraCoords: {x: 1, y: 5}}
     ]
   }
 ];

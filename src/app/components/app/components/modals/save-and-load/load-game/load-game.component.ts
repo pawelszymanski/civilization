@@ -1,22 +1,17 @@
-// 1. Combine form value and saves into stream of visible save games
-// 2. 
-
 import {Component, ViewEncapsulation} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 
 import {SortOrderId} from '../../../../../../models/sort-order';
-import {Save} from '../../../../../../models/save';
+import {Save} from '../../../../../../models/saves/save';
 import {Uuid} from '../../../../../../models/utils/uuid';
 import {ModalId} from '../../../../../../models/ui/ui';
+
+import {GeneratorService} from '../../../../../../services/generator.service';
+import {SaveSorterService} from '../../../../../../services/save-sorter.service';
 
 import {GameMapStore} from '../../../../../../stores/game-map.store';
 import {SavesStore} from '../../../../../../stores/saves.store';
 import {UiStore} from '../../../../../../stores/ui.store';
-
-interface LoadGameOptionsForm {
-  showAutosaves: boolean;
-  sortOrder: SortOrderId;
-}
 
 @Component({
   selector: '.load-game-component',
@@ -32,38 +27,18 @@ export class LoadGameComponent {
   filteredAndSortedSaves: Save[] = [];
   selectedSaveUuid: Uuid;
 
-  loadGameOptionsForm = new FormGroup({
+  saveListOptionsForm = new FormGroup({
     showAutosaves: new FormControl(false),
     sortOrder: new FormControl(SortOrderId.NAME_ASCENDING)
   });
 
   constructor(
+    private generatorService: GeneratorService,
+    private saveSorter: SaveSorterService,
     private gameMapStore: GameMapStore,
     private savesStore: SavesStore,
     private uiStore: UiStore
   ) {}
-
-  getFilteredAndSortedSaves(): Save[] {
-    const options: LoadGameOptionsForm = this.loadGameOptionsForm.value;
-    let result = [...this.saves];
-
-    if (!options.showAutosaves) {
-      result = result.filter(save => !save.isAutosave)
-    }
-
-    if (options.sortOrder == SortOrderId.DATE_ASCENDING) {
-      return result.sort((a, b) => a.timestamp > b.timestamp ? 1 : -1);
-    }
-    if (options.sortOrder == SortOrderId.DATE_DESCENDING) {
-      return result.sort((a, b) => a.timestamp < b.timestamp ? 1 : -1);
-    }
-    if (options.sortOrder == SortOrderId.NAME_ASCENDING) {
-      return result.sort((a, b) => a.name > b.name ? 1 : -1);
-    }
-    if (options.sortOrder == SortOrderId.NAME_DESCENDING) {
-      return result.sort((a, b) => a.name < b.name ? 1 : -1);
-    }
-  }
 
   deselectSaveIfFilteredOut() {
     if (this.selectedSaveUuid && !this.filteredAndSortedSaves.find(save => save.uuid === this.selectedSaveUuid)) {
@@ -72,7 +47,7 @@ export class LoadGameComponent {
   }
 
   filterAndSortSaves() {
-    this.filteredAndSortedSaves = this.getFilteredAndSortedSaves();
+    this.filteredAndSortedSaves = this.saveSorter.getFilteredAndSortedSaves(this.saves, this.saveListOptionsForm.value);
     this.deselectSaveIfFilteredOut();
   }
 
@@ -82,7 +57,9 @@ export class LoadGameComponent {
       this.filterAndSortSaves();
     });
 
-    this.loadGameOptionsForm.valueChanges.subscribe(() => this.filterAndSortSaves());
+    this.saveListOptionsForm.valueChanges.subscribe(() => {
+      this.filterAndSortSaves();
+    });
   }
 
   get selectedSave(): Save {
@@ -97,6 +74,10 @@ export class LoadGameComponent {
     this.selectedSaveUuid = uuid;
   }
 
+  onSaveGameItemDblClick() {
+    this.loadSelectedSaveAndUpdateUi();
+  }
+
   onDeleteClick() {
     if (!this.selectedSave) { return; }
     this.savesStore.removeSave(this.selectedSaveUuid);
@@ -105,6 +86,10 @@ export class LoadGameComponent {
 
   onLoadGameClick() {
     if (!this.selectedSave) { return; }
+    this.loadSelectedSaveAndUpdateUi();
+  }
+
+  loadSelectedSaveAndUpdateUi() {
     const saveToBeLoaded = this.saves.find(save => save.uuid === this.selectedSaveUuid);
     this.gameMapStore.next(saveToBeLoaded.gameMap);
     this.selectedSaveUuid = undefined;
@@ -113,3 +98,27 @@ export class LoadGameComponent {
   }
 
 }
+
+// ngOnInit() {
+//   const saves$ = this.savesStore.saves;
+//   const form$ = this.loadGameOptionsForm.valueChanges.pipe(
+//     startWith(null)
+//   );
+//
+//   const filteredSaves$ = combineLatest(saves$, form$).subscribe( ([saves, form]) =>
+//     console.info(saves, form)
+//   );
+//
+//
+//   this.savesStore.saves.subscribe(saves => {
+//     this.saves = saves;
+//     this.filterAndSortSaves();
+//   });
+//
+//   this.loadGameOptionsForm.valueChanges.pipe(
+//     startWith(null)
+//   )
+//     .subscribe(() => {
+//       this.filterAndSortSaves();
+//     });
+// }

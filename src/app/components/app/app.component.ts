@@ -56,8 +56,13 @@ export class AppComponent {
   }
 
   documentOnKeydown(event: KeyboardEvent) {
-    event.preventDefault();
+    const isInput = (event.target as HTMLElement).tagName.toUpperCase() === 'INPUT';
 
+    if (isInput) {
+      return;
+    }
+
+    event.preventDefault();
     switch (event.code) {
       case this.keyBindings.escapeView:
         this.uiStore.escapeView(); break;
@@ -74,6 +79,7 @@ export class AppComponent {
       case this.keyBindings.toggleDevTools:
         this.uiStore.toggleSidebar(SidebarId.DEV_TOOLS); break;
     }
+
   }
 
 }

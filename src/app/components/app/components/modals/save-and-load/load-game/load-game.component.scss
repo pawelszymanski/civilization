@@ -18,13 +18,14 @@ $button-height: $in-game-menu-button-height;
     @include size($button-width, $button-height);
   }
 
-  ul.save-game-list {
+  ul.save-list {
     @include size($button-width, calc(100% - #{$button-height * 2}));
 
-    li.save-game-item {
+    li.save-item {
       @include size($button-width, $button-height);
       @include font(white, 22px, $button-height, center);
       background: #55534f;
+      @include disable-selection;
       cursor: pointer;
       &:hover,
       &.active {
@@ -44,7 +45,7 @@ $button-height: $in-game-menu-button-height;
     }
   }
 
-  .selected-save {
+  .save-details-component {
     @include size($button-width, calc(100% - #{$button-height}));
     background: lightcyan;
   }

@@ -9,9 +9,17 @@
   .game-title {
     @include position-top-left(absolute, 200px, 0);
     width: 100%;
-    @include font(white, 60px, center, uppercase);
-    letter-spacing: 20px;
+    @include font($font-family-secondary, #eff9fd, 100px, 68px, 400, center, uppercase);
+    letter-spacing: 10px;
+    text-shadow: 0 5px 9px #0007;
     @include disable-selection;
+    //&:after {
+    //  content: 'VI';
+    //  @include position-block(absolute, 0, 0, 0, auto, 1);
+    //  -webkit-background-clip: text;
+    //  -webkit-text-fill-color: transparent;
+    //  background-image: linear-gradient(to bottom, #96cae7 20%, #52a5d5 80%);
+    //}
   }
 
   .primary-menu,

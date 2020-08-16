@@ -1,4 +1,4 @@
-<form class="filters" [formGroup]="loadGameOptionsForm" novalidate>
+<form class="filters" [formGroup]="saveListOptionsForm" novalidate>
   <label for="show-autosaves">Autosaves</label>
   <input type="checkbox" id="show-autosaves" formControlName="showAutosaves">
   <label for="sort-order">Sort by</label>
@@ -10,21 +10,15 @@
   </select>
 </form>
 
-<ul class="save-game-list">
-  <li class="save-game-item" *ngFor="let save of filteredAndSortedSaves"
+<ul class="save-list">
+  <li class="save-item" *ngFor="let save of filteredAndSortedSaves"
       [class.active]="isSaveGameItemSelected(save)"
       (click)="onSaveGameItemClick(save.uuid)"
-      (dblclick)="onSaveGameItemDblClick">{{ save.name }}</li>
+      (dblclick)="onSaveGameItemDblClick()">{{ save.name }}</li>
 </ul>
 
 <div class="delete-button" [class.disabled]="!selectedSave" (click)="onDeleteClick()">Delete</div>
 
-<div class="selected-save">
-  <ng-container *ngIf="selectedSave">
-    <span>{{ selectedSave.name }}</span><br/>
-    <span>{{ selectedSave.timestamp }}</span><br/>
-    <span>{{ selectedSave.uuid }}</span><br/>
-  </ng-container>
-</div>
+<div class="save-details-component" [save]="selectedSave"></div>
 
 <div class="load-game-button" [class.disabled]="!selectedSave" (click)="onLoadGameClick()">Load game</div>

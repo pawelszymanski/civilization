@@ -2,7 +2,7 @@
 
 @mixin in-game-menu-button {
   @include size($in-game-menu-button-width, $in-game-menu-button-height);
-  @include font(white, 24px, 38px, center);
+  @include font($font-family-primary, white, 24px, 38px, center);
   background: cornflowerblue;
   border: 1px solid white;
   margin-bottom: $in-game-menu-button-height / 2;
