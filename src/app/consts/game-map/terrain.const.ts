@@ -16,7 +16,8 @@ export const SUITABLE_TERRAIN_FEATURES: Record<TerrainBaseId, TerrainFeatureId[]
   [TerrainBaseId.SNOW]: [],
   [TerrainBaseId.SNOW_HILLS]: [],
   [TerrainBaseId.SNOW_MOUNTAIN]: [],
-  [TerrainBaseId.COAST_AND_LAKE]: [],
+  [TerrainBaseId.LAKE]: [],
+  [TerrainBaseId.COAST]: [],
   [TerrainBaseId.OCEAN]: [TerrainFeatureId.ICE]
 }
 

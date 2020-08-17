@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 
 import {Camera} from '../models/camera/camera';
-import {Coords3d} from '../models/utils/coords';
+import {Coords} from '../models/utils/coords';
 
 import {CAMERA_MAX_ZOOM_LEVEL, CAMERA_MIN_ZOOM_LEVEL, CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP, DEFAULT_CAMERA} from '../consts/camera/camera.const';
 
@@ -26,60 +26,41 @@ export class CameraStore {
     this.updateTileSizeCssVariable();
   }
 
-  public setTileSize(tileSize: number) {
-    this.next({...this._camera.value, tileSize});
+  private calcTileSize(zoomLevel: number): number {
+    return CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP[zoomLevel];
   }
 
-  public setTranslate(translate: Coords3d) {
-    this.next({...this._camera.value, translate});
+  private calcTranslate(zoomLevel: number): Coords {
+    return this._camera.value.translate;
   }
 
-  public setPerspective(perspective: number) {
-    this.next({...this._camera.value, perspective});
-  }
-
-  public setRotate(rotate: Coords3d) {
-    this.next({...this._camera.value, rotate});
-  }
-
-  public resetAll() {
-    this.next({...DEFAULT_CAMERA});
-  }
-
-
-  // CAMERA CALCULATIONS
-  public setZoomLevel(zoomLevel: number) {
-    zoomLevel = this.normalizeZoomLevel(zoomLevel);
-
-    this.next({
-      zoomLevel: this.normalizeZoomLevel(zoomLevel),
-      tileSize: this.calcTileSize(zoomLevel),
-      translate: this.calcTranslate(zoomLevel),
-      perspective: this.calcPerspective(zoomLevel),
-      rotate: this.calcRotate(zoomLevel),
-    })
-  }
-
-  public normalizeZoomLevel(zoomLevel: number): number {
+  private normalizeZoomLevel(zoomLevel: number): number {
     if (zoomLevel > CAMERA_MAX_ZOOM_LEVEL) { zoomLevel = CAMERA_MAX_ZOOM_LEVEL }
     if (zoomLevel < CAMERA_MIN_ZOOM_LEVEL) { zoomLevel = CAMERA_MIN_ZOOM_LEVEL }
     return zoomLevel;
   }
 
-  private calcTileSize(zoomLevel: number): number {
-    return CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP[zoomLevel];
+  public setTileSize(tileSize: number) {
+    this.next({...this._camera.value, tileSize});
   }
 
-  private calcTranslate(zoomLevel: number): Coords3d {
-    return this._camera.value.translate;
+  public setTranslate(translate: Coords) {
+    this.next({...this._camera.value, translate});
   }
 
-  private calcPerspective(zoomLevel: number): number {
-    return this._camera.value.perspective;
+  public setZoomLevel(zoomLevel: number) {
+    zoomLevel = this.normalizeZoomLevel(zoomLevel);
+    if (zoomLevel == this._camera.value.zoomLevel) { return; }
+
+    this.next({
+      zoomLevel: this.normalizeZoomLevel(zoomLevel),
+      tileSize: this.calcTileSize(zoomLevel),
+      translate: this.calcTranslate(zoomLevel)
+    })
   }
 
-  private calcRotate(zoomLevel: number): Coords3d {
-    return this._camera.value.rotate;
+  public resetAll() {
+    this.next({...DEFAULT_CAMERA});
   }
 
 }

@@ -13,19 +13,6 @@
   <input type="number" name="translateX" [ngModel]="camera.translate.x" (ngModelChange)="onTranslateXChange($event)">
   <label>Translate Y (px): <span>{{ camera.translate.y }}</span></label>
   <input type="number" name="translateY" [ngModel]="camera.translate.y" (ngModelChange)="onTranslateYChange($event)">
-  <label>Translate Z (px): <span>{{ camera.translate.z }}</span></label>
-  <input type="number" name="translateZ" [ngModel]="camera.translate.z" (ngModelChange)="onTranslateZChange($event)" disabled>
-
-  <label>Perspective (px): <span>{{ camera.perspective }}</span></label>
-  <input type="range" name="perspective" min="100" max="10000" step="100"
-         [ngModel]="camera.perspective" (ngModelChange)="onPerspectiveChange($event)" disabled>
-
-  <label>Rotate X (deg): <span>{{ camera.rotate.x }}</span></label>
-  <input type="range" name="rotateX" min="0" max="75" step="1" [ngModel]="camera.rotate.x" (ngModelChange)="onRotateXChange($event)" disabled>
-  <label>Rotate Y (deg): <span>{{ camera.rotate.y }}</span></label>
-  <input type="range" name="rotateY" min="-45" max="45" step="1" [ngModel]="camera.rotate.y" (ngModelChange)="onRotateYChange($event)" disabled>
-  <label>Rotate Z (deg): <span>{{ camera.rotate.z }}</span></label>
-  <input type="range" name="rotateZ" min="-90" max="90" step="1" [ngModel]="camera.rotate.z" (ngModelChange)="onRotateZChange($event)" disabled>
 
   <button type="button" class="float-right" (click)="onResetCameraClick()">Reset camera</button>
 </form>

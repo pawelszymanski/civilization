@@ -29,7 +29,5 @@ export const CAMERA_DEFAULT_PERSPECTIVE = 1000;
 export const DEFAULT_CAMERA: Camera = {
   zoomLevel: CAMERA_DEFAULT_ZOOM_LEVEL,
   tileSize: CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP[CAMERA_DEFAULT_ZOOM_LEVEL],
-  translate: {x: 0, y: 0, z: 0},
-  perspective: CAMERA_DEFAULT_PERSPECTIVE,
-  rotate: {x: 0, y: 0, z: 0},
+  translate: {x: 0, y: 0}
 }

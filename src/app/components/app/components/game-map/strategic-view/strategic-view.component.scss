@@ -19,7 +19,9 @@
         height: var(--tile-size);
         text-align: center;
         clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-        background: gray;
+        background-position-x: center !important;
+        background-position-y: center !important;
+        background-size: 105px 115px !important;
         margin-bottom: calc((var(--tile-size) / -4) - 1px);
         @include disable-selection;
         position: relative;
@@ -29,60 +31,77 @@
         }
 
         &.m-terrain-grassland {
-          background: #708735;
+          background: url('../../../../../../assets/images/terrain/grassland-flat.png');
         }
 
         &.m-terrain-grassland-hills {
-          background: #708735;
+          background: url('../../../../../../assets/images/terrain/grassland-hills.png');
+        }
+
+        &.m-terrain-grassland-mountain {
+          background: url('../../../../../../assets/images/terrain/grassland-mountain.png');
         }
 
         &.m-terrain-plains {
-          background: #9fa036;
+          background: url('../../../../../../assets/images/terrain/plains-flat.png');
         }
 
         &.m-terrain-plains-hills {
-          background: #9fa036;
+          background: url('../../../../../../assets/images/terrain/plains-hills.png');
+        }
+
+        &.m-terrain-plains-mountain {
+          background: url('../../../../../../assets/images/terrain/plains-mountain.png');
         }
 
         &.m-terrain-desert {
-          background: #efca73;
+          background: url('../../../../../../assets/images/terrain/desert-flat.png');
         }
 
         &.m-terrain-desert-hills {
-          background: #efca73;
+          background: url('../../../../../../assets/images/terrain/desert-hills.png');
+        }
+
+        &.m-terrain-desert-mountain {
+          background: url('../../../../../../assets/images/terrain/desert-mountain.png');
         }
 
         &.m-terrain-tundra {
-          background: #918f63;
+          background: url('../../../../../../assets/images/terrain/tundra-flat.png');
         }
 
         &.m-terrain-tundra-hills {
-          background: #918f63;
+          background: url('../../../../../../assets/images/terrain/tundra-hills.png');
+        }
+
+        &.m-terrain-tundra-mountain {
+          background: url('../../../../../../assets/images/terrain/tundra-mountain.png');
         }
 
         &.m-terrain-snow {
-          background: #d2e4f5;
+          background: url('../../../../../../assets/images/terrain/snow-flat.png');
         }
 
         &.m-terrain-snow-hills {
-          background: #d2e4f5;
+          background: url('../../../../../../assets/images/terrain/snow-hills.png');
+        }
+
+        &.m-terrain-snow-mountain {
+          background: url('../../../../../../assets/images/terrain/snow-mountain.png');
         }
 
         &.m-terrain-lake {
-          background: #2e5878;
+          background: url('../../../../../../assets/images/terrain/lake.png');
         }
 
         &.m-terrain-coast {
-          background: #2e5878;
+          background: url('../../../../../../assets/images/terrain/coast.png');
         }
 
         &.m-terrain-ocean {
-          background: #2b2f55;
+          background: url('../../../../../../assets/images/terrain/ocean.png');
         }
 
-        &.m-terrain-ice {
-          background: #c1daec;
-        }
       }
     }
   }

@@ -14,7 +14,8 @@ export enum TerrainBaseId {
   SNOW,
   SNOW_HILLS,
   SNOW_MOUNTAIN,
-  COAST_AND_LAKE,
+  LAKE,
+  COAST,
   OCEAN
 }
 export const TERRAIN_BASE_ID_LENGTH = Object.keys(TerrainBaseId).length / 2;

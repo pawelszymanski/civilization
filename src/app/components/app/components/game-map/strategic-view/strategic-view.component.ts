@@ -63,8 +63,7 @@ export class StrategicViewComponent {
   continueDrag(event: MouseEvent): any {
     this.cameraStore.setTranslate({
       x: this.dragStartOffset.x + event.pageX - this.dragStartCoords.x,
-      y: this.dragStartOffset.y + event.pageY - this.dragStartCoords.y,
-      z: 0
+      y: this.dragStartOffset.y + event.pageY - this.dragStartCoords.y
     });
   }
 
@@ -73,7 +72,7 @@ export class StrategicViewComponent {
     document.removeEventListener('mousemove', this.dragHandler as any);
   }
 
-  changeZoomLevel(event: WheelEvent) {
+  changeZoomLevel(event: WheelEvent, tile: GameMapTile) {
     const step = (Math.abs(event.deltaY) / event.deltaY);
     let newZoomLevel = this.camera.zoomLevel - step;
     this.cameraStore.setZoomLevel(newZoomLevel);
@@ -110,7 +109,7 @@ export class StrategicViewComponent {
     if (this.ui.sidebar === SidebarId.DEV_TOOLS && (event.shiftKey || event.ctrlKey || event.altKey)) {
       this.manipulateTile(event, tile)
     } else {
-      this.changeZoomLevel(event)
+      this.changeZoomLevel(event, tile)
     }
   }
 

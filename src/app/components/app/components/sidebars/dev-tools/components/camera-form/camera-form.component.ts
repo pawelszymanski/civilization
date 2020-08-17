@@ -53,26 +53,6 @@ export class CameraFormComponent {
     this.cameraStore.setTranslate({ ...this.camera.translate, y: translateY });
   }
 
-  onTranslateZChange(translateZ: number) {
-    this.cameraStore.setTranslate({ ...this.camera.translate, z: translateZ });
-  }
-
-  onPerspectiveChange(perspective: number) {
-    this.cameraStore.setPerspective(perspective);
-  }
-
-  onRotateXChange(rotateX: number) {
-    this.cameraStore.setRotate({ ...this.camera.rotate, x: rotateX });
-  }
-
-  onRotateYChange(rotateY: number) {
-    this.cameraStore.setRotate({ ...this.camera.rotate, y: rotateY });
-  }
-
-  onRotateZChange(rotateZ: number) {
-    this.cameraStore.setRotate({ ...this.camera.rotate, z: rotateZ });
-  }
-
   onResetCameraClick() {
     this.cameraStore.resetAll();
   }
