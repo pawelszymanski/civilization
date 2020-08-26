@@ -35,26 +35,6 @@ export class GameMapStore {
     this.updateTile(tile);
   }
 
-  public cycleTileTerrainBase(tile: GameMapTile, step: Step) {
-    tile.terrain.base = (tile.terrain.base + step + TERRAIN_BASE_ID_LENGTH) % TERRAIN_BASE_ID_LENGTH;
-    this.updateTile(tile);
-  }
-
-  public cycleTileTerrainFeature(tile: GameMapTile, step: Step) {
-    tile.terrain.feature = (tile.terrain.feature + step + TERRAIN_FEATURE_ID_LENGTH) % TERRAIN_FEATURE_ID_LENGTH;
-    this.updateTile(tile);
-  }
-
-  public cycleTileTerrainResource(tile: GameMapTile, step: Step) {
-    tile.terrain.resource = (tile.terrain.resource + step + TERRAIN_RESOURCE_ID_LENGTH) % TERRAIN_RESOURCE_ID_LENGTH;
-    this.updateTile(tile);
-  }
-
-  public cycleTileTerrainImprovement(tile: GameMapTile, step: Step) {
-    tile.terrain.improvement = (tile.terrain.improvement + step + TERRAIN_IMPROVEMENT_ID_LENGTH) % TERRAIN_IMPROVEMENT_ID_LENGTH;
-    this.updateTile(tile);
-  }
-
   // public updateTile(coords: Coords, terrain: Terrain) {
   public updateTile(tile: GameMapTile) {
     const gameMap = this._gameMap.value;

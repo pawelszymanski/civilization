@@ -2,9 +2,14 @@
 @import './../../../../../../styles/variables';
 
 .strategic-view-component {
-
   @include position-block(absolute, 0, 0, 0, 0, $z-index-game-map);
+
   .game-map {
+
+    // TODO maybe make the animation enabled only for dbl click on the map
+    //&.animated {
+    //  transition: 0.5s all cubic-bezier(0.4, 0, 0.15, 1);
+    //}
 
     .game-map-row {
       display: flex;
@@ -21,7 +26,8 @@
         clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
         background-position-x: center !important;
         background-position-y: center !important;
-        background-size: 105px 115px !important;
+        //background-size: 105px 115px !important;
+        background-size: 315px 350px !important;
         margin-bottom: calc((var(--tile-size) / -4) - 1px);
         @include disable-selection;
         position: relative;

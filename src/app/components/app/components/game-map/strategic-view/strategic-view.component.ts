@@ -1,14 +1,16 @@
-import {Component, HostListener, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, ViewChild, ViewEncapsulation} from '@angular/core';
 
 import {GameMap, GameMapTile} from '../../../../../models/game-map/game-map';
 import {Camera} from '../../../../../models/camera/camera';
 import {Coords} from '../../../../../models/utils/coords';
-import {Step} from '../../../../../models/utils/step';
-import {SidebarId, Ui, TileOverlayId} from '../../../../../models/ui/ui';
+import {Ui, TileOverlayId} from '../../../../../models/ui/ui';
+
+import {CameraHelpersService} from '../../../../../services/camera-helpers.service';
 
 import {CameraStore} from '../../../../../stores/camera.store';
 import {GameMapStore} from '../../../../../stores/game-map.store';
 import {UiStore} from '../../../../../stores/ui.store';
+import {CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP} from '../../../../../consts/camera/camera.const';
 
 @Component({
   selector: '.strategic-view-component',
@@ -24,13 +26,17 @@ export class StrategicViewComponent {
   camera: Camera = null;
   ui: Ui;
 
-  dragStartCoords: Coords = null;  // Page x, y when mouse was pressed down
-  dragStartOffset: Coords = null;  // Map element x, y when mouse was pressed down
+  @ViewChild('gameMapElem') gameMapElem: ElementRef;  // Map elem reference
+
+  dragStartCoords: Coords;  // Page x, y when mouse was pressed down
+  dragStartOffset: Coords;  // Map element x, y when mouse was pressed down
 
   isDragging = false;
   dragHandler: Function;
 
   constructor(
+    private window: Window,
+    private cameraHelpersService: CameraHelpersService,
     private gameMapStoreService: GameMapStore,
     private cameraStore: CameraStore,
     private uiStore: UiStore
@@ -46,8 +52,13 @@ export class StrategicViewComponent {
     this.subscribeToData();
   }
 
-  get gameMapElemStyle(): Record<string, string> {
+  calcGameMapElemStyle(): Record<string, string> {
     return {transform: `translate(${this.camera.translate.x}px, ${this.camera.translate.y}px`};
+  }
+
+  normalizeVerticalTranslation(translate: Coords): Coords {
+    const gameMapElemHeight = this.gameMapElem.nativeElement.offsetHeight;
+    return this.cameraHelpersService.normalizeVerticalTranslation(translate, gameMapElemHeight);
   }
 
   startDrag(event: MouseEvent) {
@@ -55,16 +66,21 @@ export class StrategicViewComponent {
     this.dragStartOffset = {x: this.camera.translate.x, y: this.camera.translate.y};
 
     // Need to store drag handler since .bind(this) changes the reference
-    this.isDragging = true;
     this.dragHandler = this.continueDrag.bind(this);
     document.addEventListener('mousemove', this.dragHandler as any);
+    this.isDragging = true;
   }
 
   continueDrag(event: MouseEvent): any {
-    this.cameraStore.setTranslate({
+    // new translate without normalization
+    let translate = {
       x: this.dragStartOffset.x + event.pageX - this.dragStartCoords.x,
       y: this.dragStartOffset.y + event.pageY - this.dragStartCoords.y
-    });
+    }
+
+    // normalize and set
+    translate = this.normalizeVerticalTranslation(translate);
+    this.cameraStore.setTranslate(translate);
   }
 
   stopDrag() {
@@ -72,45 +88,65 @@ export class StrategicViewComponent {
     document.removeEventListener('mousemove', this.dragHandler as any);
   }
 
-  changeZoomLevel(event: WheelEvent, tile: GameMapTile) {
-    const step = (Math.abs(event.deltaY) / event.deltaY);
-    let newZoomLevel = this.camera.zoomLevel - step;
-    this.cameraStore.setZoomLevel(newZoomLevel);
-  }
-
-  manipulateTile(event: WheelEvent, tile: GameMapTile) {
-    const step = (Math.abs(event.deltaY) / event.deltaY) as Step;
-    const shift = event.shiftKey;
-    const ctrl = event.ctrlKey;
-    const alt = event.altKey;
-    if (shift && !ctrl && !alt) { this.gameMapStoreService.cycleTileTerrainBase(tile, step); }
-    if (shift && ctrl && !alt) { this.gameMapStoreService.cycleTileTerrainFeature(tile, step); }
-    if (shift && !ctrl && alt) { this.gameMapStoreService.cycleTileTerrainResource(tile, step); }
-    if (!shift && ctrl && alt) { this.gameMapStoreService.cycleTileTerrainImprovement(tile, step); }
-    if (shift && ctrl && alt) { this.gameMapStoreService.randomizeTileTerrain(tile); }
-  }
-
-  @HostListener('mousedown', ['$event'])
-  onMouseDown(event: MouseEvent) {
+  onTileMouseDown(event: MouseEvent) {
     if (this.isDragging) { this.stopDrag(); }  // Unfortunately sometimes dragging is not disabled properly
     if (event.button === 0) {
       this.startDrag(event)
     }
   }
 
-  @HostListener('mouseup', ['$event'])
-  onMouseUp(event: MouseEvent) {
+  onTileMouseUp(event: MouseEvent) {
     if (event.button === 0) {
       this.stopDrag()
     }
   }
 
-  onTileWheel(event: WheelEvent, tile: GameMapTile) {
-    if (this.ui.sidebar === SidebarId.DEV_TOOLS && (event.shiftKey || event.ctrlKey || event.altKey)) {
-      this.manipulateTile(event, tile)
-    } else {
-      this.changeZoomLevel(event, tile)
+  onTileWheel(event: WheelEvent) {
+    // calculate new zoom level
+    const step = this.cameraHelpersService.wheelEventToStep(event);
+    const currentZoomLevel = this.camera.zoomLevel;
+    const newZoomLevel = this.cameraHelpersService.normalizeZoomLevel(currentZoomLevel + step);
+    if (newZoomLevel === currentZoomLevel) { return; }
+
+    // calculate new translate
+    const currentTranslate = this.camera.translate;
+    const mapCoordsAtScreenCenter = this.cameraHelpersService.mapCoordsAtScreenCenter(currentTranslate);
+    const scale = CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP[newZoomLevel] / CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP[currentZoomLevel];
+
+    // set zoom level first so it can used in normalization of the translation
+    this.cameraStore.setZoomLevel(newZoomLevel);
+
+    // calculate new translate, normalize then set it
+    const newTranslate: Coords = {
+      x: -Math.round((mapCoordsAtScreenCenter.x * scale) - (this.window.innerWidth / 2)),
+      y: -Math.round((mapCoordsAtScreenCenter.y * scale) - (this.window.innerHeight / 2))
     }
+    const normalizedTranslate = this.normalizeVerticalTranslation(newTranslate);
+    this.cameraStore.setTranslate(normalizedTranslate);
+  }
+
+  onTileClick(event: MouseEvent, tile: GameMapTile) {
+    // console.info('onTileClick: ', event, tile);
+  }
+
+  onTileDblclick(event: MouseEvent, tile: GameMapTile) {
+    const currentTranslate = this.camera.translate;
+    const mapCoordsAtScreenCenter = this.cameraHelpersService.mapCoordsAtScreenCenter(currentTranslate);
+    const centerOfClickedTile = this.cameraHelpersService.centerOfTheTileCoords(tile);
+
+    // The vector we need to apply to translation to move to desired position
+    const translateVector: Coords = {
+      x: mapCoordsAtScreenCenter.x - centerOfClickedTile.x,
+      y: mapCoordsAtScreenCenter.y - centerOfClickedTile.y
+    }
+
+    // Calculate new translate, normalize it and use
+    const newTranslate = {
+      x: currentTranslate.x + translateVector.x,
+      y: currentTranslate.y + translateVector.y
+    }
+    const normalizedTranslate = this.normalizeVerticalTranslation(newTranslate);
+    this.cameraStore.setTranslate(normalizedTranslate);
   }
 
 }

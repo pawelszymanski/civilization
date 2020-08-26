@@ -18,3 +18,5 @@
 
 <div class="dev-tools-component sidebar" [class.active]="ui.sidebar === SidebarId.DEV_TOOLS"></div>
 <div class="map-editor-component sidebar" [class.active]="ui.sidebar === SidebarId.MAP_EDITOR"></div>
+
+<div class="viewport-center-marker" *ngIf="ui.sidebar === SidebarId.DEV_TOOLS"></div>

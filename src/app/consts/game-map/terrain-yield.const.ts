@@ -17,7 +17,8 @@ export const TERRAIN_BASE_YIELD: Record<TerrainBaseId, Partial<Yield>> = {
   [TerrainBaseId.SNOW]: {},
   [TerrainBaseId.SNOW_HILLS]: { [YieldId.PRODUCTION]: 1 },
   [TerrainBaseId.SNOW_MOUNTAIN]: {},
-  [TerrainBaseId.COAST_AND_LAKE]: { [YieldId.FOOD]: 1, [YieldId.GOLD]: 1 },
+  [TerrainBaseId.COAST]: { [YieldId.FOOD]: 1, [YieldId.GOLD]: 1 },
+  [TerrainBaseId.LAKE]: { [YieldId.FOOD]: 1, [YieldId.GOLD]: 1 },
   [TerrainBaseId.OCEAN]: { [YieldId.FOOD]: 1 }
 }
 

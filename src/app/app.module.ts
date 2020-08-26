@@ -24,10 +24,12 @@ import {LoadGameComponent} from './components/app/components/modals/save-and-loa
 import {SaveDetailsComponent} from './components/app/components/modals/save-and-load/save-details/save-details.component';
 import {GameOptionsMenuComponent} from './components/app/components/modals/menus/game-options-menu/game-options-menu.component';
 import {ExitGameConfirmationComponent} from './components/app/components/modals/menus/exit-game-confirmation/exit-game-confirmation.component';
+import {ViewportCenterMarkerComponent} from './components/app/components/game-map/viewport-center-marker/viewport-center-marker.component';
 
 // DIRECTIVES
 
 // SERVICES
+import {CameraHelpersService} from './services/camera-helpers.service';
 import {GameMapGeneratorService} from './services/game-map-generator.service';
 import {GeneratorService} from './services/generator.service';
 import {LocalStorageService} from './services/local-storage.service';
@@ -72,7 +74,8 @@ const COMPONENTS = [
   LoadGameComponent,
   SaveDetailsComponent,
   GameOptionsMenuComponent,
-  ExitGameConfirmationComponent
+  ExitGameConfirmationComponent,
+  ViewportCenterMarkerComponent
 ]
 
 const DIRECTIVES = [
@@ -116,6 +119,7 @@ const PIPES = [
     ReactiveFormsModule
   ],
   providers: [
+    { provide: Window, useValue: window },
     ...SERVICES,
     ...STORES,
     ...PIPES
