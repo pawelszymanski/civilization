@@ -1,4 +1,4 @@
-import {TerrainBaseId, TerrainFeatureId, TerrainImprovementId, TerrainResourceId} from '../../models/game-map/terrain';
+import {TerrainBaseId, TerrainFeatureId, TerrainResourceId, TerrainImprovementId} from '../../models/game-map/terrain';
 import {Yield, YieldId} from '../../models/game-map/yield';
 
 export const TERRAIN_BASE_YIELD: Record<TerrainBaseId, Partial<Yield>> = {

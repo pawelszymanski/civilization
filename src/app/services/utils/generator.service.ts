@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 
-import {Milliseconds} from '../models/utils/milliseconds';
-import {Timestamp} from '../models/utils/timestamp';
-import {Uuid} from '../models/utils/uuid';
+import {Milliseconds} from '../../models/utils/milliseconds';
+import {Timestamp} from '../../models/utils/timestamp';
+import {Uuid} from '../../models/utils/uuid';
 
 @Injectable({providedIn: 'root'})
 export class GeneratorService {

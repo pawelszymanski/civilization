@@ -1,15 +1,15 @@
 import {Injectable} from '@angular/core';
 
-import {Coords} from '../models/utils/coords';
+import {Coords} from '../../models/utils/coords';
 
-import {CAMERA_MAX_EMPTY_WINDOW_SPACE_PC, CAMERA_MAX_ZOOM_LEVEL, CAMERA_MIN_ZOOM_LEVEL} from '../consts/camera/camera.const';
-import {TILE_SIZE_CSS_VAR_NAME} from '../consts/camera/tile-size-css-var-name.const';
+import {CAMERA_MAX_EMPTY_WINDOW_SPACE_PC, CAMERA_MAX_ZOOM_LEVEL, CAMERA_MIN_ZOOM_LEVEL} from '../../consts/camera/camera.const';
+import {TILE_SIZE_CSS_VAR_NAME} from '../../consts/camera/tile-size-css-var-name.const';
 
-import {GameMapTile} from '../models/game-map/game-map';
-import {Step} from '../models/utils/step';
+import {GameMapTile} from '../../models/game-map/game-map';
+import {Step} from '../../models/utils/step';
 
 @Injectable({providedIn: 'root'})
-export class CameraHelpersService {
+export class CameraHelperService {
 
   constructor(
     private window: Window

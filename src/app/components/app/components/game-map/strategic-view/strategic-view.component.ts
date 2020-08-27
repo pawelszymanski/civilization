@@ -5,7 +5,7 @@ import {Camera} from '../../../../../models/camera/camera';
 import {Coords} from '../../../../../models/utils/coords';
 import {Ui, TileOverlayId} from '../../../../../models/ui/ui';
 
-import {CameraHelpersService} from '../../../../../services/camera-helpers.service';
+import {CameraHelperService} from '../../../../../services/camera/camera-helper.service';
 
 import {CameraStore} from '../../../../../stores/camera.store';
 import {GameMapStore} from '../../../../../stores/game-map.store';
@@ -36,7 +36,7 @@ export class StrategicViewComponent {
 
   constructor(
     private window: Window,
-    private cameraHelpersService: CameraHelpersService,
+    private cameraHelperService: CameraHelperService,
     private gameMapStoreService: GameMapStore,
     private cameraStore: CameraStore,
     private uiStore: UiStore
@@ -58,7 +58,7 @@ export class StrategicViewComponent {
 
   normalizeVerticalTranslation(translate: Coords): Coords {
     const gameMapElemHeight = this.gameMapElem.nativeElement.offsetHeight;
-    return this.cameraHelpersService.normalizeVerticalTranslation(translate, gameMapElemHeight);
+    return this.cameraHelperService.normalizeVerticalTranslation(translate, gameMapElemHeight);
   }
 
   startDrag(event: MouseEvent) {
@@ -103,14 +103,14 @@ export class StrategicViewComponent {
 
   onTileWheel(event: WheelEvent) {
     // calculate new zoom level
-    const step = this.cameraHelpersService.wheelEventToStep(event);
+    const step = this.cameraHelperService.wheelEventToStep(event);
     const currentZoomLevel = this.camera.zoomLevel;
-    const newZoomLevel = this.cameraHelpersService.normalizeZoomLevel(currentZoomLevel + step);
+    const newZoomLevel = this.cameraHelperService.normalizeZoomLevel(currentZoomLevel + step);
     if (newZoomLevel === currentZoomLevel) { return; }
 
     // calculate new translate
     const currentTranslate = this.camera.translate;
-    const mapCoordsAtScreenCenter = this.cameraHelpersService.mapCoordsAtScreenCenter(currentTranslate);
+    const mapCoordsAtScreenCenter = this.cameraHelperService.mapCoordsAtScreenCenter(currentTranslate);
     const scale = CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP[newZoomLevel] / CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP[currentZoomLevel];
 
     // set zoom level first so it can used in normalization of the translation
@@ -131,8 +131,8 @@ export class StrategicViewComponent {
 
   onTileDblclick(event: MouseEvent, tile: GameMapTile) {
     const currentTranslate = this.camera.translate;
-    const mapCoordsAtScreenCenter = this.cameraHelpersService.mapCoordsAtScreenCenter(currentTranslate);
-    const centerOfClickedTile = this.cameraHelpersService.centerOfTheTileCoords(tile);
+    const mapCoordsAtScreenCenter = this.cameraHelperService.mapCoordsAtScreenCenter(currentTranslate);
+    const centerOfClickedTile = this.cameraHelperService.centerOfTheTileCoords(tile);
 
     // The vector we need to apply to translation to move to desired position
     const translateVector: Coords = {

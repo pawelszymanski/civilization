@@ -1,7 +1,10 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
-import {ModalId, MapTypeId, SidebarId, TileOverlayId, Ui} from '../../models/ui/ui';
+import {ModalId, MapTypeId, SidebarId, Ui, TileOverlayId} from '../../models/ui/ui';
 import {KeyBindings} from '../../models/ui/key-bindings';
+import {UiActionId} from '../../models/ui/ui-action.enum';
+
+import {KeyboardHelperService} from '../../services/ui/keyboard-helper.service';
 
 import {KeyBindingsStore} from '../../stores/key-bindings.store';
 import {UiStore} from '../../stores/ui.store';
@@ -22,6 +25,7 @@ export class AppComponent {
   ui: Ui;
 
   constructor(
+    private keyboardHelperService: KeyboardHelperService,
     private keyBindingsStore: KeyBindingsStore,
     private uiStore: UiStore
   ) {}
@@ -56,30 +60,22 @@ export class AppComponent {
   }
 
   documentOnKeydown(event: KeyboardEvent) {
+    // proceed only if outside of an input
     const isInput = (event.target as HTMLElement).tagName.toUpperCase() === 'INPUT';
-
-    if (isInput) {
-      return;
-    }
+    if (isInput) { return; }
 
     event.preventDefault();
-    switch (event.code) {
-      case this.keyBindings.escapeView:
-        this.uiStore.escapeView(); break;
-      case this.keyBindings.toggleTileYield:
-        this.uiStore.toggleTileOverlay(TileOverlayId.YIELD); break;
-      case this.keyBindings.toggleTileText:
-        this.uiStore.toggleTileOverlay(TileOverlayId.TEXT); break;
-      case this.keyBindings.toggleTechTree:
-        this.uiStore.toggleModal(ModalId.TECHNOLOGY_TREE); break;
-      case this.keyBindings.toggleCivicsTree:
-        this.uiStore.toggleModal(ModalId.CIVIC_TREE); break;
-      // case this.keyBindings.toggleMapEditor:
-      //   this.uiStore.toggleSidebar(SidebarId.MAP_EDITOR); break;
-      case this.keyBindings.toggleDevTools:
-        this.uiStore.toggleSidebar(SidebarId.DEV_TOOLS); break;
-    }
 
+    const keyBinding = this.keyboardHelperService.keyBindingFromEvent(event);
+    const uiActionId = this.keyboardHelperService.findMatchingActionId(this.keyBindings, keyBinding);
+
+    if (uiActionId == UiActionId.ESCAPE_VIEW)        {this.uiStore.escapeView()} else
+    if (uiActionId == UiActionId.TOGGLE_TILE_YIELD)  {this.uiStore.toggleTileOverlay(TileOverlayId.YIELD) } else
+    if (uiActionId == UiActionId.TOGGLE_TILE_TEXT)   {this.uiStore.toggleTileOverlay(TileOverlayId.TEXT)} else
+    if (uiActionId == UiActionId.TOGGLE_TECH_TREE)   {this.uiStore.toggleModal(ModalId.TECHNOLOGY_TREE)} else
+    if (uiActionId == UiActionId.TOGGLE_CIVICS_TREE) {this.uiStore.toggleModal(ModalId.CIVIC_TREE)} else
+    if (uiActionId == UiActionId.TOGGLE_MAP_EDITOR)  {this.uiStore.toggleSidebar(SidebarId.MAP_EDITOR)} else
+    if (uiActionId == UiActionId.TOGGLE_DEV_TOOLS)   {this.uiStore.toggleSidebar(SidebarId.DEV_TOOLS)}
   }
 
 }

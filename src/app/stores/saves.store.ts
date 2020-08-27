@@ -3,7 +3,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 
 import {Save} from '../models/saves/save';
 
-import {LocalStorageService} from '../services/local-storage.service';
+import {LocalStorageService} from '../services/utils/local-storage.service';
 
 @Injectable()
 export class SavesStore {

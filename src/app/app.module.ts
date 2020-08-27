@@ -29,12 +29,13 @@ import {ViewportCenterMarkerComponent} from './components/app/components/game-ma
 // DIRECTIVES
 
 // SERVICES
-import {CameraHelpersService} from './services/camera-helpers.service';
-import {GameMapGeneratorService} from './services/game-map-generator.service';
-import {GeneratorService} from './services/generator.service';
-import {LocalStorageService} from './services/local-storage.service';
-import {SaveSorterService} from './services/save-sorter.service';
-import {YieldCalculatorService} from './services/yield-calculator.service';
+import {CameraHelperService} from './services/camera/camera-helper.service';
+import {GameMapGeneratorService} from './services/game-map/game-map-generator.service';
+import {YieldCalculatorService} from './services/game-map/yield-calculator.service';
+import {SaveHelperService} from './services/saves/save-helper.service';
+import {KeyboardHelperService} from './services/ui/keyboard-helper.service';
+import {GeneratorService} from './services/utils/generator.service';
+import {LocalStorageService} from './services/utils/local-storage.service';
 
 // STORES
 import {CameraStore} from './stores/camera.store';
@@ -82,11 +83,13 @@ const DIRECTIVES = [
 ]
 
 const SERVICES = [
+  CameraHelperService,
   GameMapGeneratorService,
+  YieldCalculatorService,
+  SaveHelperService,
+  KeyboardHelperService,
   GeneratorService,
   LocalStorageService,
-  SaveSorterService,
-  YieldCalculatorService
 ]
 
 const STORES = [

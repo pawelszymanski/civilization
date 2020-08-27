@@ -6,7 +6,7 @@ import {Coords} from '../models/utils/coords';
 
 import {CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP, DEFAULT_CAMERA} from '../consts/camera/camera.const';
 
-import {CameraHelpersService} from '../services/camera-helpers.service';
+import {CameraHelperService} from '../services/camera/camera-helper.service';
 
 @Injectable()
 export class CameraStore {
@@ -16,14 +16,14 @@ export class CameraStore {
   public readonly camera: Observable<Camera> = this._camera.asObservable();
 
   constructor(
-    private cameraHelpersService: CameraHelpersService
+    private cameraHelperService: CameraHelperService
   ) {
-    this.cameraHelpersService.setTileSizeCssVariable(DEFAULT_CAMERA.tileSize);
+    this.cameraHelperService.setTileSizeCssVariable(DEFAULT_CAMERA.tileSize);
   }
 
   private next(camera: Camera) {
     this._camera.next(camera);
-    this.cameraHelpersService.setTileSizeCssVariable(camera.tileSize);
+    this.cameraHelperService.setTileSizeCssVariable(camera.tileSize);
   }
 
   public setTileSize(tileSize: number) {

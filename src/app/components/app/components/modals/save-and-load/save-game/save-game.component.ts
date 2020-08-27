@@ -3,7 +3,7 @@ import {Component, ViewEncapsulation} from '@angular/core';
 import {GameMap} from '../../../../../../models/game-map/game-map';
 import {Save} from '../../../../../../models/saves/save';
 
-import {GeneratorService} from '../../../../../../services/generator.service';
+import {GeneratorService} from '../../../../../../services/utils/generator.service';
 
 import {GameMapStore} from '../../../../../../stores/game-map.store';
 import {SavesStore} from '../../../../../../stores/saves.store';

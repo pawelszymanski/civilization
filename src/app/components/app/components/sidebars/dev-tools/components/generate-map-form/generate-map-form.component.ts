@@ -11,7 +11,7 @@ import {
 
 import {MAP_SIZE_CONFIGURATIONS} from '../../../../../../../consts/map-generator/map-size-configurations.const';
 
-import {GameMapGeneratorService} from '../../../../../../../services/game-map-generator.service';
+import {GameMapGeneratorService} from '../../../../../../../services/game-map/game-map-generator.service';
 
 import {GameMapStore} from '../../../../../../../stores/game-map.store';
 

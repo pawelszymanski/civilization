@@ -1,12 +1,18 @@
+import {KeyCodeId} from '../../models/ui/key-code.enum';
+import {UiActionId} from '../../models/ui/ui-action.enum';
 import {KeyBindings} from '../../models/ui/key-bindings';
-import {KeyboardEventCodeId} from '../../models/ui/keyboard-event-code';
+
+export const KEY_MODIFIER_NONE = 0;
+export const KEY_MODIFIER_SHIFT = 1;
+export const KEY_MODIFIER_CTRL = 2;
+export const KEY_MODIFIER_ALT = 4;
 
 export const DEFAULT_KEY_BINDINGS: KeyBindings = {
-  escapeView: KeyboardEventCodeId.Escape,
-  toggleTileYield: KeyboardEventCodeId.KeyY,
-  toggleTileText: KeyboardEventCodeId.KeyI,
-  toggleTechTree: KeyboardEventCodeId.KeyT,
-  toggleCivicsTree: KeyboardEventCodeId.KeyC,
-  toggleMapEditor: KeyboardEventCodeId.Backquote,
-  toggleDevTools: KeyboardEventCodeId.Backquote
+  [UiActionId.ESCAPE_VIEW]: {keyCode: KeyCodeId.Escape, modifiers: KEY_MODIFIER_NONE},
+  [UiActionId.TOGGLE_TILE_YIELD]: {keyCode: KeyCodeId.KeyY, modifiers: KEY_MODIFIER_NONE},
+  [UiActionId.TOGGLE_TILE_TEXT]: {keyCode: KeyCodeId.KeyI, modifiers: KEY_MODIFIER_NONE},
+  [UiActionId.TOGGLE_TECH_TREE]: {keyCode: KeyCodeId.KeyT, modifiers: KEY_MODIFIER_NONE},
+  [UiActionId.TOGGLE_CIVICS_TREE]: {keyCode: KeyCodeId.KeyC, modifiers: KEY_MODIFIER_NONE},
+  [UiActionId.TOGGLE_MAP_EDITOR]: {keyCode: KeyCodeId.Backquote, modifiers: KEY_MODIFIER_NONE},
+  [UiActionId.TOGGLE_DEV_TOOLS]: {keyCode: KeyCodeId.Backquote, modifiers: KEY_MODIFIER_SHIFT}
 }

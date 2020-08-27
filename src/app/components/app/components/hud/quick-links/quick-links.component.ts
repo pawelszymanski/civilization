@@ -1,7 +1,7 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
-import {ModalId, Ui} from '../../../../../models/ui/ui';
 import {YieldId} from '../../../../../models/game-map/yield';
+import {ModalId, Ui} from '../../../../../models/ui/ui';
 
 import {YIELD_ICONS} from '../../../../../consts/game-map/yield-icons.const';
 

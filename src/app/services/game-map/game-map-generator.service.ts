@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
 
-import {GameMap, GameMapRow, GameMapTile} from '../models/game-map/game-map';
-import {TerrainBaseId, TerrainFeatureId, TerrainImprovementId, TerrainResourceId} from '../models/game-map/terrain';
-import {MapGeneratorSettings} from '../models/map-generator/map-generator-settings';
+import {TerrainBaseId, TerrainFeatureId, TerrainImprovementId, TerrainResourceId} from '../../models/game-map/terrain';
+
+import {GameMap, GameMapRow, GameMapTile} from '../../models/game-map/game-map';
+import {MapGeneratorSettings} from '../../models/map-generator/map-generator-settings';
 
 import {YieldCalculatorService} from './yield-calculator.service';
 

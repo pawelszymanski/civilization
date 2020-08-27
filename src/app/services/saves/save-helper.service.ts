@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 
-import {Save} from '../models/saves/save';
-import {SaveListOptions} from '../models/saves/save-list-options';
-import {SortOrderId} from '../models/sort-order';
+import {Save} from '../../models/saves/save';
+import {SaveListOptions} from '../../models/saves/save-list-options';
+import {SortOrderId} from '../../models/sort-order';
 
 @Injectable({providedIn: 'root'})
-export class SaveSorterService {
+export class SaveHelperService {
 
   getFilteredAndSortedSaves(saves: Save[], options: SaveListOptions): Save[] {
     let result = [...saves];

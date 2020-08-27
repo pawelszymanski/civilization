@@ -1,7 +1,7 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
-import {YIELD_IDS_IN_ORDER} from '../../../../../models/game-map/yield'
 import {YIELD_ICONS} from '../../../../../consts/game-map/yield-icons.const';
+import {YIELD_IDS_IN_ORDER} from '../../../../../consts/game-map/yields-in-order.const'
 
 @Component({
   selector: '.status-bar-component',

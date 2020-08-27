@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 
-import {GameMapTile} from '../models/game-map/game-map';
-import {Yield, YieldId} from '../models/game-map/yield';
+import {GameMapTile} from '../../models/game-map/game-map';
+import {Yield, YieldId} from '../../models/game-map/yield';
 
-import {TERRAIN_BASE_YIELD, TERRAIN_FEATURE_YIELD, TERRAIN_RESOURCE_YIELD, TERRAIN_IMPROVEMENT_YIELD} from '../consts/game-map/terrain-yield.const';
+import {TERRAIN_BASE_YIELD, TERRAIN_FEATURE_YIELD, TERRAIN_RESOURCE_YIELD, TERRAIN_IMPROVEMENT_YIELD} from '../../consts/game-map/terrain-yield.const';
 
 @Injectable({providedIn: 'root'})
 export class YieldCalculatorService {
