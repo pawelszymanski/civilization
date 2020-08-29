@@ -1,8 +1,13 @@
 <!-- Tried making it only UL + LIs, yet for some reason it renders much slower when scrolling -->
 
-<div class="game-map" #gameMapElem *ngIf="gameMap" [class.animated]="!isDragging && !isZooming" [ngStyle]="calcGameMapElemStyle()">
-  <div class="game-map-row" [style.z-index]="gameMap.rows.length - rowIndex -1" *ngFor="let row of gameMap.rows; index as rowIndex">
-    <div class="game-map-tile" [ngClass]="tile.cssClasses" *ngFor="let tile of row.tiles;"
+<div class="game-map" #gameMapElem *ngIf="gameMap"
+     [class.animated]="!isDragging && !isZooming"
+     [style.transform]="'translate(' + camera.translate.x + 'px, ' + camera.translate.y + 'px)'">
+
+  <div class="game-map-row" *ngFor="let row of gameMap.rows;">
+
+    <div class="game-map-tile" *ngFor="let tile of row.tiles;"
+         [ngClass]="tile.cssClasses"
          (wheel)="onTileWheel($event)"
          (click)="onTileClick($event, tile)"
          (dblclick)="onTileDblclick($event, tile)"
@@ -10,7 +15,9 @@
          (mousedown)="onTileMouseDown($event)"
          (mouseup)="onTileMouseUp($event)">
       <div class="tile-yield-component" *ngIf="ui.tileOverlay === TileOverlayId.YIELD" [yield]="tile.yield"></div>
-      <div class="tile-text-component" [showFullInfo]="camera.zoomLevel >= 0" *ngIf="ui.tileOverlay === TileOverlayId.TEXT" [tile]="tile"></div>
+      <div class="tile-text-component" *ngIf="ui.tileOverlay === TileOverlayId.TEXT" [tile]="tile" [showFullInfo]="camera.zoomLevel >= 0"></div>
     </div>
+
   </div>
+
 </div>

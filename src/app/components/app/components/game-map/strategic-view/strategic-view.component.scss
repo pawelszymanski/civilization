@@ -17,6 +17,12 @@
       display: flex;
       position: relative;
 
+      @for $i from 0 through ($max-map-height - 1) {
+        &:nth-child(#{$i}) {
+          z-index: $max-map-height - $i;  // This makes all of hexagon area hoverable
+        }
+      }
+
       &:nth-child(2n+0) {
         left: calc(var(--tile-size) * 0.9 / 2);
       }
@@ -34,16 +40,6 @@
         &:hover {
           opacity: .95;
         }
-
-        //&.selected {
-        //  &:after {
-        //    content: '';
-        //    position: absolute;
-        //    left: 0;
-        //    @include size(100%);
-        //    background: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 35%, rgb(203 0 255) 130%);
-        //  }
-        //}
 
       }
     }
@@ -156,6 +152,15 @@
   }
 }
 
+//&.selected {
+//  &:after {
+//    content: '';
+//    position: absolute;
+//    left: 0;
+//    @include size(100%);
+//    background: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 35%, rgb(203 0 255) 130%);
+//  }
+//}
 
 
 

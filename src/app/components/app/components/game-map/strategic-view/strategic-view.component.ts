@@ -54,10 +54,6 @@ export class StrategicViewComponent {
     this.subscribeToData();
   }
 
-  calcGameMapElemStyle(): Record<string, string> {
-    return {transform: `translate(${this.camera.translate.x}px, ${this.camera.translate.y}px`};
-  }
-
   normalizeVerticalTranslation(translate: Coords): Coords {
     const gameMapElemHeight = this.gameMapElem.nativeElement.offsetHeight;
     return this.cameraHelperService.normalizeVerticalTranslation(translate, gameMapElemHeight);
