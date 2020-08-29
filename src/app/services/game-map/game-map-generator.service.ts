@@ -5,20 +5,14 @@ import {TerrainBaseId, TerrainFeatureId, TerrainImprovementId, TerrainResourceId
 import {GameMap, GameMapRow, GameMapTile} from '../../models/game-map/game-map';
 import {MapGeneratorSettings} from '../../models/map-generator/map-generator-settings';
 
-import {YieldCalculatorService} from './yield-calculator.service';
+import {GameMapHelperService} from './game-map-helper.service';
 
 @Injectable({providedIn: 'root'})
 export class GameMapGeneratorService {
 
   constructor(
-    private yieldCalculatorService: YieldCalculatorService
+    private gameMapHelperService: GameMapHelperService
   ) {}
-
-  public getTerrainCssClass(tile: GameMapTile): string {
-    return 'm-terrain-' + TerrainBaseId[tile.terrain.base]
-      .toLowerCase()
-      .replace('_', '-');
-  }
 
   private createGameMapTile(x: number, y: number): GameMapTile {
     const tile = {
@@ -33,8 +27,10 @@ export class GameMapGeneratorService {
         improvement: TerrainImprovementId.NONE
       }
     } as GameMapTile;
-    tile.cssClass = this.getTerrainCssClass(tile);
-    tile.yield = this.yieldCalculatorService.calculateTileYield(tile);
+
+    tile.cssClasses = this.gameMapHelperService.calcTileCssClasses(tile);
+    tile.yield = this.gameMapHelperService.calcTileYield(tile);
+
     return tile;
   }
 

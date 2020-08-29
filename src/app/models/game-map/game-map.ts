@@ -5,8 +5,8 @@ import {Yield} from './yield';
 export interface GameMapTile {
   coords: Coords;
   terrain: Terrain;
-  cssClass?: string;
-  yield?: Yield;
+  cssClasses: string[];
+  yield: Yield;
 }
 
 export interface GameMapRow {

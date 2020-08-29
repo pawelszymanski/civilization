@@ -5,9 +5,9 @@
     <option *ngFor="let gameMapConfig of MAP_SIZE_CONFIGURATIONS" [value]="gameMapConfig.id">{{ gameMapConfig.name }}</option>
   </select>
   <label>Width: <span>{{ settings.width }}</span></label>
-  <input type="range" name="width" min="20" max="120" step="1" [(ngModel)]="settings.width" disabled>
+  <input type="range" name="width" min="20" max="200" step="1" [(ngModel)]="settings.width" disabled>
   <label>Height: <span>{{ settings.height }}</span></label>
-  <input type="range" name="height" min="20" max="80" step="1" [(ngModel)]="settings.height" disabled>
+  <input type="range" name="height" min="20" max="120" step="1" [(ngModel)]="settings.height" disabled>
   <label>Continents: <span>{{ settings.continents }}</span></label>
   <input type="range" name="continents" min="1" max="10" step="1" [(ngModel)]="settings.continents" disabled>
   <label>Islands: <span>{{ settings.islands }}</span></label>

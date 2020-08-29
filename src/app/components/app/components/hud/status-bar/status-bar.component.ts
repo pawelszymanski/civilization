@@ -1,6 +1,6 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
-import {YIELD_ICONS} from '../../../../../consts/game-map/yield-icons.const';
+import {YIELD_ID_TO_ICON_CLASS_MAP} from '../../../../../consts/game-map/yield-id-to-icon-class-map.const';
 import {YIELD_IDS_IN_ORDER} from '../../../../../consts/game-map/yields-in-order.const'
 
 @Component({
@@ -12,6 +12,6 @@ import {YIELD_IDS_IN_ORDER} from '../../../../../consts/game-map/yields-in-order
 export class StatusBarComponent {
 
   YIELD_IDS_IN_ORDER = YIELD_IDS_IN_ORDER;
-  YIELD_ICONS = YIELD_ICONS;
+  YIELD_ICONS = YIELD_ID_TO_ICON_CLASS_MAP;
 
 }

@@ -6,17 +6,17 @@ export const CAMERA_MAX_ZOOM_LEVEL = 5;
 export const CAMERA_DEFAULT_ZOOM_LEVEL = -2;
 
 export const CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP = {
-  '-5': 40,
-  '-4': 60,
-  '-3': 80,
-  '-2': 100,
-  '-1': 120,
-  '0': 140,
-  '1': 160,
-  '2': 180,
-  '3': 200,
-  '4': 240,
-  '5': 300
+  '-5': 60,
+  '-4': 80,
+  '-3': 100,
+  '-2': 120,
+  '-1': 140,
+  '0': 160,
+  '1': 200,
+  '2': 240,
+  '3': 280,
+  '4': 340,
+  '5': 420
 }
 
 export const CAMERA_MIN_TILE_SIZE = CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP[CAMERA_MIN_ZOOM_LEVEL];

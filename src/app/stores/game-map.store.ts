@@ -3,8 +3,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 
 import {GameMap, GameMapTile} from '../models/game-map/game-map';
 
-import {GameMapGeneratorService} from '../services/game-map/game-map-generator.service';
-import {YieldCalculatorService} from '../services/game-map/yield-calculator.service';
+import {GameMapHelperService} from '../services/game-map/game-map-helper.service';
 
 @Injectable()
 export class GameMapStore {
@@ -14,21 +13,18 @@ export class GameMapStore {
   public readonly gameMap: Observable<GameMap> = this._gameMap.asObservable();
 
   constructor(
-    private gameMapGeneratorService: GameMapGeneratorService,
-    private yieldCalculatorService: YieldCalculatorService
+    private gameMapHelperService: GameMapHelperService,
   ) {}
 
   public next(gameMap: GameMap) {
+    // TODO: for during development, remove later
+    // gameMap.rows.forEach(row => row.tiles.forEach(tile => this.updateTile(tile)))
     this._gameMap.next(gameMap);
   }
 
-  // public updateTile(coords: Coords, terrain: Terrain) {
-  public updateTile(tile: GameMapTile) {
-    const gameMap = this._gameMap.value;
-    tile.cssClass = this.gameMapGeneratorService.getTerrainCssClass(tile);
-    tile.yield = this.yieldCalculatorService.calculateTileYield(tile);
-    gameMap.rows[tile.coords.y].tiles[tile.coords.x] = tile;
-    this._gameMap.next(gameMap);
+  private updateTile(tile: GameMapTile) {
+    tile.cssClasses = this.gameMapHelperService.calcTileCssClasses(tile);
+    tile.yield = this.gameMapHelperService.calcTileYield(tile);
   }
 
 }

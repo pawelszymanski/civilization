@@ -5,12 +5,13 @@ import {Camera} from '../../../../../models/camera/camera';
 import {Coords} from '../../../../../models/utils/coords';
 import {Ui, TileOverlayId} from '../../../../../models/ui/ui';
 
+import {CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP} from '../../../../../consts/camera/camera.const';
+
 import {CameraHelperService} from '../../../../../services/camera/camera-helper.service';
 
 import {CameraStore} from '../../../../../stores/camera.store';
 import {GameMapStore} from '../../../../../stores/game-map.store';
 import {UiStore} from '../../../../../stores/ui.store';
-import {CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP} from '../../../../../consts/camera/camera.const';
 
 @Component({
   selector: '.strategic-view-component',
@@ -31,6 +32,7 @@ export class StrategicViewComponent {
   dragStartCoords: Coords;  // Page x, y when mouse was pressed down
   dragStartOffset: Coords;  // Map element x, y when mouse was pressed down
 
+  isZooming = false;
   isDragging = false;
   dragHandler: Function;
 
@@ -102,6 +104,8 @@ export class StrategicViewComponent {
   }
 
   onTileWheel(event: WheelEvent) {
+    this.isZooming = true;
+
     // calculate new zoom level
     const step = this.cameraHelperService.wheelEventToStep(event);
     const currentZoomLevel = this.camera.zoomLevel;
@@ -123,6 +127,8 @@ export class StrategicViewComponent {
     }
     const normalizedTranslate = this.normalizeVerticalTranslation(newTranslate);
     this.cameraStore.setTranslate(normalizedTranslate);
+
+    window.setTimeout(() => {this.isZooming = false;}, 0);
   }
 
   onTileClick(event: MouseEvent, tile: GameMapTile) {
@@ -147,6 +153,10 @@ export class StrategicViewComponent {
     }
     const normalizedTranslate = this.normalizeVerticalTranslation(newTranslate);
     this.cameraStore.setTranslate(normalizedTranslate);
+  }
+
+  onTileContextmenu(event: MouseEvent, tile: GameMapTile) {
+    //
   }
 
 }

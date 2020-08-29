@@ -3,7 +3,7 @@ import {Component, ViewEncapsulation} from '@angular/core';
 import {YieldId} from '../../../../../models/game-map/yield';
 import {ModalId, Ui} from '../../../../../models/ui/ui';
 
-import {YIELD_ICONS} from '../../../../../consts/game-map/yield-icons.const';
+import {YIELD_ID_TO_ICON_CLASS_MAP} from '../../../../../consts/game-map/yield-id-to-icon-class-map.const';
 
 import {UiStore} from '../../../../../stores/ui.store';
 
@@ -15,7 +15,7 @@ import {UiStore} from '../../../../../stores/ui.store';
 })
 export class QuickLinksComponent {
 
-  YIELD_ICONS = YIELD_ICONS;
+  YIELD_ICONS = YIELD_ID_TO_ICON_CLASS_MAP;
 
   ModalId = ModalId;
   YieldId = YieldId;

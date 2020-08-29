@@ -2,7 +2,7 @@ import {Component, Input, ViewEncapsulation} from '@angular/core';
 
 import {Yield, YieldId, YieldOfType} from '../../../../../models/game-map/yield';
 
-import {YIELD_ICONS} from '../../../../../consts/game-map/yield-icons.const';
+import {YIELD_ID_TO_ICON_CLASS_MAP} from '../../../../../consts/game-map/yield-id-to-icon-class-map.const';
 import {YIELD_IDS_IN_ORDER} from '../../../../../consts/game-map/yields-in-order.const';
 
 @Component({
@@ -30,9 +30,9 @@ export class TileYieldComponent {
   // - small: ['fa fa-leaf', 'fa fa-leaf', 'fa fa-leaf']
   private static yieldToIconCssClasses(yieldOfType: YieldOfType): string[] {
     if (yieldOfType.count > 4) {
-      return ['fa fa-2x ' + YIELD_ICONS[yieldOfType.type] + ` m-count-${yieldOfType.count}`];
+      return ['fa fa-2x ' + YIELD_ID_TO_ICON_CLASS_MAP[yieldOfType.type] + ` m-count-${yieldOfType.count}`];
     } else {
-      return new Array(yieldOfType.count).fill('fa ' + YIELD_ICONS[yieldOfType.type]);
+      return new Array(yieldOfType.count).fill('fa ' + YIELD_ID_TO_ICON_CLASS_MAP[yieldOfType.type]);
     }
   }
 

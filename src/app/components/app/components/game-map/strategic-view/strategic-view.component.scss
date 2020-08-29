@@ -6,16 +6,18 @@
 
   .game-map {
 
-    // TODO maybe make the animation enabled only for dbl click on the map
-    //&.animated {
-    //  transition: 0.5s all cubic-bezier(0.4, 0, 0.15, 1);
-    //}
+    &.animated {
+      transition: 0.5s all cubic-bezier(0.4, 0, 0.15, 1);
+    }
 
+    // --------------------------
+    // Basic row and tile styling
+    // --------------------------
     .game-map-row {
       display: flex;
       position: relative;
 
-      &:nth-child(2n) {
+      &:nth-child(2n+0) {
         left: calc(var(--tile-size) * 0.9 / 2);
       }
 
@@ -23,11 +25,8 @@
         flex: calc(var(--tile-size) * 0.9) 0 0;
         height: var(--tile-size);
         text-align: center;
+        background-size: 180% 120%;
         clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-        background-position-x: center !important;
-        background-position-y: center !important;
-        //background-size: 105px 115px !important;
-        background-size: 315px 350px !important;
         margin-bottom: calc((var(--tile-size) / -4) - 1px);
         @include disable-selection;
         position: relative;
@@ -36,79 +35,191 @@
           opacity: .95;
         }
 
-        &.m-terrain-grassland {
-          background: url('../../../../../../assets/images/terrain/grassland-flat.png');
-        }
-
-        &.m-terrain-grassland-hills {
-          background: url('../../../../../../assets/images/terrain/grassland-hills.png');
-        }
-
-        &.m-terrain-grassland-mountain {
-          background: url('../../../../../../assets/images/terrain/grassland-mountain.png');
-        }
-
-        &.m-terrain-plains {
-          background: url('../../../../../../assets/images/terrain/plains-flat.png');
-        }
-
-        &.m-terrain-plains-hills {
-          background: url('../../../../../../assets/images/terrain/plains-hills.png');
-        }
-
-        &.m-terrain-plains-mountain {
-          background: url('../../../../../../assets/images/terrain/plains-mountain.png');
-        }
-
-        &.m-terrain-desert {
-          background: url('../../../../../../assets/images/terrain/desert-flat.png');
-        }
-
-        &.m-terrain-desert-hills {
-          background: url('../../../../../../assets/images/terrain/desert-hills.png');
-        }
-
-        &.m-terrain-desert-mountain {
-          background: url('../../../../../../assets/images/terrain/desert-mountain.png');
-        }
-
-        &.m-terrain-tundra {
-          background: url('../../../../../../assets/images/terrain/tundra-flat.png');
-        }
-
-        &.m-terrain-tundra-hills {
-          background: url('../../../../../../assets/images/terrain/tundra-hills.png');
-        }
-
-        &.m-terrain-tundra-mountain {
-          background: url('../../../../../../assets/images/terrain/tundra-mountain.png');
-        }
-
-        &.m-terrain-snow {
-          background: url('../../../../../../assets/images/terrain/snow-flat.png');
-        }
-
-        &.m-terrain-snow-hills {
-          background: url('../../../../../../assets/images/terrain/snow-hills.png');
-        }
-
-        &.m-terrain-snow-mountain {
-          background: url('../../../../../../assets/images/terrain/snow-mountain.png');
-        }
-
-        &.m-terrain-lake {
-          background: url('../../../../../../assets/images/terrain/lake.png');
-        }
-
-        &.m-terrain-coast {
-          background: url('../../../../../../assets/images/terrain/coast.png');
-        }
-
-        &.m-terrain-ocean {
-          background: url('../../../../../../assets/images/terrain/ocean.png');
-        }
+        //&.selected {
+        //  &:after {
+        //    content: '';
+        //    position: absolute;
+        //    left: 0;
+        //    @include size(100%);
+        //    background: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 35%, rgb(203 0 255) 130%);
+        //  }
+        //}
 
       }
     }
+
+    // ------------------------------------------------------------------------------------------------
+    // Make terrain background flow through tiles (since `background-attachment: fixed` is not working)
+    // ------------------------------------------------------------------------------------------------
+    .game-map-row {
+
+      &:nth-child(2n+0) {
+        .game-map-tile {
+          @for $i from 0 through ($max-map-width - 1) {
+            &.x-#{$i} {
+              background-position-x: 62.5% - ($i * 100%);
+            }
+          }
+        }
+      }
+
+      &:nth-child(2n+1) {
+        .game-map-tile {
+          @for $i from 0 through ($max-map-width - 1) {
+            &.x-#{$i} {
+              background-position-x: -$i * 100%;
+            }
+          }
+        }
+      }
+
+      .game-map-tile {
+        @for $i from 0 through ($max-map-height - 1) {
+          &.y-#{$i} {
+            background-position-y: -$i * 226%;
+          }
+        }
+      }
+
+    }
+
+    // ----------------------
+    // Backgrounds and colors
+    // ----------------------
+    .game-map-row {
+
+      .game-map-tile {
+
+        &[class*='m-terrain-grassland'] {
+          background-image: url('../../../../../../assets/game-map/grassland.png');
+        }
+        &.m-terrain-grassland-flat {}
+        &.m-terrain-grassland-hills {
+        }
+        &.m-terrain-grassland-mountain {
+        }
+
+        &[class*='m-terrain-plains'] {
+          background-image: url('../../../../../../assets/game-map/plains.png');
+        }
+        &.m-terrain-plains-flat {}
+        &.m-terrain-plains-hills {
+        }
+        &.m-terrain-plains-mountain {
+        }
+
+        &[class*='m-terrain-desert'] {
+          background-image: url('../../../../../../assets/game-map/desert.png');
+        }
+        &.m-terrain-desert-flat {}
+        &.m-terrain-desert-hills {
+        }
+        &.m-terrain-desert-mountain {
+        }
+
+        &[class*='m-terrain-tundra'] {
+          background-image: url('../../../../../../assets/game-map/tundra.png');
+        }
+        &.m-terrain-tundra-flat {}
+        &.m-terrain-tundra-hills {
+        }
+        &.m-terrain-tundra-mountain {
+        }
+
+        &[class*='m-terrain-snow'] {
+          background-image: url('../../../../../../assets/game-map/snow.png');
+        }
+
+        &.m-terrain-snow-flat {}
+        &.m-terrain-snow-hills {
+        }
+        &.m-terrain-snow-mountain {
+        }
+
+        &.m-terrain-lake {
+          background-image: url('../../../../../../assets/game-map/coast.png');
+        }
+
+        &.m-terrain-coast {
+          background-image: url('../../../../../../assets/game-map/coast.png');
+        }
+
+        &.m-terrain-ocean {
+          background-image: url('../../../../../../assets/game-map/ocean.png');
+        }
+
+
+      }
+
+    }
+
   }
 }
+
+
+
+
+
+//&[class*='m-resource'] {
+//
+//}
+//
+//&.m-resource-none {}
+//
+//@each $resource in $terrain-resources {
+//  &.m-resource-#{$resource} {
+//    &:before {
+//      content: '';
+//      display: block;
+//      height: 100%;
+//      background: url('../../../../../../assets/icons/resources/#{$resource}.webp') no-repeat;
+//      background-position-x: center;
+//      background-position-y: bottom;
+//      background-size: calc(var(--tile-size) * 0.2 + 4px);
+//      position: relative;
+//      top: calc(var(--tile-size) * -0.1);
+//    }
+//  }
+//}
+//
+//&.m-resource-bananas {}
+//&.m-resource-cattle {}
+//&.m-resource-copper {}
+//&.m-resource-crabs {}
+//&.m-resource-deer {}
+//&.m-resource-fish {}
+//&.m-resource-rice {}
+//&.m-resource-sheep {}
+//&.m-resource-stone {}
+//&.m-resource-wheat {}
+//&.m-resource-aluminum {}
+//&.m-resource-coal {}
+//&.m-resource-horses {}
+//&.m-resource-iron {}
+//&.m-resource-niter {}
+//&.m-resource-oil {}
+//&.m-resource-uranium {}
+//&.m-resource-citrus {}
+//&.m-resource-cocoa {}
+//&.m-resource-coffee {}
+//&.m-resource-cotton {}
+//&.m-resource-diamonds {}
+//&.m-resource-dyes {}
+//&.m-resource-furs {}
+//&.m-resource-gypsum {}
+//&.m-resource-incense {}
+//&.m-resource-ivory {}
+//&.m-resource-jade {}
+//&.m-resource-marble {}
+//&.m-resource-mercury {}
+//&.m-resource-pearls {}
+//&.m-resource-salt {}
+//&.m-resource-silk {}
+//&.m-resource-silver {}
+//&.m-resource-spices {}
+//&.m-resource-sugar {}
+//&.m-resource-tea {}
+//&.m-resource-tobacco {}
+//&.m-resource-truffles {}
+//&.m-resource-whales {}
+//&.m-resource-wine {}

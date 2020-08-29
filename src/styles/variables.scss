@@ -12,6 +12,15 @@ $z-index-main-menu: 300;
 $z-index-modal: 400;
 $z-index-sidebar: 500;
 
+$max-map-width: 200;
+$max-map-height: 120;
+
+$terrain-resources: 'bananas', 'cattle', 'copper', 'crabs', 'deer', 'fish', 'rice', 'sheep', 'stone', 'wheat',
+  'aluminum', 'coal', 'horses', 'iron', 'niter', 'oil', 'uranium', 'citrus', 'cocoa', 'coffee', 'cotton',
+  'diamonds', 'dyes', 'furs', 'gypsum', 'incense', 'ivory', 'jade', 'marble', 'mercury', 'pearls', 'salt',
+  'silk', 'silver', 'spices', 'sugar', 'tea', 'tobacco', 'truffles', 'whales', 'wine';
+
+
 //$tile-size: 200px
 //$tile-width: $tile-size * 0.9
 //$tile-height: $tile-size * 1.0

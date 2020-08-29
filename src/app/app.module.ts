@@ -31,7 +31,7 @@ import {ViewportCenterMarkerComponent} from './components/app/components/game-ma
 // SERVICES
 import {CameraHelperService} from './services/camera/camera-helper.service';
 import {GameMapGeneratorService} from './services/game-map/game-map-generator.service';
-import {YieldCalculatorService} from './services/game-map/yield-calculator.service';
+import {GameMapHelperService} from './services/game-map/game-map-helper.service';
 import {SaveHelperService} from './services/saves/save-helper.service';
 import {KeyboardHelperService} from './services/ui/keyboard-helper.service';
 import {GeneratorService} from './services/utils/generator.service';
@@ -85,7 +85,7 @@ const DIRECTIVES = [
 const SERVICES = [
   CameraHelperService,
   GameMapGeneratorService,
-  YieldCalculatorService,
+  GameMapHelperService,
   SaveHelperService,
   KeyboardHelperService,
   GeneratorService,
