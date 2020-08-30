@@ -2,22 +2,23 @@
 @import './../../../../../../styles/mixins';
 @import './../../../../../../styles/variables';
 
-.map-editor-component {
+.world-builder-component {
 
   h2 {
     color: white;
   }
 
   section {
+    display: flex;
+    flex-wrap: wrap;
     padding: 10px;
   }
 
 }
 
+.world-builder-component {
 
-.map-editor-component {
-
-  .map-editor-button {
+  .world-builder-button {
     display: inline-block;
     @include size(50px);
     background-size: 100%;
@@ -32,6 +33,10 @@
       content: '';
       @include position-block(absolute, 0, 0, 0, 0, -1);
       background: linear-gradient(0deg, rgba(0,89,164,1) 0%, rgba(0,0,0,1) 50%, rgba(20,68,125,1) 100%);;
+    }
+
+    &.active {
+      border: 2px solid #fd9700;
     }
 
     &.m-terrain-base {
@@ -61,7 +66,6 @@
       $filename: str-replace($terrain-feature, '-', '_');
       &.m-feature-#{$terrain-feature} {
         background-image: url('../../../../../../assets/icons/terrain/features/#{$filename}.webp');
-        background-size: 80%;
       }
     }
 

@@ -16,7 +16,7 @@ export enum ModalId {
 
 export enum SidebarId {
   NONE,
-  MAP_EDITOR,
+  WORLD_BUILDER,
   DEV_TOOLS
 }
 

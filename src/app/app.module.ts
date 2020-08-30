@@ -5,7 +5,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 // COMPONENTS
 import {AppComponent} from './components/app/app.component';
 import {MainMenuComponent} from './components/app/components/main-menu/main-menu.component';
-import {MapEditorComponent} from './components/app/components/sidebars/map-editor/map-editor.component';
+import {WorldBuilderComponent} from './components/app/components/sidebars/world-builder/world-builder.component';
 import {DevToolsComponent} from './components/app/components/sidebars/dev-tools/dev-tools.component';
 import {CameraFormComponent} from './components/app/components/sidebars/dev-tools/components/camera-form/camera-form.component';
 import {GenerateMapFormComponent} from './components/app/components/sidebars/dev-tools/components/generate-map-form/generate-map-form.component';
@@ -43,6 +43,7 @@ import {GameMapStore} from './stores/game-map.store';
 import {KeyBindingsStore} from './stores/key-bindings.store';
 import {SavesStore} from './stores/saves.store';
 import {UiStore} from './stores/ui.store';
+import {WorldBuilderUiStore} from './stores/world-builder-ui.store';
 
 // PIPES
 import {EraNamePipe} from './pipes/era-name.pipe';
@@ -57,7 +58,7 @@ import {TechnologyNamePipe} from './pipes/technology-name.pipe';
 const COMPONENTS = [
   AppComponent,
   MainMenuComponent,
-  MapEditorComponent,
+  WorldBuilderComponent,
   DevToolsComponent,
   CameraFormComponent,
   GenerateMapFormComponent,
@@ -98,6 +99,7 @@ const STORES = [
   KeyBindingsStore,
   SavesStore,
   UiStore,
+  WorldBuilderUiStore,
 ]
 
 const PIPES = [

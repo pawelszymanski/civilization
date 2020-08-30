@@ -1,0 +1,38 @@
+<h2>Map Editor</h2>
+
+<section class="tool-selection">
+  <div class="world-builder-button m-terrain-base"
+       [class.active]="worldBuilderUi.tool === WorldBuilderToolId.TERRAIN_BASE"
+       (click)="onToolClick(WorldBuilderToolId.TERRAIN_BASE)"></div>
+  <div class="world-builder-button m-terrain-feature"
+       [class.active]="worldBuilderUi.tool === WorldBuilderToolId.TERRAIN_FEATURE"
+       (click)="onToolClick(WorldBuilderToolId.TERRAIN_FEATURE)"></div>
+  <div class="world-builder-button m-terrain-resource"
+       [class.active]="worldBuilderUi.tool === WorldBuilderToolId.TERRAIN_RESOURCE"
+       (click)="onToolClick(WorldBuilderToolId.TERRAIN_RESOURCE)"></div>
+  <div class="world-builder-button m-terrain-improvement"
+       [class.active]="worldBuilderUi.tool === WorldBuilderToolId.TERRAIN_IMPROVEMENT"
+       (click)="onToolClick(WorldBuilderToolId.TERRAIN_IMPROVEMENT)"></div>
+</section>
+
+<section class="list-of-options">
+  <ng-container *ngIf="worldBuilderUi.tool === WorldBuilderToolId.TERRAIN_BASE">
+    <div class="world-builder-button" *ngFor="let base of TERRAIN_BASE_LIST" [ngClass]="base.cssClass"
+         [class.active]="worldBuilderUi.terrainBase === base.id" (click)="onTerrainBaseClick(base.id)"></div>
+  </ng-container>
+
+  <ng-container *ngIf="worldBuilderUi.tool === WorldBuilderToolId.TERRAIN_FEATURE">
+    <div class="world-builder-button" *ngFor="let feature of TERRAIN_FEATURE_LIST"
+         [ngClass]="feature.cssClass" (click)="onTerrainFeatureClick(feature.id)"></div>
+  </ng-container>
+
+  <ng-container *ngIf="worldBuilderUi.tool === WorldBuilderToolId.TERRAIN_RESOURCE">
+    <div class="world-builder-button" *ngFor="let resource of TERRAIN_RESOURCE_LIST"
+         [ngClass]="resource.cssClass" (click)="onTerrainResourceClick(resource.id)"></div>
+  </ng-container>
+
+  <ng-container *ngIf="worldBuilderUi.tool === WorldBuilderToolId.TERRAIN_IMPROVEMENT">
+    <div class="world-builder-button" *ngFor="let improvement of TERRAIN_IMPROVEMENT_LIST"
+         [ngClass]="improvement.cssClass" (click)="onTerrainImprovementClick(improvement.id)"></div>
+  </ng-container>
+</section>

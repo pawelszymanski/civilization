@@ -74,7 +74,7 @@ export class AppComponent {
     if (uiActionId == UiActionId.TOGGLE_TILE_TEXT)   {this.uiStore.toggleTileOverlay(TileOverlayId.TEXT)} else
     if (uiActionId == UiActionId.TOGGLE_TECH_TREE)   {this.uiStore.toggleModal(ModalId.TECHNOLOGY_TREE)} else
     if (uiActionId == UiActionId.TOGGLE_CIVICS_TREE) {this.uiStore.toggleModal(ModalId.CIVIC_TREE)} else
-    if (uiActionId == UiActionId.TOGGLE_MAP_EDITOR)  {this.uiStore.toggleSidebar(SidebarId.MAP_EDITOR)} else
+    if (uiActionId == UiActionId.TOGGLE_MAP_EDITOR)  {this.uiStore.toggleSidebar(SidebarId.WORLD_BUILDER)} else
     if (uiActionId == UiActionId.TOGGLE_DEV_TOOLS)   {this.uiStore.toggleSidebar(SidebarId.DEV_TOOLS)}
   }
 

@@ -1,0 +1,6 @@
+export enum WorldBuilderToolId {
+  TERRAIN_BASE,
+  TERRAIN_FEATURE,
+  TERRAIN_RESOURCE,
+  TERRAIN_IMPROVEMENT,
+}
