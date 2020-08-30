@@ -1,4 +1,4 @@
-<h2>Map Editor</h2>
+<h2>World Builder</h2>
 
 <section class="tool-selection">
   <div class="world-builder-button m-terrain-base"
@@ -22,17 +22,26 @@
   </ng-container>
 
   <ng-container *ngIf="worldBuilderUi.tool === WorldBuilderToolId.TERRAIN_FEATURE">
-    <div class="world-builder-button" *ngFor="let feature of TERRAIN_FEATURE_LIST"
-         [ngClass]="feature.cssClass" (click)="onTerrainFeatureClick(feature.id)"></div>
+    <div class="world-builder-button m-terrain-feature-none"
+         [class.active]="worldBuilderUi.terrainFeature === TerrainFeatureId.NONE"
+         (click)="onTerrainFeatureClick(TerrainFeatureId.NONE)"></div>
+    <div class="world-builder-button" *ngFor="let feature of TERRAIN_FEATURE_LIST" [ngClass]="feature.cssClass"
+         [class.active]="worldBuilderUi.terrainFeature === feature.id" (click)="onTerrainFeatureClick(feature.id)"></div>
   </ng-container>
 
   <ng-container *ngIf="worldBuilderUi.tool === WorldBuilderToolId.TERRAIN_RESOURCE">
-    <div class="world-builder-button" *ngFor="let resource of TERRAIN_RESOURCE_LIST"
-         [ngClass]="resource.cssClass" (click)="onTerrainResourceClick(resource.id)"></div>
+    <div class="world-builder-button m-terrain-resource-none"
+         [class.active]="worldBuilderUi.terrainResource === TerrainResourceId.NONE"
+         (click)="onTerrainResourceClick(TerrainResourceId.NONE)"></div>
+    <div class="world-builder-button" *ngFor="let resource of TERRAIN_RESOURCE_LIST" [ngClass]="resource.cssClass"
+         [class.active]="worldBuilderUi.terrainResource === resource.id" (click)="onTerrainResourceClick(resource.id)"></div>
   </ng-container>
 
   <ng-container *ngIf="worldBuilderUi.tool === WorldBuilderToolId.TERRAIN_IMPROVEMENT">
-    <div class="world-builder-button" *ngFor="let improvement of TERRAIN_IMPROVEMENT_LIST"
-         [ngClass]="improvement.cssClass" (click)="onTerrainImprovementClick(improvement.id)"></div>
+    <div class="world-builder-button m-terrain-improvement-none"
+         [class.active]="worldBuilderUi.terrainImprovement === TerrainImprovementId.NONE"
+         (click)="onTerrainImprovementClick(TerrainImprovementId.NONE)"></div>
+    <div class="world-builder-button" *ngFor="let improvement of TERRAIN_IMPROVEMENT_LIST" [ngClass]="improvement.cssClass"
+         [class.active]="worldBuilderUi.terrainImprovement === improvement.id" (click)="onTerrainImprovementClick(improvement.id)"></div>
   </ng-container>
 </section>

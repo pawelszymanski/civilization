@@ -20,7 +20,7 @@
 
   .world-builder-button {
     display: inline-block;
-    @include size(50px);
+    @include size(60px);
     background-size: 100%;
     background-position: center;
     background-repeat: no-repeat;
@@ -32,28 +32,21 @@
     &:before {
       content: '';
       @include position-block(absolute, 0, 0, 0, 0, -1);
-      background: linear-gradient(0deg, rgba(0,89,164,1) 0%, rgba(0,0,0,1) 50%, rgba(20,68,125,1) 100%);;
+      background: #ffffff91;
     }
 
     &.active {
       border: 2px solid #fd9700;
     }
 
-    &.m-terrain-base {
-      background-image: url('../../../../../../assets/icons/terrain/base/grassland_flat.webp');
-    }
+    &.m-terrain-base        { background-image: url('../../../../../../assets/icons/world-builder/terrain_base.webp'); }
+    &.m-terrain-feature     { background-image: url('../../../../../../assets/icons/world-builder/terrain_feature.webp'); }
+    &.m-terrain-resource    { background-image: url('../../../../../../assets/icons/world-builder/terrain_resource.webp'); }
+    &.m-terrain-improvement { background-image: url('../../../../../../assets/icons/world-builder/terrain_improvement.webp'); }
 
-    &.m-terrain-feature {
-      background-image: url('../../../../../../assets/icons/terrain/base/plains_flat.webp');
-    }
-
-    &.m-terrain-resource {
-      background-image: url('../../../../../../assets/icons/terrain/resources/iron.webp');
-    }
-
-    &.m-terrain-improvement {
-      background-image: url('../../../../../../assets/icons/terrain/improvements/farm.webp');
-    }
+    &.m-terrain-feature-none     { background-image: url('../../../../../../assets/icons/world-builder/terrain_feature_none.webp'); }
+    &.m-terrain-resource-none    { background-image: url('../../../../../../assets/icons/world-builder/terrain_resource_none.webp'); }
+    &.m-terrain-improvement-none { background-image: url('../../../../../../assets/icons/world-builder/terrain_improvement_none.webp'); }
 
     @each $terrain-base in $terrain-base-list {
       $filename: str-replace($terrain-base, '-', '_');

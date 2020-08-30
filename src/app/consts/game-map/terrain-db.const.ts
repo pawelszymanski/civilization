@@ -16,12 +16,23 @@ interface TerrainBase {
   yield: Partial<Yield>;
 }
 
+type TerrainBaseDb = {
+  [key in TerrainBaseId]: TerrainBase;
+}
+
+
+
 interface TerrainFeature {
   id: TerrainFeatureId;
   name: string;
   cssClass: string;
   yield: Partial<Yield>;
 }
+
+// All but TerrainFeatureId.NONE
+type TerrainFeatureDb = Omit<{[key in TerrainFeatureId]: TerrainFeature;}, TerrainFeatureId.NONE>;
+
+
 
 interface TerrainResource {
   id: TerrainResourceId;
@@ -31,6 +42,11 @@ interface TerrainResource {
   type: TerrainResourceTypeId;
 }
 
+// All but TerrainResourceId.NONE
+type TerrainResourceDb = Omit<{[key in TerrainResourceId]: TerrainResource;}, TerrainResourceId.NONE>;
+
+
+
 interface TerrainImprovement {
   id: TerrainImprovementId;
   name: string;
@@ -38,21 +54,8 @@ interface TerrainImprovement {
   yield: Partial<Yield>;
 }
 
-type TerrainBaseDb = {
-  [key in TerrainBaseId]: TerrainBase;
-}
-
-type TerrainFeatureDb = {
-  [key in TerrainFeatureId]: TerrainFeature;
-}
-
-type TerrainResourceDb = {
-  [key in TerrainResourceId]: TerrainResource;
-}
-
-type TerrainImprovementDb = {
-  [key in TerrainImprovementId]: TerrainImprovement;
-}
+// All but TerrainImprovementId.NONE
+type TerrainImprovementDb = Omit<{[key in TerrainImprovementId]: TerrainImprovement;}, TerrainImprovementId.NONE>;
 
 
 
@@ -60,109 +63,109 @@ export const TERRAIN_BASE_DB: TerrainBaseDb = {
   [TerrainBaseId.GRASSLAND_FLAT]: {
     id: TerrainBaseId.GRASSLAND_FLAT,
     name: 'Grassland',
-    cssClass: 'm-grassland-flat',
+    cssClass: 'm-base-grassland-flat',
     yield: { [YieldId.FOOD]: 2 }
   },
   [TerrainBaseId.GRASSLAND_HILLS]: {
     id: TerrainBaseId.GRASSLAND_HILLS,
     name: 'Grassland (Hills)',
-    cssClass: 'm-grassland-hills',
+    cssClass: 'm-base-grassland-hills',
     yield: { [YieldId.FOOD]: 2, [YieldId.PRODUCTION]: 1 }
   },
   [TerrainBaseId.GRASSLAND_MOUNTAIN]: {
     id: TerrainBaseId.GRASSLAND_MOUNTAIN,
     name: 'Grassland (Mountain)',
-    cssClass: 'm-grassland-mountain',
+    cssClass: 'm-base-grassland-mountain',
     yield: {}
   },
   [TerrainBaseId.PLAINS_FLAT]: {
     id: TerrainBaseId.PLAINS_FLAT,
     name: 'Plains',
-    cssClass: 'm-plains-flat',
+    cssClass: 'm-base-plains-flat',
     yield: { [YieldId.FOOD]: 1, [YieldId.PRODUCTION]: 1 }
   },
   [TerrainBaseId.PLAINS_HILLS]: {
     id: TerrainBaseId.PLAINS_HILLS,
     name: 'Plains (Hills)',
-    cssClass: 'm-plains-hills',
+    cssClass: 'm-base-plains-hills',
     yield: { [YieldId.FOOD]: 1, [YieldId.PRODUCTION]: 2 }
   },
   [TerrainBaseId.PLAINS_MOUNTAIN]: {
     id: TerrainBaseId.PLAINS_MOUNTAIN,
     name: 'Plains (Mountain)',
-    cssClass: 'm-plains-mountain',
+    cssClass: 'm-base-plains-mountain',
     yield: {}
   },
   [TerrainBaseId.DESERT_FLAT]: {
     id: TerrainBaseId.DESERT_FLAT,
     name: 'Desert',
-    cssClass: 'm-desert-flat',
+    cssClass: 'm-base-desert-flat',
     yield: {}
   },
   [TerrainBaseId.DESERT_HILLS]: {
     id: TerrainBaseId.DESERT_HILLS,
     name: 'Desert (Hills)',
-    cssClass: 'm-desert-hills',
+    cssClass: 'm-base-desert-hills',
     yield: { [YieldId.PRODUCTION]: 1 }
   },
   [TerrainBaseId.DESERT_MOUNTAIN]: {
     id: TerrainBaseId.DESERT_MOUNTAIN,
     name: 'Desert (Mountain)',
-    cssClass: 'm-desert-mountain',
+    cssClass: 'm-base-desert-mountain',
     yield: {}
   },
   [TerrainBaseId.TUNDRA_FLAT]: {
     id: TerrainBaseId.TUNDRA_FLAT,
     name: 'Tundra',
-    cssClass: 'm-tundra-flat',
+    cssClass: 'm-base-tundra-flat',
     yield: { [YieldId.FOOD]: 1 }
   },
   [TerrainBaseId.TUNDRA_HILLS]: {
     id: TerrainBaseId.TUNDRA_HILLS,
     name: 'Tundra (Hills)',
-    cssClass: 'm-tundra-hills',
+    cssClass: 'm-base-tundra-hills',
     yield: { [YieldId.FOOD]: 1, [YieldId.PRODUCTION]: 1 }
   },
   [TerrainBaseId.TUNDRA_MOUNTAIN]: {
     id: TerrainBaseId.TUNDRA_MOUNTAIN,
     name: 'Tundra (Mountain)',
-    cssClass: 'm-tundra-mountain',
+    cssClass: 'm-base-tundra-mountain',
     yield: {}
   },
   [TerrainBaseId.SNOW_FLAT]: {
     id: TerrainBaseId.SNOW_FLAT,
     name: 'Snow',
-    cssClass: 'm-snow-flat',
+    cssClass: 'm-base-snow-flat',
     yield: {}
   },
   [TerrainBaseId.SNOW_HILLS]: {
     id: TerrainBaseId.SNOW_HILLS,
     name: 'Snow (Hills)',
-    cssClass: 'm-snow-hills',
+    cssClass: 'm-base-snow-hills',
     yield: { [YieldId.PRODUCTION]: 1 }
   },
   [TerrainBaseId.SNOW_MOUNTAIN]: {
     id: TerrainBaseId.SNOW_MOUNTAIN,
     name: 'Snow (Mountain)',
-    cssClass: 'm-snow-mountain',
+    cssClass: 'm-base-snow-mountain',
     yield: {}
   },
   [TerrainBaseId.LAKE]: {
     id: TerrainBaseId.LAKE,
     name: 'Lake',
-    cssClass: 'm-lake',
+    cssClass: 'm-base-lake',
     yield: { [YieldId.FOOD]: 1, [YieldId.GOLD]: 1 }
   },
   [TerrainBaseId.COAST]: {
     id: TerrainBaseId.COAST,
     name: 'Coast',
-    cssClass: 'm-coast',
+    cssClass: 'm-base-coast',
     yield: { [YieldId.FOOD]: 1, [YieldId.GOLD]: 1 }
   },
   [TerrainBaseId.OCEAN]: {
     id: TerrainBaseId.OCEAN,
     name: 'Ocean',
-    cssClass: 'm-ocean',
+    cssClass: 'm-base-ocean',
     yield: { [YieldId.FOOD]: 1 }
   }
 }
@@ -171,12 +174,6 @@ export const TERRAIN_BASE_LIST: TerrainBase[] = Object.keys(TERRAIN_BASE_DB).map
 
 
 export const TERRAIN_FEATURE_DB: TerrainFeatureDb = {
-  [TerrainFeatureId.NONE]: {
-    id: TerrainFeatureId.NONE,
-    name: '',
-    cssClass: 'm-feature-none',
-    yield: {}
-  },
   [TerrainFeatureId.FLOODPLAINS]: {
     id: TerrainFeatureId.FLOODPLAINS,
     name: 'Floodplains',
@@ -225,13 +222,6 @@ export const TERRAIN_FEATURE_LIST: TerrainFeature[] = Object.keys(TERRAIN_FEATUR
 
 
 export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
-  [TerrainResourceId.NONE]: {
-    id: TerrainResourceId.NONE,
-    name: '',
-    cssClass: 'm-resource-none',
-    yield: {},
-    type: null
-  },
   [TerrainResourceId.BANANAS]: {
     id: TerrainResourceId.BANANAS,
     name: 'Bananas',
@@ -539,12 +529,6 @@ export const TERRAIN_RESOURCE_LIST: TerrainResource[] = Object.keys(TERRAIN_RESO
 
 
 export const TERRAIN_IMPROVEMENT_DB: TerrainImprovementDb = {
-  [TerrainImprovementId.NONE]: {
-    id: TerrainImprovementId.NONE,
-    name: '',
-    cssClass: 'm-improvement-none',
-    yield: {},
-  },
   // -1 Appeal
   [TerrainImprovementId.AIRSTRIP]: {
     id: TerrainImprovementId.AIRSTRIP,

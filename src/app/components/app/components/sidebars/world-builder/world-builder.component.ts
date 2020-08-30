@@ -3,8 +3,8 @@ import {Component, ViewEncapsulation} from '@angular/core';
 import {
   TerrainBaseId,
   TerrainFeatureId,
-  TerrainImprovementId,
-  TerrainResourceId
+  TerrainResourceId,
+  TerrainImprovementId
 } from '../../../../../models/game-map/terrain';
 import {WorldBuilderToolId} from '../../../../../models/world-builder/world-builder-tool.enum';
 import {WorldBuilderUi} from '../../../../../models/world-builder/world-builder';
@@ -25,6 +25,10 @@ export class WorldBuilderComponent {
   TERRAIN_FEATURE_LIST = TERRAIN_FEATURE_LIST;
   TERRAIN_RESOURCE_LIST = TERRAIN_RESOURCE_LIST;
   TERRAIN_IMPROVEMENT_LIST = TERRAIN_IMPROVEMENT_LIST;
+
+  TerrainFeatureId = TerrainFeatureId;
+  TerrainResourceId = TerrainResourceId;
+  TerrainImprovementId = TerrainImprovementId;
 
   WorldBuilderToolId = WorldBuilderToolId;
 
