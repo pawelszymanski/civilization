@@ -21,17 +21,18 @@ export enum TerrainBaseId {
 
 export enum TerrainFeatureId {
   NONE,
-  WOODS,
-  RAINFOREST,
-  MARSH,
   FLOODPLAINS,
+  ICE,
+  MARSH,
   OASIS,
+  RAINFOREST,
   REEF,
-  ICE
+  WOODS
 }
 
 export enum TerrainResourceId {
   NONE,
+  // ---
   BANANAS,
   CATTLE,
   COPPER,
@@ -42,6 +43,7 @@ export enum TerrainResourceId {
   SHEEP,
   STONE,
   WHEAT,
+  // ---
   ALUMINUM,
   COAL,
   HORSES,
@@ -49,6 +51,8 @@ export enum TerrainResourceId {
   NITER,
   OIL,
   URANIUM,
+  // ---
+  AMBER,
   CITRUS,
   COCOA,
   COFFEE,
@@ -62,6 +66,7 @@ export enum TerrainResourceId {
   JADE,
   MARBLE,
   MERCURY,
+  OLIVES,
   PEARLS,
   SALT,
   SILK,
@@ -73,31 +78,36 @@ export enum TerrainResourceId {
   TRUFFLES,
   WHALES,
   WINE
-  // CINNAMON,
-  // CLOVES,
-  // COSMETICS,
-  // JEANS,
-  // PERFUME,
-  // TOYS,
 }
 
 export enum TerrainImprovementId {
   NONE,
-  FARM,
+  AIRSTRIP,
   CAMP,
-  PASTURE,
-  MINE,
-  QUARRY,
-  PLANTATION,
-  LUMBER_MILL,
+  FARM,
   FISHING_BOATS,
-  SEASIDE_RESORT,
+  FORT,
+  LUMBER_MILL,
+  MINE,
+  MISSILE_SILO,
+  MOUNTAIN_TUNNEL,
+  OFFSHORE_OIL_RIG,
+  OFFSHORE_WIND_FARM,
   OIL_WELL,
-  OFFSHORE_PLATFORM
-  // FORT,
-  // ROADS,
-  // AIRSTRIP,
-  // MISSILE_SILO,
+  PASTURE,
+  PLANTATION,
+  QUARRY,
+  SEASIDE_RESORT,
+  SEASTEAD,
+  SKI_RESORT,
+  SOLAR_FARM,
+  WIND_FARM
+}
+
+export enum TerrainResourceTypeId {
+  BONUS,
+  STRATEGIC,
+  LUXURY
 }
 
 export interface Terrain {

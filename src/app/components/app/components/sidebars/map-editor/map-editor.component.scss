@@ -1,5 +1,84 @@
+@import './../../../../../../styles/functions';
 @import './../../../../../../styles/mixins';
 @import './../../../../../../styles/variables';
 
 .map-editor-component {
+
+  h2 {
+    color: white;
+  }
+
+  section {
+    padding: 10px;
+  }
+
+}
+
+
+.map-editor-component {
+
+  .map-editor-button {
+    display: inline-block;
+    @include size(50px);
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 2px solid #d2ba90;
+    border-radius: 5px;
+    margin: 5px;
+    cursor: pointer;
+    position: relative;
+    &:before {
+      content: '';
+      @include position-block(absolute, 0, 0, 0, 0, -1);
+      background: linear-gradient(0deg, rgba(0,89,164,1) 0%, rgba(0,0,0,1) 50%, rgba(20,68,125,1) 100%);;
+    }
+
+    &.m-terrain-base {
+      background-image: url('../../../../../../assets/icons/terrain/base/grassland_flat.webp');
+    }
+
+    &.m-terrain-feature {
+      background-image: url('../../../../../../assets/icons/terrain/base/plains_flat.webp');
+    }
+
+    &.m-terrain-resource {
+      background-image: url('../../../../../../assets/icons/terrain/resources/iron.webp');
+    }
+
+    &.m-terrain-improvement {
+      background-image: url('../../../../../../assets/icons/terrain/improvements/farm.webp');
+    }
+
+    @each $terrain-base in $terrain-base-list {
+      $filename: str-replace($terrain-base, '-', '_');
+      &.m-base-#{$terrain-base} {
+        background-image: url('../../../../../../assets/icons/terrain/base/#{$filename}.webp');
+      }
+    }
+
+    @each $terrain-feature in $terrain-features-list {
+      $filename: str-replace($terrain-feature, '-', '_');
+      &.m-feature-#{$terrain-feature} {
+        background-image: url('../../../../../../assets/icons/terrain/features/#{$filename}.webp');
+        background-size: 80%;
+      }
+    }
+
+    @each $terrain-resource in $terrain-resources-list {
+      $filename: str-replace($terrain-resource, '-', '_');
+      &.m-resource-#{$terrain-resource} {
+        background-image: url('../../../../../../assets/icons/terrain/resources/#{$filename}.webp');
+      }
+    }
+
+    @each $terrain-improvement in $terrain-improvement-list {
+      $filename: str-replace($terrain-improvement, '-', '_');
+      &.m-improvement-#{$terrain-improvement} {
+        background-image: url('../../../../../../assets/icons/terrain/improvements/#{$filename}.webp');
+      }
+    }
+
+  }
+
 }

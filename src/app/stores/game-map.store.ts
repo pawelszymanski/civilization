@@ -22,9 +22,9 @@ export class GameMapStore {
     this._gameMap.next(gameMap);
   }
 
-  private updateTile(tile: GameMapTile) {
-    tile.cssClasses = this.gameMapHelperService.calcTileCssClasses(tile);
-    tile.yield = this.gameMapHelperService.calcTileYield(tile);
-  }
+  // private updateTile(tile: GameMapTile) {
+  //   tile.cssClasses = this.gameMapHelperService.calcTileCssClasses(tile);
+  //   tile.yield = this.gameMapHelperService.calcTileYield(tile);
+  // }
 
 }

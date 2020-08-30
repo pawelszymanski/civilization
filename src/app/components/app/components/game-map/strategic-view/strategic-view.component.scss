@@ -87,63 +87,43 @@
       .game-map-tile {
 
         &[class*='m-terrain-grassland'] {
-          background-image: url('../../../../../../assets/game-map/grassland.png');
+          background-image: url('../../../../../../assets/game-map/terrain/grassland.png');
         }
-        &.m-terrain-grassland-flat {}
-        &.m-terrain-grassland-hills {
-        }
-        &.m-terrain-grassland-mountain {
-        }
+        &.m-terrain-grassland-hills {}
+        &.m-terrain-grassland-mountain {}
 
         &[class*='m-terrain-plains'] {
-          background-image: url('../../../../../../assets/game-map/plains.png');
+          background-image: url('../../../../../../assets/game-map/terrain/plains.png');
         }
-        &.m-terrain-plains-flat {}
-        &.m-terrain-plains-hills {
-        }
-        &.m-terrain-plains-mountain {
-        }
+        &.m-terrain-plains-hills {}
+        &.m-terrain-plains-mountain {}
 
         &[class*='m-terrain-desert'] {
-          background-image: url('../../../../../../assets/game-map/desert.png');
+          background-image: url('../../../../../../assets/game-map/terrain/desert.png');
         }
-        &.m-terrain-desert-flat {}
-        &.m-terrain-desert-hills {
-        }
-        &.m-terrain-desert-mountain {
-        }
+        &.m-terrain-desert-hills {}
+        &.m-terrain-desert-mountain {}
 
         &[class*='m-terrain-tundra'] {
-          background-image: url('../../../../../../assets/game-map/tundra.png');
+          background-image: url('../../../../../../assets/game-map/terrain/tundra.png');
         }
-        &.m-terrain-tundra-flat {}
-        &.m-terrain-tundra-hills {
-        }
-        &.m-terrain-tundra-mountain {
-        }
+        &.m-terrain-tundra-hills {}
+        &.m-terrain-tundra-mountain {}
 
         &[class*='m-terrain-snow'] {
-          background-image: url('../../../../../../assets/game-map/snow.png');
+          background-image: url('../../../../../../assets/game-map/terrain/snow.png');
         }
+        &.m-terrain-snow-hills {}
+        &.m-terrain-snow-mountain {}
 
-        &.m-terrain-snow-flat {}
-        &.m-terrain-snow-hills {
-        }
-        &.m-terrain-snow-mountain {
-        }
-
-        &.m-terrain-lake {
-          background-image: url('../../../../../../assets/game-map/coast.png');
-        }
-
+        &.m-terrain-lake,
         &.m-terrain-coast {
-          background-image: url('../../../../../../assets/game-map/coast.png');
+          background-image: url('../../../../../../assets/game-map/terrain/coast.png');
         }
 
         &.m-terrain-ocean {
-          background-image: url('../../../../../../assets/game-map/ocean.png');
+          background-image: url('../../../../../../assets/game-map/terrain/ocean.png');
         }
-
 
       }
 

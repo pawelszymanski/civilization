@@ -1,7 +1,7 @@
 $font-family-primary: 'Calibri';
 $font-family-secondary: 'Bellefair';
 
-$sidebar-width: 300px;
+$sidebar-width: 320px;
 
 $in-game-menu-button-width: 300px;
 $in-game-menu-button-height: 40px;
@@ -15,16 +15,29 @@ $z-index-sidebar: 500;
 $max-map-width: 200;
 $max-map-height: 120;
 
-$terrain-resources: 'bananas', 'cattle', 'copper', 'crabs', 'deer', 'fish', 'rice', 'sheep', 'stone', 'wheat',
-  'aluminum', 'coal', 'horses', 'iron', 'niter', 'oil', 'uranium', 'citrus', 'cocoa', 'coffee', 'cotton',
-  'diamonds', 'dyes', 'furs', 'gypsum', 'incense', 'ivory', 'jade', 'marble', 'mercury', 'pearls', 'salt',
-  'silk', 'silver', 'spices', 'sugar', 'tea', 'tobacco', 'truffles', 'whales', 'wine';
 
 
-//$tile-size: 200px
-//$tile-width: $tile-size * 0.9
-//$tile-height: $tile-size * 1.0
-//$tile-con-size: $tile-size / 12.5
+// Lists for iterators
 
-//\:root
-//  --tile-size: #{$tile-size}
+$terrain-base-list:
+  'grassland-flat', 'grassland-hills', 'grassland-mountain', 'plains-flat', 'plains-hills', 'plains-mountain',
+  'desert-flat', 'desert-hills', 'desert-mountain', 'tundra-flat', 'tundra-hills', 'tundra-mountain',
+  'snow-flat', 'snow-hills', 'snow-mountain', 'lake', 'coast', 'ocean';
+
+$terrain-features-list:
+  'floodplains', 'ice', 'oasis', 'marsh', 'rainforest', 'reef', 'woods';
+
+$terrain-resources-list:
+  'bananas', 'cattle', 'copper', 'crabs', 'deer', 'fish', 'rice', 'sheep', 'stone', 'wheat',
+  'aluminum', 'coal', 'horses', 'iron', 'niter', 'oil', 'uranium',
+  'amber', 'citrus', 'cocoa', 'coffee', 'cotton', 'diamonds', 'dyes', 'furs', 'gypsum',
+  'incense', 'ivory', 'jade', 'marble', 'mercury', 'olives', 'pearls', 'salt', 'silk',
+  'silver', 'spices', 'sugar', 'tea', 'tobacco', 'truffles', 'whales', 'wine';
+
+$off-map-resources-list:
+  'cinnamon', 'cloves', 'cosmetics', 'jeans', 'perfume', 'toys';
+
+$terrain-improvement-list:
+  'airstrip', 'camp', 'farm', 'fishing-boats', 'fort', 'lumber-mill', 'mine', 'missile-silo',
+  'mountain-tunnel', 'offshore-oil-rig', 'offshore-wind-farm', 'oil-well', 'pasture', 'plantation',
+  'quarry', 'seaside-resort', 'seastead', 'ski-resort', 'solar-farm', 'wind-farm';

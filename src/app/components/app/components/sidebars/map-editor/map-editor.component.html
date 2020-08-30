@@ -1,1 +1,26 @@
-It works!
+<h2>Map Editor</h2>
+
+<section>
+  <div class="map-editor-button m-terrain-base" (click)="setMode(MapEditorModeId.TERRAIN_BASE)"></div>
+  <div class="map-editor-button m-terrain-feature" (click)="setMode(MapEditorModeId.TERRAIN_FEATURE)"></div>
+  <div class="map-editor-button m-terrain-resource" (click)="setMode(MapEditorModeId.TERRAIN_RESOURCE)"></div>
+  <div class="map-editor-button m-terrain-improvement" (click)="setMode(MapEditorModeId.TERRAIN_IMPROVEMENT)"></div>
+</section>
+
+<section>
+  <ng-container *ngIf="mode === MapEditorModeId.TERRAIN_BASE">
+    <div class="map-editor-button" [ngClass]="base.cssClass" *ngFor="let base of TERRAIN_BASE_LIST"></div>
+  </ng-container>
+
+  <ng-container *ngIf="mode === MapEditorModeId.TERRAIN_FEATURE">
+    <div class="map-editor-button" [ngClass]="feature.cssClass" *ngFor="let feature of TERRAIN_FEATURE_LIST"></div>
+  </ng-container>
+
+  <ng-container *ngIf="mode === MapEditorModeId.TERRAIN_RESOURCE">
+    <div class="map-editor-button" [ngClass]="resource.cssClass" *ngFor="let resource of TERRAIN_RESOURCE_LIST"></div>
+  </ng-container>
+
+  <ng-container *ngIf="mode === MapEditorModeId.TERRAIN_IMPROVEMENT">
+    <div class="map-editor-button" [ngClass]="improvement.cssClass" *ngFor="let improvement of TERRAIN_IMPROVEMENT_LIST"></div>
+  </ng-container>
+</section>
