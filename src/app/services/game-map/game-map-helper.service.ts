@@ -11,9 +11,9 @@ export class GameMapHelperService {
   public calcTileCssClasses(tile: GameMapTile): string[] {
     return [
       TERRAIN_BASE_DB[tile.terrain.base].cssClass,
-      TERRAIN_FEATURE_DB[tile.terrain.feature].cssClass,
-      TERRAIN_RESOURCE_DB[tile.terrain.resource].cssClass,
-      TERRAIN_IMPROVEMENT_DB[tile.terrain.resource].cssClass,
+      TERRAIN_FEATURE_DB[tile.terrain.feature] ? TERRAIN_FEATURE_DB[tile.terrain.feature].cssClass : '',
+      TERRAIN_RESOURCE_DB[tile.terrain.resource] ? TERRAIN_RESOURCE_DB[tile.terrain.resource].cssClass : '',
+      TERRAIN_IMPROVEMENT_DB[tile.terrain.improvement] ? TERRAIN_IMPROVEMENT_DB[tile.terrain.improvement].cssClass : '',
       `m-x-${tile.coords.x}`,
       `m-y-${tile.coords.y}`
     ];

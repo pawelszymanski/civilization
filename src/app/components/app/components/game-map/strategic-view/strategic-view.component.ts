@@ -3,7 +3,8 @@ import {Component, ElementRef, ViewChild, ViewEncapsulation} from '@angular/core
 import {GameMap, GameMapTile} from '../../../../../models/game-map/game-map';
 import {Camera} from '../../../../../models/camera/camera';
 import {Coords} from '../../../../../models/utils/coords';
-import {Ui, TileOverlayId} from '../../../../../models/ui/ui';
+import {SidebarId, TileOverlayId, Ui} from '../../../../../models/ui/ui';
+import {WorldBuilderUi} from '../../../../../models/world-builder/world-builder';
 
 import {CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP} from '../../../../../consts/camera/camera.const';
 
@@ -12,6 +13,8 @@ import {CameraHelperService} from '../../../../../services/camera/camera-helper.
 import {CameraStore} from '../../../../../stores/camera.store';
 import {GameMapStore} from '../../../../../stores/game-map.store';
 import {UiStore} from '../../../../../stores/ui.store';
+import {WorldBuilderUiStore} from '../../../../../stores/world-builder-ui.store';
+import {WorldBuilderToolId} from '../../../../../models/world-builder/world-builder-tool.enum';
 
 @Component({
   selector: '.strategic-view-component',
@@ -26,6 +29,7 @@ export class StrategicViewComponent {
   gameMap: GameMap = null;
   camera: Camera = null;
   ui: Ui;
+  worldBuilderUi: WorldBuilderUi;
 
   @ViewChild('gameMapElem') gameMapElem: ElementRef;  // Map elem reference
 
@@ -41,13 +45,15 @@ export class StrategicViewComponent {
     private cameraHelperService: CameraHelperService,
     private gameMapStoreService: GameMapStore,
     private cameraStore: CameraStore,
-    private uiStore: UiStore
+    private uiStore: UiStore,
+    private worldBuilderUiStore: WorldBuilderUiStore
   ) {}
 
   subscribeToData() {
     this.gameMapStoreService.gameMap.subscribe(gameMap => this.gameMap = gameMap);
     this.cameraStore.camera.subscribe(camera => this.camera = camera);
     this.uiStore.ui.subscribe(ui => this.ui = ui);
+    this.worldBuilderUiStore.worldBuilderUi.subscribe(worldBuilderUi => this.worldBuilderUi = worldBuilderUi);
   }
 
   ngOnInit() {
@@ -128,7 +134,22 @@ export class StrategicViewComponent {
   }
 
   onTileClick(event: MouseEvent, tile: GameMapTile) {
-    // console.info('onTileClick: ', event, tile);
+    if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
+      switch (this.worldBuilderUi.tool) {
+        case WorldBuilderToolId.TERRAIN_BASE:
+          this.gameMapStoreService.setTileTerrainBase(tile.coords, this.worldBuilderUi.terrainBase);
+          break;
+        case WorldBuilderToolId.TERRAIN_FEATURE:
+          this.gameMapStoreService.setTileTerrainFeature(tile.coords, this.worldBuilderUi.terrainFeature);
+          break;
+        case WorldBuilderToolId.TERRAIN_RESOURCE:
+          this.gameMapStoreService.setTileTerrainResource(tile.coords, this.worldBuilderUi.terrainResource);
+          break;
+        case WorldBuilderToolId.TERRAIN_IMPROVEMENT:
+          this.gameMapStoreService.setTileTerrainImprovement(tile.coords, this.worldBuilderUi.terrainImprovement);
+          break;
+      }
+    }
   }
 
   onTileDblclick(event: MouseEvent, tile: GameMapTile) {
