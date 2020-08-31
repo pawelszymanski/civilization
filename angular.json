@@ -25,7 +25,8 @@
             "aot": true,
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              {"glob": "**/*", "input": "src/assets/icons","output": "/assets/icons", "ignore": ["**/*.psd"]},
+              {"glob": "**/*", "input": "src/assets/game-map","output": "/assets/game-map", "ignore": ["**/*.psd"]}
             ],
             "styles": [
               "src/styles.scss"
@@ -89,7 +90,8 @@
             "karmaConfig": "karma.conf.js",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              {"glob": "**/*", "input": "src/assets/icons","output": "/assets/icons", "ignore": ["**/*.psd"]},
+              {"glob": "**/*", "input": "src/assets/game-map","output": "/assets/game-map", "ignore": ["**/*.psd"]}
             ],
             "styles": [
               "src/styles.sass"

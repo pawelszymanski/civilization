@@ -39,40 +39,36 @@
       border: 2px solid #fd9700;
     }
 
-    &.m-terrain-base        { background-image: url('../../../../../../assets/icons/world-builder/terrain_base.webp'); }
-    &.m-terrain-feature     { background-image: url('../../../../../../assets/icons/world-builder/terrain_feature.webp'); }
-    &.m-terrain-resource    { background-image: url('../../../../../../assets/icons/world-builder/terrain_resource.webp'); }
-    &.m-terrain-improvement { background-image: url('../../../../../../assets/icons/world-builder/terrain_improvement.webp'); }
+    $world-builder-icons: 'terrain-base', 'terrain-feature', 'terrain-feature-none',
+      'terrain-resource', 'terrain-improvement', 'terrain-resource-none', 'terrain-improvement-none';
 
-    &.m-terrain-feature-none     { background-image: url('../../../../../../assets/icons/world-builder/terrain_feature_none.webp'); }
-    &.m-terrain-resource-none    { background-image: url('../../../../../../assets/icons/world-builder/terrain_resource_none.webp'); }
-    &.m-terrain-improvement-none { background-image: url('../../../../../../assets/icons/world-builder/terrain_improvement_none.webp'); }
+    @each $world-builder-icon in $world-builder-icons {
+      &.m-#{$world-builder-icon} {
+        background-image: url('/assets/icons/world-builder/#{$world-builder-icon}.webp');
+      }
+    }
 
     @each $terrain-base in $terrain-base-list {
-      $filename: str-replace($terrain-base, '-', '_');
       &.m-base-#{$terrain-base} {
-        background-image: url('../../../../../../assets/icons/terrain/base/#{$filename}.webp');
+        background-image: url('/assets/icons/terrain/base/#{$terrain-base}.webp');
       }
     }
 
     @each $terrain-feature in $terrain-features-list {
-      $filename: str-replace($terrain-feature, '-', '_');
       &.m-feature-#{$terrain-feature} {
-        background-image: url('../../../../../../assets/icons/terrain/features/#{$filename}.webp');
+        background-image: url('/assets/icons/terrain/features/#{$terrain-feature}.webp');
       }
     }
 
     @each $terrain-resource in $terrain-resources-list {
-      $filename: str-replace($terrain-resource, '-', '_');
       &.m-resource-#{$terrain-resource} {
-        background-image: url('../../../../../../assets/icons/terrain/resources/#{$filename}.webp');
+        background-image: url('/assets/icons/terrain/resources/#{$terrain-resource}.webp');
       }
     }
 
     @each $terrain-improvement in $terrain-improvement-list {
-      $filename: str-replace($terrain-improvement, '-', '_');
       &.m-improvement-#{$terrain-improvement} {
-        background-image: url('../../../../../../assets/icons/terrain/improvements/#{$filename}.webp');
+        background-image: url('/assets/icons/terrain/improvements/#{$terrain-improvement}.webp');
       }
     }
 
