@@ -153,23 +153,25 @@ export class StrategicViewComponent {
   }
 
   onTileDblclick(event: MouseEvent, tile: GameMapTile) {
-    const currentTranslate = this.camera.translate;
-    const mapCoordsAtScreenCenter = this.cameraHelperService.mapCoordsAtScreenCenter(currentTranslate);
-    const centerOfClickedTile = this.cameraHelperService.centerOfTheTileCoords(tile);
+    if (this.ui.sidebar !== SidebarId.WORLD_BUILDER) {
+      const currentTranslate = this.camera.translate;
+      const mapCoordsAtScreenCenter = this.cameraHelperService.mapCoordsAtScreenCenter(currentTranslate);
+      const centerOfClickedTile = this.cameraHelperService.centerOfTheTileCoords(tile);
 
-    // The vector we need to apply to translation to move to desired position
-    const translateVector: Coords = {
-      x: mapCoordsAtScreenCenter.x - centerOfClickedTile.x,
-      y: mapCoordsAtScreenCenter.y - centerOfClickedTile.y
-    }
+      // The vector we need to apply to translation to move to desired position
+      const translateVector: Coords = {
+        x: mapCoordsAtScreenCenter.x - centerOfClickedTile.x,
+        y: mapCoordsAtScreenCenter.y - centerOfClickedTile.y
+      }
 
-    // Calculate new translate, normalize it and use
-    const newTranslate = {
-      x: currentTranslate.x + translateVector.x,
-      y: currentTranslate.y + translateVector.y
+      // Calculate new translate, normalize it and use
+      const newTranslate = {
+        x: currentTranslate.x + translateVector.x,
+        y: currentTranslate.y + translateVector.y
+      }
+      const normalizedTranslate = this.normalizeVerticalTranslation(newTranslate);
+      this.cameraStore.setTranslate(normalizedTranslate);
     }
-    const normalizedTranslate = this.normalizeVerticalTranslation(newTranslate);
-    this.cameraStore.setTranslate(normalizedTranslate);
   }
 
   onTileContextmenu(event: MouseEvent, tile: GameMapTile) {

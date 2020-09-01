@@ -9,6 +9,7 @@ import {ModalId} from '../../../../../../models/ui/ui';
 import {GeneratorService} from '../../../../../../services/utils/generator.service';
 import {SaveHelperService} from '../../../../../../services/saves/save-helper.service';
 
+import {CameraStore} from '../../../../../../stores/camera.store';
 import {GameMapStore} from '../../../../../../stores/game-map.store';
 import {SavesStore} from '../../../../../../stores/saves.store';
 import {UiStore} from '../../../../../../stores/ui.store';
@@ -35,6 +36,7 @@ export class LoadGameComponent {
   constructor(
     private generatorService: GeneratorService,
     private saveSorter: SaveHelperService,
+    private cameraStore: CameraStore,
     private gameMapStore: GameMapStore,
     private savesStore: SavesStore,
     private uiStore: UiStore
@@ -92,6 +94,7 @@ export class LoadGameComponent {
   loadSelectedSaveAndUpdateUi() {
     const saveToBeLoaded = this.saves.find(save => save.uuid === this.selectedSaveUuid);
     this.gameMapStore.next(saveToBeLoaded.gameMap);
+    this.cameraStore.next(saveToBeLoaded.camera);
     this.selectedSaveUuid = undefined;
     this.uiStore.toggleModal(ModalId.LOAD_GAME);
     this.uiStore.hideMainMenu();

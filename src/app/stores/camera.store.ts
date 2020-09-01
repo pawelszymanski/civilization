@@ -21,7 +21,7 @@ export class CameraStore {
     this.cameraHelperService.setTileSizeCssVariable(DEFAULT_CAMERA.tileSize);
   }
 
-  private next(camera: Camera) {
+  public next(camera: Camera) {
     this._camera.next(camera);
     this.cameraHelperService.setTileSizeCssVariable(camera.tileSize);
   }
