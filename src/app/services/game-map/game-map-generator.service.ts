@@ -1,7 +1,13 @@
 import {Injectable} from '@angular/core';
 
-import {TerrainBaseId, TerrainFeatureId, TerrainImprovementId, TerrainResourceId} from '../../models/game-map/terrain';
+import {
+  TerrainBaseId,
+  TerrainFeatureId,
+  TerrainImprovementId,
+  TerrainResourceId
+} from '../../models/game-map/terrain';
 
+import {Coords} from '../../models/utils/coords';
 import {GameMap, GameMapRow, GameMapTile} from '../../models/game-map/game-map';
 import {MapGeneratorSettings} from '../../models/map-generator/map-generator-settings';
 
@@ -14,19 +20,16 @@ export class GameMapGeneratorService {
     private gameMapHelperService: GameMapHelperService
   ) {}
 
-  private createGameMapTile(x: number, y: number): GameMapTile {
+  private createEmptyOceanTile(coords: Coords): GameMapTile {
     const tile = {
-      coords: {
-        x,
-        y
-      },
+      coords,
       terrain: {
-        base: TerrainBaseId.OCEAN,
-        feature: TerrainFeatureId.NONE,
-        resource: TerrainResourceId.NONE,
-        improvement: TerrainImprovementId.NONE
+        base: {id: TerrainBaseId.OCEAN, variation: 1},
+        feature: {id: TerrainFeatureId.NONE, variation: null},
+        resourceId: TerrainResourceId.NONE,
+        improvementId: TerrainImprovementId.NONE,
       }
-    } as GameMapTile;
+    } as unknown as GameMapTile;
 
     tile.cssClasses = this.gameMapHelperService.calcTileCssClasses(tile);
     tile.yield = this.gameMapHelperService.calcTileYield(tile);
@@ -35,7 +38,7 @@ export class GameMapGeneratorService {
   }
 
   private createGameMapRow(rowId: number, width: number): GameMapRow {
-    return {tiles: [...Array(width).keys()].map(x => this.createGameMapTile(x, rowId))}
+    return {tiles: [...Array(width).keys()].map(x => this.createEmptyOceanTile({x: x, y: rowId}))}
   }
 
   private createGameMap(params: MapGeneratorSettings): GameMap {

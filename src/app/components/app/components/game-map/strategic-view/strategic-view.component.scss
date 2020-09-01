@@ -206,7 +206,7 @@
           }
         }
 
-        // Resources
+        // Resources. Example: `m-resource-amber`
         @each $resource in $terrain-resource-list {
           &.m-resource-#{$resource} {
             &:after {

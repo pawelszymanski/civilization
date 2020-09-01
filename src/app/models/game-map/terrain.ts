@@ -112,13 +112,26 @@ export enum TerrainResourceTypeId {
 
 export interface TerrainUi {
   name: string;
-  cssClassBase: string;
-  cssVariation?: number;
+  cssClass: string;
+}
+
+export interface TerrainUiWithVariations extends TerrainUi {
+  cssVariations: number;
+}
+
+export interface TerrainBaseWithVariation {
+  id: TerrainBaseId;
+  variation: number;
+}
+
+export interface TerrainFeatureWithVariation {
+  id: TerrainFeatureId;
+  variation: number;
 }
 
 export interface Terrain {
-  base: TerrainBaseId;
-  feature: TerrainFeatureId;
-  resource: TerrainResourceId;
-  improvement: TerrainImprovementId;
+  base: TerrainBaseWithVariation;
+  feature: TerrainFeatureWithVariation;
+  resourceId: TerrainResourceId;
+  improvementId: TerrainImprovementId;
 }

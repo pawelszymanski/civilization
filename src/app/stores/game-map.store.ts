@@ -5,7 +5,10 @@ import {TerrainBaseId, TerrainFeatureId, TerrainResourceId, TerrainImprovementId
 import {Coords} from '../models/utils/coords';
 import {GameMap, GameMapTile} from '../models/game-map/game-map';
 
+import {TERRAIN_BASE_DB, TERRAIN_FEATURE_DB} from '../consts/game-map/terrain-db.const';
+
 import {GameMapHelperService} from '../services/game-map/game-map-helper.service';
+import {GeneratorService} from '../services/utils/generator.service';
 
 @Injectable()
 export class GameMapStore {
@@ -16,6 +19,7 @@ export class GameMapStore {
 
   constructor(
     private gameMapHelperService: GameMapHelperService,
+    private generatorService: GeneratorService
   ) {}
 
   private updateTileCssClasses(tile: GameMapTile) {
@@ -26,40 +30,40 @@ export class GameMapStore {
     tile.yield = this.gameMapHelperService.calcTileYield(tile);
   }
 
-  public setTileTerrainBase(coords: Coords, terrainBase: TerrainBaseId) {
-    const gameMap = this._gameMap.value;
-    const tile = gameMap.rows[coords.y].tiles[coords.x];
-    tile.terrain.base = terrainBase;
+  private updateTileAndNext(tile: GameMapTile, gameMap: GameMap) {
     this.updateTileCssClasses(tile);
     this.updateTileYield(tile);
     this.next(gameMap);
   }
 
-  public setTileTerrainFeature(coords: Coords, terrainFeature: TerrainFeatureId) {
+  public setTileTerrainBase(coords: Coords, terrainBaseId: TerrainBaseId) {
     const gameMap = this._gameMap.value;
     const tile = gameMap.rows[coords.y].tiles[coords.x];
-    tile.terrain.feature = terrainFeature;
-    this.updateTileCssClasses(tile);
-    this.updateTileYield(tile);
-    this.next(gameMap);
+    const variations = TERRAIN_BASE_DB[terrainBaseId].ui.cssVariations;
+    tile.terrain.base = {id: terrainBaseId, variation: this.generatorService.randomPositiveInteger(variations)};
+    this.updateTileAndNext(tile, gameMap);
   }
 
-  public setTileTerrainResource(coords: Coords, terrainResource: TerrainResourceId) {
+  public setTileTerrainFeature(coords: Coords, terrainFeatureId: TerrainFeatureId) {
     const gameMap = this._gameMap.value;
     const tile = gameMap.rows[coords.y].tiles[coords.x];
-    tile.terrain.resource = terrainResource;
-    this.updateTileCssClasses(tile);
-    this.updateTileYield(tile);
-    this.next(gameMap);
+    const variations = terrainFeatureId ? this.generatorService.randomPositiveInteger(TERRAIN_FEATURE_DB[terrainFeatureId].ui.cssVariations) : null;
+    tile.terrain.feature = {id: terrainFeatureId, variation: variations};
+    this.updateTileAndNext(tile, gameMap);
   }
 
-  public setTileTerrainImprovement(coords: Coords, terrainImprovement: TerrainImprovementId) {
+  public setTileTerrainResource(coords: Coords, terrainResourceId: TerrainResourceId) {
     const gameMap = this._gameMap.value;
     const tile = gameMap.rows[coords.y].tiles[coords.x];
-    tile.terrain.improvement = terrainImprovement;
-    this.updateTileCssClasses(tile);
-    this.updateTileYield(tile);
-    this.next(gameMap);
+    tile.terrain.resourceId = terrainResourceId;
+    this.updateTileAndNext(tile, gameMap);
+  }
+
+  public setTileTerrainImprovement(coords: Coords, terrainImprovementId: TerrainImprovementId) {
+    const gameMap = this._gameMap.value;
+    const tile = gameMap.rows[coords.y].tiles[coords.x];
+    tile.terrain.improvementId = terrainImprovementId;
+    this.updateTileAndNext(tile, gameMap);
   }
 
   public next(gameMap: GameMap) {

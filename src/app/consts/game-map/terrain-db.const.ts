@@ -4,7 +4,8 @@ import {
   TerrainResourceId,
   TerrainImprovementId,
   TerrainResourceTypeId,
-  TerrainUi
+  TerrainUi,
+  TerrainUiWithVariations
 } from '../../models/game-map/terrain';
 import {Yield, YieldId} from '../../models/game-map/yield';
 
@@ -13,7 +14,7 @@ import {Yield, YieldId} from '../../models/game-map/yield';
 interface TerrainBase {
   id: TerrainBaseId;
   yield: Partial<Yield>;
-  ui: TerrainUi;
+  ui: TerrainUiWithVariations;
 }
 
 type TerrainBaseDb = {
@@ -25,7 +26,7 @@ type TerrainBaseDb = {
 interface TerrainFeature {
   id: TerrainFeatureId;
   yield: Partial<Yield>;
-  ui: TerrainUi;
+  ui: TerrainUiWithVariations;
 }
 
 // All but TerrainFeatureId.NONE
@@ -62,7 +63,8 @@ export const TERRAIN_BASE_DB: TerrainBaseDb = {
     yield: { [YieldId.FOOD]: 2 },
     ui: {
       name: 'Grassland',
-      cssClassBase: 'm-base-grassland-flat',
+      cssClass: 'm-base-grassland-flat',
+      cssVariations: 1,
     },
   },
   [TerrainBaseId.GRASSLAND_HILLS]: {
@@ -70,7 +72,8 @@ export const TERRAIN_BASE_DB: TerrainBaseDb = {
     yield: { [YieldId.FOOD]: 2, [YieldId.PRODUCTION]: 1 },
     ui: {
       name: 'Grassland (Hills)',
-      cssClassBase: 'm-base-grassland-hills',
+      cssClass: 'm-base-grassland-hills',
+      cssVariations: 3,
     },
   },
   [TerrainBaseId.GRASSLAND_MOUNTAIN]: {
@@ -78,7 +81,8 @@ export const TERRAIN_BASE_DB: TerrainBaseDb = {
     yield: {},
     ui: {
       name: 'Grassland (Mountain)',
-      cssClassBase: 'm-base-grassland-mountain',
+      cssClass: 'm-base-grassland-mountain',
+      cssVariations: 5,
     },
   },
   [TerrainBaseId.PLAINS_FLAT]: {
@@ -86,7 +90,8 @@ export const TERRAIN_BASE_DB: TerrainBaseDb = {
     yield: { [YieldId.FOOD]: 1, [YieldId.PRODUCTION]: 1 },
     ui: {
       name: 'Plains',
-      cssClassBase: 'm-base-plains-flat',
+      cssClass: 'm-base-plains-flat',
+      cssVariations: 1,
     },
   },
   [TerrainBaseId.PLAINS_HILLS]: {
@@ -94,7 +99,8 @@ export const TERRAIN_BASE_DB: TerrainBaseDb = {
     yield: { [YieldId.FOOD]: 1, [YieldId.PRODUCTION]: 2 },
     ui: {
       name: 'Plains (Hills)',
-      cssClassBase: 'm-base-plains-hills',
+      cssClass: 'm-base-plains-hills',
+      cssVariations: 3,
     },
   },
   [TerrainBaseId.PLAINS_MOUNTAIN]: {
@@ -102,7 +108,8 @@ export const TERRAIN_BASE_DB: TerrainBaseDb = {
     yield: {},
     ui: {
       name: 'Plains (Mountain)',
-      cssClassBase: 'm-base-plains-mountain',
+      cssClass: 'm-base-plains-mountain',
+      cssVariations: 5,
     },
   },
   [TerrainBaseId.DESERT_FLAT]: {
@@ -110,7 +117,8 @@ export const TERRAIN_BASE_DB: TerrainBaseDb = {
     yield: {},
     ui: {
       name: 'Desert',
-      cssClassBase: 'm-base-desert-flat',
+      cssClass: 'm-base-desert-flat',
+      cssVariations: 1,
     },
   },
   [TerrainBaseId.DESERT_HILLS]: {
@@ -118,7 +126,8 @@ export const TERRAIN_BASE_DB: TerrainBaseDb = {
     yield: { [YieldId.PRODUCTION]: 1 },
     ui: {
       name: 'Desert (Hills)',
-      cssClassBase: 'm-base-desert-hills',
+      cssClass: 'm-base-desert-hills',
+      cssVariations: 3,
     },
   },
   [TerrainBaseId.DESERT_MOUNTAIN]: {
@@ -126,7 +135,8 @@ export const TERRAIN_BASE_DB: TerrainBaseDb = {
     yield: {},
     ui: {
       name: 'Desert (Mountain)',
-      cssClassBase: 'm-base-desert-mountain',
+      cssClass: 'm-base-desert-mountain',
+      cssVariations: 5,
     },
   },
   [TerrainBaseId.TUNDRA_FLAT]: {
@@ -134,7 +144,8 @@ export const TERRAIN_BASE_DB: TerrainBaseDb = {
     yield: { [YieldId.FOOD]: 1 },
     ui: {
       name: 'Tundra',
-      cssClassBase: 'm-base-tundra-flat',
+      cssClass: 'm-base-tundra-flat',
+      cssVariations: 1,
     },
   },
   [TerrainBaseId.TUNDRA_HILLS]: {
@@ -142,7 +153,8 @@ export const TERRAIN_BASE_DB: TerrainBaseDb = {
     yield: { [YieldId.FOOD]: 1, [YieldId.PRODUCTION]: 1 },
     ui: {
       name: 'Tundra (Hills)',
-      cssClassBase: 'm-base-tundra-hills',
+      cssClass: 'm-base-tundra-hills',
+      cssVariations: 3,
     },
   },
   [TerrainBaseId.TUNDRA_MOUNTAIN]: {
@@ -150,7 +162,8 @@ export const TERRAIN_BASE_DB: TerrainBaseDb = {
     yield: {},
     ui: {
       name: 'Tundra (Mountain)',
-      cssClassBase: 'm-base-tundra-mountain',
+      cssClass: 'm-base-tundra-mountain',
+      cssVariations: 5,
     },
   },
   [TerrainBaseId.SNOW_FLAT]: {
@@ -158,7 +171,8 @@ export const TERRAIN_BASE_DB: TerrainBaseDb = {
     yield: {},
     ui: {
       name: 'Snow',
-      cssClassBase: 'm-base-snow-flat',
+      cssClass: 'm-base-snow-flat',
+      cssVariations: 1,
     },
   },
   [TerrainBaseId.SNOW_HILLS]: {
@@ -166,7 +180,8 @@ export const TERRAIN_BASE_DB: TerrainBaseDb = {
     yield: { [YieldId.PRODUCTION]: 1 },
     ui: {
       name: 'Snow (Hills)',
-      cssClassBase: 'm-base-snow-hills',
+      cssClass: 'm-base-snow-hills',
+      cssVariations: 3,
     },
   },
   [TerrainBaseId.SNOW_MOUNTAIN]: {
@@ -174,7 +189,8 @@ export const TERRAIN_BASE_DB: TerrainBaseDb = {
     yield: {},
     ui: {
       name: 'Snow (Mountain)',
-      cssClassBase: 'm-base-snow-mountain',
+      cssClass: 'm-base-snow-mountain',
+      cssVariations: 5,
     },
   },
   [TerrainBaseId.LAKE]: {
@@ -182,7 +198,8 @@ export const TERRAIN_BASE_DB: TerrainBaseDb = {
     yield: { [YieldId.FOOD]: 1, [YieldId.GOLD]: 1 },
     ui: {
       name: 'Lake',
-      cssClassBase: 'm-base-lake',
+      cssClass: 'm-base-lake',
+      cssVariations: 1,
     },
   },
   [TerrainBaseId.COAST]: {
@@ -190,7 +207,8 @@ export const TERRAIN_BASE_DB: TerrainBaseDb = {
     yield: { [YieldId.FOOD]: 1, [YieldId.GOLD]: 1 },
     ui: {
       name: 'Coast',
-      cssClassBase: 'm-base-coast',
+      cssClass: 'm-base-coast',
+      cssVariations: 1,
     },
   },
   [TerrainBaseId.OCEAN]: {
@@ -198,7 +216,8 @@ export const TERRAIN_BASE_DB: TerrainBaseDb = {
     yield: { [YieldId.FOOD]: 1 },
     ui: {
       name: 'Ocean',
-      cssClassBase: 'm-base-ocean',
+      cssClass: 'm-base-ocean',
+      cssVariations: 1,
     },
   }
 }
@@ -212,7 +231,8 @@ export const TERRAIN_FEATURE_DB: TerrainFeatureDb = {
     yield: { [YieldId.FOOD]: 1 },
     ui: {
       name: 'Floodplains',
-      cssClassBase: 'm-feature-floodplains',
+      cssClass: 'm-feature-floodplains',
+      cssVariations: 1,
     },
   },
   [TerrainFeatureId.ICE]: {
@@ -220,7 +240,8 @@ export const TERRAIN_FEATURE_DB: TerrainFeatureDb = {
     yield: {},
     ui: {
       name: 'Ice',
-      cssClassBase: 'm-feature-ice',
+      cssClass: 'm-feature-ice',
+      cssVariations: 1,
     },
   },
   [TerrainFeatureId.MARSH]: {
@@ -228,7 +249,8 @@ export const TERRAIN_FEATURE_DB: TerrainFeatureDb = {
     yield: { [YieldId.FOOD]: 1 },
     ui: {
       name: 'Marsh',
-      cssClassBase: 'm-feature-marsh',
+      cssClass: 'm-feature-marsh',
+      cssVariations: 1,
     },
   },
   [TerrainFeatureId.OASIS]: {
@@ -236,7 +258,8 @@ export const TERRAIN_FEATURE_DB: TerrainFeatureDb = {
     yield: { [YieldId.FOOD]: 3, [YieldId.GOLD]: 1 },
     ui: {
       name: 'Oasis',
-      cssClassBase: 'm-feature-oasis',
+      cssClass: 'm-feature-oasis',
+      cssVariations: 1,
     },
   },
   [TerrainFeatureId.RAINFOREST]: {
@@ -244,7 +267,8 @@ export const TERRAIN_FEATURE_DB: TerrainFeatureDb = {
     yield: { [YieldId.FOOD]: 1 },
     ui: {
       name: 'Rainforest',
-      cssClassBase: 'm-feature-rainforest',
+      cssClass: 'm-feature-rainforest',
+      cssVariations: 1,
     },
   },
   [TerrainFeatureId.REEF]: {
@@ -252,7 +276,8 @@ export const TERRAIN_FEATURE_DB: TerrainFeatureDb = {
     yield: { [YieldId.FOOD]: 1, [YieldId.PRODUCTION]: 1 },
     ui: {
       name: 'Reef',
-      cssClassBase: 'm-feature-reef',
+      cssClass: 'm-feature-reef',
+      cssVariations: 1,
     },
   },
   [TerrainFeatureId.WOODS]: {
@@ -260,7 +285,8 @@ export const TERRAIN_FEATURE_DB: TerrainFeatureDb = {
     yield: { [YieldId.PRODUCTION]: 1 },
     ui: {
       name: 'Woods',
-      cssClassBase: 'm-feature-woods',
+      cssClass: 'm-feature-woods',
+      cssVariations: 1,
     },
   }
 }
@@ -275,7 +301,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: {  [YieldId.FOOD]: 1 },
     ui: {
       name: 'Bananas',
-      cssClassBase: 'm-resource-bananas',
+      cssClass: 'm-resource-bananas',
     },
   },
   [TerrainResourceId.CATTLE]: {
@@ -284,7 +310,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.FOOD]: 1 },
     ui: {
       name: 'Cattle',
-      cssClassBase: 'm-resource-cattle',
+      cssClass: 'm-resource-cattle',
     },
   },
   [TerrainResourceId.COPPER]: {
@@ -293,7 +319,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.GOLD]: 2 },
     ui: {
       name: 'Copper',
-      cssClassBase: 'm-resource-copper',
+      cssClass: 'm-resource-copper',
     },
   },
   [TerrainResourceId.CRABS]: {
@@ -302,7 +328,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.GOLD]: 2 },
     ui: {
       name: 'Crabs',
-      cssClassBase: 'm-resource-crabs',
+      cssClass: 'm-resource-crabs',
     },
   },
   [TerrainResourceId.DEER]: {
@@ -311,7 +337,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.PRODUCTION]: 1 },
     ui: {
       name: 'Deer',
-      cssClassBase: 'm-resource-deer',
+      cssClass: 'm-resource-deer',
     },
   },
   [TerrainResourceId.FISH]: {
@@ -320,7 +346,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: {  [YieldId.FOOD]: 1 },
     ui: {
       name: 'Fish',
-      cssClassBase: 'm-resource-fish',
+      cssClass: 'm-resource-fish',
     },
   },
   [TerrainResourceId.RICE]: {
@@ -329,7 +355,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: {  [YieldId.FOOD]: 1 },
     ui: {
       name: 'Rice',
-      cssClassBase: 'm-resource-rice',
+      cssClass: 'm-resource-rice',
     },
   },
   [TerrainResourceId.SHEEP]: {
@@ -338,7 +364,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: {  [YieldId.FOOD]: 1 },
     ui: {
       name: 'Sheep',
-      cssClassBase: 'm-resource-sheep',
+      cssClass: 'm-resource-sheep',
     },
   },
   [TerrainResourceId.STONE]: {
@@ -347,7 +373,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.PRODUCTION]: 1 },
     ui: {
       name: 'Stone',
-      cssClassBase: 'm-resource-stone',
+      cssClass: 'm-resource-stone',
     },
   },
   [TerrainResourceId.WHEAT]: {
@@ -356,7 +382,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.FOOD]: 1 },
     ui: {
       name: 'Wheat',
-      cssClassBase: 'm-resource-wheat',
+      cssClass: 'm-resource-wheat',
     },
   },
   [TerrainResourceId.ALUMINUM]: {
@@ -365,7 +391,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.SCIENCE]: 1 },
     ui: {
       name: 'Aluminum',
-      cssClassBase: 'm-resource-aluminum',
+      cssClass: 'm-resource-aluminum',
     },
   },
   [TerrainResourceId.COAL]: {
@@ -374,7 +400,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.PRODUCTION]: 2 },
     ui: {
       name: 'Coal',
-      cssClassBase: 'm-resource-coal',
+      cssClass: 'm-resource-coal',
     },
   },
   [TerrainResourceId.HORSES]: {
@@ -383,7 +409,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.FOOD]: 1, [YieldId.PRODUCTION]: 1 },
     ui: {
       name: 'Horses',
-      cssClassBase: 'm-resource-horses',
+      cssClass: 'm-resource-horses',
     },
   },
   [TerrainResourceId.IRON]: {
@@ -392,7 +418,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.SCIENCE]: 1 },
     ui: {
       name: 'Iron',
-      cssClassBase: 'm-resource-iron',
+      cssClass: 'm-resource-iron',
     },
   },
   [TerrainResourceId.NITER]: {
@@ -401,7 +427,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.FOOD]: 1, [YieldId.PRODUCTION]: 1 },
     ui: {
       name: 'Niter',
-      cssClassBase: 'm-resource-niter',
+      cssClass: 'm-resource-niter',
     },
   },
   [TerrainResourceId.OIL]: {
@@ -410,7 +436,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.PRODUCTION]: 3 },
     ui: {
       name: 'Oil',
-      cssClassBase: 'm-resource-oil',
+      cssClass: 'm-resource-oil',
     },
   },
   [TerrainResourceId.URANIUM]: {
@@ -419,7 +445,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.PRODUCTION]: 2 },
     ui: {
       name: 'Uranium',
-      cssClassBase: 'm-resource-uranium',
+      cssClass: 'm-resource-uranium',
     },
   },
   [TerrainResourceId.AMBER]: {
@@ -428,7 +454,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.CULTURE]: 1 },
     ui: {
       name: 'Amber',
-      cssClassBase: 'm-resource-amber',
+      cssClass: 'm-resource-amber',
     },
   },
   [TerrainResourceId.CITRUS]: {
@@ -437,7 +463,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.FOOD]: 2 },
     ui: {
       name: 'Citrus',
-      cssClassBase: 'm-resource-citrus',
+      cssClass: 'm-resource-citrus',
     },
   },
   [TerrainResourceId.COCOA]: {
@@ -446,7 +472,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.GOLD]: 3 },
     ui: {
       name: 'Cocoa',
-      cssClassBase: 'm-resource-cocoa',
+      cssClass: 'm-resource-cocoa',
     },
   },
   [TerrainResourceId.COFFEE]: {
@@ -455,7 +481,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.CULTURE]: 1 },
     ui: {
       name: 'Coffee',
-      cssClassBase: 'm-resource-coffee',
+      cssClass: 'm-resource-coffee',
     },
   },
   [TerrainResourceId.COTTON]: {
@@ -464,7 +490,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.GOLD]: 3 },
     ui: {
       name: 'Cotton',
-      cssClassBase: 'm-resource-cotton',
+      cssClass: 'm-resource-cotton',
     },
   },
   [TerrainResourceId.DIAMONDS]: {
@@ -473,7 +499,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.GOLD]: 3 },
     ui: {
       name: 'Diamonds',
-      cssClassBase: 'm-resource-diamonds',
+      cssClass: 'm-resource-diamonds',
     },
   },
   [TerrainResourceId.DYES]: {
@@ -482,7 +508,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.FAITH]: 1 },
     ui: {
       name: 'Dyes',
-      cssClassBase: 'm-resource-dyes',
+      cssClass: 'm-resource-dyes',
     },
   },
   [TerrainResourceId.FURS]: {
@@ -491,7 +517,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.FOOD]: 1, [YieldId.GOLD]: 1 },
     ui: {
       name: 'Furs',
-      cssClassBase: 'm-resource-furs',
+      cssClass: 'm-resource-furs',
     },
   },
   [TerrainResourceId.GYPSUM]: {
@@ -500,7 +526,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.PRODUCTION]: 1, [YieldId.GOLD]: 1 },
     ui: {
       name: 'Gypsum',
-      cssClassBase: 'm-resource-gypsum',
+      cssClass: 'm-resource-gypsum',
     },
   },
   [TerrainResourceId.INCENSE]: {
@@ -509,7 +535,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.FAITH]: 1 },
     ui: {
       name: 'Incense',
-      cssClassBase: 'm-resource-incense',
+      cssClass: 'm-resource-incense',
     },
   },
   [TerrainResourceId.IVORY]: {
@@ -518,7 +544,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.PRODUCTION]: 1, [YieldId.GOLD]: 1 },
     ui: {
       name: 'Ivory',
-      cssClassBase: 'm-resource-ivory',
+      cssClass: 'm-resource-ivory',
     },
   },
   [TerrainResourceId.JADE]: {
@@ -527,7 +553,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.CULTURE]: 1 },
     ui: {
       name: 'Jade',
-      cssClassBase: 'm-resource-jade',
+      cssClass: 'm-resource-jade',
     },
   },
   [TerrainResourceId.MARBLE]: {
@@ -536,7 +562,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.CULTURE]: 1 },
     ui: {
       name: 'marble',
-      cssClassBase: 'm-resource-marble',
+      cssClass: 'm-resource-marble',
     },
   },
   [TerrainResourceId.MERCURY]: {
@@ -545,7 +571,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.SCIENCE]: 1 },
     ui: {
       name: 'Mercury',
-      cssClassBase: 'm-resource-mercury',
+      cssClass: 'm-resource-mercury',
     },
   },
   [TerrainResourceId.OLIVES]: {
@@ -554,7 +580,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.PRODUCTION]: 1, [YieldId.GOLD]: 1 },
     ui: {
       name: 'Olives',
-      cssClassBase: 'm-resource-olives',
+      cssClass: 'm-resource-olives',
     },
   },
   [TerrainResourceId.PEARLS]: {
@@ -563,7 +589,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.FAITH]: 1 },
     ui: {
       name: 'Pearls',
-      cssClassBase: 'm-resource-pearls',
+      cssClass: 'm-resource-pearls',
     },
   },
   [TerrainResourceId.SALT]: {
@@ -572,7 +598,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.FOOD]: 1, [YieldId.GOLD]: 1 },
     ui: {
       name: 'Salt',
-      cssClassBase: 'm-resource-salt',
+      cssClass: 'm-resource-salt',
     },
   },
   [TerrainResourceId.SILK]: {
@@ -581,7 +607,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.CULTURE]: 1 },
     ui: {
       name: 'Silk',
-      cssClassBase: 'm-resource-silk',
+      cssClass: 'm-resource-silk',
     },
   },
   [TerrainResourceId.SILVER]: {
@@ -590,7 +616,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.GOLD]: 3 },
     ui: {
       name: 'Silver',
-      cssClassBase: 'm-resource-silver',
+      cssClass: 'm-resource-silver',
     },
   },
   [TerrainResourceId.SPICES]: {
@@ -599,7 +625,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.FOOD]: 2 },
     ui: {
       name:'Spices',
-      cssClassBase: 'm-resource-spices',
+      cssClass: 'm-resource-spices',
     },
   },
   [TerrainResourceId.SUGAR]: {
@@ -608,7 +634,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.FOOD]: 2 },
     ui: {
       name: 'Sugar',
-      cssClassBase: 'm-resource-sugar',
+      cssClass: 'm-resource-sugar',
     },
   },
   [TerrainResourceId.TEA]: {
@@ -617,7 +643,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.SCIENCE]: 1 },
     ui: {
       name: 'Tea',
-      cssClassBase: 'm-resource-tea',
+      cssClass: 'm-resource-tea',
     },
   },
   [TerrainResourceId.TOBACCO]: {
@@ -626,7 +652,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.FAITH]: 1 },
     ui: {
       name: 'Tobacco',
-      cssClassBase: 'm-resource-tobacco',
+      cssClass: 'm-resource-tobacco',
     },
   },
   [TerrainResourceId.TRUFFLES]: {
@@ -635,7 +661,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.GOLD]: 3 },
     ui: {
       name: 'Truffles',
-      cssClassBase: 'm-resource-truffles',
+      cssClass: 'm-resource-truffles',
     },
   },
   [TerrainResourceId.WHALES]: {
@@ -644,7 +670,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.FOOD]: 1, [YieldId.GOLD]: 1 },
     ui: {
       name: 'Whales',
-      cssClassBase: 'm-resource-whales',
+      cssClass: 'm-resource-whales',
     },
   },
   [TerrainResourceId.WINE]: {
@@ -653,7 +679,7 @@ export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
     yield: { [YieldId.FOOD]: 1, [YieldId.GOLD]: 1 },
     ui: {
       name: 'Wine',
-      cssClassBase: 'm-resource-wine',
+      cssClass: 'm-resource-wine',
     },
   }
 }
@@ -668,7 +694,7 @@ export const TERRAIN_IMPROVEMENT_DB: TerrainImprovementDb = {
     yield: {},
     ui: {
       name: 'Airstrip',
-      cssClassBase: 'm-improvement-airstrip',
+      cssClass: 'm-improvement-airstrip',
     },
   },
   // +0.5 Housing, +1 Food (Mercantilism), +1 Production (Mercantilism), +1 Gold (Synthetic Materials)
@@ -677,7 +703,7 @@ export const TERRAIN_IMPROVEMENT_DB: TerrainImprovementDb = {
     yield: { [YieldId.GOLD]: 2 },
     ui: {
       name: 'Camp',
-      cssClassBase: 'm-improvement-camp',
+      cssClass: 'm-improvement-camp',
     },
   },
   // +0.5 Housing, +1 Food per 2 adjacent Farms (Feudalism until Replaceable Parts), +1 Food per adjacent Farm (Replaceable Parts)
@@ -686,7 +712,7 @@ export const TERRAIN_IMPROVEMENT_DB: TerrainImprovementDb = {
     yield: { [YieldId.FOOD]: 1 },
     ui: {
       name: 'Farm',
-      cssClassBase: 'm-improvement-farm',
+      cssClass: 'm-improvement-farm',
     },
   },
   // +0.5 Housing, +2 Gold (Cartography), +1 Food (Plastics)
@@ -695,7 +721,7 @@ export const TERRAIN_IMPROVEMENT_DB: TerrainImprovementDb = {
     yield: { [YieldId.FOOD]: 1 },
     ui: {
       name: 'Fishing Boats',
-      cssClassBase: 'm-improvement-fishing-boats',
+      cssClass: 'm-improvement-fishing-boats',
     },
   },
   [TerrainImprovementId.FORT]: {
@@ -703,7 +729,7 @@ export const TERRAIN_IMPROVEMENT_DB: TerrainImprovementDb = {
     yield: {},
     ui: {
       name: 'Fort',
-      cssClassBase: 'm-improvement-fort',
+      cssClass: 'm-improvement-fort',
     },
   },
   // +1 Production (Steel), +1 Production (Cybernetics)
@@ -712,7 +738,7 @@ export const TERRAIN_IMPROVEMENT_DB: TerrainImprovementDb = {
     yield: { [YieldId.PRODUCTION]: 2 },
     ui: {
       name: 'Lumber Mill',
-      cssClassBase: 'm-improvement-lumber-mill',
+      cssClass: 'm-improvement-lumber-mill',
     },
   },
   // -1 Appeal, +1 Production (Apprenticeship), +1 Production (Industrialization), +1 Production (Smart materials),
@@ -721,7 +747,7 @@ export const TERRAIN_IMPROVEMENT_DB: TerrainImprovementDb = {
     yield: { [YieldId.PRODUCTION]: 1 },
     ui: {
       name: 'Mine',
-      cssClassBase: 'm-improvement-mine',
+      cssClass: 'm-improvement-mine',
     },
   },
   [TerrainImprovementId.MISSILE_SILO]: {
@@ -729,7 +755,7 @@ export const TERRAIN_IMPROVEMENT_DB: TerrainImprovementDb = {
     yield: {},
     ui: {
       name: 'Missile Silo',
-      cssClassBase: 'm-improvement-missile-silo',
+      cssClass: 'm-improvement-missile-silo',
     },
   },
   [TerrainImprovementId.MOUNTAIN_TUNNEL]: {
@@ -737,7 +763,7 @@ export const TERRAIN_IMPROVEMENT_DB: TerrainImprovementDb = {
     yield: {},
     ui: {
       name: 'Mountain Tunnel',
-      cssClassBase: 'm-improvement-mountain-tunnel',
+      cssClass: 'm-improvement-mountain-tunnel',
     },
   },
   // -1 Appeal
@@ -746,7 +772,7 @@ export const TERRAIN_IMPROVEMENT_DB: TerrainImprovementDb = {
     yield: { [YieldId.PRODUCTION]: 2 },
     ui: {
       name: 'Offshore Oil Rig',
-      cssClassBase: 'm-improvement-offshore-oil-rig',
+      cssClass: 'm-improvement-offshore-oil-rig',
     },
   },
   [TerrainImprovementId.OFFSHORE_WIND_FARM]: {
@@ -754,7 +780,7 @@ export const TERRAIN_IMPROVEMENT_DB: TerrainImprovementDb = {
     yield: { [YieldId.PRODUCTION]: 1, [YieldId.GOLD]: 1, [YieldId.POWER]: 2 },
     ui: {
       name: 'Offshore Wind Farm',
-      cssClassBase: 'm-improvement-offshore-wind-farm',
+      cssClass: 'm-improvement-offshore-wind-farm',
     },
   },
   // -1 Appeal
@@ -763,7 +789,7 @@ export const TERRAIN_IMPROVEMENT_DB: TerrainImprovementDb = {
     yield: { [YieldId.PRODUCTION]: 2 },
     ui: {
       name: 'Oil Well',
-      cssClassBase: 'm-improvement-oil-well',
+      cssClass: 'm-improvement-oil-well',
     },
   },
   // +0.5 Housing, +1 Food (Exploration), +1 Production (Robotics)
@@ -772,7 +798,7 @@ export const TERRAIN_IMPROVEMENT_DB: TerrainImprovementDb = {
     yield: { [YieldId.PRODUCTION]: 1 },
     ui: {
       name: 'Pasture',
-      cssClassBase: 'm-improvement-pasture',
+      cssClass: 'm-improvement-pasture',
     },
   },
   // +0.5 Housing, +1 Food (Scientific Theory), +2 Gold (Globalization)
@@ -781,7 +807,7 @@ export const TERRAIN_IMPROVEMENT_DB: TerrainImprovementDb = {
     yield: { [YieldId.GOLD]: 2 },
     ui: {
       name: 'Plantation',
-      cssClassBase: 'm-improvement-plantation',
+      cssClass: 'm-improvement-plantation',
     },
   },
   // -1 Appeal, +1 Production (Gunpowder), +1 Production (Rocketry), +1 Production (Predictive systems)
@@ -790,7 +816,7 @@ export const TERRAIN_IMPROVEMENT_DB: TerrainImprovementDb = {
     yield: { [YieldId.PRODUCTION]: 1 },
     ui: {
       name: 'Quarry',
-      cssClassBase: 'm-improvement-quarry',
+      cssClass: 'm-improvement-quarry',
     },
   },
   // Appeal x1 to gold, Appeal x 2 to tourism
@@ -799,7 +825,7 @@ export const TERRAIN_IMPROVEMENT_DB: TerrainImprovementDb = {
     yield: {},
     ui: {
       name: 'Seaside Resort',
-      cssClassBase: 'm-improvement-seaside-resort',
+      cssClass: 'm-improvement-seaside-resort',
     },
   },
   // +1 Production from each adjacent Fishing Boat, Fishing Boats receive +1 Production from each adjacent Seastead, +1 Culture and Tourism for each adjacent Reef, +2 Housing.
@@ -808,7 +834,7 @@ export const TERRAIN_IMPROVEMENT_DB: TerrainImprovementDb = {
     yield: { [YieldId.FOOD]: 1 },
     ui: {
       name: 'Seastead',
-      cssClassBase: 'm-improvement-seastead',
+      cssClass: 'm-improvement-seastead',
     },
   },
   // +1 Amenities, Provides Tourism equal to the tile's Appeal
@@ -817,7 +843,7 @@ export const TERRAIN_IMPROVEMENT_DB: TerrainImprovementDb = {
     yield: {},
     ui: {
       name: 'Ski Resort',
-      cssClassBase: 'm-improvement-ski-resort',
+      cssClass: 'm-improvement-ski-resort',
     },
   },
   [TerrainImprovementId.SOLAR_FARM]: {
@@ -825,7 +851,7 @@ export const TERRAIN_IMPROVEMENT_DB: TerrainImprovementDb = {
     yield: { [YieldId.PRODUCTION]: 1, [YieldId.GOLD]: 1, [YieldId.POWER]: 2 },
     ui: {
       name: 'Solar Farm',
-      cssClassBase: 'm-improvement-solar-farm',
+      cssClass: 'm-improvement-solar-farm',
     },
   },
   [TerrainImprovementId.WIND_FARM]: {
@@ -833,7 +859,7 @@ export const TERRAIN_IMPROVEMENT_DB: TerrainImprovementDb = {
     yield: { [YieldId.PRODUCTION]: 1, [YieldId.GOLD]: 1, [YieldId.POWER]: 2 },
     ui: {
       name: 'Wind Farm',
-      cssClassBase: 'm-improvement-wind-farm',
+      cssClass: 'm-improvement-wind-farm',
     },
   }
 }
