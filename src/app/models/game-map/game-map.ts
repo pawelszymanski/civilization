@@ -9,10 +9,10 @@ export interface GameMapTile {
   cssClasses: string[];  // Recalculated on change
 }
 
-export interface GameMapRow {
+export interface GameMapColumn {
   tiles: GameMapTile[];
 }
 
 export interface GameMap {
-  rows: GameMapRow[];
+  columns: GameMapColumn[];
 }

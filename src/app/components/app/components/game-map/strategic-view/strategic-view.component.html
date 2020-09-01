@@ -1,12 +1,13 @@
 <!-- Tried making it only UL + LIs, yet for some reason it renders much slower when scrolling -->
 
 <div class="game-map" #gameMapElem *ngIf="gameMap"
+     [ngClass]="'m-x-' + gameMap?.columns?.length"
      [class.animated]="!isDragging && !isZooming"
      [style.transform]="'translate(' + camera.translate.x + 'px, ' + camera.translate.y + 'px)'">
 
-  <div class="game-map-row" *ngFor="let row of gameMap.rows;">
+  <div class="game-map-column" *ngFor="let column of gameMap.columns;">
 
-    <div class="game-map-tile" *ngFor="let tile of row.tiles;"
+    <div class="game-map-tile" *ngFor="let tile of column.tiles;"
          [ngClass]="tile.cssClasses"
          (wheel)="onTileWheel($event)"
          (click)="onTileClick($event, tile)"

@@ -8,7 +8,7 @@ import {
 } from '../../models/game-map/terrain';
 
 import {Coords} from '../../models/utils/coords';
-import {GameMap, GameMapRow, GameMapTile} from '../../models/game-map/game-map';
+import {GameMap, GameMapColumn, GameMapTile} from '../../models/game-map/game-map';
 import {MapGeneratorSettings} from '../../models/map-generator/map-generator-settings';
 
 import {GameMapHelperService} from './game-map-helper.service';
@@ -37,12 +37,12 @@ export class GameMapGeneratorService {
     return tile;
   }
 
-  private createGameMapRow(rowId: number, width: number): GameMapRow {
-    return {tiles: [...Array(width).keys()].map(x => this.createEmptyOceanTile({x: x, y: rowId}))}
+  private createGameMapColumn(column: number, height: number): GameMapColumn {
+    return {tiles: [...Array(height).keys()].map(row => this.createEmptyOceanTile({x: column, y: row}))}
   }
 
   private createGameMap(params: MapGeneratorSettings): GameMap {
-    return {rows: [...Array(params.height).keys()].map(y => this.createGameMapRow(y, params.width))}
+    return {columns: [...Array(params.width).keys()].map(column => this.createGameMapColumn(column, params.height))}
   }
 
   public generateNewGameMap(params: MapGeneratorSettings): GameMap {

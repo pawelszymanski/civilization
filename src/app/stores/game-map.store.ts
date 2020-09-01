@@ -38,7 +38,7 @@ export class GameMapStore {
 
   public setTileTerrainBase(coords: Coords, terrainBaseId: TerrainBaseId) {
     const gameMap = this._gameMap.value;
-    const tile = gameMap.rows[coords.y].tiles[coords.x];
+    const tile = gameMap.columns[coords.x].tiles[coords.y];
     const variations = TERRAIN_BASE_DB[terrainBaseId].ui.cssVariations;
     tile.terrain.base = {id: terrainBaseId, variation: this.generatorService.randomPositiveInteger(variations)};
     this.updateTileAndNext(tile, gameMap);
@@ -46,7 +46,7 @@ export class GameMapStore {
 
   public setTileTerrainFeature(coords: Coords, terrainFeatureId: TerrainFeatureId) {
     const gameMap = this._gameMap.value;
-    const tile = gameMap.rows[coords.y].tiles[coords.x];
+    const tile = gameMap.columns[coords.x].tiles[coords.y];
     const variations = terrainFeatureId ? this.generatorService.randomPositiveInteger(TERRAIN_FEATURE_DB[terrainFeatureId].ui.cssVariations) : null;
     tile.terrain.feature = {id: terrainFeatureId, variation: variations};
     this.updateTileAndNext(tile, gameMap);
@@ -54,21 +54,21 @@ export class GameMapStore {
 
   public setTileTerrainResource(coords: Coords, terrainResourceId: TerrainResourceId) {
     const gameMap = this._gameMap.value;
-    const tile = gameMap.rows[coords.y].tiles[coords.x];
+    const tile = gameMap.columns[coords.x].tiles[coords.y];
     tile.terrain.resourceId = terrainResourceId;
     this.updateTileAndNext(tile, gameMap);
   }
 
   public setTileTerrainImprovement(coords: Coords, terrainImprovementId: TerrainImprovementId) {
     const gameMap = this._gameMap.value;
-    const tile = gameMap.rows[coords.y].tiles[coords.x];
+    const tile = gameMap.columns[coords.x].tiles[coords.y];
     tile.terrain.improvementId = terrainImprovementId;
     this.updateTileAndNext(tile, gameMap);
   }
 
   public next(gameMap: GameMap) {
     // TODO: for during development, remove later
-    // gameMap.rows.forEach(row => row.tiles.forEach(tile => this.updateTileCssClassesAndYield(tile)))
+    // gameMap.columns.forEach(column => column.tiles.forEach(tile => this.updateTileCssClassesAndYield(tile)))
     this._gameMap.next(gameMap);
   }
 
