@@ -3,10 +3,10 @@ import {Terrain} from './terrain';
 import {Yield} from './yield';
 
 export interface GameMapTile {
-  coords: Coords;
-  terrain: Terrain;
-  cssClasses: string[];
-  yield: Yield;
+  coords: Coords;        // Provided
+  terrain: Terrain;      // Provided
+  cssClasses: string[];  // Recalculated on change
+  yield: Yield;          // Recalculated on change
 }
 
 export interface GameMapRow {

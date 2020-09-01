@@ -3,7 +3,8 @@ import {
   TerrainFeatureId,
   TerrainResourceId,
   TerrainImprovementId,
-  TerrainResourceTypeId
+  TerrainResourceTypeId,
+  TerrainUi
 } from '../../models/game-map/terrain';
 import {Yield, YieldId} from '../../models/game-map/yield';
 
@@ -11,9 +12,8 @@ import {Yield, YieldId} from '../../models/game-map/yield';
 
 interface TerrainBase {
   id: TerrainBaseId;
-  name: string;
-  cssClass: string;
   yield: Partial<Yield>;
+  ui: TerrainUi;
 }
 
 type TerrainBaseDb = {
@@ -24,9 +24,8 @@ type TerrainBaseDb = {
 
 interface TerrainFeature {
   id: TerrainFeatureId;
-  name: string;
-  cssClass: string;
   yield: Partial<Yield>;
+  ui: TerrainUi;
 }
 
 // All but TerrainFeatureId.NONE
@@ -36,10 +35,9 @@ type TerrainFeatureDb = Omit<{[key in TerrainFeatureId]: TerrainFeature;}, Terra
 
 interface TerrainResource {
   id: TerrainResourceId;
-  name: string;
-  cssClass: string;
-  yield: Partial<Yield>;
   type: TerrainResourceTypeId;
+  yield: Partial<Yield>;
+  ui: TerrainUi;
 }
 
 // All but TerrainResourceId.NONE
@@ -49,9 +47,8 @@ type TerrainResourceDb = Omit<{[key in TerrainResourceId]: TerrainResource;}, Te
 
 interface TerrainImprovement {
   id: TerrainImprovementId;
-  name: string;
-  cssClass: string;
   yield: Partial<Yield>;
+  ui: TerrainUi;
 }
 
 // All but TerrainImprovementId.NONE
@@ -62,111 +59,147 @@ type TerrainImprovementDb = Omit<{[key in TerrainImprovementId]: TerrainImprovem
 export const TERRAIN_BASE_DB: TerrainBaseDb = {
   [TerrainBaseId.GRASSLAND_FLAT]: {
     id: TerrainBaseId.GRASSLAND_FLAT,
-    name: 'Grassland',
-    cssClass: 'm-base-grassland-flat',
-    yield: { [YieldId.FOOD]: 2 }
+    yield: { [YieldId.FOOD]: 2 },
+    ui: {
+      name: 'Grassland',
+      cssClassBase: 'm-base-grassland-flat',
+    },
   },
   [TerrainBaseId.GRASSLAND_HILLS]: {
     id: TerrainBaseId.GRASSLAND_HILLS,
-    name: 'Grassland (Hills)',
-    cssClass: 'm-base-grassland-hills',
-    yield: { [YieldId.FOOD]: 2, [YieldId.PRODUCTION]: 1 }
+    yield: { [YieldId.FOOD]: 2, [YieldId.PRODUCTION]: 1 },
+    ui: {
+      name: 'Grassland (Hills)',
+      cssClassBase: 'm-base-grassland-hills',
+    },
   },
   [TerrainBaseId.GRASSLAND_MOUNTAIN]: {
     id: TerrainBaseId.GRASSLAND_MOUNTAIN,
-    name: 'Grassland (Mountain)',
-    cssClass: 'm-base-grassland-mountain',
-    yield: {}
+    yield: {},
+    ui: {
+      name: 'Grassland (Mountain)',
+      cssClassBase: 'm-base-grassland-mountain',
+    },
   },
   [TerrainBaseId.PLAINS_FLAT]: {
     id: TerrainBaseId.PLAINS_FLAT,
-    name: 'Plains',
-    cssClass: 'm-base-plains-flat',
-    yield: { [YieldId.FOOD]: 1, [YieldId.PRODUCTION]: 1 }
+    yield: { [YieldId.FOOD]: 1, [YieldId.PRODUCTION]: 1 },
+    ui: {
+      name: 'Plains',
+      cssClassBase: 'm-base-plains-flat',
+    },
   },
   [TerrainBaseId.PLAINS_HILLS]: {
     id: TerrainBaseId.PLAINS_HILLS,
-    name: 'Plains (Hills)',
-    cssClass: 'm-base-plains-hills',
-    yield: { [YieldId.FOOD]: 1, [YieldId.PRODUCTION]: 2 }
+    yield: { [YieldId.FOOD]: 1, [YieldId.PRODUCTION]: 2 },
+    ui: {
+      name: 'Plains (Hills)',
+      cssClassBase: 'm-base-plains-hills',
+    },
   },
   [TerrainBaseId.PLAINS_MOUNTAIN]: {
     id: TerrainBaseId.PLAINS_MOUNTAIN,
-    name: 'Plains (Mountain)',
-    cssClass: 'm-base-plains-mountain',
-    yield: {}
+    yield: {},
+    ui: {
+      name: 'Plains (Mountain)',
+      cssClassBase: 'm-base-plains-mountain',
+    },
   },
   [TerrainBaseId.DESERT_FLAT]: {
     id: TerrainBaseId.DESERT_FLAT,
-    name: 'Desert',
-    cssClass: 'm-base-desert-flat',
-    yield: {}
+    yield: {},
+    ui: {
+      name: 'Desert',
+      cssClassBase: 'm-base-desert-flat',
+    },
   },
   [TerrainBaseId.DESERT_HILLS]: {
     id: TerrainBaseId.DESERT_HILLS,
-    name: 'Desert (Hills)',
-    cssClass: 'm-base-desert-hills',
-    yield: { [YieldId.PRODUCTION]: 1 }
+    yield: { [YieldId.PRODUCTION]: 1 },
+    ui: {
+      name: 'Desert (Hills)',
+      cssClassBase: 'm-base-desert-hills',
+    },
   },
   [TerrainBaseId.DESERT_MOUNTAIN]: {
     id: TerrainBaseId.DESERT_MOUNTAIN,
-    name: 'Desert (Mountain)',
-    cssClass: 'm-base-desert-mountain',
-    yield: {}
+    yield: {},
+    ui: {
+      name: 'Desert (Mountain)',
+      cssClassBase: 'm-base-desert-mountain',
+    },
   },
   [TerrainBaseId.TUNDRA_FLAT]: {
     id: TerrainBaseId.TUNDRA_FLAT,
-    name: 'Tundra',
-    cssClass: 'm-base-tundra-flat',
-    yield: { [YieldId.FOOD]: 1 }
+    yield: { [YieldId.FOOD]: 1 },
+    ui: {
+      name: 'Tundra',
+      cssClassBase: 'm-base-tundra-flat',
+    },
   },
   [TerrainBaseId.TUNDRA_HILLS]: {
     id: TerrainBaseId.TUNDRA_HILLS,
-    name: 'Tundra (Hills)',
-    cssClass: 'm-base-tundra-hills',
-    yield: { [YieldId.FOOD]: 1, [YieldId.PRODUCTION]: 1 }
+    yield: { [YieldId.FOOD]: 1, [YieldId.PRODUCTION]: 1 },
+    ui: {
+      name: 'Tundra (Hills)',
+      cssClassBase: 'm-base-tundra-hills',
+    },
   },
   [TerrainBaseId.TUNDRA_MOUNTAIN]: {
     id: TerrainBaseId.TUNDRA_MOUNTAIN,
-    name: 'Tundra (Mountain)',
-    cssClass: 'm-base-tundra-mountain',
-    yield: {}
+    yield: {},
+    ui: {
+      name: 'Tundra (Mountain)',
+      cssClassBase: 'm-base-tundra-mountain',
+    },
   },
   [TerrainBaseId.SNOW_FLAT]: {
     id: TerrainBaseId.SNOW_FLAT,
-    name: 'Snow',
-    cssClass: 'm-base-snow-flat',
-    yield: {}
+    yield: {},
+    ui: {
+      name: 'Snow',
+      cssClassBase: 'm-base-snow-flat',
+    },
   },
   [TerrainBaseId.SNOW_HILLS]: {
     id: TerrainBaseId.SNOW_HILLS,
-    name: 'Snow (Hills)',
-    cssClass: 'm-base-snow-hills',
-    yield: { [YieldId.PRODUCTION]: 1 }
+    yield: { [YieldId.PRODUCTION]: 1 },
+    ui: {
+      name: 'Snow (Hills)',
+      cssClassBase: 'm-base-snow-hills',
+    },
   },
   [TerrainBaseId.SNOW_MOUNTAIN]: {
     id: TerrainBaseId.SNOW_MOUNTAIN,
-    name: 'Snow (Mountain)',
-    cssClass: 'm-base-snow-mountain',
-    yield: {}
+    yield: {},
+    ui: {
+      name: 'Snow (Mountain)',
+      cssClassBase: 'm-base-snow-mountain',
+    },
   },
   [TerrainBaseId.LAKE]: {
     id: TerrainBaseId.LAKE,
-    name: 'Lake',
-    cssClass: 'm-base-lake',
-    yield: { [YieldId.FOOD]: 1, [YieldId.GOLD]: 1 }
+    yield: { [YieldId.FOOD]: 1, [YieldId.GOLD]: 1 },
+    ui: {
+      name: 'Lake',
+      cssClassBase: 'm-base-lake',
+    },
   },
   [TerrainBaseId.COAST]: {
     id: TerrainBaseId.COAST,
-    name: 'Coast',
-    cssClass: 'm-base-coast',
-    yield: { [YieldId.FOOD]: 1, [YieldId.GOLD]: 1 }
+    yield: { [YieldId.FOOD]: 1, [YieldId.GOLD]: 1 },
+    ui: {
+      name: 'Coast',
+      cssClassBase: 'm-base-coast',
+    },
   },
   [TerrainBaseId.OCEAN]: {
     id: TerrainBaseId.OCEAN,
-    name: 'Ocean',
-    cssClass: 'm-base-ocean',
-    yield: { [YieldId.FOOD]: 1 }
+    yield: { [YieldId.FOOD]: 1 },
+    ui: {
+      name: 'Ocean',
+      cssClassBase: 'm-base-ocean',
+    },
   }
 }
 export const TERRAIN_BASE_LIST: TerrainBase[] = Object.keys(TERRAIN_BASE_DB).map(key => TERRAIN_BASE_DB[key]);
@@ -176,45 +209,59 @@ export const TERRAIN_BASE_LIST: TerrainBase[] = Object.keys(TERRAIN_BASE_DB).map
 export const TERRAIN_FEATURE_DB: TerrainFeatureDb = {
   [TerrainFeatureId.FLOODPLAINS]: {
     id: TerrainFeatureId.FLOODPLAINS,
-    name: 'Floodplains',
-    cssClass: 'm-feature-floodplains',
-    yield: { [YieldId.FOOD]: 1 }
+    yield: { [YieldId.FOOD]: 1 },
+    ui: {
+      name: 'Floodplains',
+      cssClassBase: 'm-feature-floodplains',
+    },
   },
   [TerrainFeatureId.ICE]: {
     id: TerrainFeatureId.ICE,
-    name: 'Ice',
-    cssClass: 'm-feature-ice',
-    yield: {}
+    yield: {},
+    ui: {
+      name: 'Ice',
+      cssClassBase: 'm-feature-ice',
+    },
   },
   [TerrainFeatureId.MARSH]: {
     id: TerrainFeatureId.MARSH,
-    name: 'Marsh',
-    cssClass: 'm-feature-marsh',
-    yield: { [YieldId.FOOD]: 1 }
+    yield: { [YieldId.FOOD]: 1 },
+    ui: {
+      name: 'Marsh',
+      cssClassBase: 'm-feature-marsh',
+    },
   },
   [TerrainFeatureId.OASIS]: {
     id: TerrainFeatureId.OASIS,
-    name: 'Oasis',
-    cssClass: 'm-feature-oasis',
-    yield: { [YieldId.FOOD]: 3, [YieldId.GOLD]: 1 }
+    yield: { [YieldId.FOOD]: 3, [YieldId.GOLD]: 1 },
+    ui: {
+      name: 'Oasis',
+      cssClassBase: 'm-feature-oasis',
+    },
   },
   [TerrainFeatureId.RAINFOREST]: {
     id: TerrainFeatureId.RAINFOREST,
-    name: 'Rainforest',
-    cssClass: 'm-feature-rainforest',
-    yield: { [YieldId.FOOD]: 1 }
+    yield: { [YieldId.FOOD]: 1 },
+    ui: {
+      name: 'Rainforest',
+      cssClassBase: 'm-feature-rainforest',
+    },
   },
   [TerrainFeatureId.REEF]: {
     id: TerrainFeatureId.REEF,
-    name: 'Reef',
-    cssClass: 'm-feature-reef',
-    yield: { [YieldId.FOOD]: 1, [YieldId.PRODUCTION]: 1 }
+    yield: { [YieldId.FOOD]: 1, [YieldId.PRODUCTION]: 1 },
+    ui: {
+      name: 'Reef',
+      cssClassBase: 'm-feature-reef',
+    },
   },
   [TerrainFeatureId.WOODS]: {
     id: TerrainFeatureId.WOODS,
-    name: 'Woods',
-    cssClass: 'm-feature-woods',
-    yield: { [YieldId.PRODUCTION]: 1 }
+    yield: { [YieldId.PRODUCTION]: 1 },
+    ui: {
+      name: 'Woods',
+      cssClassBase: 'm-feature-woods',
+    },
   }
 }
 export const TERRAIN_FEATURE_LIST: TerrainFeature[] = Object.keys(TERRAIN_FEATURE_DB).map(key => TERRAIN_FEATURE_DB[key]);
@@ -224,304 +271,390 @@ export const TERRAIN_FEATURE_LIST: TerrainFeature[] = Object.keys(TERRAIN_FEATUR
 export const TERRAIN_RESOURCE_DB: TerrainResourceDb = {
   [TerrainResourceId.BANANAS]: {
     id: TerrainResourceId.BANANAS,
-    name: 'Bananas',
-    cssClass: 'm-resource-bananas',
+    type: TerrainResourceTypeId.BONUS,
     yield: {  [YieldId.FOOD]: 1 },
-    type: TerrainResourceTypeId.BONUS
+    ui: {
+      name: 'Bananas',
+      cssClassBase: 'm-resource-bananas',
+    },
   },
   [TerrainResourceId.CATTLE]: {
     id: TerrainResourceId.CATTLE,
-    name: 'Cattle',
-    cssClass: 'm-resource-cattle',
+    type: TerrainResourceTypeId.BONUS,
     yield: { [YieldId.FOOD]: 1 },
-    type: TerrainResourceTypeId.BONUS
+    ui: {
+      name: 'Cattle',
+      cssClassBase: 'm-resource-cattle',
+    },
   },
   [TerrainResourceId.COPPER]: {
     id: TerrainResourceId.COPPER,
-    name: 'Copper',
-    cssClass: 'm-resource-copper',
+    type: TerrainResourceTypeId.BONUS,
     yield: { [YieldId.GOLD]: 2 },
-    type: TerrainResourceTypeId.BONUS
+    ui: {
+      name: 'Copper',
+      cssClassBase: 'm-resource-copper',
+    },
   },
   [TerrainResourceId.CRABS]: {
     id: TerrainResourceId.CRABS,
-    name: 'Crabs',
-    cssClass: 'm-resource-crabs',
+    type: TerrainResourceTypeId.BONUS,
     yield: { [YieldId.GOLD]: 2 },
-    type: TerrainResourceTypeId.BONUS
+    ui: {
+      name: 'Crabs',
+      cssClassBase: 'm-resource-crabs',
+    },
   },
   [TerrainResourceId.DEER]: {
     id: TerrainResourceId.DEER,
-    name: 'Deer',
-    cssClass: 'm-resource-deer',
+    type: TerrainResourceTypeId.BONUS,
     yield: { [YieldId.PRODUCTION]: 1 },
-    type: TerrainResourceTypeId.BONUS
+    ui: {
+      name: 'Deer',
+      cssClassBase: 'm-resource-deer',
+    },
   },
   [TerrainResourceId.FISH]: {
     id: TerrainResourceId.FISH,
-    name: 'Fish',
-    cssClass: 'm-resource-fish',
+    type: TerrainResourceTypeId.BONUS,
     yield: {  [YieldId.FOOD]: 1 },
-    type: TerrainResourceTypeId.BONUS
+    ui: {
+      name: 'Fish',
+      cssClassBase: 'm-resource-fish',
+    },
   },
   [TerrainResourceId.RICE]: {
     id: TerrainResourceId.RICE,
-    name: 'Rice',
-    cssClass: 'm-resource-rice',
+    type: TerrainResourceTypeId.BONUS,
     yield: {  [YieldId.FOOD]: 1 },
-    type: TerrainResourceTypeId.BONUS
+    ui: {
+      name: 'Rice',
+      cssClassBase: 'm-resource-rice',
+    },
   },
   [TerrainResourceId.SHEEP]: {
     id: TerrainResourceId.SHEEP,
-    name: 'Sheep',
-    cssClass: 'm-resource-sheep',
+    type: TerrainResourceTypeId.BONUS,
     yield: {  [YieldId.FOOD]: 1 },
-    type: TerrainResourceTypeId.BONUS
+    ui: {
+      name: 'Sheep',
+      cssClassBase: 'm-resource-sheep',
+    },
   },
   [TerrainResourceId.STONE]: {
     id: TerrainResourceId.STONE,
-    name: 'Stone',
-    cssClass: 'm-resource-stone',
+    type: TerrainResourceTypeId.BONUS,
     yield: { [YieldId.PRODUCTION]: 1 },
-    type: TerrainResourceTypeId.BONUS
+    ui: {
+      name: 'Stone',
+      cssClassBase: 'm-resource-stone',
+    },
   },
   [TerrainResourceId.WHEAT]: {
     id: TerrainResourceId.WHEAT,
-    name: 'Wheat',
-    cssClass: 'm-resource-wheat',
+    type: TerrainResourceTypeId.BONUS,
     yield: { [YieldId.FOOD]: 1 },
-    type: TerrainResourceTypeId.BONUS
+    ui: {
+      name: 'Wheat',
+      cssClassBase: 'm-resource-wheat',
+    },
   },
   [TerrainResourceId.ALUMINUM]: {
     id: TerrainResourceId.ALUMINUM,
-    name: 'Aluminum',
-    cssClass: 'm-resource-aluminum',
+    type: TerrainResourceTypeId.STRATEGIC,
     yield: { [YieldId.SCIENCE]: 1 },
-    type: TerrainResourceTypeId.STRATEGIC
+    ui: {
+      name: 'Aluminum',
+      cssClassBase: 'm-resource-aluminum',
+    },
   },
   [TerrainResourceId.COAL]: {
     id: TerrainResourceId.COAL,
-    name: 'Coal',
-    cssClass: 'm-resource-coal',
+    type: TerrainResourceTypeId.STRATEGIC,
     yield: { [YieldId.PRODUCTION]: 2 },
-    type: TerrainResourceTypeId.STRATEGIC
+    ui: {
+      name: 'Coal',
+      cssClassBase: 'm-resource-coal',
+    },
   },
   [TerrainResourceId.HORSES]: {
     id: TerrainResourceId.HORSES,
-    name: 'Horses',
-    cssClass: 'm-resource-horses',
+    type: TerrainResourceTypeId.STRATEGIC,
     yield: { [YieldId.FOOD]: 1, [YieldId.PRODUCTION]: 1 },
-    type: TerrainResourceTypeId.STRATEGIC
+    ui: {
+      name: 'Horses',
+      cssClassBase: 'm-resource-horses',
+    },
   },
   [TerrainResourceId.IRON]: {
     id: TerrainResourceId.IRON,
-    name: 'Iron',
-    cssClass: 'm-resource-iron',
+    type: TerrainResourceTypeId.STRATEGIC,
     yield: { [YieldId.SCIENCE]: 1 },
-    type: TerrainResourceTypeId.STRATEGIC
+    ui: {
+      name: 'Iron',
+      cssClassBase: 'm-resource-iron',
+    },
   },
   [TerrainResourceId.NITER]: {
     id: TerrainResourceId.NITER,
-    name: 'Niter',
-    cssClass: 'm-resource-niter',
+    type: TerrainResourceTypeId.STRATEGIC,
     yield: { [YieldId.FOOD]: 1, [YieldId.PRODUCTION]: 1 },
-    type: TerrainResourceTypeId.STRATEGIC
+    ui: {
+      name: 'Niter',
+      cssClassBase: 'm-resource-niter',
+    },
   },
   [TerrainResourceId.OIL]: {
     id: TerrainResourceId.OIL,
-    name: 'Oil',
-    cssClass: 'm-resource-oil',
+    type: TerrainResourceTypeId.STRATEGIC,
     yield: { [YieldId.PRODUCTION]: 3 },
-    type: TerrainResourceTypeId.STRATEGIC
+    ui: {
+      name: 'Oil',
+      cssClassBase: 'm-resource-oil',
+    },
   },
   [TerrainResourceId.URANIUM]: {
     id: TerrainResourceId.URANIUM,
-    name: 'Uranium',
-    cssClass: 'm-resource-uranium',
+    type: TerrainResourceTypeId.STRATEGIC,
     yield: { [YieldId.PRODUCTION]: 2 },
-    type: TerrainResourceTypeId.STRATEGIC
+    ui: {
+      name: 'Uranium',
+      cssClassBase: 'm-resource-uranium',
+    },
   },
   [TerrainResourceId.AMBER]: {
     id: TerrainResourceId.AMBER,
-    name: 'Amber',
-    cssClass: 'm-resource-amber',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.CULTURE]: 1 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'Amber',
+      cssClassBase: 'm-resource-amber',
+    },
   },
   [TerrainResourceId.CITRUS]: {
     id: TerrainResourceId.CITRUS,
-    name: 'Citrus',
-    cssClass: 'm-resource-citrus',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.FOOD]: 2 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'Citrus',
+      cssClassBase: 'm-resource-citrus',
+    },
   },
   [TerrainResourceId.COCOA]: {
     id: TerrainResourceId.COCOA,
-    name: 'Cocoa',
-    cssClass: 'm-resource-cocoa',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.GOLD]: 3 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'Cocoa',
+      cssClassBase: 'm-resource-cocoa',
+    },
   },
   [TerrainResourceId.COFFEE]: {
     id: TerrainResourceId.COFFEE,
-    name: 'Coffee',
-    cssClass: 'm-resource-coffee',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.CULTURE]: 1 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'Coffee',
+      cssClassBase: 'm-resource-coffee',
+    },
   },
   [TerrainResourceId.COTTON]: {
     id: TerrainResourceId.COTTON,
-    name: 'Cotton',
-    cssClass: 'm-resource-cotton',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.GOLD]: 3 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'Cotton',
+      cssClassBase: 'm-resource-cotton',
+    },
   },
   [TerrainResourceId.DIAMONDS]: {
     id: TerrainResourceId.DIAMONDS,
-    name: 'Diamonds',
-    cssClass: 'm-resource-diamonds',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.GOLD]: 3 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'Diamonds',
+      cssClassBase: 'm-resource-diamonds',
+    },
   },
   [TerrainResourceId.DYES]: {
     id: TerrainResourceId.DYES,
-    name: 'Dyes',
-    cssClass: 'm-resource-dyes',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.FAITH]: 1 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'Dyes',
+      cssClassBase: 'm-resource-dyes',
+    },
   },
   [TerrainResourceId.FURS]: {
     id: TerrainResourceId.FURS,
-    name: 'Furs',
-    cssClass: 'm-resource-furs',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.FOOD]: 1, [YieldId.GOLD]: 1 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'Furs',
+      cssClassBase: 'm-resource-furs',
+    },
   },
   [TerrainResourceId.GYPSUM]: {
     id: TerrainResourceId.GYPSUM,
-    name: 'Gypsum',
-    cssClass: 'm-resource-gypsum',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.PRODUCTION]: 1, [YieldId.GOLD]: 1 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'Gypsum',
+      cssClassBase: 'm-resource-gypsum',
+    },
   },
   [TerrainResourceId.INCENSE]: {
     id: TerrainResourceId.INCENSE,
-    name: 'Incense',
-    cssClass: 'm-resource-incense',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.FAITH]: 1 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'Incense',
+      cssClassBase: 'm-resource-incense',
+    },
   },
   [TerrainResourceId.IVORY]: {
     id: TerrainResourceId.IVORY,
-    name: 'Ivory',
-    cssClass: 'm-resource-ivory',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.PRODUCTION]: 1, [YieldId.GOLD]: 1 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'Ivory',
+      cssClassBase: 'm-resource-ivory',
+    },
   },
   [TerrainResourceId.JADE]: {
     id: TerrainResourceId.JADE,
-    name: 'Jade',
-    cssClass: 'm-resource-jade',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.CULTURE]: 1 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'Jade',
+      cssClassBase: 'm-resource-jade',
+    },
   },
   [TerrainResourceId.MARBLE]: {
     id: TerrainResourceId.MARBLE,
-    name: 'marble',
-    cssClass: 'm-resource-marble',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.CULTURE]: 1 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'marble',
+      cssClassBase: 'm-resource-marble',
+    },
   },
   [TerrainResourceId.MERCURY]: {
     id: TerrainResourceId.MERCURY,
-    name: 'Mercury',
-    cssClass: 'm-resource-mercury',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.SCIENCE]: 1 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'Mercury',
+      cssClassBase: 'm-resource-mercury',
+    },
   },
   [TerrainResourceId.OLIVES]: {
     id: TerrainResourceId.OLIVES,
-    name: 'Olives',
-    cssClass: 'm-resource-olives',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.PRODUCTION]: 1, [YieldId.GOLD]: 1 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'Olives',
+      cssClassBase: 'm-resource-olives',
+    },
   },
   [TerrainResourceId.PEARLS]: {
     id: TerrainResourceId.PEARLS,
-    name: 'Pearls',
-    cssClass: 'm-resource-pearls',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.FAITH]: 1 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'Pearls',
+      cssClassBase: 'm-resource-pearls',
+    },
   },
   [TerrainResourceId.SALT]: {
     id: TerrainResourceId.SALT,
-    name: 'Salt',
-    cssClass: 'm-resource-salt',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.FOOD]: 1, [YieldId.GOLD]: 1 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'Salt',
+      cssClassBase: 'm-resource-salt',
+    },
   },
   [TerrainResourceId.SILK]: {
     id: TerrainResourceId.SILK,
-    name: 'Silk',
-    cssClass: 'm-resource-silk',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.CULTURE]: 1 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'Silk',
+      cssClassBase: 'm-resource-silk',
+    },
   },
   [TerrainResourceId.SILVER]: {
     id: TerrainResourceId.SILVER,
-    name: 'Silver',
-    cssClass: 'm-resource-silver',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.GOLD]: 3 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'Silver',
+      cssClassBase: 'm-resource-silver',
+    },
   },
   [TerrainResourceId.SPICES]: {
     id: TerrainResourceId.SPICES,
-    name: 'Spices',
-    cssClass: 'm-resource-spices',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.FOOD]: 2 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name:'Spices',
+      cssClassBase: 'm-resource-spices',
+    },
   },
   [TerrainResourceId.SUGAR]: {
     id: TerrainResourceId.SUGAR,
-    name: 'Sugar',
-    cssClass: 'm-resource-sugar',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.FOOD]: 2 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'Sugar',
+      cssClassBase: 'm-resource-sugar',
+    },
   },
   [TerrainResourceId.TEA]: {
     id: TerrainResourceId.TEA,
-    name: 'Tea',
-    cssClass: 'm-resource-tea',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.SCIENCE]: 1 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'Tea',
+      cssClassBase: 'm-resource-tea',
+    },
   },
   [TerrainResourceId.TOBACCO]: {
     id: TerrainResourceId.TOBACCO,
-    name: 'Tobacco',
-    cssClass: 'm-resource-tobacco',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.FAITH]: 1 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'Tobacco',
+      cssClassBase: 'm-resource-tobacco',
+    },
   },
   [TerrainResourceId.TRUFFLES]: {
     id: TerrainResourceId.TRUFFLES,
-    name: 'Truffles',
-    cssClass: 'm-resource-truffles',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.GOLD]: 3 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'Truffles',
+      cssClassBase: 'm-resource-truffles',
+    },
   },
   [TerrainResourceId.WHALES]: {
     id: TerrainResourceId.WHALES,
-    name: 'Whales',
-    cssClass: 'm-resource-whales',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.FOOD]: 1, [YieldId.GOLD]: 1 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'Whales',
+      cssClassBase: 'm-resource-whales',
+    },
   },
   [TerrainResourceId.WINE]: {
     id: TerrainResourceId.WINE,
-    name: 'Wine',
-    cssClass: 'm-resource-wine',
+    type: TerrainResourceTypeId.LUXURY,
     yield: { [YieldId.FOOD]: 1, [YieldId.GOLD]: 1 },
-    type: TerrainResourceTypeId.LUXURY
+    ui: {
+      name: 'Wine',
+      cssClassBase: 'm-resource-wine',
+    },
   }
 }
 export const TERRAIN_RESOURCE_LIST: TerrainResource[] = Object.keys(TERRAIN_RESOURCE_DB).map(key => TERRAIN_RESOURCE_DB[key]);
@@ -532,136 +665,176 @@ export const TERRAIN_IMPROVEMENT_DB: TerrainImprovementDb = {
   // -1 Appeal
   [TerrainImprovementId.AIRSTRIP]: {
     id: TerrainImprovementId.AIRSTRIP,
-    name: 'Airstrip',
-    cssClass: 'm-improvement-airstrip',
     yield: {},
+    ui: {
+      name: 'Airstrip',
+      cssClassBase: 'm-improvement-airstrip',
+    },
   },
   // +0.5 Housing, +1 Food (Mercantilism), +1 Production (Mercantilism), +1 Gold (Synthetic Materials)
   [TerrainImprovementId.CAMP]: {
     id: TerrainImprovementId.CAMP,
-    name: 'Camp',
-    cssClass: 'm-improvement-camp',
     yield: { [YieldId.GOLD]: 2 },
+    ui: {
+      name: 'Camp',
+      cssClassBase: 'm-improvement-camp',
+    },
   },
   // +0.5 Housing, +1 Food per 2 adjacent Farms (Feudalism until Replaceable Parts), +1 Food per adjacent Farm (Replaceable Parts)
   [TerrainImprovementId.FARM]: {
     id: TerrainImprovementId.FARM,
-    name: 'Farm',
-    cssClass: 'm-improvement-farm',
     yield: { [YieldId.FOOD]: 1 },
+    ui: {
+      name: 'Farm',
+      cssClassBase: 'm-improvement-farm',
+    },
   },
   // +0.5 Housing, +2 Gold (Cartography), +1 Food (Plastics)
   [TerrainImprovementId.FISHING_BOATS]: {
     id: TerrainImprovementId.FISHING_BOATS,
-    name: 'Fishing Boats',
-    cssClass: 'm-improvement-fishing-boats',
     yield: { [YieldId.FOOD]: 1 },
+    ui: {
+      name: 'Fishing Boats',
+      cssClassBase: 'm-improvement-fishing-boats',
+    },
   },
   [TerrainImprovementId.FORT]: {
     id: TerrainImprovementId.FORT,
-    name: 'Fort',
-    cssClass: 'm-improvement-fort',
-    yield: {  },
+    yield: {},
+    ui: {
+      name: 'Fort',
+      cssClassBase: 'm-improvement-fort',
+    },
   },
   // +1 Production (Steel), +1 Production (Cybernetics)
   [TerrainImprovementId.LUMBER_MILL]: {
     id: TerrainImprovementId.LUMBER_MILL,
-    name: 'Lumber Mill',
-    cssClass: 'm-improvement-lumber-mill',
     yield: { [YieldId.PRODUCTION]: 2 },
+    ui: {
+      name: 'Lumber Mill',
+      cssClassBase: 'm-improvement-lumber-mill',
+    },
   },
   // -1 Appeal, +1 Production (Apprenticeship), +1 Production (Industrialization), +1 Production (Smart materials),
   [TerrainImprovementId.MINE]: {
     id: TerrainImprovementId.MINE,
-    name: 'Mine',
-    cssClass: 'm-improvement-mine',
     yield: { [YieldId.PRODUCTION]: 1 },
+    ui: {
+      name: 'Mine',
+      cssClassBase: 'm-improvement-mine',
+    },
   },
   [TerrainImprovementId.MISSILE_SILO]: {
     id: TerrainImprovementId.MISSILE_SILO,
-    name: 'Missile Silo',
-    cssClass: 'm-improvement-missile-silo',
-    yield: {  },
+    yield: {},
+    ui: {
+      name: 'Missile Silo',
+      cssClassBase: 'm-improvement-missile-silo',
+    },
   },
   [TerrainImprovementId.MOUNTAIN_TUNNEL]: {
     id: TerrainImprovementId.MOUNTAIN_TUNNEL,
-    name: 'Mountain Tunnel',
-    cssClass: 'm-improvement-mountain-tunnel',
-    yield: {  },
+    yield: {},
+    ui: {
+      name: 'Mountain Tunnel',
+      cssClassBase: 'm-improvement-mountain-tunnel',
+    },
   },
   // -1 Appeal
   [TerrainImprovementId.OFFSHORE_OIL_RIG]: {
     id: TerrainImprovementId.OFFSHORE_OIL_RIG,
-    name: 'Offshore Oil Rig',
-    cssClass: 'm-improvement-offshore-oil-rig',
     yield: { [YieldId.PRODUCTION]: 2 },
+    ui: {
+      name: 'Offshore Oil Rig',
+      cssClassBase: 'm-improvement-offshore-oil-rig',
+    },
   },
   [TerrainImprovementId.OFFSHORE_WIND_FARM]: {
     id: TerrainImprovementId.OFFSHORE_WIND_FARM,
-    name: 'Offshore Wind Farm',
-    cssClass: 'm-improvement-offshore-wind-farm',
     yield: { [YieldId.PRODUCTION]: 1, [YieldId.GOLD]: 1, [YieldId.POWER]: 2 },
+    ui: {
+      name: 'Offshore Wind Farm',
+      cssClassBase: 'm-improvement-offshore-wind-farm',
+    },
   },
   // -1 Appeal
   [TerrainImprovementId.OIL_WELL]: {
     id: TerrainImprovementId.OIL_WELL,
-    name: 'Oil Well',
-    cssClass: 'm-improvement-oil-well',
     yield: { [YieldId.PRODUCTION]: 2 },
+    ui: {
+      name: 'Oil Well',
+      cssClassBase: 'm-improvement-oil-well',
+    },
   },
   // +0.5 Housing, +1 Food (Exploration), +1 Production (Robotics)
   [TerrainImprovementId.PASTURE]: {
     id: TerrainImprovementId.PASTURE,
-    name: 'Pasture',
-    cssClass: 'm-improvement-pasture',
     yield: { [YieldId.PRODUCTION]: 1 },
+    ui: {
+      name: 'Pasture',
+      cssClassBase: 'm-improvement-pasture',
+    },
   },
   // +0.5 Housing, +1 Food (Scientific Theory), +2 Gold (Globalization)
   [TerrainImprovementId.PLANTATION]: {
     id: TerrainImprovementId.PLANTATION,
-    name: 'Plantation',
-    cssClass: 'm-improvement-plantation',
     yield: { [YieldId.GOLD]: 2 },
+    ui: {
+      name: 'Plantation',
+      cssClassBase: 'm-improvement-plantation',
+    },
   },
   // -1 Appeal, +1 Production (Gunpowder), +1 Production (Rocketry), +1 Production (Predictive systems)
   [TerrainImprovementId.QUARRY]: {
     id: TerrainImprovementId.QUARRY,
-    name: 'Quarry',
-    cssClass: 'm-improvement-quarry',
     yield: { [YieldId.PRODUCTION]: 1 },
+    ui: {
+      name: 'Quarry',
+      cssClassBase: 'm-improvement-quarry',
+    },
   },
   // Appeal x1 to gold, Appeal x 2 to tourism
   [TerrainImprovementId.SEASIDE_RESORT]: {
     id: TerrainImprovementId.SEASIDE_RESORT,
-    name: 'Seaside Resort',
-    cssClass: 'm-improvement-seaside-resort',
-    yield: {}
+    yield: {},
+    ui: {
+      name: 'Seaside Resort',
+      cssClassBase: 'm-improvement-seaside-resort',
+    },
   },
   // +1 Production from each adjacent Fishing Boat, Fishing Boats receive +1 Production from each adjacent Seastead, +1 Culture and Tourism for each adjacent Reef, +2 Housing.
   [TerrainImprovementId.SEASTEAD]: {
     id: TerrainImprovementId.SEASTEAD,
-    name: 'Seastead',
-    cssClass: 'm-improvement-seastead',
-    yield: { [YieldId.FOOD]: 1 }
+    yield: { [YieldId.FOOD]: 1 },
+    ui: {
+      name: 'Seastead',
+      cssClassBase: 'm-improvement-seastead',
+    },
   },
   // +1 Amenities, Provides Tourism equal to the tile's Appeal
   [TerrainImprovementId.SKI_RESORT]: {
     id: TerrainImprovementId.SKI_RESORT,
-    name: 'Ski Resort',
-    cssClass: 'm-improvement-ski-resort',
-    yield: {}
+    yield: {},
+    ui: {
+      name: 'Ski Resort',
+      cssClassBase: 'm-improvement-ski-resort',
+    },
   },
   [TerrainImprovementId.SOLAR_FARM]: {
     id: TerrainImprovementId.SOLAR_FARM,
-    name: 'Solar Farm',
-    cssClass: 'm-improvement-solar-farm',
-    yield: { [YieldId.PRODUCTION]: 1, [YieldId.GOLD]: 1, [YieldId.POWER]: 2 }
+    yield: { [YieldId.PRODUCTION]: 1, [YieldId.GOLD]: 1, [YieldId.POWER]: 2 },
+    ui: {
+      name: 'Solar Farm',
+      cssClassBase: 'm-improvement-solar-farm',
+    },
   },
   [TerrainImprovementId.WIND_FARM]: {
     id: TerrainImprovementId.WIND_FARM,
-    name: 'Wind Farm',
-    cssClass: 'm-improvement-wind-farm',
-    yield: { [YieldId.PRODUCTION]: 1, [YieldId.GOLD]: 1, [YieldId.POWER]: 2 }
+    yield: { [YieldId.PRODUCTION]: 1, [YieldId.GOLD]: 1, [YieldId.POWER]: 2 },
+    ui: {
+      name: 'Wind Farm',
+      cssClassBase: 'm-improvement-wind-farm',
+    },
   }
 }
 export const TERRAIN_IMPROVEMENT_LIST: TerrainImprovement[] = Object.keys(TERRAIN_IMPROVEMENT_DB).map(key => TERRAIN_IMPROVEMENT_DB[key]);

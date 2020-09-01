@@ -110,6 +110,12 @@ export enum TerrainResourceTypeId {
   LUXURY
 }
 
+export interface TerrainUi {
+  name: string;
+  cssClassBase: string;
+  cssVariation?: number;
+}
+
 export interface Terrain {
   base: TerrainBaseId;
   feature: TerrainFeatureId;

@@ -54,13 +54,13 @@
       }
     }
 
-    @each $terrain-feature in $terrain-features-list {
+    @each $terrain-feature in $terrain-feature-list {
       &.m-feature-#{$terrain-feature} {
         background-image: url('/assets/icons/terrain/features/#{$terrain-feature}.webp');
       }
     }
 
-    @each $terrain-resource in $terrain-resources-list {
+    @each $terrain-resource in $terrain-resource-list {
       &.m-resource-#{$terrain-resource} {
         background-image: url('/assets/icons/terrain/resources/#{$terrain-resource}.webp');
       }

@@ -86,16 +86,6 @@
 
       .game-map-tile {
 
-        // Base terrain texture
-        &[class*='m-base-grassland'] { background-image: url('../../../../../../assets/game-map/terrain/textures/grassland.png'); }
-        &[class*='m-base-plains']    { background-image: url('../../../../../../assets/game-map/terrain/textures/plains.png'); }
-        &[class*='m-base-desert']    { background-image: url('../../../../../../assets/game-map/terrain/textures/desert.png'); }
-        &[class*='m-base-tundra']    { background-image: url('../../../../../../assets/game-map/terrain/textures/tundra.png'); }
-        &[class*='m-base-snow']      { background-image: url('../../../../../../assets/game-map/terrain/textures/snow.png'); }
-        &.m-base-lake,
-        &.m-base-coast { background-image: url('../../../../../../assets/game-map/terrain/textures/coast.png'); }
-        &.m-base-ocean { background-image: url('../../../../../../assets/game-map/terrain/textures/ocean.png'); }
-
         &:before {
           content: '';
           display: block;
@@ -105,56 +95,126 @@
           background-repeat: no-repeat;
         }
 
-        // Hills
-        &.m-base-grassland-hills { &:before { background-image: url('../../../../../../assets/game-map/terrain/hills/grassland-hills-1.webp'); } }
-        &.m-base-plains-hills    { &:before { background-image: url('../../../../../../assets/game-map/terrain/hills/plains-hills-1.webp'); } }
-        &.m-base-desert-hills    { &:before { background-image: url('../../../../../../assets/game-map/terrain/hills/desert-hills-1.webp'); } }
-        &.m-base-tundra-hills    { &:before { background-image: url('../../../../../../assets/game-map/terrain/hills/tundra-hills-1.webp'); } }
-        &.m-base-snow-hills      { &:before { background-image: url('../../../../../../assets/game-map/terrain/hills/snow-hills-1.webp'); } }
+        // Base terrain texture. Based on the land type.
+        &[class*='m-base-grassland'] { background-image: url('/assets/game-map/terrain/textures/grassland.png'); }
+        &[class*='m-base-plains']    { background-image: url('/assets/game-map/terrain/textures/plains.png'); }
+        &[class*='m-base-desert']    { background-image: url('/assets/game-map/terrain/textures/desert.png'); }
+        &[class*='m-base-tundra']    { background-image: url('/assets/game-map/terrain/textures/tundra.png'); }
+        &[class*='m-base-snow']      { background-image: url('/assets/game-map/terrain/textures/snow.png'); }
+        &.m-base-lake,
+        &.m-base-coast { background-image: url('/assets/game-map/terrain/textures/coast.png'); }
+        &.m-base-ocean { background-image: url('/assets/game-map/terrain/textures/ocean.png'); }
 
-        // Woods, Rainforest
-        &.m-feature-woods { &:before { background-image: url('../../../../../../assets/game-map/terrain/features/woods.webp'); } }
-        &.m-feature-rainforest { &:before { background-image: url('../../../../../../assets/game-map/terrain/features/rainforest.webp'); } }
-
-        // Hills + Woods, Rainforest
-        &.m-feature-woods {
-          &.m-base-grassland-hills { &:before { background-image: url('../../../../../../assets/game-map/terrain/features/woods.webp'), url('../../../../../../assets/game-map/terrain/hills/grassland-hills-1.webp'); } }
-          &.m-base-plains-hills    { &:before { background-image: url('../../../../../../assets/game-map/terrain/features/woods.webp'), url('../../../../../../assets/game-map/terrain/hills/plains-hills-1.webp'); } }
-          &.m-base-desert-hills    { &:before { background-image: url('../../../../../../assets/game-map/terrain/features/woods.webp'), url('../../../../../../assets/game-map/terrain/hills/desert-hills-1.webp'); } }
-          &.m-base-tundra-hills    { &:before { background-image: url('../../../../../../assets/game-map/terrain/features/woods.webp'), url('../../../../../../assets/game-map/terrain/hills/tundra-hills-1.webp'); } }
-          &.m-base-snow-hills      { &:before { background-image: url('../../../../../../assets/game-map/terrain/features/woods.webp'), url('../../../../../../assets/game-map/terrain/hills/snow-hills-1.webp'); } }
-        }
-        &.m-feature-rainforest {
-          &.m-base-grassland-hills { &:before { background-image: url('../../../../../../assets/game-map/terrain/features/rainforest.webp'), url('../../../../../../assets/game-map/terrain/hills/grassland-hills-1.webp'); } }
-          &.m-base-plains-hills    { &:before { background-image: url('../../../../../../assets/game-map/terrain/features/rainforest.webp'), url('../../../../../../assets/game-map/terrain/hills/plains-hills-1.webp'); } }
-          &.m-base-desert-hills    { &:before { background-image: url('../../../../../../assets/game-map/terrain/features/rainforest.webp'), url('../../../../../../assets/game-map/terrain/hills/desert-hills-1.webp'); } }
-          &.m-base-tundra-hills    { &:before { background-image: url('../../../../../../assets/game-map/terrain/features/rainforest.webp'), url('../../../../../../assets/game-map/terrain/hills/tundra-hills-1.webp'); } }
-          &.m-base-snow-hills      { &:before { background-image: url('../../../../../../assets/game-map/terrain/features/rainforest.webp'), url('../../../../../../assets/game-map/terrain/hills/snow-hills-1.webp'); } }
+        // Hills. Example: `m-base-desert-hills-2`
+        @each $land-type in $terrain-base-land-type-list {
+          @for $variation from 1 through 3 {
+            &.m-base-#{$land-type}-hills-#{$variation} {
+              &:before { background-image: url('/assets/game-map/terrain/hills/#{$land-type}-hills-#{$variation}.webp'); }
+            }
+          }
         }
 
-        // Mountains
-        &.m-base-grassland-mountain { &:before { background-image: url('../../../../../../assets/game-map/terrain/mountain/mountain-1.webp'); } }
-        &.m-base-plains-mountain    { &:before { background-image: url('../../../../../../assets/game-map/terrain/mountain/mountain-1.webp'); } }
-        &.m-base-desert-mountain    { &:before { background-image: url('../../../../../../assets/game-map/terrain/mountain/mountain-1.webp'); } }
-        &.m-base-tundra-mountain    { &:before { background-image: url('../../../../../../assets/game-map/terrain/mountain/mountain-1.webp'); } }
-        &.m-base-snow-mountain      { &:before { background-image: url('../../../../../../assets/game-map/terrain/mountain/mountain-1.webp'); } }
+        // Mountains. Example: `m-base-snow-mountain-3`
+        @each $land-type in $terrain-base-land-type-list {
+          @for $variation from 1 through 5 {
+            &.m-base-#{$land-type}-mountain-#{$variation} {
+              &:before { background-image: url('/assets/game-map/terrain/mountain/mountain-#{$variation}.webp'); }
+            }
+          }
+        }
 
-        // Floodplains, Marsh, Oasis, Reef, Ice
-        &.m-feature-floodplains { &:before { background-image: url('../../../../../../assets/game-map/terrain/features/floodplains.webp'); } }
-        &.m-feature-marsh { &:before { background-image: url('../../../../../../assets/game-map/terrain/features/marsh.webp'); } }
-        &.m-feature-oasis { &:before { background-image: url('../../../../../../assets/game-map/terrain/features/oasis.webp'); } }
-        &.m-feature-reef { &:before { background-image: url('../../../../../../assets/game-map/terrain/features/reef.webp'); } }
-        &.m-feature-ice { &:before { background-image: url('../../../../../../assets/game-map/terrain/features/ice-1.webp'); } }
+        // Woods. Example: `m-feature-woods-1`
+        @for $variation from 1 through 1 {
+          &.m-feature-woods-#{$variation} {
+            &:before { background-image: url('/assets/game-map/terrain/features/woods-#{$variation}.webp'); }
+          }
+        }
+
+        // Rainforest. Example: `m-feature-rainforest-1`
+        @for $variation from 1 through 1 {
+          &.m-feature-rainforest-#{$variation} {
+            &:before { background-image: url('/assets/game-map/terrain/features/rainforest-#{$variation}.webp'); }
+          }
+        }
+
+        // Floodplains. Example: `m-feature-floodplains-1`
+        @for $variation from 1 through 1 {
+          &.m-feature-floodplains-#{$variation} {
+            &:before { background-image: url('/assets/game-map/terrain/features/floodplains-#{$variation}.webp'); }
+          }
+        }
+
+        // Marsh. Example: `m-feature-marsh-1`
+        @for $variation from 1 through 1 {
+          &.m-feature-marsh-#{$variation} {
+            &:before { background-image: url('/assets/game-map/terrain/features/marsh-#{$variation}.webp'); }
+          }
+        }
+
+        // Oasis. Example: `m-feature-oasis-1`
+        @for $variation from 1 through 1 {
+          &.m-feature-oasis-#{$variation} {
+            &:before { background-image: url('/assets/game-map/terrain/features/oasis-#{$variation}.webp'); }
+          }
+        }
+
+        // Reef. Example: `m-feature-reef-1`
+        @for $variation from 1 through 1 {
+          &.m-feature-reef-#{$variation} {
+            &:before { background-image: url('/assets/game-map/terrain/features/reef-#{$variation}.webp'); }
+          }
+        }
+
+        // Ice. Example: `m-feature-ice-1`
+        @for $variation from 1 through 1 {
+          &.m-feature-ice-#{$variation} {
+            &:before { background-image: url('/assets/game-map/terrain/features/ice-#{$variation}.webp'); }
+          }
+        }
+
+        // Woods ON Hills
+        @each $terrain-base in $terrain-base-land-type-list {
+          @for $woods-variation from 1 through 1 {
+            @for $hills-variation from 1 through 3 {
+              &.m-feature-woods-#{$woods-variation} {
+                &.m-base-#{$terrain-base}-hills-#{$hills-variation} {
+                  &:before {
+                    $woodsUrl: '/assets/game-map/terrain/features/woods-#{$woods-variation}.webp';
+                    $hillsUrl: '/assets/game-map/terrain/hills/#{$terrain-base}-hills-#{$hills-variation}.webp';
+                    background-image: url($woodsUrl), url($hillsUrl);
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        // Rainforest ON Hills
+        @each $terrain-base in $terrain-base-land-type-list {
+          @for $rainforest-variation from 1 through 1 {
+            @for $hills-variation from 1 through 3 {
+              &.m-feature-rainforest-#{$rainforest-variation} {
+                &.m-base-#{$terrain-base}-hills-#{$hills-variation} {
+                  &:before {
+                    $woodsUrl: '/assets/game-map/terrain/features/rainforest-#{$rainforest-variation}.webp';
+                    $hillsUrl: '/assets/game-map/terrain/hills/#{$terrain-base}-hills-#{$hills-variation}.webp';
+                    background-image: url($woodsUrl), url($hillsUrl);
+                  }
+                }
+              }
+            }
+          }
+        }
 
         // Resources
-        @each $resource in $terrain-resources-list {
+        @each $resource in $terrain-resource-list {
           &.m-resource-#{$resource} {
             &:after {
               content: '';
               display: block;
               @include size(100%);
               @include position-block(relative, calc(var(--tile-size) * -0.1), 0, 0, 0);
-              background: url('../../../../../../assets/icons/terrain/resources/#{$resource}.webp') no-repeat;
+              background: url('/assets/icons/terrain/resources/#{$resource}.webp') no-repeat;
               background-position-x: center;
               background-position-y: bottom;
               background-size: calc(var(--tile-size) * 0.2 + 4px);

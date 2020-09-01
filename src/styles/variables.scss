@@ -19,22 +19,26 @@ $max-map-height: 120;
 
 // Lists for iterators
 
+$terrain-base-land-type-list: 'grassland', 'plains', 'desert', 'tundra', 'snow';
+
+$terrain-base-land-elevation-list: 'flat', 'hills', 'mountain';
+
 $terrain-base-list:
   'grassland-flat', 'grassland-hills', 'grassland-mountain', 'plains-flat', 'plains-hills', 'plains-mountain',
   'desert-flat', 'desert-hills', 'desert-mountain', 'tundra-flat', 'tundra-hills', 'tundra-mountain',
   'snow-flat', 'snow-hills', 'snow-mountain', 'lake', 'coast', 'ocean';
 
-$terrain-features-list:
+$terrain-feature-list:
   'floodplains', 'ice', 'oasis', 'marsh', 'rainforest', 'reef', 'woods';
 
-$terrain-resources-list:
+$terrain-resource-list:
   'bananas', 'cattle', 'copper', 'crabs', 'deer', 'fish', 'rice', 'sheep', 'stone', 'wheat',
   'aluminum', 'coal', 'horses', 'iron', 'niter', 'oil', 'uranium',
   'amber', 'citrus', 'cocoa', 'coffee', 'cotton', 'diamonds', 'dyes', 'furs', 'gypsum',
   'incense', 'ivory', 'jade', 'marble', 'mercury', 'olives', 'pearls', 'salt', 'silk',
   'silver', 'spices', 'sugar', 'tea', 'tobacco', 'truffles', 'whales', 'wine';
 
-$off-map-resources-list:
+$off-map-resource-list:
   'cinnamon', 'cloves', 'cosmetics', 'jeans', 'perfume', 'toys';
 
 $terrain-improvement-list:
