@@ -27,7 +27,7 @@ export const CAMERA_TILE_SIZE_STEP = 20;
 export const DEFAULT_CAMERA: Camera = {
   zoomLevel: CAMERA_DEFAULT_ZOOM_LEVEL,
   tileSize: CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP[CAMERA_DEFAULT_ZOOM_LEVEL],
-  translate: {x: 0, y: 0}
+  translate: {x: 0, y: 0},
 }
 
 export const CAMERA_MAX_EMPTY_WINDOW_SPACE_PC = 45;

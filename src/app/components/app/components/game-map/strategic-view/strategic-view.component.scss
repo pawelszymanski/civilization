@@ -34,12 +34,12 @@
         @include disable-selection;
         position: relative;
 
-        // Indent odd rows half a tile
+        // Indent odd rowsq half a tile
         &:nth-child(2n+0) {
           left: calc(var(--tile-size) * 0.9 / 2);
         }
 
-        // This makes all of hexagon area hoverable
+        // Make whole hexagon area hoverable
         @for $i from 0 through ($max-map-height - 1) {
           &:nth-child(#{$i}) {
             z-index: $max-map-height - $i;

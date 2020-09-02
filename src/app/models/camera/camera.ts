@@ -1,10 +1,8 @@
 import {Coords} from '../../models/utils/coords';
 
 export interface Camera {
-  // Primary variable, affected by mouse wheel
-  zoomLevel: number;
-
-  // Secondary, calculated based on the zoomLevel
-  tileSize: number;
-  translate: Coords;
+  zoomLevel: number;       // Primary variable, affected by mouse wheel
+  tileSize: number;        // Secondary variable, calculated based on the zoomLevel
+  translate: Coords;       // Secondary variable, calculated based on the zoomLevel
+  // colTranslate: number[];  // Secondary variable, calculated based on the translate and zoomLevel
 }

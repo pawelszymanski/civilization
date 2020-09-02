@@ -46,7 +46,7 @@ export class StrategicViewComponent {
     private gameMapStoreService: GameMapStore,
     private cameraStore: CameraStore,
     private uiStore: UiStore,
-    private worldBuilderUiStore: WorldBuilderUiStore
+    private worldBuilderUiStore: WorldBuilderUiStore,
   ) {}
 
   subscribeToData() {
@@ -58,6 +58,13 @@ export class StrategicViewComponent {
 
   ngOnInit() {
     this.subscribeToData();
+  }
+
+  calcColumnStyleLeft(colNumber: number): number {
+    const tileSize = this.cameraHelperService.getTileSizeCssVariable();
+    const gameMapElemWidth = tileSize * this.gameMap.columns.length;
+    console.info(tileSize, gameMapElemWidth);
+    return 0;
   }
 
   normalizeVerticalTranslation(translate: Coords): Coords {
