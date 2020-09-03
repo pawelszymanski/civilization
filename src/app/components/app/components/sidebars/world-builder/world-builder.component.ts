@@ -16,7 +16,7 @@ import {WorldBuilderUiStore} from '../../../../../stores/world-builder-ui.store'
 @Component({
   selector: '.world-builder-component',
   templateUrl: './world-builder.component.html',
-  styleUrls: ['./world-builder.component.scss', './../sidebar.scss'],
+  styleUrls: ['./world-builder.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class WorldBuilderComponent {

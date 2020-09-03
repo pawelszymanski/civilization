@@ -4,6 +4,10 @@
 
 .world-builder-component {
 
+  @include position-block(absolute, 0, 0, 0, auto, $z-index-sidebar);
+  width: 370px;
+  background: rgba(48, 108, 48, 0.65);
+
   h2 {
     color: white;
   }

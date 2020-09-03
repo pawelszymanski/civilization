@@ -8,8 +8,8 @@
      [style.transform]="'translate(' + camera.translate.x + 'px, ' + camera.translate.y + 'px)'">
 
   <div class="game-map-column"
-       *ngFor="let column of gameMap.columns; index as colNumber;"
-       [style.left.px]="calcColumnStyleLeft(colNumber)">
+       *ngFor="let column of gameMap.columns; index as colNumber;">
+<!--       [style.left.px]="calcColumnStyleLeft(colNumber)">-->
 
     <div class="game-map-tile"
          *ngFor="let tile of column.tiles;"

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 
-import {Milliseconds} from '../../models/utils/milliseconds';
+import {Millisecond} from '../../models/utils/millisecond';
 import {Timestamp} from '../../models/utils/timestamp';
 import {Uuid} from '../../models/utils/uuid';
 
@@ -14,8 +14,8 @@ export class GeneratorService {
     });
   }
 
-  public nowMilliseconds(): Milliseconds {
-    return (new Date()).getTime() as Milliseconds;
+  public nowMilliseconds(): Millisecond {
+    return (new Date()).getTime() as Millisecond;
   }
 
   public nowIsoString(): Timestamp {

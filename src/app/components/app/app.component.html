@@ -16,7 +16,7 @@
 <div class="civic-tree-component research-tree-modal" [class.active]="ui.modal === ModalId.CIVIC_TREE"></div>
 <div class="technology-tree-component research-tree-modal" [class.active]="ui.modal === ModalId.TECHNOLOGY_TREE"></div>
 
-<div class="dev-tools-component sidebar" [class.active]="ui.sidebar === SidebarId.DEV_TOOLS"></div>
-<div class="world-builder-component sidebar" [class.active]="ui.sidebar === SidebarId.WORLD_BUILDER"></div>
+<div class="dev-tools-component" *ngIf="ui.sidebar === SidebarId.DEV_TOOLS"></div>
+<div class="world-builder-component" *ngIf="ui.sidebar === SidebarId.WORLD_BUILDER"></div>
 
 <div class="viewport-center-marker-component" *ngIf="ui.sidebar === SidebarId.DEV_TOOLS"></div>
