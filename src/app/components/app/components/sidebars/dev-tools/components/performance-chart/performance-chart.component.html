@@ -1,0 +1,9 @@
+<h3>FPS meter</h3>
+<form>
+  <button [class.active]="performanceMeterMode === PerformanceMeterModeId.SINGLE_FRAME_TIME"
+          (click)="setMeterMode(PerformanceMeterModeId.SINGLE_FRAME_TIME)">Single frame time (ms)</button>
+  <button [class.active]="performanceMeterMode === PerformanceMeterModeId.SINGLE_FPS"
+          (click)="setMeterMode(PerformanceMeterModeId.SINGLE_FPS)">Single FPS</button>
+</form>
+
+<canvas #canvas width="360" height="120"></canvas>

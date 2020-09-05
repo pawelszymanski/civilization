@@ -7,7 +7,7 @@ import {AppComponent} from './components/app/app.component';
 import {MainMenuComponent} from './components/app/components/main-menu/main-menu.component';
 import {WorldBuilderComponent} from './components/app/components/sidebars/world-builder/world-builder.component';
 import {DevToolsComponent} from './components/app/components/sidebars/dev-tools/dev-tools.component';
-import {FpsChartComponent} from './components/app/components/sidebars/dev-tools/components/fps-chart/fps-chart.component';
+import {PerformanceChartComponent} from './components/app/components/sidebars/dev-tools/components/performance-chart/performance-chart.component';
 import {CameraFormComponent} from './components/app/components/sidebars/dev-tools/components/camera-form/camera-form.component';
 import {GenerateMapFormComponent} from './components/app/components/sidebars/dev-tools/components/generate-map-form/generate-map-form.component';
 import {StrategicViewComponent} from './components/app/components/game-map/strategic-view/strategic-view.component';
@@ -31,7 +31,6 @@ import {ViewportCenterMarkerComponent} from './components/app/components/game-ma
 
 // SERVICES
 import {CameraHelperService} from './services/camera/camera-helper.service';
-import {AnimationFramesService} from './services/utils/animation-frames.service';
 import {GameMapGeneratorService} from './services/game-map/game-map-generator.service';
 import {GameMapHelperService} from './services/game-map/game-map-helper.service';
 import {SaveHelperService} from './services/saves/save-helper.service';
@@ -41,7 +40,6 @@ import {LocalStorageService} from './services/utils/local-storage.service';
 
 // STORES
 import {CameraStore} from './stores/camera.store';
-import {FpsHistoryStore} from './stores/fps-store.service';
 import {GameMapStore} from './stores/game-map.store';
 import {KeyBindingsStore} from './stores/key-bindings.store';
 import {SavesStore} from './stores/saves.store';
@@ -63,7 +61,7 @@ const COMPONENTS = [
   MainMenuComponent,
   WorldBuilderComponent,
   DevToolsComponent,
-  FpsChartComponent,
+  PerformanceChartComponent,
   CameraFormComponent,
   GenerateMapFormComponent,
   StrategicViewComponent,
@@ -89,7 +87,6 @@ const DIRECTIVES = [
 
 const SERVICES = [
   CameraHelperService,
-  AnimationFramesService,
   GameMapGeneratorService,
   GameMapHelperService,
   SaveHelperService,
@@ -100,7 +97,6 @@ const SERVICES = [
 
 const STORES = [
   CameraStore,
-  FpsHistoryStore,
   GameMapStore,
   KeyBindingsStore,
   SavesStore,

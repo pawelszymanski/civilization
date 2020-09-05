@@ -13,6 +13,6 @@ export const DEFAULT_KEY_BINDINGS: KeyBindings = {
   [UiActionId.TOGGLE_TILE_TEXT]: {keyCode: KeyCodeId.KeyI, modifiers: KEY_MODIFIER_NONE},
   [UiActionId.TOGGLE_TECH_TREE]: {keyCode: KeyCodeId.KeyT, modifiers: KEY_MODIFIER_NONE},
   [UiActionId.TOGGLE_CIVICS_TREE]: {keyCode: KeyCodeId.KeyC, modifiers: KEY_MODIFIER_NONE},
-  [UiActionId.TOGGLE_MAP_EDITOR]: {keyCode: KeyCodeId.Backquote, modifiers: KEY_MODIFIER_NONE},
-  [UiActionId.TOGGLE_DEV_TOOLS]: {keyCode: KeyCodeId.Backquote, modifiers: KEY_MODIFIER_SHIFT}
+  [UiActionId.TOGGLE_MAP_EDITOR]: {keyCode: KeyCodeId.KeyM, modifiers: KEY_MODIFIER_NONE},
+  [UiActionId.TOGGLE_DEV_TOOLS]: {keyCode: KeyCodeId.KeyD, modifiers: KEY_MODIFIER_NONE}
 }
