@@ -4,8 +4,8 @@
      #gameMapElem
      *ngIf="gameMap"
      [ngClass]="'m-x-' + gameMap?.columns?.length"
-     [class.animated]="!isDragging && !isZooming"
      [style.transform]="'translate(' + camera.translate.x + 'px, ' + camera.translate.y + 'px)'">
+  <!--     [class.animated]="!isDragging && !isZooming"-->
 
   <div class="game-map-column"
        *ngFor="let column of gameMap.columns; index as colNumber;">

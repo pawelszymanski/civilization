@@ -9,7 +9,7 @@
 - right click to remove selected item
 - map details: map name and description
 - onWheel do use scale rather than var --tile-size 
-
+- 3ms: tile-yield-component + tile-text-component bindings
 ## DONE
 - add scale to camera dev tools
 
@@ -32,6 +32,7 @@
 ## Lessons learned
 - remove hover on tile since it was causing 17ms Update Layer tree
 - move change detection to OnPush to save 8ms
+- pointer-events: none; blocks events, also in children. But at a cost of a 50% of frame rate drop!!
 
 
 

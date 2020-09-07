@@ -7,9 +7,9 @@
   .game-map {
     display: flex;
 
-    &.animated {
-      transition: 0.5s all cubic-bezier(0.4, 0, 0.15, 1);
-    }
+    //&.animated {
+    //  transition: 0.5s all cubic-bezier(0.4, 0, 0.15, 1);
+    //}
 
     @for $width from 1 through $max-map-width {
       &.m-x-#{$width} {

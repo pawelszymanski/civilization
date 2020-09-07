@@ -82,7 +82,6 @@ export class StrategicViewComponent {
   calcColumnStyleLeft(colNumber: number): number {
     const tileSize = this.cameraHelperService.getTileSizeCssVariable();
     const gameMapElemWidth = tileSize * this.gameMap.columns.length;
-    console.info(tileSize, gameMapElemWidth);
     return 0;
   }
 
