@@ -13,23 +13,14 @@
 ## DONE
 - add scale to camera dev tools
 
-+  encapsulation: ViewEncapsulation.None,
-+  changeDetection: ChangeDetectionStrategy.OnPush
-
-+    private ngZone: NgZone,
-+    private cdr: ChangeDetectorRef,
-
-+  requestAnimationFrame() {
-+    window.requestAnimationFrame(() => {
-+      this.requestAnimationFrame();
-+      this.cdr.detectChanges();
-+    });
 
 
-+  ngOnInit() {
-+    this.subscribeToData();
-+    this.requestAnimationFrame();
-+  }
+
+
+  
+
+
+  
 
 ## TO TEST
 - using el.classList.add / remove
@@ -40,7 +31,8 @@
 
 ## Lessons learned
 - remove hover on tile since it was causing 17ms Update Layer tree
- 
+- move change detection to OnPush to save 8ms
+
 
 
 ## IDEAS TO SPEED UP 
@@ -59,4 +51,5 @@ var context = offscreen.getContext('2d');
 1. Use transform and opacity rather any other style (STYLE > LAYOUT > PAIN > COMPOSITE)
 1. Don't check .innerWidth ets as this would force full repaint
 1. Web Assembly for huge operations
- 
+1. Use pure pipes when possible to avoid recalculations
+1.  

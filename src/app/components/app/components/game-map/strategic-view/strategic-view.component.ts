@@ -1,4 +1,12 @@
-import {Component, ElementRef, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  NgZone,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 
 import {GameMap, GameMapTile} from '../../../../../models/game-map/game-map';
 import {Camera} from '../../../../../models/camera/camera';
@@ -20,7 +28,8 @@ import {WorldBuilderToolId} from '../../../../../models/world-builder/world-buil
   selector: '.strategic-view-component',
   templateUrl: './strategic-view.component.html',
   styleUrls: ['strategic-view.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StrategicViewComponent {
 
@@ -42,12 +51,19 @@ export class StrategicViewComponent {
 
   constructor(
     private window: Window,
+    private ngZone: NgZone,
+    private cdr: ChangeDetectorRef,
     private cameraHelperService: CameraHelperService,
     private gameMapStoreService: GameMapStore,
     private cameraStore: CameraStore,
     private uiStore: UiStore,
     private worldBuilderUiStore: WorldBuilderUiStore,
   ) {}
+
+  ngOnInit() {
+    this.subscribeToData();
+    this.requestAnimationFrame();
+  }
 
   subscribeToData() {
     this.gameMapStoreService.gameMap.subscribe(gameMap => this.gameMap = gameMap);
@@ -56,8 +72,11 @@ export class StrategicViewComponent {
     this.worldBuilderUiStore.worldBuilderUi.subscribe(worldBuilderUi => this.worldBuilderUi = worldBuilderUi);
   }
 
-  ngOnInit() {
-    this.subscribeToData();
+  requestAnimationFrame() {
+    window.requestAnimationFrame(() => {
+      this.requestAnimationFrame();
+      this.cdr.detectChanges();
+    });
   }
 
   calcColumnStyleLeft(colNumber: number): number {
