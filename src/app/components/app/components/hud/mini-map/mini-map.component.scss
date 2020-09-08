@@ -4,6 +4,5 @@
 .mini-map-component {
   @include position-block(absolute, auto, auto, 0, 0, $z-index-hud);
   @include size(240px, 160px);
-  background: gray;
   box-shadow: 2px -2px 2px #0003;
 }

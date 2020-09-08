@@ -54,7 +54,7 @@ export class StrategicViewComponent {
     private ngZone: NgZone,
     private cdr: ChangeDetectorRef,
     private cameraHelperService: CameraHelperService,
-    private gameMapStoreService: GameMapStore,
+    private gameMapStore: GameMapStore,
     private cameraStore: CameraStore,
     private uiStore: UiStore,
     private worldBuilderUiStore: WorldBuilderUiStore,
@@ -66,7 +66,7 @@ export class StrategicViewComponent {
   }
 
   subscribeToData() {
-    this.gameMapStoreService.gameMap.subscribe(gameMap => this.gameMap = gameMap);
+    this.gameMapStore.gameMap.subscribe(gameMap => this.gameMap = gameMap);
     this.cameraStore.camera.subscribe(camera => this.camera = camera);
     this.uiStore.ui.subscribe(ui => this.ui = ui);
     this.worldBuilderUiStore.worldBuilderUi.subscribe(worldBuilderUi => this.worldBuilderUi = worldBuilderUi);
@@ -162,16 +162,16 @@ export class StrategicViewComponent {
     if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
       switch (this.worldBuilderUi.tool) {
         case WorldBuilderToolId.TERRAIN_BASE:
-          this.gameMapStoreService.setTileTerrainBase(tile.coords, this.worldBuilderUi.terrainBase);
+          this.gameMapStore.setTileTerrainBase(tile.coords, this.worldBuilderUi.terrainBase);
           break;
         case WorldBuilderToolId.TERRAIN_FEATURE:
-          this.gameMapStoreService.setTileTerrainFeature(tile.coords, this.worldBuilderUi.terrainFeature);
+          this.gameMapStore.setTileTerrainFeature(tile.coords, this.worldBuilderUi.terrainFeature);
           break;
         case WorldBuilderToolId.TERRAIN_RESOURCE:
-          this.gameMapStoreService.setTileTerrainResource(tile.coords, this.worldBuilderUi.terrainResource);
+          this.gameMapStore.setTileTerrainResource(tile.coords, this.worldBuilderUi.terrainResource);
           break;
         case WorldBuilderToolId.TERRAIN_IMPROVEMENT:
-          this.gameMapStoreService.setTileTerrainImprovement(tile.coords, this.worldBuilderUi.terrainImprovement);
+          this.gameMapStore.setTileTerrainImprovement(tile.coords, this.worldBuilderUi.terrainImprovement);
           break;
       }
     }
