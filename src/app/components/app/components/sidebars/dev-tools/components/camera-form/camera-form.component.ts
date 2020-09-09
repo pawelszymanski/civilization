@@ -13,7 +13,7 @@ import {
 import {CameraStore} from '../../../../../../../stores/camera.store';
 
 @Component({
-  selector: 'camera-form',
+  selector: '.camera-form-component',
   templateUrl: './camera-form.component.html',
   styleUrls: ['../dev-tools-form.scss']
 })

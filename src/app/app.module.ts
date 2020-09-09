@@ -9,6 +9,7 @@ import {WorldBuilderComponent} from './components/app/components/sidebars/world-
 import {DevToolsComponent} from './components/app/components/sidebars/dev-tools/dev-tools.component';
 import {PerformanceChartComponent} from './components/app/components/sidebars/dev-tools/components/performance-chart/performance-chart.component';
 import {CameraFormComponent} from './components/app/components/sidebars/dev-tools/components/camera-form/camera-form.component';
+import {MapSelectionFormComponent} from './components/app/components/sidebars/dev-tools/components/map-selection-form/map-selection-form.component';
 import {GenerateMapFormComponent} from './components/app/components/sidebars/dev-tools/components/generate-map-form/generate-map-form.component';
 import {StrategicViewComponent} from './components/app/components/game-map/strategic-view/strategic-view.component';
 import {TileYieldComponent} from './components/app/components/game-map/tile-yield/tile-yield.component';
@@ -63,6 +64,7 @@ const COMPONENTS = [
   DevToolsComponent,
   PerformanceChartComponent,
   CameraFormComponent,
+  MapSelectionFormComponent,
   GenerateMapFormComponent,
   StrategicViewComponent,
   TileYieldComponent,

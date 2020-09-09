@@ -1,3 +1,7 @@
+unsub strategic
+
+
+
 ## TODO
 - play now generates map
 - remove font awesome

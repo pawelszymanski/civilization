@@ -16,7 +16,7 @@ import {GameMapGeneratorService} from '../../../../../../../services/game-map/ga
 import {GameMapStore} from '../../../../../../../stores/game-map.store';
 
 @Component({
-  selector: 'generate-map-form',
+  selector: '.generate-map-form-component',
   templateUrl: './generate-map-form.component.html',
   styleUrls: ['../dev-tools-form.scss']
 })

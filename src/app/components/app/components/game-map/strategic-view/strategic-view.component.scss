@@ -3,6 +3,11 @@
 
 .strategic-view-component {
   @include position-block(absolute, 0, 0, 0, 0, $z-index-game-map);
+  display: none;
+
+  &.active {
+    display: block;
+  }
 
   .game-map {
     display: flex;

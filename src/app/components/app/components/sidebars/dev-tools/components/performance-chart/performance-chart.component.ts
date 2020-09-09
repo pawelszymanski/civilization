@@ -38,25 +38,25 @@ export class PerformanceChartComponent {
   ngOnInit() {
     this.initContext();
     this.setMeterMode(PerformanceMeterModeId.SINGLE_FRAME_TIME);
-    this.initRequestAnimationFrameLoop();
+    this.initRequestAnimationFrame();
   }
 
   ngOnDestroy() {
-    this.cancelAnimationFrameLoop();
+    this.cancelAnimationFrame();
   }
 
   initContext() {
     this.ctx = this.canvas.nativeElement.getContext('2d')
   }
 
-  initRequestAnimationFrameLoop() {
+  initRequestAnimationFrame() {
     this.ngZone.runOutsideAngular(() => {
       this.then = this.generatorService.nowMilliseconds();
       this.requestAnimationFrame();
     });
   }
 
-  cancelAnimationFrameLoop() {
+  cancelAnimationFrame() {
     window.cancelAnimationFrame(this.animationFrameId);
   }
 

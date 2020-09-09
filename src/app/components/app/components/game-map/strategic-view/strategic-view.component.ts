@@ -23,6 +23,7 @@ import {GameMapStore} from '../../../../../stores/game-map.store';
 import {UiStore} from '../../../../../stores/ui.store';
 import {WorldBuilderUiStore} from '../../../../../stores/world-builder-ui.store';
 import {WorldBuilderToolId} from '../../../../../models/world-builder/world-builder-tool.enum';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: '.strategic-view-component',
@@ -49,6 +50,10 @@ export class StrategicViewComponent {
   isDragging = false;
   dragHandler: Function;
 
+  animationFrameId: number;
+
+  subscriptions: Subscription[] = [];
+
   constructor(
     private window: Window,
     private ngZone: NgZone,
@@ -65,18 +70,28 @@ export class StrategicViewComponent {
     this.requestAnimationFrame();
   }
 
+  ngOnDestroy() {
+    this.cancelAnimationFrame();
+  }
+
   subscribeToData() {
-    this.gameMapStore.gameMap.subscribe(gameMap => this.gameMap = gameMap);
-    this.cameraStore.camera.subscribe(camera => this.camera = camera);
-    this.uiStore.ui.subscribe(ui => this.ui = ui);
-    this.worldBuilderUiStore.worldBuilderUi.subscribe(worldBuilderUi => this.worldBuilderUi = worldBuilderUi);
+    this.subscriptions.push(
+      this.gameMapStore.gameMap.subscribe(gameMap => this.gameMap = gameMap),
+      this.cameraStore.camera.subscribe(camera => this.camera = camera),
+      this.uiStore.ui.subscribe(ui => this.ui = ui),
+      this.worldBuilderUiStore.worldBuilderUi.subscribe(worldBuilderUi => this.worldBuilderUi = worldBuilderUi)
+    );
   }
 
   requestAnimationFrame() {
-    window.requestAnimationFrame(() => {
+    this.animationFrameId = window.requestAnimationFrame(() => {
       this.requestAnimationFrame();
       this.cdr.detectChanges();
     });
+  }
+
+  cancelAnimationFrame() {
+    window.cancelAnimationFrame(this.animationFrameId);
   }
 
   calcColumnStyleLeft(colNumber: number): number {

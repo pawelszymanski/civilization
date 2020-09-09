@@ -1,2 +1,15 @@
 @import './../../../../../../styles/mixins';
 @import './../../../../../../styles/variables';
+
+.strategic-view-component {
+  display: none;
+
+  &.active {
+    display: block;
+  }
+
+  canvas {
+
+  }
+
+}

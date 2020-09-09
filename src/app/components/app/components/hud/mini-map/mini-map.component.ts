@@ -30,18 +30,17 @@ export class MiniMapComponent {
     this.subscribeToData();
   }
 
+  initContext() {
+    this.ctx = this.canvas.nativeElement.getContext('2d')
+  }
+
   subscribeToData() {
     this.gameMapStore.gameMap.subscribe(gameMap =>
       this.drawMinimap(gameMap)
     );
   }
 
-  initContext() {
-    this.ctx = this.canvas.nativeElement.getContext('2d')
-  }
-
   drawMinimap(gameMap: GameMap) {
-    console.info(123);
     this.ctx.clearRect(0, 0, this.CANVAS.width, this.CANVAS.height);
 
     this.ctx.fillStyle = 'gray';
