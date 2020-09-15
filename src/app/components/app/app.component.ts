@@ -69,13 +69,13 @@ export class AppComponent {
     const keyBinding = this.keyboardHelperService.keyBindingFromEvent(event);
     const uiActionId = this.keyboardHelperService.findMatchingActionId(this.keyBindings, keyBinding);
 
-    if (uiActionId == UiActionId.ESCAPE_VIEW)        {this.uiStore.escapeView()} else
-    if (uiActionId == UiActionId.TOGGLE_TILE_YIELD)  {this.uiStore.toggleTileOverlay(TileOverlayId.YIELD) } else
-    if (uiActionId == UiActionId.TOGGLE_TILE_TEXT)   {this.uiStore.toggleTileOverlay(TileOverlayId.TEXT)} else
-    if (uiActionId == UiActionId.TOGGLE_TECH_TREE)   {this.uiStore.toggleModal(ModalId.TECHNOLOGY_TREE)} else
-    if (uiActionId == UiActionId.TOGGLE_CIVICS_TREE) {this.uiStore.toggleModal(ModalId.CIVIC_TREE)} else
-    if (uiActionId == UiActionId.TOGGLE_MAP_EDITOR)  {this.uiStore.toggleSidebar(SidebarId.WORLD_BUILDER)} else
-    if (uiActionId == UiActionId.TOGGLE_DEV_TOOLS)   {this.uiStore.toggleSidebar(SidebarId.DEV_TOOLS)}
+    if (uiActionId == UiActionId.ESCAPE_VIEW)        { this.uiStore.escapeView(); } else
+    if (uiActionId == UiActionId.TOGGLE_TILE_YIELD)  { this.uiStore.toggleTileOverlay(TileOverlayId.YIELD); } else
+    if (uiActionId == UiActionId.TOGGLE_TILE_TEXT)   { this.uiStore.toggleTileOverlay(TileOverlayId.TEXT); } else
+    if (uiActionId == UiActionId.TOGGLE_TECH_TREE)   { this.uiStore.toggleModal(ModalId.TECHNOLOGY_TREE); } else
+    if (uiActionId == UiActionId.TOGGLE_CIVICS_TREE) { this.uiStore.toggleModal(ModalId.CIVIC_TREE); } else
+    if (uiActionId == UiActionId.TOGGLE_MAP_EDITOR)  { this.uiStore.toggleSidebar(SidebarId.WORLD_BUILDER); } else
+    if (uiActionId == UiActionId.TOGGLE_DEV_TOOLS)   { this.uiStore.toggleSidebar(SidebarId.DEV_TOOLS); }
   }
 
 }

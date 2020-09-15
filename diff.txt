@@ -1,0 +1,917 @@
+diff --git a/package-lock.json b/package-lock.json
+index 35cf8c5..7e60ef6 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -1,6 +1,6 @@
+ {
+-  "name": "civ-app",
+-  "version": "0.0.3",
++  "name": "Civilization",
++  "version": "0.0.4",
+   "lockfileVersion": 1,
+   "requires": true,
+   "dependencies": {
+@@ -1530,11 +1530,6 @@
+         }
+       }
+     },
+-    "@ngrx/store": {
+-      "version": "9.2.0",
+-      "resolved": "https://registry.npmjs.org/@ngrx/store/-/store-9.2.0.tgz",
+-      "integrity": "sha512-V8AI3mxbMztVpbZpALkLZYlGkofKcu9GaOCY5e+sZ1VcJ90oxhFjBpnmd6MuVdmhep1XAHALb1B8ZbBFn+xsgQ=="
+-    },
+     "@ngtools/webpack": {
+       "version": "10.0.3",
+       "resolved": "https://registry.npmjs.org/@ngtools/webpack/-/webpack-10.0.3.tgz",
+diff --git a/src/app/app.module.ts b/src/app/app.module.ts
+index b968a03..43fffee 100644
+--- a/src/app/app.module.ts
++++ b/src/app/app.module.ts
+@@ -11,10 +11,11 @@ import {PerformanceChartComponent} from './components/app/components/sidebars/de
+ import {CameraFormComponent} from './components/app/components/sidebars/dev-tools/components/camera-form/camera-form.component';
+ import {MapSelectionFormComponent} from './components/app/components/sidebars/dev-tools/components/map-selection-form/map-selection-form.component';
+ import {GenerateMapFormComponent} from './components/app/components/sidebars/dev-tools/components/generate-map-form/generate-map-form.component';
+-import {StrategicViewComponent} from './components/app/components/game-map/strategic-view/strategic-view.component';
++import {IsometricViewComponent} from './components/app/components/game-map/isometric-view/isometric-view.component';
++import {StrategicViewCanvasComponent} from './components/app/components/game-map/strategic-view-canvas/strategic-view-canvas.component';
++import {StrategicViewHtmlComponent} from './components/app/components/game-map/strategic-view-html/strategic-view-html.component';
+ import {TileYieldComponent} from './components/app/components/game-map/tile-yield/tile-yield.component';
+ import {TileTextComponent} from './components/app/components/game-map/tile-text/tile-text.component';
+-import {IsometricViewComponent} from './components/app/components/game-map/isometric-view/isometric-view.component';
+ import {StatusBarComponent} from './components/app/components/hud/status-bar/status-bar.component';
+ import {MiniMapComponent} from './components/app/components/hud/mini-map/mini-map.component';
+ import {QuickLinksComponent} from './components/app/components/hud/quick-links/quick-links.component';
+@@ -66,10 +67,11 @@ const COMPONENTS = [
+   CameraFormComponent,
+   MapSelectionFormComponent,
+   GenerateMapFormComponent,
+-  StrategicViewComponent,
++  IsometricViewComponent,
++  StrategicViewCanvasComponent,
++  StrategicViewHtmlComponent,
+   TileYieldComponent,
+   TileTextComponent,
+-  IsometricViewComponent,
+   StatusBarComponent,
+   MiniMapComponent,
+   QuickLinksComponent,
+@@ -82,10 +84,10 @@ const COMPONENTS = [
+   GameOptionsMenuComponent,
+   ExitGameConfirmationComponent,
+   ViewportCenterMarkerComponent
+-]
++];
+ 
+ const DIRECTIVES = [
+-]
++];
+ 
+ const SERVICES = [
+   CameraHelperService,
+@@ -95,7 +97,7 @@ const SERVICES = [
+   KeyboardHelperService,
+   GeneratorService,
+   LocalStorageService,
+-]
++];
+ 
+ const STORES = [
+   CameraStore,
+@@ -104,7 +106,7 @@ const STORES = [
+   SavesStore,
+   UiStore,
+   WorldBuilderUiStore,
+-]
++];
+ 
+ const PIPES = [
+   EraNamePipe,
+@@ -114,7 +116,7 @@ const PIPES = [
+   TerrainResourceNamePipe,
+   CivicNamePipe,
+   TechnologyNamePipe,
+-]
++];
+ 
+ @NgModule({
+   declarations: [
+diff --git a/src/app/components/app/app.component.html b/src/app/components/app/app.component.html
+index 3dcaeef..7ed0fd2 100644
+--- a/src/app/components/app/app.component.html
++++ b/src/app/components/app/app.component.html
+@@ -1,7 +1,8 @@
+-<div class="main-menu-component" [class.active]="ui.mainMenu"></div>
++<div class="main-menu-component" *ngIf="ui.mainMenu"></div>
+ 
+-<div class="isometric-view-component" [class.active]="ui.mapType === MapTypeId.ISOMETRIC"></div>
+-<div class="strategic-view-component" [class.active]="ui.mapType === MapTypeId.STRATEGIC"></div>
++<div class="strategic-view-canvas-component" *ngIf="ui.mapType === MapTypeId.STRATEGIC_CANVAS"></div>
++<div class="strategic-view-html-component" *ngIf="ui.mapType === MapTypeId.STRATEGIC_HTML"></div>
++<div class="isometric-view-component" *ngIf="ui.mapType === MapTypeId.ISOMETRIC"></div>
+ 
+ <div class="status-bar-component"></div>
+ <div class="quick-links-component"></div>
+diff --git a/src/app/components/app/app.component.ts b/src/app/components/app/app.component.ts
+index d8dde36..366f772 100644
+--- a/src/app/components/app/app.component.ts
++++ b/src/app/components/app/app.component.ts
+@@ -69,13 +69,13 @@ export class AppComponent {
+     const keyBinding = this.keyboardHelperService.keyBindingFromEvent(event);
+     const uiActionId = this.keyboardHelperService.findMatchingActionId(this.keyBindings, keyBinding);
+ 
+-    if (uiActionId == UiActionId.ESCAPE_VIEW)        {this.uiStore.escapeView()} else
+-    if (uiActionId == UiActionId.TOGGLE_TILE_YIELD)  {this.uiStore.toggleTileOverlay(TileOverlayId.YIELD) } else
+-    if (uiActionId == UiActionId.TOGGLE_TILE_TEXT)   {this.uiStore.toggleTileOverlay(TileOverlayId.TEXT)} else
+-    if (uiActionId == UiActionId.TOGGLE_TECH_TREE)   {this.uiStore.toggleModal(ModalId.TECHNOLOGY_TREE)} else
+-    if (uiActionId == UiActionId.TOGGLE_CIVICS_TREE) {this.uiStore.toggleModal(ModalId.CIVIC_TREE)} else
+-    if (uiActionId == UiActionId.TOGGLE_MAP_EDITOR)  {this.uiStore.toggleSidebar(SidebarId.WORLD_BUILDER)} else
+-    if (uiActionId == UiActionId.TOGGLE_DEV_TOOLS)   {this.uiStore.toggleSidebar(SidebarId.DEV_TOOLS)}
++    if (uiActionId == UiActionId.ESCAPE_VIEW)        { this.uiStore.escapeView(); } else
++    if (uiActionId == UiActionId.TOGGLE_TILE_YIELD)  { this.uiStore.toggleTileOverlay(TileOverlayId.YIELD); } else
++    if (uiActionId == UiActionId.TOGGLE_TILE_TEXT)   { this.uiStore.toggleTileOverlay(TileOverlayId.TEXT); } else
++    if (uiActionId == UiActionId.TOGGLE_TECH_TREE)   { this.uiStore.toggleModal(ModalId.TECHNOLOGY_TREE); } else
++    if (uiActionId == UiActionId.TOGGLE_CIVICS_TREE) { this.uiStore.toggleModal(ModalId.CIVIC_TREE); } else
++    if (uiActionId == UiActionId.TOGGLE_MAP_EDITOR)  { this.uiStore.toggleSidebar(SidebarId.WORLD_BUILDER); } else
++    if (uiActionId == UiActionId.TOGGLE_DEV_TOOLS)   { this.uiStore.toggleSidebar(SidebarId.DEV_TOOLS); }
+   }
+ 
+ }
+diff --git a/src/app/components/app/components/game-map/isometric-view/isometric-view.component.html b/src/app/components/app/components/game-map/isometric-view/isometric-view.component.html
+index fd11707..ec2bea3 100644
+--- a/src/app/components/app/components/game-map/isometric-view/isometric-view.component.html
++++ b/src/app/components/app/components/game-map/isometric-view/isometric-view.component.html
+@@ -1 +1 @@
+-<canvas #canvas [width]="CANVAS.width" [height]="CANVAS.height"></canvas>
++<h1>ISOMETRIC VIEW</h1>
+diff --git a/src/app/components/app/components/game-map/isometric-view/isometric-view.component.scss b/src/app/components/app/components/game-map/isometric-view/isometric-view.component.scss
+index 41bd35b..9b2e464 100644
+--- a/src/app/components/app/components/game-map/isometric-view/isometric-view.component.scss
++++ b/src/app/components/app/components/game-map/isometric-view/isometric-view.component.scss
+@@ -1,15 +1,5 @@
+ @import './../../../../../../styles/mixins';
+ @import './../../../../../../styles/variables';
+ 
+-.strategic-view-component {
+-  display: none;
+-
+-  &.active {
+-    display: block;
+-  }
+-
+-  canvas {
+-
+-  }
+-
++.isometric-view-component {
+ }
+diff --git a/src/app/components/app/components/game-map/isometric-view/isometric-view.component.ts b/src/app/components/app/components/game-map/isometric-view/isometric-view.component.ts
+index 700a60e..9ee2b83 100644
+--- a/src/app/components/app/components/game-map/isometric-view/isometric-view.component.ts
++++ b/src/app/components/app/components/game-map/isometric-view/isometric-view.component.ts
+@@ -1,12 +1,4 @@
+-import {Component, ElementRef, ViewChild, ViewEncapsulation} from '@angular/core';
+-import {Subscription} from 'rxjs';
+-
+-import {Camera} from '../../../../../models/camera/camera';
+-import {GameMap} from '../../../../../models/game-map/game-map';
+-
+-import {CameraStore} from '../../../../../stores/camera.store';
+-import {GameMapStore} from '../../../../../stores/game-map.store';
+-import {Coords} from '../../../../../models/utils/coords';
++import {Component, ViewEncapsulation} from '@angular/core';
+ 
+ @Component({
+   selector: '.isometric-view-component',
+@@ -15,108 +7,4 @@ import {Coords} from '../../../../../models/utils/coords';
+   encapsulation: ViewEncapsulation.None
+ })
+ export class IsometricViewComponent {
+-
+-  readonly CANVAS = {
+-    width: 600,
+-    height: 400
+-  }
+-
+-  @ViewChild('canvas', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
+-
+-  ctx: CanvasRenderingContext2D;
+-
+-  gameMap: GameMap;
+-  camera: Camera;
+-
+-  shallRedraw = false;
+-
+-  animationFrameId: number;
+-
+-  subscriptions: Subscription[] = [];
+-
+-  constructor(
+-    private gameMapStore: GameMapStore,
+-    private cameraStore: CameraStore
+-  ) {}
+-
+-  ngOnInit() {
+-    this.initContext();
+-    this.setCanvasSize();
+-    this.subscribeToData();
+-    this.requestAnimationFrame();
+-  }
+-
+-  ngOnDestroy() {
+-    this.unsubscribeFromData();
+-    this.cancelAnimationFrame();
+-  }
+-
+-  initContext() {
+-    this.ctx = this.canvas.nativeElement.getContext('2d')
+-  }
+-
+-  setCanvasSize() {
+-    this.CANVAS.width = window.innerWidth;
+-    this.CANVAS.height = window.innerHeight;
+-    this.shallRedraw = true;
+-  }
+-
+-  subscribeToData() {
+-    this.subscriptions.push(
+-      this.cameraStore.camera.subscribe(camera => {this.camera = camera; this.shallRedraw = true;}),
+-      this.gameMapStore.gameMap.subscribe(gameMap => {this.gameMap = gameMap; this.shallRedraw = true;})
+-    );
+-  }
+-
+-  requestAnimationFrame() {
+-    this.animationFrameId = window.requestAnimationFrame(() => {
+-      this.requestAnimationFrame();
+-      if (this.shallRedraw) {
+-        this.drawMap();
+-        this.shallRedraw = false;
+-      }
+-    });
+-  }
+-
+-  unsubscribeFromData() {
+-    this.subscriptions.forEach(s => s.unsubscribe());
+-  }
+-
+-  cancelAnimationFrame() {
+-    window.cancelAnimationFrame(this.animationFrameId);
+-  }
+-
+-  drawMap() {
+-    this.ctx.clearRect(0, 0, this.CANVAS.width, this.CANVAS.height);
+-    const offset = {x: 100, y: 100};
+-    const tileWidth = this.camera.tileSize * 0.9;
+-    const tileHeight = this.camera.tileSize;
+-
+-    this.ctx.fillStyle = 'gray';
+-    this.ctx.fillRect(0, 0, this.CANVAS.width, this.CANVAS.height);
+-
+-    this.ctx.fillStyle = 'red';
+-    this.drawHex(offset, tileWidth, tileHeight);
+-  }
+-
+-  drawHex(offset: Coords, tileWidth: number, tileHeight: number) {
+-    this.ctx.beginPath();
+-    this.ctx.moveTo(offset.x + tileWidth * 0.50, offset.y);
+-    this.ctx.lineTo(offset.x + tileWidth, offset.y + tileHeight * 0.25);
+-    this.ctx.lineTo(offset.x + tileWidth, offset.y + tileHeight * 0.75);
+-    this.ctx.lineTo(offset.x + tileWidth * 0.50, offset.y + tileHeight);
+-    this.ctx.lineTo(offset.x, offset.y + tileHeight * 0.75);
+-    this.ctx.lineTo(offset.x, offset.y + tileHeight * 0.25);
+-    this.ctx.closePath();
+-    this.ctx.fill();
+-    // clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+-  }
+-
+-
+ }
+-
+-// Camera {
+-//   zoomLevel: number;       // Primary variable, affected by mouse wheel
+-//   tileSize: number;        // Secondary variable, calculated based on the zoomLevel
+-//   translate: Coords;       // Secondary variable, calculated based on the zoomLevel
+-// }
+diff --git a/src/app/components/app/components/game-map/strategic-view/strategic-view.component.html b/src/app/components/app/components/game-map/strategic-view/strategic-view.component.html
+deleted file mode 100644
+index df26d9b..0000000
+--- a/src/app/components/app/components/game-map/strategic-view/strategic-view.component.html
++++ /dev/null
+@@ -1,29 +0,0 @@
+-<!-- Tried making it only UL + LIs, yet for some reason it renders much slower when scrolling -->
+-
+-<div class="game-map"
+-     #gameMapElem
+-     *ngIf="gameMap"
+-     [ngClass]="'m-x-' + gameMap?.columns?.length"
+-     [style.transform]="'translate(' + camera.translate.x + 'px, ' + camera.translate.y + 'px)'">
+-  <!--     [class.animated]="!isDragging && !isZooming"-->
+-
+-  <div class="game-map-column"
+-       *ngFor="let column of gameMap.columns; index as colNumber;">
+-<!--       [style.left.px]="calcColumnStyleLeft(colNumber)">-->
+-
+-    <div class="game-map-tile"
+-         *ngFor="let tile of column.tiles;"
+-         [ngClass]="tile.cssClasses"
+-         (wheel)="onTileWheel($event)"
+-         (click)="onTileClick($event, tile)"
+-         (dblclick)="onTileDblclick($event, tile)"
+-         (contextmenu)="onTileContextmenu($event, tile)"
+-         (mousedown)="onTileMouseDown($event)"
+-         (mouseup)="onTileMouseUp($event)">
+-      <div class="tile-yield-component" *ngIf="ui.tileOverlay === TileOverlayId.YIELD" [yield]="tile.yield"></div>
+-      <div class="tile-text-component" *ngIf="ui.tileOverlay === TileOverlayId.TEXT" [tile]="tile" [showFullInfo]="camera.zoomLevel >= 0"></div>
+-    </div>
+-
+-  </div>
+-
+-</div>
+diff --git a/src/app/components/app/components/game-map/strategic-view/strategic-view.component.scss b/src/app/components/app/components/game-map/strategic-view/strategic-view.component.scss
+deleted file mode 100644
+index da38a8b..0000000
+--- a/src/app/components/app/components/game-map/strategic-view/strategic-view.component.scss
++++ /dev/null
+@@ -1,249 +0,0 @@
+-@import './../../../../../../styles/mixins';
+-@import './../../../../../../styles/variables';
+-
+-.strategic-view-component {
+-  @include position-block(absolute, 0, 0, 0, 0, $z-index-game-map);
+-  display: none;
+-
+-  &.active {
+-    display: block;
+-  }
+-
+-  .game-map {
+-    display: flex;
+-
+-    //&.animated {
+-    //  transition: 0.5s all cubic-bezier(0.4, 0, 0.15, 1);
+-    //}
+-
+-    @for $width from 1 through $max-map-width {
+-      &.m-x-#{$width} {
+-        width: calc((var(--tile-size) * 0.9 * #{$width}));;
+-      }
+-    }
+-
+-    // --------------------------
+-    // Basic row and tile styling
+-    // --------------------------
+-    .game-map-column {
+-      width: calc(var(--tile-size) * 0.9);
+-      position: relative;
+-
+-      .game-map-tile {
+-        width: calc(var(--tile-size) * 0.9) 0 0;
+-        height: var(--tile-size);
+-        text-align: center;
+-        background-size: 180% 120%;
+-        clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+-        margin-bottom: calc((var(--tile-size) / -4) - 1px);
+-        @include disable-selection;
+-        position: relative;
+-
+-        // Indent odd rows half a tile
+-        &:nth-child(2n+0) {
+-          left: calc(var(--tile-size) * 0.9 / 2);
+-        }
+-
+-        // Make whole hexagon area hoverable
+-        @for $i from 0 through ($max-map-height - 1) {
+-          &:nth-child(#{$i}) {
+-            z-index: $max-map-height - $i;
+-          }
+-        }
+-
+-        &:last-of-type {
+-          margin-bottom: 0;
+-        }
+-
+-      }
+-    }
+-
+-    // ------------------------------------------------------------------------------------------------
+-    // Make terrain background flow through tiles (since `background-attachment: fixed` is not working)
+-    // ------------------------------------------------------------------------------------------------
+-    .game-map-column {
+-
+-      .game-map-tile {
+-
+-        @for $i from 0 through ($max-map-width - 1) {
+-          &:nth-of-type(2n+1) {
+-            &.m-x-#{$i} {
+-              background-position-x: $i * 125%;
+-            }
+-          }
+-          &:nth-of-type(2n+0) {
+-            &.m-x-#{$i} {
+-              background-position-x: $i * 125% + 62.5%;
+-            }
+-          }
+-        }
+-
+-        @for $i from 0 through ($max-map-height - 1) {
+-          &.m-y-#{$i} {
+-            background-position-y: -$i * 226%;
+-          }
+-        }
+-
+-      }
+-
+-    }
+-
+-    // ----------------------------
+-    // Terrain, features, resources
+-    // ----------------------------
+-    .game-map-column {
+-
+-      .game-map-tile {
+-
+-        &:before {
+-          content: '';
+-          display: block;
+-          @include position-block(absolute, 0, 0, 0, 0);
+-          background-size: 100%;
+-          background-position: center;
+-          background-repeat: no-repeat;
+-        }
+-
+-        // Base terrain texture. Based on the land type.
+-        &[class*='m-base-grassland'] { background-image: url('/assets/game-map/terrain/textures/grassland.png'); }
+-        &[class*='m-base-plains']    { background-image: url('/assets/game-map/terrain/textures/plains.png'); }
+-        &[class*='m-base-desert']    { background-image: url('/assets/game-map/terrain/textures/desert.png'); }
+-        &[class*='m-base-tundra']    { background-image: url('/assets/game-map/terrain/textures/tundra.png'); }
+-        &[class*='m-base-snow']      { background-image: url('/assets/game-map/terrain/textures/snow.png'); }
+-        &.m-base-lake,
+-        &.m-base-coast { background-image: url('/assets/game-map/terrain/textures/coast.png'); }
+-        &.m-base-ocean { background-image: url('/assets/game-map/terrain/textures/ocean.png'); }
+-
+-        // Hills. Example: `m-base-desert-hills-2`
+-        @each $land-type in $terrain-base-land-type-list {
+-          @for $variation from 1 through 3 {
+-            &.m-base-#{$land-type}-hills-#{$variation} {
+-              &:before { background-image: url('/assets/game-map/terrain/hills/#{$land-type}-hills-#{$variation}.webp'); }
+-            }
+-          }
+-        }
+-
+-        // Mountains. Example: `m-base-snow-mountain-3`
+-        @each $land-type in $terrain-base-land-type-list {
+-          @for $variation from 1 through 5 {
+-            &.m-base-#{$land-type}-mountain-#{$variation} {
+-              &:before { background-image: url('/assets/game-map/terrain/mountain/mountain-#{$variation}.webp'); }
+-            }
+-          }
+-        }
+-
+-        // Woods. Example: `m-feature-woods-1`
+-        @for $variation from 1 through 1 {
+-          &.m-feature-woods-#{$variation} {
+-            &:before { background-image: url('/assets/game-map/terrain/features/woods-#{$variation}.webp'); }
+-          }
+-        }
+-
+-        // Rainforest. Example: `m-feature-rainforest-1`
+-        @for $variation from 1 through 1 {
+-          &.m-feature-rainforest-#{$variation} {
+-            &:before { background-image: url('/assets/game-map/terrain/features/rainforest-#{$variation}.webp'); }
+-          }
+-        }
+-
+-        // Floodplains. Example: `m-feature-floodplains-1`
+-        @for $variation from 1 through 1 {
+-          &.m-feature-floodplains-#{$variation} {
+-            &:before { background-image: url('/assets/game-map/terrain/features/floodplains-#{$variation}.webp'); }
+-          }
+-        }
+-
+-        // Marsh. Example: `m-feature-marsh-1`
+-        @for $variation from 1 through 1 {
+-          &.m-feature-marsh-#{$variation} {
+-            &:before { background-image: url('/assets/game-map/terrain/features/marsh-#{$variation}.webp'); }
+-          }
+-        }
+-
+-        // Oasis. Example: `m-feature-oasis-1`
+-        @for $variation from 1 through 1 {
+-          &.m-feature-oasis-#{$variation} {
+-            &:before { background-image: url('/assets/game-map/terrain/features/oasis-#{$variation}.webp'); }
+-          }
+-        }
+-
+-        // Reef. Example: `m-feature-reef-1`
+-        @for $variation from 1 through 1 {
+-          &.m-feature-reef-#{$variation} {
+-            &:before { background-image: url('/assets/game-map/terrain/features/reef-#{$variation}.webp'); }
+-          }
+-        }
+-
+-        // Ice. Example: `m-feature-ice-1`
+-        @for $variation from 1 through 1 {
+-          &.m-feature-ice-#{$variation} {
+-            &:before { background-image: url('/assets/game-map/terrain/features/ice-#{$variation}.webp'); }
+-          }
+-        }
+-
+-        // Woods ON Hills
+-        @each $terrain-base in $terrain-base-land-type-list {
+-          @for $woods-variation from 1 through 1 {
+-            @for $hills-variation from 1 through 3 {
+-              &.m-feature-woods-#{$woods-variation} {
+-                &.m-base-#{$terrain-base}-hills-#{$hills-variation} {
+-                  &:before {
+-                    $woodsUrl: '/assets/game-map/terrain/features/woods-#{$woods-variation}.webp';
+-                    $hillsUrl: '/assets/game-map/terrain/hills/#{$terrain-base}-hills-#{$hills-variation}.webp';
+-                    background-image: url($woodsUrl), url($hillsUrl);
+-                  }
+-                }
+-              }
+-            }
+-          }
+-        }
+-
+-        // Rainforest ON Hills
+-        @each $terrain-base in $terrain-base-land-type-list {
+-          @for $rainforest-variation from 1 through 1 {
+-            @for $hills-variation from 1 through 3 {
+-              &.m-feature-rainforest-#{$rainforest-variation} {
+-                &.m-base-#{$terrain-base}-hills-#{$hills-variation} {
+-                  &:before {
+-                    $woodsUrl: '/assets/game-map/terrain/features/rainforest-#{$rainforest-variation}.webp';
+-                    $hillsUrl: '/assets/game-map/terrain/hills/#{$terrain-base}-hills-#{$hills-variation}.webp';
+-                    background-image: url($woodsUrl), url($hillsUrl);
+-                  }
+-                }
+-              }
+-            }
+-          }
+-        }
+-
+-        // Resources. Example: `m-resource-amber`
+-        @each $resource in $terrain-resource-list {
+-          &.m-resource-#{$resource} {
+-            &:after {
+-              content: '';
+-              display: block;
+-              @include size(100%);
+-              @include position-block(relative, calc(var(--tile-size) * -0.1), 0, 0, 0);
+-              background: url('/assets/icons/terrain/resources/#{$resource}.webp') no-repeat;
+-              background-position-x: center;
+-              background-position-y: bottom;
+-              background-size: calc(var(--tile-size) * 0.2 + 4px);
+-            }
+-          }
+-        }
+-
+-      }
+-
+-    }
+-
+-  }
+-}
+-
+-//&.selected {
+-//  &:after {
+-//    content: '';
+-//    position: absolute;
+-//    left: 0;
+-//    @include size(100%);
+-//    background: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 35%, rgb(203 0 255) 130%);
+-//  }
+-//}
+diff --git a/src/app/components/app/components/game-map/strategic-view/strategic-view.component.ts b/src/app/components/app/components/game-map/strategic-view/strategic-view.component.ts
+deleted file mode 100644
+index 7252a1a..0000000
+--- a/src/app/components/app/components/game-map/strategic-view/strategic-view.component.ts
++++ /dev/null
+@@ -1,221 +0,0 @@
+-import {
+-  ChangeDetectionStrategy,
+-  ChangeDetectorRef,
+-  Component,
+-  ElementRef,
+-  NgZone,
+-  ViewChild,
+-  ViewEncapsulation
+-} from '@angular/core';
+-
+-import {GameMap, GameMapTile} from '../../../../../models/game-map/game-map';
+-import {Camera} from '../../../../../models/camera/camera';
+-import {Coords} from '../../../../../models/utils/coords';
+-import {SidebarId, TileOverlayId, Ui} from '../../../../../models/ui/ui';
+-import {WorldBuilderUi} from '../../../../../models/world-builder/world-builder';
+-
+-import {CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP} from '../../../../../consts/camera/camera.const';
+-
+-import {CameraHelperService} from '../../../../../services/camera/camera-helper.service';
+-
+-import {CameraStore} from '../../../../../stores/camera.store';
+-import {GameMapStore} from '../../../../../stores/game-map.store';
+-import {UiStore} from '../../../../../stores/ui.store';
+-import {WorldBuilderUiStore} from '../../../../../stores/world-builder-ui.store';
+-import {WorldBuilderToolId} from '../../../../../models/world-builder/world-builder-tool.enum';
+-import {Subscription} from 'rxjs';
+-
+-@Component({
+-  selector: '.strategic-view-component',
+-  templateUrl: './strategic-view.component.html',
+-  styleUrls: ['strategic-view.component.scss'],
+-  encapsulation: ViewEncapsulation.None,
+-  changeDetection: ChangeDetectionStrategy.OnPush
+-})
+-export class StrategicViewComponent {
+-
+-  TileOverlayId = TileOverlayId;
+-
+-  gameMap: GameMap = null;
+-  camera: Camera = null;
+-  ui: Ui;
+-  worldBuilderUi: WorldBuilderUi;
+-
+-  @ViewChild('gameMapElem') gameMapElem: ElementRef;  // Map elem reference
+-
+-  dragStartCoords: Coords;  // Page x, y when mouse was pressed down
+-  dragStartOffset: Coords;  // Map element x, y when mouse was pressed down
+-
+-  isZooming = false;
+-  isDragging = false;
+-  dragHandler: Function;
+-
+-  animationFrameId: number;
+-
+-  subscriptions: Subscription[] = [];
+-
+-  constructor(
+-    private window: Window,
+-    private ngZone: NgZone,
+-    private cdr: ChangeDetectorRef,
+-    private cameraHelperService: CameraHelperService,
+-    private gameMapStore: GameMapStore,
+-    private cameraStore: CameraStore,
+-    private uiStore: UiStore,
+-    private worldBuilderUiStore: WorldBuilderUiStore,
+-  ) {}
+-
+-  ngOnInit() {
+-    this.subscribeToData();
+-    this.requestAnimationFrame();
+-  }
+-
+-  ngOnDestroy() {
+-    this.cancelAnimationFrame();
+-  }
+-
+-  subscribeToData() {
+-    this.subscriptions.push(
+-      this.gameMapStore.gameMap.subscribe(gameMap => this.gameMap = gameMap),
+-      this.cameraStore.camera.subscribe(camera => this.camera = camera),
+-      this.uiStore.ui.subscribe(ui => this.ui = ui),
+-      this.worldBuilderUiStore.worldBuilderUi.subscribe(worldBuilderUi => this.worldBuilderUi = worldBuilderUi)
+-    );
+-  }
+-
+-  requestAnimationFrame() {
+-    this.animationFrameId = window.requestAnimationFrame(() => {
+-      this.requestAnimationFrame();
+-      this.cdr.detectChanges();
+-    });
+-  }
+-
+-  cancelAnimationFrame() {
+-    window.cancelAnimationFrame(this.animationFrameId);
+-  }
+-
+-  calcColumnStyleLeft(colNumber: number): number {
+-    const tileSize = this.cameraHelperService.getTileSizeCssVariable();
+-    const gameMapElemWidth = tileSize * this.gameMap.columns.length;
+-    return 0;
+-  }
+-
+-  normalizeVerticalTranslation(translate: Coords): Coords {
+-    const gameMapElemHeight = this.gameMapElem.nativeElement.offsetHeight;
+-    return this.cameraHelperService.normalizeVerticalTranslation(translate, gameMapElemHeight);
+-  }
+-
+-  startDrag(event: MouseEvent) {
+-    this.dragStartCoords = {x: event.pageX, y: event.pageY};
+-    this.dragStartOffset = {x: this.camera.translate.x, y: this.camera.translate.y};
+-
+-    // Need to store drag handler since .bind(this) changes the reference
+-    this.dragHandler = this.continueDrag.bind(this);
+-    document.addEventListener('mousemove', this.dragHandler as any);
+-    this.isDragging = true;
+-  }
+-
+-  continueDrag(event: MouseEvent): any {
+-    // new translate without normalization
+-    let translate = {
+-      x: this.dragStartOffset.x + event.pageX - this.dragStartCoords.x,
+-      y: this.dragStartOffset.y + event.pageY - this.dragStartCoords.y
+-    }
+-
+-    // normalize and set
+-    translate = this.normalizeVerticalTranslation(translate);
+-    this.cameraStore.setTranslate(translate);
+-  }
+-
+-  stopDrag() {
+-    this.isDragging = false;
+-    document.removeEventListener('mousemove', this.dragHandler as any);
+-  }
+-
+-  onTileMouseDown(event: MouseEvent) {
+-    if (this.isDragging) { this.stopDrag(); }  // Unfortunately sometimes dragging is not disabled properly
+-    if (event.button === 0) {
+-      this.startDrag(event)
+-    }
+-  }
+-
+-  onTileMouseUp(event: MouseEvent) {
+-    if (event.button === 0) {
+-      this.stopDrag()
+-    }
+-  }
+-
+-  onTileWheel(event: WheelEvent) {
+-    this.isZooming = true;
+-
+-    // calculate new zoom level
+-    const step = this.cameraHelperService.wheelEventToStep(event);
+-    const currentZoomLevel = this.camera.zoomLevel;
+-    const newZoomLevel = this.cameraHelperService.normalizeZoomLevel(currentZoomLevel + step);
+-    if (newZoomLevel === currentZoomLevel) { return; }
+-
+-    // calculate new translate
+-    const currentTranslate = this.camera.translate;
+-    const mapCoordsAtScreenCenter = this.cameraHelperService.mapCoordsAtScreenCenter(currentTranslate);
+-    const scale = CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP[newZoomLevel] / CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP[currentZoomLevel];
+-
+-    // set zoom level first so it can used in normalization of the translation
+-    this.cameraStore.setZoomLevel(newZoomLevel);
+-
+-    // calculate new translate, normalize then set it
+-    const newTranslate: Coords = {
+-      x: -Math.round((mapCoordsAtScreenCenter.x * scale) - (this.window.innerWidth / 2)),
+-      y: -Math.round((mapCoordsAtScreenCenter.y * scale) - (this.window.innerHeight / 2))
+-    }
+-    const normalizedTranslate = this.normalizeVerticalTranslation(newTranslate);
+-    this.cameraStore.setTranslate(normalizedTranslate);
+-
+-    window.setTimeout(() => {this.isZooming = false;}, 0);
+-  }
+-
+-  onTileClick(event: MouseEvent, tile: GameMapTile) {
+-    if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
+-      switch (this.worldBuilderUi.tool) {
+-        case WorldBuilderToolId.TERRAIN_BASE:
+-          this.gameMapStore.setTileTerrainBase(tile.coords, this.worldBuilderUi.terrainBase);
+-          break;
+-        case WorldBuilderToolId.TERRAIN_FEATURE:
+-          this.gameMapStore.setTileTerrainFeature(tile.coords, this.worldBuilderUi.terrainFeature);
+-          break;
+-        case WorldBuilderToolId.TERRAIN_RESOURCE:
+-          this.gameMapStore.setTileTerrainResource(tile.coords, this.worldBuilderUi.terrainResource);
+-          break;
+-        case WorldBuilderToolId.TERRAIN_IMPROVEMENT:
+-          this.gameMapStore.setTileTerrainImprovement(tile.coords, this.worldBuilderUi.terrainImprovement);
+-          break;
+-      }
+-    }
+-  }
+-
+-  onTileDblclick(event: MouseEvent, tile: GameMapTile) {
+-    if (this.ui.sidebar !== SidebarId.WORLD_BUILDER) {
+-      const currentTranslate = this.camera.translate;
+-      const mapCoordsAtScreenCenter = this.cameraHelperService.mapCoordsAtScreenCenter(currentTranslate);
+-      const centerOfClickedTile = this.cameraHelperService.centerOfTheTileCoords(tile);
+-
+-      // The vector we need to apply to translation to move to desired position
+-      const translateVector: Coords = {
+-        x: mapCoordsAtScreenCenter.x - centerOfClickedTile.x,
+-        y: mapCoordsAtScreenCenter.y - centerOfClickedTile.y
+-      }
+-
+-      // Calculate new translate, normalize it and use
+-      const newTranslate = {
+-        x: currentTranslate.x + translateVector.x,
+-        y: currentTranslate.y + translateVector.y
+-      }
+-      const normalizedTranslate = this.normalizeVerticalTranslation(newTranslate);
+-      this.cameraStore.setTranslate(normalizedTranslate);
+-    }
+-  }
+-
+-  onTileContextmenu(event: MouseEvent, tile: GameMapTile) {
+-    //
+-  }
+-
+-}
+diff --git a/src/app/components/app/components/main-menu/main-menu.component.scss b/src/app/components/app/components/main-menu/main-menu.component.scss
+index 86830a5..3a670f1 100644
+--- a/src/app/components/app/components/main-menu/main-menu.component.scss
++++ b/src/app/components/app/components/main-menu/main-menu.component.scss
+@@ -4,7 +4,6 @@
+ .main-menu-component {
+   @include position-block(absolute, 0, 0, 0, 0, $z-index-main-menu);
+   background: #2e5878;
+-  @include display-block-when-active;
+ 
+   .game-title {
+     @include position-top-left(absolute, 200px, 0);
+diff --git a/src/app/components/app/components/main-menu/main-menu.component.ts b/src/app/components/app/components/main-menu/main-menu.component.ts
+index 79916cc..4990bc7 100644
+--- a/src/app/components/app/components/main-menu/main-menu.component.ts
++++ b/src/app/components/app/components/main-menu/main-menu.component.ts
+@@ -53,7 +53,7 @@ export class MainMenuComponent {
+     const latestTimestamp = this.saves.map(save => save.timestamp).sort().pop();
+     const saveToBeLoaded = this.saves.find(save => save.timestamp === latestTimestamp);
+     this.gameMapStore.next(saveToBeLoaded.gameMap);
+-    this.uiStore.setMapType(MapTypeId.STRATEGIC);
++    this.uiStore.setMapType(MapTypeId.STRATEGIC_CANVAS);
+     this.uiStore.hideMainMenu();
+     this.showSinglePlayerMenu = false;
+   }
+diff --git a/src/app/components/app/components/sidebars/dev-tools/components/map-selection-form/map-selection-form.component.html b/src/app/components/app/components/sidebars/dev-tools/components/map-selection-form/map-selection-form.component.html
+index bb2bdc0..3807d83 100644
+--- a/src/app/components/app/components/sidebars/dev-tools/components/map-selection-form/map-selection-form.component.html
++++ b/src/app/components/app/components/sidebars/dev-tools/components/map-selection-form/map-selection-form.component.html
+@@ -1,7 +1,9 @@
+ <form>
+   <h3>Map type</h3>
+-  <button [class.active]="ui.mapType === MapTypeId.STRATEGIC"
+-          (click)="setMapType(MapTypeId.STRATEGIC)">Strategic</button>
++  <button [class.active]="ui.mapType === MapTypeId.STRATEGIC_CANVAS"
++          (click)="setMapType(MapTypeId.STRATEGIC_CANVAS)">Strategic (CANVAS)</button>
++  <button [class.active]="ui.mapType === MapTypeId.STRATEGIC_HTML"
++          (click)="setMapType(MapTypeId.STRATEGIC_HTML)">Strategic (HTML)</button>
+   <button [class.active]="ui.mapType === MapTypeId.ISOMETRIC"
+           (click)="setMapType(MapTypeId.ISOMETRIC)">Isometric</button>
+ </form>
+diff --git a/src/app/consts/ui/ui.const.ts b/src/app/consts/ui/ui.const.ts
+index 18490df..22f5acd 100644
+--- a/src/app/consts/ui/ui.const.ts
++++ b/src/app/consts/ui/ui.const.ts
+@@ -2,8 +2,8 @@ import {MapTypeId, ModalId, SidebarId, TileOverlayId, Ui} from '../../models/ui/
+ 
+ export const DEFAULT_UI: Ui = {
+   mainMenu: true,
+-  mapType: MapTypeId.STRATEGIC,
++  mapType: MapTypeId.STRATEGIC_CANVAS,
+   tileOverlay: TileOverlayId.NONE,
+   modal: ModalId.NONE,
+   sidebar: SidebarId.NONE
+-}
++};
+diff --git a/src/app/models/ui/ui.ts b/src/app/models/ui/ui.ts
+index 6e1b78b..35af895 100644
+--- a/src/app/models/ui/ui.ts
++++ b/src/app/models/ui/ui.ts
+@@ -1,5 +1,6 @@
+ export enum MapTypeId {
+-  STRATEGIC,
++  STRATEGIC_CANVAS,
++  STRATEGIC_HTML,
+   ISOMETRIC
+ }
+ 
+diff --git a/tslint.json b/tslint.json
+index 67bcdea..2bac64c 100644
+--- a/tslint.json
++++ b/tslint.json
+@@ -24,7 +24,7 @@
+     ],
+     "component-selector": [
+       true,
+-      "element",
++      "class",
+       "app",
+       "kebab-case"
+     ],
+@@ -95,8 +95,7 @@
+       }
+     },
+     "typedef": [
+-      true,
+-      "call-signature"
++      true
+     ],
+     "typedef-whitespace": {
+       "options": [
+@@ -143,10 +142,11 @@
+     "no-outputs-metadata-property": true,
+     "template-banana-in-box": true,
+     "template-no-negated-async": true,
+-    "use-lifecycle-interface": true,
+-    "use-pipe-transform-interface": true
++    "use-lifecycle-interface": false,
++    "use-pipe-transform-interface": true,
++    "prefer-for-of": false
+   },
+   "rulesDirectory": [
+     "codelyzer"
+   ]
+-}
+\ No newline at end of file
++}

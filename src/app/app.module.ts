@@ -11,10 +11,11 @@ import {PerformanceChartComponent} from './components/app/components/sidebars/de
 import {CameraFormComponent} from './components/app/components/sidebars/dev-tools/components/camera-form/camera-form.component';
 import {MapSelectionFormComponent} from './components/app/components/sidebars/dev-tools/components/map-selection-form/map-selection-form.component';
 import {GenerateMapFormComponent} from './components/app/components/sidebars/dev-tools/components/generate-map-form/generate-map-form.component';
-import {StrategicViewComponent} from './components/app/components/game-map/strategic-view/strategic-view.component';
+import {IsometricViewComponent} from './components/app/components/game-map/isometric-view/isometric-view.component';
+import {StrategicViewCanvasComponent} from './components/app/components/game-map/strategic-view-canvas/strategic-view-canvas.component';
+import {StrategicViewHtmlComponent} from './components/app/components/game-map/strategic-view-html/strategic-view-html.component';
 import {TileYieldComponent} from './components/app/components/game-map/tile-yield/tile-yield.component';
 import {TileTextComponent} from './components/app/components/game-map/tile-text/tile-text.component';
-import {IsometricViewComponent} from './components/app/components/game-map/isometric-view/isometric-view.component';
 import {StatusBarComponent} from './components/app/components/hud/status-bar/status-bar.component';
 import {MiniMapComponent} from './components/app/components/hud/mini-map/mini-map.component';
 import {QuickLinksComponent} from './components/app/components/hud/quick-links/quick-links.component';
@@ -66,10 +67,11 @@ const COMPONENTS = [
   CameraFormComponent,
   MapSelectionFormComponent,
   GenerateMapFormComponent,
-  StrategicViewComponent,
+  IsometricViewComponent,
+  StrategicViewCanvasComponent,
+  StrategicViewHtmlComponent,
   TileYieldComponent,
   TileTextComponent,
-  IsometricViewComponent,
   StatusBarComponent,
   MiniMapComponent,
   QuickLinksComponent,
@@ -82,10 +84,10 @@ const COMPONENTS = [
   GameOptionsMenuComponent,
   ExitGameConfirmationComponent,
   ViewportCenterMarkerComponent
-]
+];
 
 const DIRECTIVES = [
-]
+];
 
 const SERVICES = [
   CameraHelperService,
@@ -95,7 +97,7 @@ const SERVICES = [
   KeyboardHelperService,
   GeneratorService,
   LocalStorageService,
-]
+];
 
 const STORES = [
   CameraStore,
@@ -104,7 +106,7 @@ const STORES = [
   SavesStore,
   UiStore,
   WorldBuilderUiStore,
-]
+];
 
 const PIPES = [
   EraNamePipe,
@@ -114,7 +116,7 @@ const PIPES = [
   TerrainResourceNamePipe,
   CivicNamePipe,
   TechnologyNamePipe,
-]
+];
 
 @NgModule({
   declarations: [

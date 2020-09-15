@@ -24,7 +24,7 @@
     ],
     "component-selector": [
       true,
-      "element",
+      "class",
       "app",
       "kebab-case"
     ],
@@ -95,8 +95,7 @@
       }
     },
     "typedef": [
-      true,
-      "call-signature"
+      true
     ],
     "typedef-whitespace": {
       "options": [
@@ -143,8 +142,9 @@
     "no-outputs-metadata-property": true,
     "template-banana-in-box": true,
     "template-no-negated-async": true,
-    "use-lifecycle-interface": true,
-    "use-pipe-transform-interface": true
+    "use-lifecycle-interface": false,
+    "use-pipe-transform-interface": true,
+    "prefer-for-of": false
   },
   "rulesDirectory": [
     "codelyzer"

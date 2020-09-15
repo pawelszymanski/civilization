@@ -53,7 +53,7 @@ export class MainMenuComponent {
     const latestTimestamp = this.saves.map(save => save.timestamp).sort().pop();
     const saveToBeLoaded = this.saves.find(save => save.timestamp === latestTimestamp);
     this.gameMapStore.next(saveToBeLoaded.gameMap);
-    this.uiStore.setMapType(MapTypeId.STRATEGIC);
+    this.uiStore.setMapType(MapTypeId.STRATEGIC_CANVAS);
     this.uiStore.hideMainMenu();
     this.showSinglePlayerMenu = false;
   }

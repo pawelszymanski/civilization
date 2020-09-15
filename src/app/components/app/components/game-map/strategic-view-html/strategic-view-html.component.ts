@@ -26,13 +26,13 @@ import {WorldBuilderToolId} from '../../../../../models/world-builder/world-buil
 import {Subscription} from 'rxjs';
 
 @Component({
-  selector: '.strategic-view-component',
-  templateUrl: './strategic-view.component.html',
-  styleUrls: ['strategic-view.component.scss'],
+  selector: '.strategic-view-html-component',
+  templateUrl: './strategic-view-html.component.html',
+  styleUrls: ['strategic-view-html.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StrategicViewComponent {
+export class StrategicViewHtmlComponent {
 
   TileOverlayId = TileOverlayId;
 
