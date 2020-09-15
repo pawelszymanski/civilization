@@ -84,10 +84,10 @@ const COMPONENTS = [
   GameOptionsMenuComponent,
   ExitGameConfirmationComponent,
   ViewportCenterMarkerComponent
-];
+]
 
 const DIRECTIVES = [
-];
+]
 
 const SERVICES = [
   CameraHelperService,
@@ -97,7 +97,7 @@ const SERVICES = [
   KeyboardHelperService,
   GeneratorService,
   LocalStorageService,
-];
+]
 
 const STORES = [
   CameraStore,
@@ -106,7 +106,7 @@ const STORES = [
   SavesStore,
   UiStore,
   WorldBuilderUiStore,
-];
+]
 
 const PIPES = [
   EraNamePipe,
@@ -116,7 +116,7 @@ const PIPES = [
   TerrainResourceNamePipe,
   CivicNamePipe,
   TechnologyNamePipe,
-];
+]
 
 @NgModule({
   declarations: [
