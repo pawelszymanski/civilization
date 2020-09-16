@@ -2,12 +2,12 @@ import {Component, ElementRef, HostListener, ViewChild, ViewEncapsulation} from 
 import {Subscription} from 'rxjs';
 
 import {Camera} from '../../../../../models/camera/camera';
+import {Coords} from '../../../../../models/utils/coords';
 import {GameMap, GameMapTile} from '../../../../../models/game-map/game-map';
+import {TerrainBaseId} from '../../../../../models/game-map/terrain';
 
 import {CameraStore} from '../../../../../stores/camera.store';
 import {GameMapStore} from '../../../../../stores/game-map.store';
-import {Coords} from '../../../../../models/utils/coords';
-import {TerrainBaseId} from '../../../../../models/game-map/terrain';
 
 @Component({
   selector: '.strategic-view-canvas-component',
@@ -34,6 +34,8 @@ export class StrategicViewCanvasComponent {
   animationFrameId: number;
 
   subscriptions: Subscription[] = [];
+
+  counter = 0;
 
   constructor(
     private gameMapStore: GameMapStore,
@@ -93,6 +95,9 @@ export class StrategicViewCanvasComponent {
   }
 
   drawMap() {
+    console.info(this.counter);
+    this.counter = 0;
+
     this.ctx.clearRect(0, 0, this.CANVAS.width, this.CANVAS.height);
 
     this.ctx.fillStyle = 'gray';
@@ -103,36 +108,62 @@ export class StrategicViewCanvasComponent {
     for (let column = 0; column < this.gameMap.columns.length; column++) {
       for (let row = 0; row < this.gameMap.columns[column].tiles.length; row++) {
         const tile: GameMapTile = this.gameMap.columns[column].tiles[row];
-        this.drawTile(tile);
+        if (this.isTileInViewport(tile)) {
+          this.drawTile(tile);
+          this.counter++;
+        }
       }
     }
   }
 
-  getTileOffset(tile: GameMapTile, tileWidth: number, tileHeight: number): Coords {
-    const isOddRow = tile.coords.y % 2 === 1;
+  tileWidth(): number {
+    return this.camera.tileSize * 0.9;
+  }
+
+  tileHeight(): number {
+    return this.camera.tileSize;
+  }
+
+  isOddRow(tile: GameMapTile): boolean {
+    return tile.coords.y % 2 === 1;
+  }
+
+  isTileInViewport(tile: GameMapTile): boolean {
+    const tileSize = { x: this.tileWidth(), y: this.tileHeight() }
+    const tilePosition = this.tilePosition(tile);
+    const viewportSize = { x: this.CANVAS.width, y: this.CANVAS.height }
+    const cameraTranslate = this.camera.translate;
+
+    return (cameraTranslate.x + tilePosition.x + tileSize.x >= 0) &&
+           (cameraTranslate.x + tilePosition.x <= viewportSize.x) &&
+           (cameraTranslate.y + tilePosition.y + tileSize.y >= 0) &&
+           (cameraTranslate.y + tilePosition.y <= viewportSize.y);
+  }
+
+  tilePosition(tile: GameMapTile): Coords {
     return {
-      x: ((tile.coords.x * tileWidth) + (isOddRow ? tileWidth / 2 : 0)),
-      y: (tile.coords.y * tileHeight * 0.75)
+      x: ((tile.coords.x * this.tileWidth()) + (this.isOddRow(tile) ? this.tileWidth() / 2 : 0)),
+      y: (tile.coords.y * this.tileHeight() * 0.75)
     };
   }
 
   createTilePath(tile: GameMapTile) {
-    const tileWidth = this.camera.tileSize * 0.9;
-    const tileHeight = this.camera.tileSize;
-
-    const offset = this.getTileOffset(tile, tileWidth, tileHeight);
+    const tileWidth = this.tileWidth();
+    const tileHeight = this.tileHeight();
+    const tilePosition = this.tilePosition(tile);
+    const cameraTranslate = this.camera.translate;
 
     this.ctx.beginPath();
-    this.ctx.moveTo(offset.x + tileWidth * 0.50, offset.y);
-    this.ctx.lineTo(offset.x + tileWidth, offset.y + tileHeight * 0.25);
-    this.ctx.lineTo(offset.x + tileWidth, offset.y + tileHeight * 0.75);
-    this.ctx.lineTo(offset.x + tileWidth * 0.50, offset.y + tileHeight);
-    this.ctx.lineTo(offset.x, offset.y + tileHeight * 0.75);
-    this.ctx.lineTo(offset.x, offset.y + tileHeight * 0.25);
+    this.ctx.moveTo(cameraTranslate.x + tilePosition.x + tileWidth * 0.50, cameraTranslate.y + tilePosition.y);
+    this.ctx.lineTo(cameraTranslate.x + tilePosition.x + tileWidth, cameraTranslate.y + tilePosition.y + tileHeight * 0.25);
+    this.ctx.lineTo(cameraTranslate.x + tilePosition.x + tileWidth, cameraTranslate.y + tilePosition.y + tileHeight * 0.75);
+    this.ctx.lineTo(cameraTranslate.x + tilePosition.x + tileWidth * 0.50, cameraTranslate.y + tilePosition.y + tileHeight);
+    this.ctx.lineTo(cameraTranslate.x + tilePosition.x, cameraTranslate.y + tilePosition.y + tileHeight * 0.75);
+    this.ctx.lineTo(cameraTranslate.x + tilePosition.x, cameraTranslate.y + tilePosition.y + tileHeight * 0.25);
     this.ctx.closePath();
   }
 
-  getTileFillStyle(tile: GameMapTile): CanvasPattern {
+  tileFillStyle(tile: GameMapTile): CanvasPattern {
     let imgElemId;
     switch (tile.terrain.base.id) {
       case TerrainBaseId.GRASSLAND_FLAT:
@@ -175,7 +206,7 @@ export class StrategicViewCanvasComponent {
   drawTile(tile: GameMapTile): void {
     this.createTilePath(tile);
     this.ctx.stroke();
-    this.ctx.fillStyle = this.getTileFillStyle(tile);
+    this.ctx.fillStyle = this.tileFillStyle(tile);
     this.ctx.fill();
   }
 
