@@ -1,6 +1,5 @@
 export enum MapTypeId {
-  STRATEGIC_CANVAS,
-  STRATEGIC_HTML,
+  STRATEGIC,
   ISOMETRIC
 }
 

@@ -4,39 +4,37 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 // COMPONENTS
 import {AppComponent} from './components/app/app.component';
-import {MainMenuComponent} from './components/app/components/main-menu/main-menu.component';
-import {WorldBuilderComponent} from './components/app/components/sidebars/world-builder/world-builder.component';
-import {DevToolsComponent} from './components/app/components/sidebars/dev-tools/dev-tools.component';
-import {PerformanceChartComponent} from './components/app/components/sidebars/dev-tools/components/performance-chart/performance-chart.component';
-import {CameraFormComponent} from './components/app/components/sidebars/dev-tools/components/camera-form/camera-form.component';
-import {MapSelectionFormComponent} from './components/app/components/sidebars/dev-tools/components/map-selection-form/map-selection-form.component';
-import {GenerateMapFormComponent} from './components/app/components/sidebars/dev-tools/components/generate-map-form/generate-map-form.component';
-import {IsometricViewComponent} from './components/app/components/game-map/isometric-view/isometric-view.component';
-import {StrategicViewCanvasComponent} from './components/app/components/game-map/strategic-view-canvas/strategic-view-canvas.component';
-import {StrategicViewHtmlComponent} from './components/app/components/game-map/strategic-view-html/strategic-view-html.component';
-import {TileYieldComponent} from './components/app/components/game-map/tile-yield/tile-yield.component';
-import {TileTextComponent} from './components/app/components/game-map/tile-text/tile-text.component';
-import {StatusBarComponent} from './components/app/components/hud/status-bar/status-bar.component';
-import {MiniMapComponent} from './components/app/components/hud/mini-map/mini-map.component';
-import {QuickLinksComponent} from './components/app/components/hud/quick-links/quick-links.component';
-import {CivicTreeComponent} from './components/app/components/modals/research/civic-tree/civic-tree.component';
-import {TechnologyTreeComponent} from './components/app/components/modals/research/technology-tree/technology-tree.component';
-import {InGameMenuComponent} from './components/app/components/modals/menus/in-game-menu/in-game-menu.component';
-import {SaveGameComponent} from './components/app/components/modals/save-and-load/save-game/save-game.component';
-import {LoadGameComponent} from './components/app/components/modals/save-and-load/load-game/load-game.component';
-import {SaveDetailsComponent} from './components/app/components/modals/save-and-load/save-details/save-details.component';
-import {GameOptionsMenuComponent} from './components/app/components/modals/menus/game-options-menu/game-options-menu.component';
-import {ExitGameConfirmationComponent} from './components/app/components/modals/menus/exit-game-confirmation/exit-game-confirmation.component';
-import {ViewportCenterMarkerComponent} from './components/app/components/game-map/viewport-center-marker/viewport-center-marker.component';
+import {MainMenuComponent} from './components/main-menu/main-menu.component';
+import {WorldBuilderComponent} from './components/sidebars/world-builder/world-builder.component';
+import {DevToolsComponent} from './components/sidebars/dev-tools/dev-tools.component';
+import {PerformanceChartComponent} from './components/sidebars/dev-tools/components/performance-chart/performance-chart.component';
+import {CameraFormComponent} from './components/sidebars/dev-tools/components/camera-form/camera-form.component';
+import {MapSelectionFormComponent} from './components/sidebars/dev-tools/components/map-selection-form/map-selection-form.component';
+import {GenerateMapFormComponent} from './components/sidebars/dev-tools/components/generate-map-form/generate-map-form.component';
+import {IsometricViewComponent} from './components/game-map/isometric-view/isometric-view.component';
+import {StrategicViewComponent} from './components/game-map/strategic-view/strategic-view.component';
+import {StatusBarComponent} from './components/hud/status-bar/status-bar.component';
+import {MiniMapComponent} from './components/hud/mini-map/mini-map.component';
+import {QuickLinksComponent} from './components/hud/quick-links/quick-links.component';
+import {ViewportCenterMarkerComponent} from './components/hud/viewport-center-marker/viewport-center-marker.component';
+import {CivicTreeComponent} from './components/modals/research/civic-tree/civic-tree.component';
+import {TechnologyTreeComponent} from './components/modals/research/technology-tree/technology-tree.component';
+import {InGameMenuComponent} from './components/modals/menus/in-game-menu/in-game-menu.component';
+import {SaveGameComponent} from './components/modals/save-and-load/save-game/save-game.component';
+import {LoadGameComponent} from './components/modals/save-and-load/load-game/load-game.component';
+import {SaveDetailsComponent} from './components/modals/save-and-load/save-details/save-details.component';
+import {GameOptionsMenuComponent} from './components/modals/menus/game-options-menu/game-options-menu.component';
+import {ExitGameConfirmationComponent} from './components/modals/menus/exit-game-confirmation/exit-game-confirmation.component';
 
 // DIRECTIVES
 
 // SERVICES
 import {CameraHelperService} from './services/camera/camera-helper.service';
 import {GameMapGeneratorService} from './services/game-map/game-map-generator.service';
-import {GameMapHelperService} from './services/game-map/game-map-helper.service';
+import {YieldHelperService} from './services/game-map/yield-helper.service';
 import {SaveHelperService} from './services/saves/save-helper.service';
 import {KeyboardHelperService} from './services/ui/keyboard-helper.service';
+import {MouseHelperService} from './services/ui/mouse-helper.service';
 import {GeneratorService} from './services/utils/generator.service';
 import {LocalStorageService} from './services/utils/local-storage.service';
 
@@ -68,12 +66,10 @@ const COMPONENTS = [
   MapSelectionFormComponent,
   GenerateMapFormComponent,
   IsometricViewComponent,
-  StrategicViewCanvasComponent,
-  StrategicViewHtmlComponent,
-  TileYieldComponent,
-  TileTextComponent,
+  StrategicViewComponent,
   StatusBarComponent,
   MiniMapComponent,
+  ViewportCenterMarkerComponent,
   QuickLinksComponent,
   CivicTreeComponent,
   TechnologyTreeComponent,
@@ -82,8 +78,7 @@ const COMPONENTS = [
   LoadGameComponent,
   SaveDetailsComponent,
   GameOptionsMenuComponent,
-  ExitGameConfirmationComponent,
-  ViewportCenterMarkerComponent
+  ExitGameConfirmationComponent
 ]
 
 const DIRECTIVES = [
@@ -92,9 +87,10 @@ const DIRECTIVES = [
 const SERVICES = [
   CameraHelperService,
   GameMapGeneratorService,
-  GameMapHelperService,
+  YieldHelperService,
   SaveHelperService,
   KeyboardHelperService,
+  MouseHelperService,
   GeneratorService,
   LocalStorageService,
 ]

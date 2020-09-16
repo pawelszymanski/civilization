@@ -1,0 +1,36 @@
+@import '../../../../../styles/mixins';
+@import '../../../../../styles/variables';
+
+.exit-game-confirmation-component {
+  @include position-top-left(absolute, 40%, calc(50% - 220px), $z-index-modal);
+  width: 440px;
+  background: gray;
+  padding: 20px;
+  display: none;
+
+  &.active {
+    display: block;
+  }
+
+  p {
+    margin-bottom: 40px;
+  }
+
+  .button-no,
+  .button-yes {
+    float: left;
+    @include size(180px, 30px);
+    @include font(white, 18px, 28px, center);
+    background: #2e5878;
+    border: 1px solid lightskyblue;
+    cursor: pointer;
+    @include disable-selection;
+  }
+
+  .button-no {}
+
+  .button-yes {
+    margin-left: 40px;
+  }
+
+}

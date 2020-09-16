@@ -25,8 +25,8 @@ export enum RainfallId {
 }
 
 export interface MapGeneratorSettings {
-  width: number;
-  height: number;
+  width: number;   // 1-indexed
+  height: number;  // 1-indexed
   landmass: LandmassValueId;
   continents: number;
   islands: number;

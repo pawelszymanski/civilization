@@ -1,0 +1,64 @@
+@import '../../../../../styles/mixins';
+@import '../../../../../styles/variables';
+
+$button-width: $in-game-menu-button-width;
+$button-height: $in-game-menu-button-height;
+
+.load-game-component {
+  @include position-top-left(absolute, 10%, calc(50% - #{$button-width}), $z-index-modal);
+  @include size($button-width * 2, 70%);
+  background: #9f9787;
+  display: none;
+  flex-flow: column wrap;
+  &.active {
+    display: flex;
+  }
+
+  form.filters {
+    @include size($button-width, $button-height);
+  }
+
+  ul.save-list {
+    @include size($button-width, calc(100% - #{$button-height * 2}));
+
+    li.save-item {
+      @include size($button-width, $button-height);
+      @include font(white, 22px, $button-height, center);
+      background: #55534f;
+      @include disable-selection;
+      cursor: pointer;
+      &:hover,
+      &.active {
+        background: #2e5878;
+      }
+    }
+  }
+
+  .delete-button {
+    @include size($button-width, $button-height);
+    @include font(white, 22px, $button-height, center);
+    background: darkred;
+    @include disable-selection;
+    cursor: pointer;
+    &.disabled {
+      opacity: .5;
+    }
+  }
+
+  .save-details-component {
+    @include size($button-width, calc(100% - #{$button-height}));
+    background: lightcyan;
+  }
+
+  .load-game-button {
+    @include size($button-width, $button-height);
+    @include font(white, 22px, $button-height, center);
+    background: #2e5878;
+    @include disable-selection;
+    cursor: pointer;
+    &.disabled {
+      opacity: .5;
+    }
+  }
+
+}

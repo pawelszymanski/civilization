@@ -1,0 +1,7 @@
+<form>
+  <h3>Map type</h3>
+  <button [class.active]="ui.mapType === MapTypeId.STRATEGIC"
+          (click)="setMapType(MapTypeId.STRATEGIC)">Strategic (CANVAS)</button>
+  <button [class.active]="ui.mapType === MapTypeId.ISOMETRIC"
+          (click)="setMapType(MapTypeId.ISOMETRIC)">Isometric</button>
+</form>

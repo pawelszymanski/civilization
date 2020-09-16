@@ -17,13 +17,10 @@ export class CameraStore {
 
   constructor(
     private cameraHelperService: CameraHelperService
-  ) {
-    this.cameraHelperService.setTileSizeCssVariable(DEFAULT_CAMERA.tileSize);
-  }
+  ) {}
 
   public next(camera: Camera) {
     this._camera.next(camera);
-    this.cameraHelperService.setTileSizeCssVariable(camera.tileSize);
   }
 
   public setTileSize(tileSize: number) {

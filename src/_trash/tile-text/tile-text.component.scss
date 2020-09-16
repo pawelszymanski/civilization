@@ -1,0 +1,17 @@
+@import '../../styles/mixins';
+@import '../../styles/variables';
+
+.tile-text-component {
+  @include position-block(absolute, auto, 0, 0, 0);
+  @include font(#ddd, uppercase);
+  font-weight: bold;
+  text-shadow: 1px .5px #0009, 0 0 2px black;
+  padding-bottom: 10px;
+
+  p {
+    height: 10px;
+    @include font(10px, 10px);
+    font-weight: normal;
+  }
+
+}

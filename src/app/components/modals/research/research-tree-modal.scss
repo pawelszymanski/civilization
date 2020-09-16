@@ -1,0 +1,98 @@
+@import '../../../../styles/mixins';
+@import '../../../../styles/variables';
+
+$tech-tile-width: 360px;
+$tech-tile-height: 80px;
+$tech-tile-margin-horizontal: 80px;
+$tech-tile-margin-vertical: 8px;
+
+$tech-tile-icon-size: 64px;
+
+$header-height: 32px;
+$tech-tree-height: 728px;  // $tech-height * 8 + $tech-margin-vertical * 7 + vertical margins of 32px total
+$scrollbar-height: 16px;
+$popup-height: $header-height + $tech-tree-height + $scrollbar-height;
+
+.research-tree-modal {
+  @include position-top-left(absolute, calc((100% - #{$popup-height}) / 2), 0, $z-index-modal);
+  @include size(100%, $popup-height);
+  background: #9f9787;
+  border-bottom: 16px solid gray;
+  @include display-block-when-active;
+
+  .title {
+    @include size(100%, 32px);
+    @include font(white, 18px, 32px, center);
+    font-weight: normal;
+    background: #072740;
+    @include disable-selection;
+  }
+
+  .close-button {
+    @include position-top-right(absolute, 0, 0, 1);
+    @include size(32px);
+    @include font(white, 16px, 32px, center);
+    cursor: pointer
+  }
+
+  .tree-viewport {
+    @include size(100%, $tech-tree-height);
+    overflow-x: scroll;
+    overflow-y: hidden;
+    position: relative;
+
+    ul.eras {
+      width: 11600px;
+      height: $tech-tree-height;
+      padding: 16px 0;
+
+      li.era {
+        float: left;
+        height: $tech-tree-height;
+        margin: 0 240px;
+        position: relative;
+        &:first-of-type {
+          margin-left: 160px;
+        }
+        &:last-of-type {
+          margin-right: 160px;
+        }
+
+        @for $columns from 1 through 5 {
+          &.m-columns-#{$columns} {
+            width: #{$columns * $tech-tile-width + ($columns - 1) * $tech-tile-margin-horizontal};
+          }
+        }
+
+        .item {
+          position: absolute;
+          @include size($tech-tile-width, $tech-tile-height);
+          border: 1px solid gray;
+
+          @for $horizontal from 0 through 2 {
+            @for $vertical from 0 through 7 {
+              &.m-offset-#{$horizontal}-#{$vertical} {
+                top: #{$vertical * $tech-tile-height + ($vertical - 1) * $tech-tile-margin-vertical + $tech-tile-margin-vertical};
+                left: #{$horizontal * ($tech-tile-width + $tech-tile-margin-horizontal)};
+              }
+            }
+          }
+
+          .item-icon {
+            @include position-top-left(absolute, 0, 0, 1);
+            @include size($tech-tile-icon-size, $tech-tile-icon-size);
+            background: #55534f
+          }
+
+          .item-name {
+            @include position-top-right(absolute, 0, 0, 1);
+            width: calc(100% - #{$tech-tile-icon-size});
+            background: #627862;
+            @include disable-selection;
+          }
+
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,81 @@
+@import '../../../../styles/functions';
+@import '../../../../styles/mixins';
+@import '../../../../styles/variables';
+
+.world-builder-component {
+
+  @include position-block(absolute, 0, 0, 0, auto, $z-index-sidebar);
+  width: 370px;
+  background: rgba(48, 108, 48, 0.65);
+
+  h2 {
+    color: white;
+  }
+
+  section {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px;
+  }
+
+}
+
+.world-builder-component {
+
+  .world-builder-button {
+    display: inline-block;
+    @include size(60px);
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 2px solid #d2ba90;
+    border-radius: 5px;
+    margin: 5px;
+    cursor: pointer;
+    position: relative;
+    &:before {
+      content: '';
+      @include position-block(absolute, 0, 0, 0, 0, -1);
+      background: #ffffff91;
+    }
+
+    &.active {
+      border: 2px solid #fd9700;
+    }
+
+    $world-builder-icons: 'terrain-base', 'terrain-feature', 'terrain-feature-none',
+      'terrain-resource', 'terrain-improvement', 'terrain-resource-none', 'terrain-improvement-none';
+
+    @each $world-builder-icon in $world-builder-icons {
+      &.m-#{$world-builder-icon} {
+        background-image: url('/assets/icons/world-builder/#{$world-builder-icon}.webp');
+      }
+    }
+
+    @each $terrain-base in $terrain-base-list {
+      &.m-base-#{$terrain-base} {
+        background-image: url('/assets/icons/terrain/base/#{$terrain-base}.webp');
+      }
+    }
+
+    @each $terrain-feature in $terrain-feature-list {
+      &.m-feature-#{$terrain-feature} {
+        background-image: url('/assets/icons/terrain/features/#{$terrain-feature}.webp');
+      }
+    }
+
+    @each $terrain-resource in $terrain-resource-list {
+      &.m-resource-#{$terrain-resource} {
+        background-image: url('/assets/icons/terrain/resources/#{$terrain-resource}.webp');
+      }
+    }
+
+    @each $terrain-improvement in $terrain-improvement-list {
+      &.m-improvement-#{$terrain-improvement} {
+        background-image: url('/assets/icons/terrain/improvements/#{$terrain-improvement}.webp');
+      }
+    }
+
+  }
+
+}
