@@ -1,9 +1,6 @@
-- tile info for canvas
 
 ## TODO
-
 - play now generates map
-- remove font awesome
 - make resources and improvements have more visuals
 - hide hud for world builder
 - make dev tools component .component class
@@ -18,6 +15,8 @@
 - add scale to camera dev tools
 - performance meter const TODO comment
 - toggle grid
+- tile info for canvas
+- remove font awesome
 
 
 
