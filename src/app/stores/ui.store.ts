@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 
-import {MapTypeId, ModalId, SidebarId, TileOverlayId, Ui} from '../models/ui';
+import {MapTypeId, ModalId, SidebarId, Ui} from '../models/ui';
 
 import {DEFAULT_UI} from '../consts/ui.const';
 
@@ -52,12 +52,6 @@ export class UiStore {
   public toggleSidebar(sidebarId: SidebarId) {
     const newSidebarId = this._ui.value.sidebar === sidebarId ? SidebarId.NONE : sidebarId;
     this._ui.next({...this._ui.value, sidebar: newSidebarId});
-  }
-
-  // TILE OVERLAY
-  public toggleTileOverlay(tileOverlayId: TileOverlayId) {
-    const newTileOverlayId = this._ui.value.tileOverlay === tileOverlayId ? TileOverlayId.NONE : tileOverlayId;
-    this._ui.next({...this._ui.value, tileOverlay: newTileOverlayId});
   }
 
   // OTHER

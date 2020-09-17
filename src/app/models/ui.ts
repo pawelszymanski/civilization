@@ -20,16 +20,9 @@ export enum SidebarId {
   DEV_TOOLS
 }
 
-export enum TileOverlayId {
-  NONE,
-  YIELD,
-  TEXT
-}
-
 export interface Ui {
   showMainMenu: boolean;
   mapType: MapTypeId;
-  tileOverlay: TileOverlayId;
   modal: ModalId;
   sidebar: SidebarId;
 }

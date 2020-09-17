@@ -1,10 +1,8 @@
-unsub strategic
-
+- tile info for canvas
+- toggle grid
 
 
 ## TODO
-
-- performance meter const TODO comment
 
 - play now generates map
 - remove font awesome
@@ -17,8 +15,10 @@ unsub strategic
 - map details: map name and description
 - onWheel do use scale rather than var --tile-size 
 - 3ms: tile-yield-component + tile-text-component bindings
+
 ## DONE
 - add scale to camera dev tools
+- performance meter const TODO comment
 
 
 

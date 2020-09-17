@@ -4,17 +4,19 @@ import {Subscription} from 'rxjs';
 import {Camera} from '../../models/camera';
 import {Coords} from '../../models/utils';
 import {Map, Tile} from '../../models/map';
+import {TerrainBaseId} from '../../models/terrain';
+import {Ui} from '../../models/ui';
+import {MapUi} from '../../models/map-ui';
 
 import {CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP} from '../../consts/camera.const';
 
 import {CameraService} from '../../services/camera.service';
 import {MouseService} from '../../services/mouse.service';
 import {TileService} from '../../services/tile.service';
-import {MapCanvasService} from '../../services/map-canvas.service';
 
 import {CameraStore} from '../../stores/camera.store';
 import {MapStore} from '../../stores/map.store';
-import {TerrainBaseId} from '../../models/terrain';
+import {MapUiStore} from '../../stores/map-ui.store';
 
 @Component({
   selector: '.map-component',
@@ -33,8 +35,9 @@ export class MapComponent {
 
   ctx: CanvasRenderingContext2D;
 
-  map: Map;
   camera: Camera;
+  map: Map;
+  mapUi: MapUi;
 
   dragStartCoords: Coords;  // Page x, y when mouse was pressed down
   dragStartOffset: Coords;  // Map element x, y when mouse was pressed down
@@ -55,8 +58,9 @@ export class MapComponent {
     private cameraService: CameraService,
     private tileService: TileService,
     private mouseService: MouseService,
+    private cameraStore: CameraStore,
     private mapStore: MapStore,
-    private cameraStore: CameraStore
+    private mapUiStore: MapUiStore
   ) {}
 
   ngOnInit() {
@@ -83,7 +87,8 @@ export class MapComponent {
   subscribeToData() {
     this.subscriptions.push(
       this.cameraStore.camera.subscribe(camera => this.onCameraNext(camera)),
-      this.mapStore.map.subscribe(map => this.onMapNext(map))
+      this.mapStore.map.subscribe(map => this.onMapNext(map)),
+      this.mapUiStore.mapUi.subscribe(mapUi => this.onMapUiNext(mapUi))
     );
   }
 
@@ -97,8 +102,13 @@ export class MapComponent {
     this.checkIfToRedraw();
   }
 
+  onMapUiNext(mapUi: MapUi) {
+    this.mapUi = mapUi;
+    this.checkIfToRedraw();
+  }
+
   checkIfToRedraw() {
-    if (this.map && this.camera) { this.shallRedraw = true; }
+    if (this.map) { this.shallRedraw = true; }
   }
 
   requestAnimationFrame() {
@@ -192,7 +202,7 @@ export class MapComponent {
     this.tileWidth = this.camera.tileSize * 0.9;
     this.tileHeight = this.camera.tileSize;
     this.mapWidth = this.tileWidth * this.map.width + Math.ceil(this.tileWidth * 0.5);
-    this.mapHeight = (this.tileHeight * this.map.height * 0.75) + Math.ceil(this.tileHeight * 0.25);
+    this.mapHeight = (this.tileHeight * this.map.height * 0.75) + Math.ceil(this.tileHeight * 0.25) - this.map.height + 1;  // this.map.height is 1-based, need +1
   }
 
 
@@ -226,7 +236,7 @@ export class MapComponent {
   tilePosition(tile: Tile): Coords {
     return {
       x: ((tile.coords.x * this.tileWidth) + (this.tileService.isTileInOddRow(tile) ? this.tileWidth / 2 : 0)),
-      y: (tile.coords.y * this.tileHeight * 0.75)
+      y: (tile.coords.y * this.tileHeight * 0.75) - tile.coords.y  // tile.coords.y is 0-based, no  need for +/- 1
     };
   }
 
@@ -290,8 +300,8 @@ export class MapComponent {
 
   drawTile(tile: Tile): void {
     this.createTilePath(tile);
+    if (this.mapUi.showGrid) { this.ctx.stroke() }
     this.fillTerrainBase(tile);
-    this.ctx.stroke();
   }
 
 }

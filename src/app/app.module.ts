@@ -44,6 +44,7 @@ import {MapStore} from './stores/map.store';
 import {KeyBindingsStore} from './stores/key-bindings.store';
 import {SavesStore} from './stores/saves.store';
 import {UiStore} from './stores/ui.store';
+import {MapUiStore} from './stores/map-ui.store';
 import {WorldBuilderUiStore} from './stores/world-builder-ui.store';
 
 // PIPES
@@ -101,6 +102,7 @@ const STORES = [
   KeyBindingsStore,
   SavesStore,
   UiStore,
+  MapUiStore,
   WorldBuilderUiStore,
 ]
 

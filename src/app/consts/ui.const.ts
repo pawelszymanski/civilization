@@ -1,9 +1,8 @@
-import {MapTypeId, ModalId, SidebarId, TileOverlayId, Ui} from '../models/ui';
+import {MapTypeId, ModalId, SidebarId, Ui} from '../models/ui';
 
 export const DEFAULT_UI: Ui = {
   showMainMenu: true,
   mapType: MapTypeId.STRATEGIC,
-  tileOverlay: TileOverlayId.NONE,
   modal: ModalId.NONE,
   sidebar: SidebarId.NONE
 };

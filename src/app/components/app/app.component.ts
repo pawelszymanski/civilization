@@ -1,12 +1,14 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
-import {ModalId, MapTypeId, SidebarId, Ui, TileOverlayId} from '../../models/ui';
 import {KeyBindings, UserActionId} from '../../models/key-bindings';
+import {ModalId, MapTypeId, SidebarId, Ui} from '../../models/ui';
+import {TileInfoOverlayId, TileResourceOverlayId} from '../../models/map-ui';
 
 import {KeyboardService} from '../../services/keyboard.service';
 
 import {KeyBindingsStore} from '../../stores/key-bindings.store';
 import {UiStore} from '../../stores/ui.store';
+import {MapUiStore} from '../../stores/map-ui.store';
 
 @Component({
   selector: '.app-component',
@@ -26,7 +28,8 @@ export class AppComponent {
   constructor(
     private keyboardService: KeyboardService,
     private keyBindingsStore: KeyBindingsStore,
-    private uiStore: UiStore
+    private uiStore: UiStore,
+    private mapUiStore: MapUiStore
   ) {}
 
   ngOnInit() {
@@ -69,12 +72,15 @@ export class AppComponent {
     const userActionId = this.keyboardService.findMatchingActionId(this.keyBindings, keyBinding);
 
     if (userActionId == UserActionId.ESCAPE_VIEW)        { this.uiStore.escapeView() } else
-    if (userActionId == UserActionId.TOGGLE_TILE_YIELD)  { this.uiStore.toggleTileOverlay(TileOverlayId.YIELD) } else
-    if (userActionId == UserActionId.TOGGLE_TILE_TEXT)   { this.uiStore.toggleTileOverlay(TileOverlayId.TEXT) } else
     if (userActionId == UserActionId.TOGGLE_TECH_TREE)   { this.uiStore.toggleModal(ModalId.TECHNOLOGY_TREE) } else
     if (userActionId == UserActionId.TOGGLE_CIVICS_TREE) { this.uiStore.toggleModal(ModalId.CIVIC_TREE) } else
     if (userActionId == UserActionId.TOGGLE_MAP_EDITOR)  { this.uiStore.toggleSidebar(SidebarId.WORLD_BUILDER) } else
-    if (userActionId == UserActionId.TOGGLE_DEV_TOOLS)   { this.uiStore.toggleSidebar(SidebarId.DEV_TOOLS) }
+    if (userActionId == UserActionId.TOGGLE_DEV_TOOLS)   { this.uiStore.toggleSidebar(SidebarId.DEV_TOOLS) } else
+
+    if (userActionId == UserActionId.TOGGLE_TILE_INFO_OVERLAY_YIELD)   { this.mapUiStore.toggleTileInfoOverlay(TileInfoOverlayId.YIELD) } else
+    if (userActionId == UserActionId.TOGGLE_TILE_INFO_OVERLAY_TEXT)    { this.mapUiStore.toggleTileInfoOverlay(TileInfoOverlayId.TEXT) } else
+    if (userActionId == UserActionId.TOGGLE_TILE_RESOURCE_OVERLAY_ALL) { this.mapUiStore.toggleTileResourceOverlay(TileResourceOverlayId.ALL) } else
+    if (userActionId == UserActionId.TOGGLE_GRID) { this.mapUiStore.toggleGrid() }
   }
 
 }
