@@ -1,4 +1,5 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {Subscription} from 'rxjs';
 
 import {YieldId} from '../../../models/yield';
 import {ModalId, Ui} from '../../../models/ui';
@@ -13,7 +14,7 @@ import {UiStore} from '../../../stores/ui.store';
   styleUrls: ['./quick-links.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class QuickLinksComponent {
+export class QuickLinksComponent implements OnInit, OnDestroy {
 
   YIELD_ICONS = YIELD_ID_TO_ICON_CLASS_MAP;
 
@@ -22,16 +23,28 @@ export class QuickLinksComponent {
 
   ui: Ui;
 
+  subscriptions: Subscription[] = [];
+
   constructor(
     private uiStore: UiStore
   ) {}
 
-  subscribeToData() {
-    this.uiStore.ui.subscribe(ui => this.ui = ui);
-  }
-
   ngOnInit() {
     this.subscribeToData();
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeFromData();
+  }
+
+  subscribeToData() {
+    this.subscriptions.push(
+      this.uiStore.ui.subscribe(ui => this.ui = ui)
+    );
+  }
+
+  unsubscribeFromData() {
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   onScienceIconClick() {

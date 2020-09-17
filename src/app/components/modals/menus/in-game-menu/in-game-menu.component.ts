@@ -1,7 +1,8 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
-import {UiStore} from '../../../../stores/ui.store';
 import {ModalId} from '../../../../models/ui';
+
+import {UiStore} from '../../../../stores/ui.store';
 
 @Component({
   selector: '.in-game-menu-component',

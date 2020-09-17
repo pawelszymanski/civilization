@@ -1,4 +1,5 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {Subscription} from 'rxjs';
 
 import {KeyBindings, UserActionId} from '../../models/key-bindings';
 import {ModalId, MapTypeId, SidebarId, Ui} from '../../models/ui';
@@ -16,7 +17,7 @@ import {MapUiStore} from '../../stores/map-ui.store';
   styleUrls: ['./app.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
 
   ModalId = ModalId;
   MapTypeId = MapTypeId;
@@ -24,6 +25,8 @@ export class AppComponent {
 
   keyBindings: KeyBindings;
   ui: Ui;
+
+  subscriptions: Subscription[] = [];
 
   constructor(
     private keyboardService: KeyboardService,
@@ -38,8 +41,14 @@ export class AppComponent {
   }
 
   subscribeToData() {
-    this.keyBindingsStore.keyBindings.subscribe(keyBindings => this.keyBindings = keyBindings);
-    this.uiStore.ui.subscribe(ui => this.ui = ui);
+    this.subscriptions.push(
+      this.keyBindingsStore.keyBindings.subscribe(keyBindings => this.keyBindings = keyBindings),
+      this.uiStore.ui.subscribe(ui => this.ui = ui)
+    );
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeFromData();
   }
 
   addEventListeners() {
@@ -47,6 +56,10 @@ export class AppComponent {
     document.addEventListener('wheel', this.documentOnWheel.bind(this), {passive: false});
     document.addEventListener('contextmenu', this.documentOnContextMenu.bind(this));
     document.addEventListener('keydown', this.documentOnKeydown.bind(this));
+  }
+
+  unsubscribeFromData() {
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   documentOnWheel(event) {

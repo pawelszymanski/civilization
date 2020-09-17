@@ -1,4 +1,5 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {Subscription} from 'rxjs';
 
 import {Camera} from '../../../../models/camera';
 import {Map} from '../../../../models/map';
@@ -17,7 +18,7 @@ import {UiStore} from '../../../../stores/ui.store';
   styleUrls: ['./save-game.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class SaveGameComponent {
+export class SaveGameComponent implements OnInit, OnDestroy {
 
   saveName = '';
 
@@ -25,6 +26,8 @@ export class SaveGameComponent {
   camera: Camera;
 
   save: Save;
+
+  subscriptions: Subscription[] = [];
 
   constructor(
     private generatorService: GeneratorService,
@@ -35,8 +38,22 @@ export class SaveGameComponent {
   ) {}
 
   ngOnInit() {
-    this.mapStore.map.subscribe(map => this.map = map);
-    this.cameraStore.camera.subscribe(camera => this.camera = camera);
+    this.subscribeToData();
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeFromData();
+  }
+
+  subscribeToData() {
+    this.subscriptions.push(
+      this.mapStore.map.subscribe(map => this.map = map),
+      this.cameraStore.camera.subscribe(camera => this.camera = camera)
+    );
+  }
+
+  unsubscribeFromData() {
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   canGameBeSaved(): boolean {

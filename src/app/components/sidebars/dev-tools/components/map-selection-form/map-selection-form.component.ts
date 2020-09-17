@@ -1,4 +1,5 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {Subscription} from 'rxjs';
 
 import {MapTypeId, Ui} from '../../../../../models/ui';
 
@@ -10,11 +11,13 @@ import {UiStore} from '../../../../../stores/ui.store';
   styleUrls: ['./map-selection-form.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class MapSelectionFormComponent {
+export class MapSelectionFormComponent implements OnInit, OnDestroy {
 
   ui: Ui;
 
   MapTypeId = MapTypeId;
+
+  subscriptions: Subscription[] = [];
 
   constructor(
     private uiStore: UiStore
@@ -24,8 +27,18 @@ export class MapSelectionFormComponent {
     this.subscribeToData();
   }
 
+  ngOnDestroy() {
+    this.unsubscribeFromData();
+  }
+
   subscribeToData() {
-    this.uiStore.ui.subscribe(ui => this.ui = ui);
+    this.subscriptions.push(
+      this.uiStore.ui.subscribe(ui => this.ui = ui)
+    );
+  }
+
+  unsubscribeFromData() {
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   setMapType(mapTypeId: MapTypeId) {

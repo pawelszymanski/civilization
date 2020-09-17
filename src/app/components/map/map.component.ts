@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostListener, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {Subscription} from 'rxjs';
 
 import {Camera} from '../../models/camera';
@@ -28,7 +28,7 @@ import {TerrainImprovementNamePipe} from '../../pipes/terrain-improvement-name.p
   styleUrls: ['map.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class MapComponent {
+export class MapComponent implements OnInit, OnDestroy {
 
   readonly CANVAS = {
     width: 600,

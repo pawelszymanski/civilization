@@ -1,5 +1,6 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
+import {Subscription} from 'rxjs';
 
 import {Save, SaveSortOrderId} from '../../../../models/saves';
 import {Uuid} from '../../../../models/utils';
@@ -19,7 +20,7 @@ import {UiStore} from '../../../../stores/ui.store';
   styleUrls: ['./load-game.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class LoadGameComponent {
+export class LoadGameComponent implements OnInit, OnDestroy {
 
   SaveSortOrderId = SaveSortOrderId;
 
@@ -32,6 +33,8 @@ export class LoadGameComponent {
     sortOrder: new FormControl(SaveSortOrderId.NAME_ASCENDING)
   });
 
+  subscriptions: Subscription[] = [];
+
   constructor(
     private generatorService: GeneratorService,
     private saveSorter: SaveService,
@@ -40,6 +43,25 @@ export class LoadGameComponent {
     private savesStore: SavesStore,
     private uiStore: UiStore
   ) {}
+
+  ngOnInit() {
+    this.subscribeToData();
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeFromData();
+  }
+
+  subscribeToData() {
+    this.subscriptions.push(
+      this.savesStore.saves.subscribe(saves => { this.saves = saves; this.filterAndSortSaves(); }),
+      this.saveListOptionsForm.valueChanges.subscribe(() => this.filterAndSortSaves())
+    );
+  }
+
+  unsubscribeFromData() {
+    this.subscriptions.forEach(s => s.unsubscribe());
+  }
 
   deselectSaveIfFilteredOut() {
     if (this.selectedSaveUuid && !this.filteredAndSortedSaves.find(save => save.uuid === this.selectedSaveUuid)) {
@@ -50,17 +72,6 @@ export class LoadGameComponent {
   filterAndSortSaves() {
     this.filteredAndSortedSaves = this.saveSorter.getFilteredAndSortedSaves(this.saves, this.saveListOptionsForm.value);
     this.deselectSaveIfFilteredOut();
-  }
-
-  ngOnInit() {
-    this.savesStore.saves.subscribe(saves => {
-      this.saves = saves;
-      this.filterAndSortSaves();
-    });
-
-    this.saveListOptionsForm.valueChanges.subscribe(() => {
-      this.filterAndSortSaves();
-    });
   }
 
   get selectedSave(): Save {

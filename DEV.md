@@ -1,6 +1,6 @@
 ## WORKING ON
-- make sure all components have ngOnDestroy 
-
+- cant pan after 2 loads bug
+- onDestroy decorator
 
 ## TODO
 -- GENERAL
@@ -30,6 +30,7 @@
 - remove font awesome
 - make dev tools component .component class
 - play now generates map
+- make sure all components have ngOnDestroy 
 
 
 

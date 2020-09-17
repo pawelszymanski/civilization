@@ -1,4 +1,13 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, NgZone, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  NgZone,
+  OnDestroy, OnInit,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 
 import {PerformanceMeterModeId} from '../../../../../models/performance-meter';
 import {Millisecond} from '../../../../../models/utils';
@@ -14,7 +23,7 @@ import {GeneratorService} from '../../../../../services/generator.service';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PerformanceChartComponent {
+export class PerformanceChartComponent implements OnInit, OnDestroy {
 
   @ViewChild('canvas', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
 

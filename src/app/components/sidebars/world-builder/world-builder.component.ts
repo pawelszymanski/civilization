@@ -1,4 +1,5 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {Subscription} from 'rxjs';
 
 import {
   TerrainBaseId,
@@ -19,7 +20,7 @@ import {WorldBuilderUiStore} from '../../../stores/world-builder-ui.store';
   styleUrls: ['./world-builder.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class WorldBuilderComponent {
+export class WorldBuilderComponent implements OnInit, OnDestroy {
 
   TERRAIN_BASE_LIST = TERRAIN_BASE_LIST;
   TERRAIN_FEATURE_LIST = TERRAIN_FEATURE_LIST;
@@ -34,6 +35,8 @@ export class WorldBuilderComponent {
 
   worldBuilderUi: WorldBuilderUi;
 
+  subscriptions: Subscription[] = [];
+
   constructor(
     private worldBuilderUiStore: WorldBuilderUiStore
   ) {}
@@ -42,8 +45,18 @@ export class WorldBuilderComponent {
     this.subscribeToData();
   }
 
+  ngOnDestroy() {
+    this.unsubscribeFromData();
+  }
+
   subscribeToData() {
-    this.worldBuilderUiStore.worldBuilderUi.subscribe(worldBuilderUi => this.worldBuilderUi = worldBuilderUi);
+    this.subscriptions.push(
+      this.worldBuilderUiStore.worldBuilderUi.subscribe(worldBuilderUi => this.worldBuilderUi = worldBuilderUi)
+    );
+  }
+
+  unsubscribeFromData() {
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   onToolClick(tool: WorldBuilderToolId) {

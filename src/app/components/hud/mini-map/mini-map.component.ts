@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {Subscription} from 'rxjs';
 
 import {Camera} from '../../../models/camera';
@@ -13,7 +13,7 @@ import {MapStore} from '../../../stores/map.store';
   styleUrls: ['./mini-map.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class MiniMapComponent {
+export class MiniMapComponent implements OnInit, OnDestroy {
 
   @ViewChild('canvas', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
 

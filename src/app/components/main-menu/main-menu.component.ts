@@ -1,16 +1,18 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {Subscription} from 'rxjs';
 
 import {Save} from '../../models/saves';
+import {MapSizeId} from '../../models/map-size';
 import {MapTypeId, ModalId, Ui} from '../../models/ui';
 import {LandmassValueId, MapGeneratorSettings, RainfallId, TemperatureId, WorldAgeId} from '../../models/map-generator';
+
+import {MAP_SIZE_SETTINGS_LIST} from '../../consts/map-size-settings.const';
 
 import {MapGeneratorService} from '../../services/map-generator.service';
 
 import {MapStore} from '../../stores/map.store';
 import {SavesStore} from '../../stores/saves.store';
 import {UiStore} from '../../stores/ui.store';
-import {MAP_SIZE_SETTINGS_LIST} from '../../consts/map-size-settings.const';
-import {MapSizeId} from '../../models/map-size';
 
 @Component({
   selector: '.main-menu-component',
@@ -18,12 +20,14 @@ import {MapSizeId} from '../../models/map-size';
   styleUrls: ['./main-menu.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class MainMenuComponent {
+export class MainMenuComponent implements OnInit, OnDestroy {
 
   ui: Ui;
   saves: Save[];
 
   showSinglePlayerMenu = false;
+
+  subscriptions: Subscription[] = [];
 
   constructor(
     private mapGeneratorService: MapGeneratorService,
@@ -33,8 +37,22 @@ export class MainMenuComponent {
   ) {}
 
   ngOnInit() {
-    this.uiStore.ui.subscribe(ui => this.ui = ui);
-    this.savesStore.saves.subscribe(saves => this.saves = saves);
+    this.subscribeToData();
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeFromData();
+  }
+
+  subscribeToData() {
+    this.subscriptions.push(
+      this.uiStore.ui.subscribe(ui => this.ui = ui),
+      this.savesStore.saves.subscribe(saves => this.saves = saves)
+    );
+  }
+
+  unsubscribeFromData() {
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   get noSavesPresent(): boolean {
