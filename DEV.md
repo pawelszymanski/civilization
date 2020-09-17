@@ -1,6 +1,4 @@
 - tile info for canvas
-- toggle grid
-
 
 ## TODO
 
@@ -19,6 +17,7 @@
 ## DONE
 - add scale to camera dev tools
 - performance meter const TODO comment
+- toggle grid
 
 
 

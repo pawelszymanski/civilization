@@ -5,8 +5,7 @@ import {Camera} from '../../models/camera';
 import {Coords} from '../../models/utils';
 import {Map, Tile} from '../../models/map';
 import {TerrainBaseId} from '../../models/terrain';
-import {Ui} from '../../models/ui';
-import {MapUi} from '../../models/map-ui';
+import {MapUi, TileInfoOverlayId} from '../../models/map-ui';
 
 import {CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP} from '../../consts/camera.const';
 
@@ -17,6 +16,11 @@ import {TileService} from '../../services/tile.service';
 import {CameraStore} from '../../stores/camera.store';
 import {MapStore} from '../../stores/map.store';
 import {MapUiStore} from '../../stores/map-ui.store';
+
+import {TerrainBaseNamePipe} from '../../pipes/terrain-base-name.pipe';
+import {TerrainFeatureNamePipe} from '../../pipes/terrain-feature-name.pipe';
+import {TerrainResourceNamePipe} from '../../pipes/terrain-resource-name.pipe';
+import {TerrainImprovementNamePipe} from '../../pipes/terrain-improvement-name.pipe';
 
 @Component({
   selector: '.map-component',
@@ -60,7 +64,11 @@ export class MapComponent {
     private mouseService: MouseService,
     private cameraStore: CameraStore,
     private mapStore: MapStore,
-    private mapUiStore: MapUiStore
+    private mapUiStore: MapUiStore,
+    private terrainBaseNamePipe: TerrainBaseNamePipe,
+    private terrainFeatureNamePipe: TerrainFeatureNamePipe,
+    private terrainImprovementNamePipe: TerrainImprovementNamePipe,
+    private terrainResourceNamePipe: TerrainResourceNamePipe,
   ) {}
 
   ngOnInit() {
@@ -218,38 +226,33 @@ export class MapComponent {
 
   paintTiles() {
     for (const tile of this.map.tiles) {
-      if (this.isTileInViewport(tile)) {
-        this.drawTile(tile);
+      const tileCoords = this.tileCoords(tile);
+      if (this.isTileInViewport(tileCoords)) {
+        this.drawTile(tile, tileCoords);
       }
     }
   }
 
-  isTileInViewport(tile: Tile): boolean {
-    const tilePosition = this.tilePosition(tile);
-
-    return (this.camera.translate.x + tilePosition.x + this.tileWidth >= 0) &&
-      (this.camera.translate.x + tilePosition.x <= this.ctx.canvas.width) &&
-      (this.camera.translate.y + tilePosition.y + this.tileHeight >= 0) &&
-      (this.camera.translate.y + tilePosition.y <= this.ctx.canvas.height);
+  isTileInViewport(tileCoords: Coords): boolean {
+    return (tileCoords.x + this.tileWidth >= 0) && (tileCoords.x <= this.ctx.canvas.width) &&
+           (tileCoords.y + this.tileHeight >= 0) && (tileCoords.y <= this.ctx.canvas.height);
   }
 
-  tilePosition(tile: Tile): Coords {
+  tileCoords(tile: Tile): Coords {
     return {
-      x: ((tile.coords.x * this.tileWidth) + (this.tileService.isTileInOddRow(tile) ? this.tileWidth / 2 : 0)),
-      y: (tile.coords.y * this.tileHeight * 0.75) - tile.coords.y  // tile.coords.y is 0-based, no  need for +/- 1
+      x: (((tile.coords.x * this.tileWidth) + (this.tileService.isTileInOddRow(tile) ? this.tileWidth / 2 : 0))) + this.camera.translate.x,
+      y: ((tile.coords.y * this.tileHeight * 0.75) - tile.coords.y) + this.camera.translate.y  // tile.coords.y is 0-based, no  need for +/- 1
     };
   }
 
-  createTilePath(tile: Tile) {
-    const tilePosition = this.tilePosition(tile);
-
+  createTilePath(tileCoords: Coords) {
     this.ctx.beginPath();
-    this.ctx.moveTo(this.camera.translate.x + tilePosition.x + this.tileWidth * 0.50, this.camera.translate.y + tilePosition.y);
-    this.ctx.lineTo(this.camera.translate.x + tilePosition.x + this.tileWidth, this.camera.translate.y + tilePosition.y + this.tileHeight * 0.25);
-    this.ctx.lineTo(this.camera.translate.x + tilePosition.x + this.tileWidth, this.camera.translate.y + tilePosition.y + this.tileHeight * 0.75);
-    this.ctx.lineTo(this.camera.translate.x + tilePosition.x + this.tileWidth * 0.50, this.camera.translate.y + tilePosition.y + this.tileHeight);
-    this.ctx.lineTo(this.camera.translate.x + tilePosition.x, this.camera.translate.y + tilePosition.y + this.tileHeight * 0.75);
-    this.ctx.lineTo(this.camera.translate.x + tilePosition.x, this.camera.translate.y + tilePosition.y + this.tileHeight * 0.25);
+    this.ctx.moveTo(tileCoords.x + this.tileWidth * 0.50, tileCoords.y);
+    this.ctx.lineTo(tileCoords.x + this.tileWidth, tileCoords.y + this.tileHeight * 0.25);
+    this.ctx.lineTo(tileCoords.x + this.tileWidth, tileCoords.y + this.tileHeight * 0.75);
+    this.ctx.lineTo(tileCoords.x + this.tileWidth * 0.50, tileCoords.y + this.tileHeight);
+    this.ctx.lineTo(tileCoords.x, tileCoords.y + this.tileHeight * 0.75);
+    this.ctx.lineTo(tileCoords.x, tileCoords.y + this.tileHeight * 0.25);
     this.ctx.closePath();
   }
 
@@ -298,10 +301,44 @@ export class MapComponent {
     return this.ctx.createPattern(imgElem, 'repeat');
   }
 
-  drawTile(tile: Tile): void {
-    this.createTilePath(tile);
-    if (this.mapUi.showGrid) { this.ctx.stroke() }
+  fillTextWithShadow(text: string, textColor: string, shadowColor: string, x: number, y: number, shadowDistance = 1) {
+    this.ctx.fillStyle = shadowColor;
+    this.ctx.fillText(text, x + shadowDistance, y + shadowDistance);
+    this.ctx.fillStyle = textColor;
+    this.ctx.fillText(text, x, y);
+  }
+
+  addTileInfoTextOverlay(tile: Tile, tileCoords: Coords) {
+    this.ctx.font = '10px Calibri';
+    this.ctx.textAlign = 'center';
+    this.ctx.textBaseline = 'bottom';
+
+    const tileHorizontalCenter = tileCoords.x + (this.tileWidth / 2);
+    const tileBottom = tileCoords.y + this.tileHeight;
+
+    this.fillTextWithShadow(`${tile.coords.x}, ${tile.coords.y}`, 'lightgray', 'black', tileHorizontalCenter, tileBottom - 10);
+    if (this.tileWidth > 120) {
+      const terrainBaseName = this.terrainBaseNamePipe.transform(tile.terrain.base.id).toUpperCase();
+      const terrainFeatureName = this.terrainFeatureNamePipe.transform(tile.terrain.feature.id).toUpperCase();
+      const terrainResourceName = this.terrainResourceNamePipe.transform(tile.terrain.resourceId).toUpperCase();
+      const terrainImprovementName = this.terrainImprovementNamePipe.transform(tile.terrain.improvementId).toUpperCase();
+      this.fillTextWithShadow(terrainImprovementName, 'lightgray', 'black', tileHorizontalCenter, tileBottom - 20);
+      this.fillTextWithShadow(terrainResourceName, 'lightgray', 'black', tileHorizontalCenter, tileBottom - 30);
+      this.fillTextWithShadow(terrainFeatureName, 'lightgray', 'black', tileHorizontalCenter, tileBottom - 40);
+      this.fillTextWithShadow(terrainBaseName, 'lightgray', 'black', tileHorizontalCenter, tileBottom - 50);
+    }
+  }
+
+  addTileInfoYieldOverlay(tile: Tile, tileCoords: Coords) {
+
+  }
+
+  drawTile(tile: Tile, tileCoords: Coords): void {
+    this.createTilePath(tileCoords);
     this.fillTerrainBase(tile);
+    if (this.mapUi.infoOverlay === TileInfoOverlayId.TEXT) { this.addTileInfoTextOverlay(tile, tileCoords) }
+    if (this.mapUi.infoOverlay === TileInfoOverlayId.YIELD) { this.addTileInfoYieldOverlay(tile, tileCoords) }
+    if (this.mapUi.showGrid) { this.ctx.stroke() }
   }
 
 }
