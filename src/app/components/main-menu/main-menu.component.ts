@@ -9,10 +9,11 @@ import {LandmassValueId, MapGeneratorSettings, RainfallId, TemperatureId, WorldA
 import {MAP_SIZE_SETTINGS_LIST} from '../../consts/map-size-settings.const';
 
 import {MapGeneratorService} from '../../services/map-generator.service';
+import {SaveService} from '../../services/save.service';
 
+import {UiStore} from '../../stores/ui.store';
 import {MapStore} from '../../stores/map.store';
 import {SavesStore} from '../../stores/saves.store';
-import {UiStore} from '../../stores/ui.store';
 
 @Component({
   selector: '.main-menu-component',
@@ -31,9 +32,10 @@ export class MainMenuComponent implements OnInit, OnDestroy {
 
   constructor(
     private mapGeneratorService: MapGeneratorService,
+    private saveService: SaveService,
     private uiStore: UiStore,
-    private savesStore: SavesStore,
-    private mapStore: MapStore
+    private mapStore: MapStore,
+    private savesStore: SavesStore
   ) {}
 
   ngOnInit() {
@@ -76,10 +78,9 @@ export class MainMenuComponent implements OnInit, OnDestroy {
     if (this.noSavesPresent) { return; }
     const latestTimestamp = this.saves.map(save => save.timestamp).sort().pop();
     const saveToBeLoaded = this.saves.find(save => save.timestamp === latestTimestamp);
-    this.mapStore.next(saveToBeLoaded.map);
+    this.saveService.loadSave(saveToBeLoaded);
     this.uiStore.setMapType(MapTypeId.STRATEGIC);
     this.uiStore.hideMainMenu();
-    this.showSinglePlayerMenu = false;
   }
 
   onLoadGameClick() {

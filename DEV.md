@@ -4,7 +4,6 @@
 
 ## TODO
 -- GENERAL
-- save MapUi in save
 - make resources and improvements have more visuals
 - map details: map name and description
 
@@ -31,6 +30,7 @@
 - make dev tools component .component class
 - play now generates map
 - make sure all components have ngOnDestroy 
+- save MapUi in save
 
 
 

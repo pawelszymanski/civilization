@@ -163,6 +163,16 @@ export class MapComponent implements OnInit, OnDestroy {
     this.cameraStore.setTranslate(normalizedTranslate);
   }
 
+  onCanvasMousedown(event: MouseEvent) {
+    this.dragStartCoords = {x: event.pageX, y: event.pageY};
+    this.dragStartOffset = {x: this.camera.translate.x, y: this.camera.translate.y};
+    this.isDragging = true;
+  }
+
+  onCanvasClick(event: MouseEvent) {
+    console.info(123);
+  }
+
   onCanvasWheel(event: WheelEvent) {
     // calculate new zoom level
     const step = this.mouseService.wheelEventToStep(event);
@@ -189,12 +199,6 @@ export class MapComponent implements OnInit, OnDestroy {
     }
     const normalizedTranslate = this.cameraService.normalizeVerticalTranslation(newTranslate, this.CANVAS.height, this.mapHeight);
     this.cameraStore.setTranslate(normalizedTranslate);
-  }
-
-  onCanvasMousedown(event: MouseEvent) {
-    this.dragStartCoords = {x: event.pageX, y: event.pageY};
-    this.dragStartOffset = {x: this.camera.translate.x, y: this.camera.translate.y};
-    this.isDragging = true;
   }
 
   // DRAWING MAP

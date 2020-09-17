@@ -38,7 +38,7 @@ export class LoadGameComponent implements OnInit, OnDestroy {
 
   constructor(
     private generatorService: GeneratorService,
-    private saveSorter: SaveService,
+    private saveService: SaveService,
     private cameraStore: CameraStore,
     private mapStore: MapStore,
     private mapUiStore: MapUiStore,
@@ -72,7 +72,7 @@ export class LoadGameComponent implements OnInit, OnDestroy {
   }
 
   filterAndSortSaves() {
-    this.filteredAndSortedSaves = this.saveSorter.getFilteredAndSortedSaves(this.saves, this.saveListOptionsForm.value);
+    this.filteredAndSortedSaves = this.saveService.getFilteredAndSortedSaves(this.saves, this.saveListOptionsForm.value);
     this.deselectSaveIfFilteredOut();
   }
 
@@ -105,9 +105,7 @@ export class LoadGameComponent implements OnInit, OnDestroy {
 
   loadSelectedSaveAndUpdateUi() {
     const saveToBeLoaded = this.saves.find(save => save.uuid === this.selectedSaveUuid);
-    this.mapStore.next(saveToBeLoaded.map);
-    this.mapUiStore.next(saveToBeLoaded.mapUi);
-    this.cameraStore.next(saveToBeLoaded.camera);
+    this.saveService.loadSave(saveToBeLoaded);
     this.selectedSaveUuid = undefined;
     this.uiStore.toggleModal(ModalId.LOAD_GAME);
     this.uiStore.hideMainMenu();
