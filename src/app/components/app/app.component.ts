@@ -1,10 +1,9 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
-import {ModalId, MapTypeId, SidebarId, Ui, TileOverlayId} from '../../models/ui/ui';
-import {KeyBindings} from '../../models/ui/key-bindings';
-import {UiActionId} from '../../models/ui/ui-action.enum';
+import {ModalId, MapTypeId, SidebarId, Ui, TileOverlayId} from '../../models/ui';
+import {KeyBindings, UserActionId} from '../../models/key-bindings';
 
-import {KeyboardHelperService} from '../../services/ui/keyboard-helper.service';
+import {KeyboardService} from '../../services/keyboard.service';
 
 import {KeyBindingsStore} from '../../stores/key-bindings.store';
 import {UiStore} from '../../stores/ui.store';
@@ -25,7 +24,7 @@ export class AppComponent {
   ui: Ui;
 
   constructor(
-    private keyboardHelperService: KeyboardHelperService,
+    private keyboardService: KeyboardService,
     private keyBindingsStore: KeyBindingsStore,
     private uiStore: UiStore
   ) {}
@@ -66,16 +65,16 @@ export class AppComponent {
 
     event.preventDefault();
 
-    const keyBinding = this.keyboardHelperService.keyBindingFromEvent(event);
-    const uiActionId = this.keyboardHelperService.findMatchingActionId(this.keyBindings, keyBinding);
+    const keyBinding = this.keyboardService.keyBindingFromEvent(event);
+    const userActionId = this.keyboardService.findMatchingActionId(this.keyBindings, keyBinding);
 
-    if (uiActionId == UiActionId.ESCAPE_VIEW)        { this.uiStore.escapeView() } else
-    if (uiActionId == UiActionId.TOGGLE_TILE_YIELD)  { this.uiStore.toggleTileOverlay(TileOverlayId.YIELD) } else
-    if (uiActionId == UiActionId.TOGGLE_TILE_TEXT)   { this.uiStore.toggleTileOverlay(TileOverlayId.TEXT) } else
-    if (uiActionId == UiActionId.TOGGLE_TECH_TREE)   { this.uiStore.toggleModal(ModalId.TECHNOLOGY_TREE) } else
-    if (uiActionId == UiActionId.TOGGLE_CIVICS_TREE) { this.uiStore.toggleModal(ModalId.CIVIC_TREE) } else
-    if (uiActionId == UiActionId.TOGGLE_MAP_EDITOR)  { this.uiStore.toggleSidebar(SidebarId.WORLD_BUILDER) } else
-    if (uiActionId == UiActionId.TOGGLE_DEV_TOOLS)   { this.uiStore.toggleSidebar(SidebarId.DEV_TOOLS) }
+    if (userActionId == UserActionId.ESCAPE_VIEW)        { this.uiStore.escapeView() } else
+    if (userActionId == UserActionId.TOGGLE_TILE_YIELD)  { this.uiStore.toggleTileOverlay(TileOverlayId.YIELD) } else
+    if (userActionId == UserActionId.TOGGLE_TILE_TEXT)   { this.uiStore.toggleTileOverlay(TileOverlayId.TEXT) } else
+    if (userActionId == UserActionId.TOGGLE_TECH_TREE)   { this.uiStore.toggleModal(ModalId.TECHNOLOGY_TREE) } else
+    if (userActionId == UserActionId.TOGGLE_CIVICS_TREE) { this.uiStore.toggleModal(ModalId.CIVIC_TREE) } else
+    if (userActionId == UserActionId.TOGGLE_MAP_EDITOR)  { this.uiStore.toggleSidebar(SidebarId.WORLD_BUILDER) } else
+    if (userActionId == UserActionId.TOGGLE_DEV_TOOLS)   { this.uiStore.toggleSidebar(SidebarId.DEV_TOOLS) }
   }
 
 }

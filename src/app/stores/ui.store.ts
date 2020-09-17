@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 
-import {MapTypeId, ModalId, SidebarId, TileOverlayId, Ui} from '../models/ui/ui';
+import {MapTypeId, ModalId, SidebarId, TileOverlayId, Ui} from '../models/ui';
 
-import {DEFAULT_UI} from '../consts/ui/ui.const';
+import {DEFAULT_UI} from '../consts/ui.const';
 
 @Injectable()
 export class UiStore {
@@ -14,11 +14,11 @@ export class UiStore {
 
   // MAIN MENU
   public hideMainMenu() {
-    this._ui.next({...this._ui.value, mainMenu: false});
+    this._ui.next({...this._ui.value, showMainMenu: false});
   }
 
   public showMainMenu() {
-    this._ui.next({...this._ui.value, mainMenu: true});
+    this._ui.next({...this._ui.value, showMainMenu: true});
   }
 
   // MAP TYPE
@@ -65,8 +65,8 @@ export class UiStore {
     const ui = this._ui.value;
     if (ui.sidebar !== SidebarId.NONE) { this.closeSidebar(); return; }
     if (ui.modal !== ModalId.NONE) { this.closeModal(); return; }
-    if (ui.mainMenu) { this.openModal(ModalId.EXIT_GAME_CONFIRMATION); return; }
-    if (!ui.mainMenu) { this.openModal(ModalId.IN_GAME_MENU); return; }
+    if (ui.showMainMenu) { this.openModal(ModalId.EXIT_GAME_CONFIRMATION); return; }
+    if (!ui.showMainMenu) { this.openModal(ModalId.IN_GAME_MENU); return; }
   }
 
 }

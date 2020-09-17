@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 
-import {Save} from '../models/saves/save';
+import {Save} from '../models/saves';
 
-import {LocalStorageService} from '../services/utils/local-storage.service';
+import {LocalStorageService} from '../services/local-storage.service';
 
 @Injectable()
 export class SavesStore {

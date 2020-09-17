@@ -1,9 +1,9 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
-import {Save} from '../../models/saves/save';
-import {MapTypeId, ModalId, Ui} from '../../models/ui/ui';
+import {Save} from '../../models/saves';
+import {MapTypeId, ModalId, Ui} from '../../models/ui';
 
-import {GameMapStore} from '../../stores/game-map.store';
+import {MapStore} from '../../stores/map.store';
 import {SavesStore} from '../../stores/saves.store';
 import {UiStore} from '../../stores/ui.store';
 
@@ -23,7 +23,7 @@ export class MainMenuComponent {
   constructor(
     private uiStore: UiStore,
     private savesStore: SavesStore,
-    private gameMapStore: GameMapStore
+    private mapStore: MapStore
   ) {}
 
   ngOnInit() {
@@ -52,7 +52,7 @@ export class MainMenuComponent {
     if (this.noSavesPresent) { return; }
     const latestTimestamp = this.saves.map(save => save.timestamp).sort().pop();
     const saveToBeLoaded = this.saves.find(save => save.timestamp === latestTimestamp);
-    this.gameMapStore.next(saveToBeLoaded.gameMap);
+    this.mapStore.next(saveToBeLoaded.map);
     this.uiStore.setMapType(MapTypeId.STRATEGIC);
     this.uiStore.hideMainMenu();
     this.showSinglePlayerMenu = false;

@@ -3,6 +3,9 @@ unsub strategic
 
 
 ## TODO
+
+- performance meter const TODO comment
+
 - play now generates map
 - remove font awesome
 - make resources and improvements have more visuals

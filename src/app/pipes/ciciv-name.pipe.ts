@@ -1,6 +1,6 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {CivicId} from '../models/research/civic';
+import {CivicId} from '../models/civics';
 
 @Pipe({name: 'civicName'})
 export class CivicNamePipe implements PipeTransform {

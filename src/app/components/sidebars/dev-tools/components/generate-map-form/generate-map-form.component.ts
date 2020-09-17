@@ -1,19 +1,19 @@
 import {Component} from '@angular/core';
 
-import {MapSizeConfigurationId} from '../../../../../models/map-generator/map-size-configuration';
+import {MapSizeId} from '../../../../../models/map-size';
 import {
   LandmassValueId,
   MapGeneratorSettings,
   RainfallId,
   TemperatureId,
   WorldAgeId
-} from '../../../../../models/map-generator/map-generator-settings';
+} from '../../../../../models/map-generator';
 
-import {MAP_SIZE_CONFIGURATIONS} from '../../../../../consts/map-generator/map-size-configurations.const';
+import {MAP_SIZE_SETTINGS_LIST} from '../../../../../consts/map-size-settings.const';
 
-import {GameMapGeneratorService} from '../../../../../services/game-map/game-map-generator.service';
+import {MapGeneratorService} from '../../../../../services/map-generator.service';
 
-import {GameMapStore} from '../../../../../stores/game-map.store';
+import {MapStore} from '../../../../../stores/map.store';
 
 @Component({
   selector: '.generate-map-form-component',
@@ -22,15 +22,15 @@ import {GameMapStore} from '../../../../../stores/game-map.store';
 })
 export class GenerateMapFormComponent {
 
-  readonly MAP_SIZE_CONFIGURATIONS = MAP_SIZE_CONFIGURATIONS;
-  readonly DEFAULT_MAP_SIZE_CONFIGURATION = MAP_SIZE_CONFIGURATIONS[MapSizeConfigurationId.DUEL];
+  readonly MAP_SIZE_SETTINGS_LIST = MAP_SIZE_SETTINGS_LIST;
+  readonly DEFAULT_MAP_SIZE_SETTINGS = MAP_SIZE_SETTINGS_LIST[MapSizeId.DUEL];
 
-  gameMapConfigurationId: MapSizeConfigurationId = this.DEFAULT_MAP_SIZE_CONFIGURATION.id;
-  settings: MapGeneratorSettings = {
-    width: this.DEFAULT_MAP_SIZE_CONFIGURATION.width,
-    height:  this.DEFAULT_MAP_SIZE_CONFIGURATION.height,
-    continents: this.DEFAULT_MAP_SIZE_CONFIGURATION.continents,
-    islands: this.DEFAULT_MAP_SIZE_CONFIGURATION.islands,
+  mapSizeId: MapSizeId = this.DEFAULT_MAP_SIZE_SETTINGS.id;
+  mapGeneratorSettings: MapGeneratorSettings = {
+    width: this.DEFAULT_MAP_SIZE_SETTINGS.width,
+    height:  this.DEFAULT_MAP_SIZE_SETTINGS.height,
+    continents: this.DEFAULT_MAP_SIZE_SETTINGS.continents,
+    islands: this.DEFAULT_MAP_SIZE_SETTINGS.islands,
     landmass: LandmassValueId.STANDARD,
     worldAge: WorldAgeId.STANDARD,
     temperature: TemperatureId.STANDARD,
@@ -38,23 +38,23 @@ export class GenerateMapFormComponent {
   }
 
   constructor(
-    private gameMapGeneratorService: GameMapGeneratorService,
-    private gameMapStore: GameMapStore
+    private mapGeneratorService: MapGeneratorService,
+    private mapStore: MapStore
   ) {}
 
-  onGameMapConfigurationIdChange(gameMapConfigurationId: MapSizeConfigurationId) {
-    const gameMapConfig = MAP_SIZE_CONFIGURATIONS.find(mc => mc.id === Number(gameMapConfigurationId));
-    if (gameMapConfig) {
-      this.settings.width = gameMapConfig.width;
-      this.settings.height = gameMapConfig.height;
-      this.settings.continents = gameMapConfig.continents;
-      this.settings.islands = gameMapConfig.islands;
+  onMapSizeIdChange(mapSizeId: MapSizeId) {
+    const mapSizeSettings = MAP_SIZE_SETTINGS_LIST.find(mss => mss.id === Number(mapSizeId));
+    if (mapSizeSettings) {
+      this.mapGeneratorSettings.width = mapSizeSettings.width;
+      this.mapGeneratorSettings.height = mapSizeSettings.height;
+      this.mapGeneratorSettings.continents = mapSizeSettings.continents;
+      this.mapGeneratorSettings.islands = mapSizeSettings.islands;
     }
   }
 
   onGenerateGameMapClick() {
-    const gameMap = this.gameMapGeneratorService.generateNewGameMap(this.settings);
-    this.gameMapStore.next(gameMap);
+    const map = this.mapGeneratorService.generateNewGameMap(this.mapGeneratorSettings);
+    this.mapStore.next(map);
   }
 
 }

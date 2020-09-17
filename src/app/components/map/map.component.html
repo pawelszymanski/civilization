@@ -1,0 +1,15 @@
+<canvas #canvas
+        [width]="CANVAS.width"
+        [height]="CANVAS.height"
+        (mousedown)="onCanvasMousedown($event)"
+        (mousemove)="onCanvasMousemove($event)"
+        (mouseup)="onCanvasMouseup($event)"
+        (wheel)="onCanvasWheel($event)"></canvas>
+
+<img id="terrain-texture-grassland" src="../../../assets/game-map/terrain/textures/grassland.png" [width]="422" [height]="323">
+<img id="terrain-texture-plains" src="../../../assets/game-map/terrain/textures/plains.png" [width]="422" [height]="323">
+<img id="terrain-texture-desert" src="../../../assets/game-map/terrain/textures/desert.png" [width]="422" [height]="323">
+<img id="terrain-texture-tundra" src="../../../assets/game-map/terrain/textures/tundra.png" [width]="422" [height]="323">
+<img id="terrain-texture-snow" src="../../../assets/game-map/terrain/textures/snow.png" [width]="422" [height]="323">
+<img id="terrain-texture-coast" src="../../../assets/game-map/terrain/textures/coast.png" [width]="422" [height]="323">
+<img id="terrain-texture-ocean" src="../../../assets/game-map/terrain/textures/ocean.png" [width]="422" [height]="323">

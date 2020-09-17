@@ -1,9 +1,9 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
-import {YieldId} from '../../../models/game-map/yield';
-import {ModalId, Ui} from '../../../models/ui/ui';
+import {YieldId} from '../../../models/yield';
+import {ModalId, Ui} from '../../../models/ui';
 
-import {YIELD_ID_TO_ICON_CLASS_MAP} from '../../../consts/game-map/yield-id-to-icon-class-map.const';
+import {YIELD_ID_TO_ICON_CLASS_MAP} from '../../../consts/yield.const';
 
 import {UiStore} from '../../../stores/ui.store';
 

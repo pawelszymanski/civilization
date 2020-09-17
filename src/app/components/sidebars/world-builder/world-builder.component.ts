@@ -5,11 +5,11 @@ import {
   TerrainFeatureId,
   TerrainResourceId,
   TerrainImprovementId
-} from '../../../models/game-map/terrain';
-import {WorldBuilderToolId} from '../../../models/world-builder/world-builder-tool.enum';
-import {WorldBuilderUi} from '../../../models/world-builder/world-builder';
+} from '../../../models/terrain';
+import {WorldBuilderToolId} from '../../../models/world-builder';
+import {WorldBuilderUi} from '../../../models/world-builder';
 
-import {TERRAIN_BASE_LIST, TERRAIN_FEATURE_LIST, TERRAIN_RESOURCE_LIST, TERRAIN_IMPROVEMENT_LIST} from '../../../consts/game-map/terrain-db.const';
+import {TERRAIN_BASE_LIST, TERRAIN_FEATURE_LIST, TERRAIN_RESOURCE_LIST, TERRAIN_IMPROVEMENT_LIST} from '../../../consts/terrain.const';
 
 import {WorldBuilderUiStore} from '../../../stores/world-builder-ui.store';
 

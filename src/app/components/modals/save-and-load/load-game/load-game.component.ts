@@ -1,16 +1,15 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 
-import {SortOrderId} from '../../../../models/sort-order';
-import {Save} from '../../../../models/saves/save';
-import {Uuid} from '../../../../models/utils/uuid';
-import {ModalId} from '../../../../models/ui/ui';
+import {Save, SaveSortOrderId} from '../../../../models/saves';
+import {Uuid} from '../../../../models/utils';
+import {ModalId} from '../../../../models/ui';
 
-import {GeneratorService} from '../../../../services/utils/generator.service';
-import {SaveHelperService} from '../../../../services/saves/save-helper.service';
+import {GeneratorService} from '../../../../services/generator.service';
+import {SaveService} from '../../../../services/save.service';
 
 import {CameraStore} from '../../../../stores/camera.store';
-import {GameMapStore} from '../../../../stores/game-map.store';
+import {MapStore} from '../../../../stores/map.store';
 import {SavesStore} from '../../../../stores/saves.store';
 import {UiStore} from '../../../../stores/ui.store';
 
@@ -22,7 +21,7 @@ import {UiStore} from '../../../../stores/ui.store';
 })
 export class LoadGameComponent {
 
-  SortOrderId = SortOrderId;
+  SaveSortOrderId = SaveSortOrderId;
 
   saves: Save[] = [];
   filteredAndSortedSaves: Save[] = [];
@@ -30,14 +29,14 @@ export class LoadGameComponent {
 
   saveListOptionsForm = new FormGroup({
     showAutosaves: new FormControl(false),
-    sortOrder: new FormControl(SortOrderId.NAME_ASCENDING)
+    sortOrder: new FormControl(SaveSortOrderId.NAME_ASCENDING)
   });
 
   constructor(
     private generatorService: GeneratorService,
-    private saveSorter: SaveHelperService,
+    private saveSorter: SaveService,
     private cameraStore: CameraStore,
-    private gameMapStore: GameMapStore,
+    private mapStore: MapStore,
     private savesStore: SavesStore,
     private uiStore: UiStore
   ) {}
@@ -93,7 +92,7 @@ export class LoadGameComponent {
 
   loadSelectedSaveAndUpdateUi() {
     const saveToBeLoaded = this.saves.find(save => save.uuid === this.selectedSaveUuid);
-    this.gameMapStore.next(saveToBeLoaded.gameMap);
+    this.mapStore.next(saveToBeLoaded.map);
     this.cameraStore.next(saveToBeLoaded.camera);
     this.selectedSaveUuid = undefined;
     this.uiStore.toggleModal(ModalId.LOAD_GAME);

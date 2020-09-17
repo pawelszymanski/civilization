@@ -1,13 +1,13 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
-import {Camera} from '../../../../models/camera/camera';
-import {GameMap} from '../../../../models/game-map/game-map';
-import {Save} from '../../../../models/saves/save';
+import {Camera} from '../../../../models/camera';
+import {Map} from '../../../../models/map';
+import {Save} from '../../../../models/saves';
 
-import {GeneratorService} from '../../../../services/utils/generator.service';
+import {GeneratorService} from '../../../../services/generator.service';
 
 import {CameraStore} from '../../../../stores/camera.store';
-import {GameMapStore} from '../../../../stores/game-map.store';
+import {MapStore} from '../../../../stores/map.store';
 import {SavesStore} from '../../../../stores/saves.store';
 import {UiStore} from '../../../../stores/ui.store';
 
@@ -21,7 +21,7 @@ export class SaveGameComponent {
 
   saveName = '';
 
-  gameMap: GameMap;
+  map: Map;
   camera: Camera;
 
   save: Save;
@@ -29,18 +29,18 @@ export class SaveGameComponent {
   constructor(
     private generatorService: GeneratorService,
     private cameraStore: CameraStore,
-    private gameMapStore: GameMapStore,
+    private mapStore: MapStore,
     private savesStore: SavesStore,
     private uiStore: UiStore
   ) {}
 
   ngOnInit() {
-    this.gameMapStore.gameMap.subscribe(gameMap => this.gameMap = gameMap);
+    this.mapStore.map.subscribe(map => this.map = map);
     this.cameraStore.camera.subscribe(camera => this.camera = camera);
   }
 
   canGameBeSaved(): boolean {
-    return (this.saveName && !!this.gameMap);
+    return (this.saveName && !!this.map);
   }
 
   onSaveGameClick() {
@@ -50,7 +50,7 @@ export class SaveGameComponent {
       name: this.saveName,
       uuid: this.generatorService.uuid(),
       timestamp: this.generatorService.nowIsoString(),
-      gameMap: this.gameMap,
+      map: this.map,
       camera: this.camera,
       isAutosave: false,
     }

@@ -1,9 +1,9 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
-import {CivicIdWithEraCoords, CivicTreeEra} from '../../../../models/research/civic-tree';
-import {Ui} from '../../../../models/ui/ui';
+import {CivicIdWithEraCoords, CivicTreeEra} from '../../../../models/civics';
+import {Ui} from '../../../../models/ui';
 
-import {CIVIC_TREE} from '../../../../consts/research/civic-tree';
+import {CIVIC_TREE} from '../../../../consts/civic-tree.const';
 
 import {UiStore} from '../../../../stores/ui.store';
 

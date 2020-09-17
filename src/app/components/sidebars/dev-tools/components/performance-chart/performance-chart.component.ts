@@ -1,11 +1,11 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, NgZone, ViewChild, ViewEncapsulation} from '@angular/core';
 
-import {PerformanceMeterModeId} from '../../../../../models/performance-meter/performance-meter-mode.enum';
-import {Millisecond} from '../../../../../models/utils/millisecond';
+import {PerformanceMeterModeId} from '../../../../../models/performance-meter';
+import {Millisecond} from '../../../../../models/utils';
 
-import {CANVAS, CHART, MAX_VALUES, PERFORMANCE_MODE_TO_RANGE_MAP} from '../../../../../consts/performance-meter/performance-meter.const';
+import {CANVAS, CHART, MAX_VALUES, PERFORMANCE_MODE_TO_RANGE_MAP} from '../../../../../consts/performance-meter.const';
 
-import {GeneratorService} from '../../../../../services/utils/generator.service';
+import {GeneratorService} from '../../../../../services/generator.service';
 
 @Component({
   selector: '.performance-chart-component',

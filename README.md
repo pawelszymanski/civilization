@@ -69,7 +69,7 @@ Example:
   public readonly camera: Observable<Camera> = this._camera.asObservable();
 
   constructor(
-    private cameraHelperService: CameraHelperService
+    private cameraHelperService: CameraService
   ) {
     this.cameraHelperService.setTileSizeCssVariable(DEFAULT_CAMERA.tileSize);
   }

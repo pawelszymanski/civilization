@@ -1,11 +1,10 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 
-import {TerrainBaseId, TerrainFeatureId, TerrainImprovementId, TerrainResourceId} from '../models/game-map/terrain';
-import {WorldBuilderBrushSize, WorldBuilderUi} from '../models/world-builder/world-builder';
-import {WorldBuilderToolId} from '../models/world-builder/world-builder-tool.enum';
+import {TerrainBaseId, TerrainFeatureId, TerrainImprovementId, TerrainResourceId} from '../models/terrain';
+import {WorldBuilderBrushSizeId, WorldBuilderUi, WorldBuilderToolId} from '../models/world-builder';
 
-import {DEFAULT_WORLD_BUILDER_UI} from '../consts/world-builder/world-builder.const';
+import {DEFAULT_WORLD_BUILDER_UI} from '../consts/world-builder.const';
 
 @Injectable()
 export class WorldBuilderUiStore {
@@ -22,7 +21,7 @@ export class WorldBuilderUiStore {
     this.next({...this._worldBuilderUi.value, tool});
   }
 
-  public setBrushSize(brushSize: WorldBuilderBrushSize) {
+  public setBrushSize(brushSize: WorldBuilderBrushSizeId) {
     this.next({...this._worldBuilderUi.value, brushSize});
   }
 

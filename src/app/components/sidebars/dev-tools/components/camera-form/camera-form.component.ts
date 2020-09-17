@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 
-import {Camera} from '../../../../../models/camera/camera';
+import {Camera} from '../../../../../models/camera';
 
 import {
   CAMERA_MIN_ZOOM_LEVEL,
@@ -8,7 +8,7 @@ import {
   CAMERA_MIN_TILE_SIZE,
   CAMERA_MAX_TILE_SIZE,
   CAMERA_TILE_SIZE_STEP
-} from '../../../../../consts/camera/camera.const';
+} from '../../../../../consts/camera.const';
 
 import {CameraStore} from '../../../../../stores/camera.store';
 

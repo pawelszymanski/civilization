@@ -1,11 +1,11 @@
 import {Component, ElementRef, ViewChild, ViewEncapsulation} from '@angular/core';
 import {Subscription} from 'rxjs';
 
-import {Camera} from '../../../models/camera/camera';
-import {GameMap} from '../../../models/game-map/game-map';
+import {Camera} from '../../../models/camera';
+import {Map} from '../../../models/map';
 
 import {CameraStore} from '../../../stores/camera.store';
-import {GameMapStore} from '../../../stores/game-map.store';
+import {MapStore} from '../../../stores/map.store';
 
 @Component({
   selector: '.mini-map-component',
@@ -19,7 +19,7 @@ export class MiniMapComponent {
 
   ctx: CanvasRenderingContext2D;
 
-  gameMap: GameMap;
+  map: Map;
   camera: Camera;
 
   shallRedraw = false;
@@ -30,7 +30,7 @@ export class MiniMapComponent {
 
   constructor(
     private cameraStore: CameraStore,
-    private gameMapStore: GameMapStore
+    private mapStore: MapStore
   ) {}
 
   ngOnInit() {
@@ -51,14 +51,14 @@ export class MiniMapComponent {
   subscribeToData() {
     this.subscriptions.push(
       this.cameraStore.camera.subscribe(camera => { this.camera = camera; this.shallRedraw = true; }),
-      this.gameMapStore.gameMap.subscribe(gameMap => { this.gameMap = gameMap; this.shallRedraw = true; })
+      this.mapStore.map.subscribe(map => { this.map = map; this.shallRedraw = true; })
     );
   }
 
   requestAnimationFrame() {
     this.animationFrameId = window.requestAnimationFrame(() => {
       this.requestAnimationFrame();
-      if (this.gameMap && this.shallRedraw) {     // TODO remove game map check at some point
+      if (this.map && this.shallRedraw) {     // TODO remove game map check at some point
         this.drawMinimap();
         this.shallRedraw = false;
       }

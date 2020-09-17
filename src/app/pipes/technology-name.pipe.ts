@@ -1,6 +1,6 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {TechnologyId} from '../models/research/technology';
+import {TechnologyId} from '../models/technologies';
 
 @Pipe({name: 'technologyName'})
 export class TechnologyNamePipe implements PipeTransform {

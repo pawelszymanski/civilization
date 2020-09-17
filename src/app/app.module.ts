@@ -11,8 +11,7 @@ import {PerformanceChartComponent} from './components/sidebars/dev-tools/compone
 import {CameraFormComponent} from './components/sidebars/dev-tools/components/camera-form/camera-form.component';
 import {MapSelectionFormComponent} from './components/sidebars/dev-tools/components/map-selection-form/map-selection-form.component';
 import {GenerateMapFormComponent} from './components/sidebars/dev-tools/components/generate-map-form/generate-map-form.component';
-import {IsometricViewComponent} from './components/game-map/isometric-view/isometric-view.component';
-import {StrategicViewComponent} from './components/game-map/strategic-view/strategic-view.component';
+import {MapComponent} from './components/map/map.component';
 import {StatusBarComponent} from './components/hud/status-bar/status-bar.component';
 import {MiniMapComponent} from './components/hud/mini-map/mini-map.component';
 import {QuickLinksComponent} from './components/hud/quick-links/quick-links.component';
@@ -29,18 +28,19 @@ import {ExitGameConfirmationComponent} from './components/modals/menus/exit-game
 // DIRECTIVES
 
 // SERVICES
-import {CameraHelperService} from './services/camera/camera-helper.service';
-import {GameMapGeneratorService} from './services/game-map/game-map-generator.service';
-import {YieldHelperService} from './services/game-map/yield-helper.service';
-import {SaveHelperService} from './services/saves/save-helper.service';
-import {KeyboardHelperService} from './services/ui/keyboard-helper.service';
-import {MouseHelperService} from './services/ui/mouse-helper.service';
-import {GeneratorService} from './services/utils/generator.service';
-import {LocalStorageService} from './services/utils/local-storage.service';
+import {CameraService} from './services/camera.service';
+import {TileService} from './services/tile.service';
+import {MapGeneratorService} from './services/map-generator.service';
+import {YieldService} from './services/yield.service';
+import {SaveService} from './services/save.service';
+import {KeyboardService} from './services/keyboard.service';
+import {MouseService} from './services/mouse.service';
+import {GeneratorService} from './services/generator.service';
+import {LocalStorageService} from './services/local-storage.service';
 
 // STORES
 import {CameraStore} from './stores/camera.store';
-import {GameMapStore} from './stores/game-map.store';
+import {MapStore} from './stores/map.store';
 import {KeyBindingsStore} from './stores/key-bindings.store';
 import {SavesStore} from './stores/saves.store';
 import {UiStore} from './stores/ui.store';
@@ -65,8 +65,7 @@ const COMPONENTS = [
   CameraFormComponent,
   MapSelectionFormComponent,
   GenerateMapFormComponent,
-  IsometricViewComponent,
-  StrategicViewComponent,
+  MapComponent,
   StatusBarComponent,
   MiniMapComponent,
   ViewportCenterMarkerComponent,
@@ -85,19 +84,20 @@ const DIRECTIVES = [
 ]
 
 const SERVICES = [
-  CameraHelperService,
-  GameMapGeneratorService,
-  YieldHelperService,
-  SaveHelperService,
-  KeyboardHelperService,
-  MouseHelperService,
+  CameraService,
+  TileService,
+  MapGeneratorService,
+  YieldService,
+  SaveService,
+  KeyboardService,
+  MouseService,
   GeneratorService,
   LocalStorageService,
 ]
 
 const STORES = [
   CameraStore,
-  GameMapStore,
+  MapStore,
   KeyBindingsStore,
   SavesStore,
   UiStore,

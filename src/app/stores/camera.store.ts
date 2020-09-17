@@ -1,12 +1,10 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 
-import {Camera} from '../models/camera/camera';
-import {Coords} from '../models/utils/coords';
+import {Camera} from '../models/camera';
+import {Coords} from '../models/utils';
 
-import {CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP, DEFAULT_CAMERA} from '../consts/camera/camera.const';
-
-import {CameraHelperService} from '../services/camera/camera-helper.service';
+import {CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP, DEFAULT_CAMERA} from '../consts/camera.const';
 
 @Injectable()
 export class CameraStore {
@@ -14,10 +12,6 @@ export class CameraStore {
   private _camera: BehaviorSubject<Camera> = new BehaviorSubject(DEFAULT_CAMERA);
 
   public readonly camera: Observable<Camera> = this._camera.asObservable();
-
-  constructor(
-    private cameraHelperService: CameraHelperService
-  ) {}
 
   public next(camera: Camera) {
     this._camera.next(camera);

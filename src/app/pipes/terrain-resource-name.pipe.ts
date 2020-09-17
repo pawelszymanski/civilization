@@ -1,6 +1,6 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {TerrainResourceId} from '../models/game-map/terrain';
+import {TerrainResourceId} from '../models/terrain';
 
 @Pipe({name: 'terrainResourceName'})
 export class TerrainResourceNamePipe implements PipeTransform {

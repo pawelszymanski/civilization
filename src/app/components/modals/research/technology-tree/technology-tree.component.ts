@@ -1,9 +1,9 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
-import {TechnologyIdWithEraCoords, TechnologyTreeEra} from '../../../../models/research/technology-tree';
-import {Ui} from '../../../../models/ui/ui';
+import {TechnologyIdWithEraCoords, TechnologyTreeEra} from '../../../../models/technologies';
+import {Ui} from '../../../../models/ui';
 
-import {TECHNOLOGY_TREE} from '../../../../consts/research/technology-tree';
+import {TECHNOLOGY_TREE} from '../../../../consts/technology-tree.const';
 
 import {UiStore} from '../../../../stores/ui.store';
 

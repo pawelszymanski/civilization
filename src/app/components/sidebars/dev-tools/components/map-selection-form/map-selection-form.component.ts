@@ -1,6 +1,6 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
-import {MapTypeId, Ui} from '../../../../../models/ui/ui';
+import {MapTypeId, Ui} from '../../../../../models/ui';
 
 import {UiStore} from '../../../../../stores/ui.store';
 

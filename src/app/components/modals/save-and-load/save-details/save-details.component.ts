@@ -1,6 +1,6 @@
 import {Component, ViewEncapsulation, Input} from '@angular/core';
 
-import {Save} from '../../../../models/saves/save';
+import {Save} from '../../../../models/saves';
 
 @Component({
   selector: '.save-details-component',
