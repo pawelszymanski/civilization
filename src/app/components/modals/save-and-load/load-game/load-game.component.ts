@@ -11,6 +11,7 @@ import {SaveService} from '../../../../services/save.service';
 
 import {CameraStore} from '../../../../stores/camera.store';
 import {MapStore} from '../../../../stores/map.store';
+import {MapUiStore} from '../../../../stores/map-ui.store';
 import {SavesStore} from '../../../../stores/saves.store';
 import {UiStore} from '../../../../stores/ui.store';
 
@@ -40,6 +41,7 @@ export class LoadGameComponent implements OnInit, OnDestroy {
     private saveSorter: SaveService,
     private cameraStore: CameraStore,
     private mapStore: MapStore,
+    private mapUiStore: MapUiStore,
     private savesStore: SavesStore,
     private uiStore: UiStore
   ) {}
@@ -104,6 +106,7 @@ export class LoadGameComponent implements OnInit, OnDestroy {
   loadSelectedSaveAndUpdateUi() {
     const saveToBeLoaded = this.saves.find(save => save.uuid === this.selectedSaveUuid);
     this.mapStore.next(saveToBeLoaded.map);
+    this.mapUiStore.next(saveToBeLoaded.mapUi);
     this.cameraStore.next(saveToBeLoaded.camera);
     this.selectedSaveUuid = undefined;
     this.uiStore.toggleModal(ModalId.LOAD_GAME);

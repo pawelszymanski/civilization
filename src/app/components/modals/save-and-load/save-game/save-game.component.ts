@@ -3,12 +3,14 @@ import {Subscription} from 'rxjs';
 
 import {Camera} from '../../../../models/camera';
 import {Map} from '../../../../models/map';
+import {MapUi} from '../../../../models/map-ui';
 import {Save} from '../../../../models/saves';
 
 import {GeneratorService} from '../../../../services/generator.service';
 
 import {CameraStore} from '../../../../stores/camera.store';
 import {MapStore} from '../../../../stores/map.store';
+import {MapUiStore} from '../../../../stores/map-ui.store';
 import {SavesStore} from '../../../../stores/saves.store';
 import {UiStore} from '../../../../stores/ui.store';
 
@@ -23,6 +25,7 @@ export class SaveGameComponent implements OnInit, OnDestroy {
   saveName = '';
 
   map: Map;
+  mapUi: MapUi;
   camera: Camera;
 
   save: Save;
@@ -33,6 +36,7 @@ export class SaveGameComponent implements OnInit, OnDestroy {
     private generatorService: GeneratorService,
     private cameraStore: CameraStore,
     private mapStore: MapStore,
+    private mapUiStore: MapUiStore,
     private savesStore: SavesStore,
     private uiStore: UiStore
   ) {}
@@ -48,6 +52,7 @@ export class SaveGameComponent implements OnInit, OnDestroy {
   subscribeToData() {
     this.subscriptions.push(
       this.mapStore.map.subscribe(map => this.map = map),
+      this.mapUiStore.mapUi.subscribe(mapUi => this.mapUi = mapUi),
       this.cameraStore.camera.subscribe(camera => this.camera = camera)
     );
   }
@@ -67,9 +72,10 @@ export class SaveGameComponent implements OnInit, OnDestroy {
       name: this.saveName,
       uuid: this.generatorService.uuid(),
       timestamp: this.generatorService.nowIsoString(),
-      map: this.map,
-      camera: this.camera,
       isAutosave: false,
+      map: this.map,
+      mapUi: this.mapUi,
+      camera: this.camera,
     }
 
     this.savesStore.addSave(save);

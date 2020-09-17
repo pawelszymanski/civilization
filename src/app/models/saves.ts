@@ -1,5 +1,6 @@
 import {Camera} from './camera';
 import {Map} from './map';
+import {MapUi} from './map-ui';
 import {Timestamp, Uuid} from './utils';
 
 export enum SaveSortOrderId {
@@ -18,7 +19,8 @@ export interface Save {
   name: string;
   uuid: Uuid;
   timestamp: Timestamp;
-  map: Map;
-  camera: Camera;
   isAutosave: boolean;
+  map: Map;
+  mapUi: MapUi;
+  camera: Camera;
 }

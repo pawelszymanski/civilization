@@ -12,6 +12,10 @@ export class MapUiStore {
 
   public readonly mapUi: Observable<MapUi> = this._mapUi.asObservable();
 
+  public next(mapUi: MapUi) {
+    this._mapUi.next(mapUi);
+  }
+
   public toggleGrid() {
     this._mapUi.next({...this._mapUi.value, showGrid: !this._mapUi.value.showGrid});
   }
