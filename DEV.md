@@ -1,15 +1,26 @@
+## WORKING ON
+- make sure all components have ngOnDestroy 
+
 
 ## TODO
-- play now generates map
+-- GENERAL
+- save MapUi in save
 - make resources and improvements have more visuals
+- map details: map name and description
+
+-- CANVAS
+- restore tile yield
+- make tile background scale to tile size
+- make tile background move to match translate
+- add terrain features
+- add terrain resources
+- click coords to tile decode
+
+-- WORLD BUILDER:
 - hide hud for world builder
-- make dev tools component .component class
 - don't place anything when panning
 - brush size
 - right click to remove selected item
-- map details: map name and description
-- onWheel do use scale rather than var --tile-size 
-- 3ms: tile-yield-component + tile-text-component bindings
 
 ## DONE
 - add scale to camera dev tools
@@ -17,6 +28,8 @@
 - toggle grid
 - tile info for canvas
 - remove font awesome
+- make dev tools component .component class
+- play now generates map
 
 
 

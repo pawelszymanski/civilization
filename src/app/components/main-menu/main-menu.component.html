@@ -9,7 +9,7 @@
 <ul class="secondary-menu" [class.active]="showSinglePlayerMenu">
   <li class="secondary-menu-item" [class.disabled]="noSavesPresent" (click)="onResumeGameClick()">Resume Game</li>
   <li class="secondary-menu-item" [class.disabled]="noSavesPresent" (click)="onLoadGameClick()">Load Game</li>
-  <li class="secondary-menu-item disabled" (click)="onPlayNowClick()">Play Now</li>
+  <li class="secondary-menu-item" (click)="onPlayNowClick()">Play Now</li>
   <li class="secondary-menu-item disabled" (click)="onCreateGameClick()">Create Game</li>
 </ul>
 

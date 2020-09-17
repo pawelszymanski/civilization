@@ -2,10 +2,15 @@ import {Component, ViewEncapsulation} from '@angular/core';
 
 import {Save} from '../../models/saves';
 import {MapTypeId, ModalId, Ui} from '../../models/ui';
+import {LandmassValueId, MapGeneratorSettings, RainfallId, TemperatureId, WorldAgeId} from '../../models/map-generator';
+
+import {MapGeneratorService} from '../../services/map-generator.service';
 
 import {MapStore} from '../../stores/map.store';
 import {SavesStore} from '../../stores/saves.store';
 import {UiStore} from '../../stores/ui.store';
+import {MAP_SIZE_SETTINGS_LIST} from '../../consts/map-size-settings.const';
+import {MapSizeId} from '../../models/map-size';
 
 @Component({
   selector: '.main-menu-component',
@@ -21,6 +26,7 @@ export class MainMenuComponent {
   showSinglePlayerMenu = false;
 
   constructor(
+    private mapGeneratorService: MapGeneratorService,
     private uiStore: UiStore,
     private savesStore: SavesStore,
     private mapStore: MapStore
@@ -60,15 +66,25 @@ export class MainMenuComponent {
 
   onLoadGameClick() {
     if (this.noSavesPresent) { return; }
-    // TODO
     this.uiStore.openModal(ModalId.LOAD_GAME);
   }
 
   onPlayNowClick() {
-    // TODO
-    this.showSinglePlayerMenu = false;
-    this.uiStore.hideMainMenu();
+    const defaultMapSizeSettings = MAP_SIZE_SETTINGS_LIST.find(mss => mss.id === MapSizeId.STANDARD);
+    const mapGeneratorSetting: MapGeneratorSettings = {
+      width: defaultMapSizeSettings.width,
+      height: defaultMapSizeSettings.height,
+      landmass: LandmassValueId.STANDARD,
+      continents: defaultMapSizeSettings.continents,
+      islands: defaultMapSizeSettings.islands,
+      worldAge: WorldAgeId.STANDARD,
+      temperature: TemperatureId.STANDARD,
+      rainfall: RainfallId.STANDARD
+    }
+    const newMap = this.mapGeneratorService.generateNewGameMap(mapGeneratorSetting);
+    this.mapStore.next(newMap);
     this.uiStore.setMapType(MapTypeId.STRATEGIC);
+    this.uiStore.hideMainMenu();
   }
 
   onCreateGameClick() {
