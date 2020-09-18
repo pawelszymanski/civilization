@@ -1,16 +1,16 @@
 ## WORKING ON
-- cant pan after 2 loads bug
-- onDestroy decorator
+- make tile background scale to tile size
+- make tile background move to match translate
 
 ## TODO
 -- GENERAL
+- onDestroy decorator
 - make resources and improvements have more visuals
 - map details: map name and description
 
 -- CANVAS
+- iterate on eventTargetTile
 - restore tile yield
-- make tile background scale to tile size
-- make tile background move to match translate
 - add terrain features
 - add terrain resources
 - click coords to tile decode
@@ -31,8 +31,8 @@
 - play now generates map
 - make sure all components have ngOnDestroy 
 - save MapUi in save
-
-
+- can't pan after 2 loads
+- endless horizontal scrolling
 
 
 

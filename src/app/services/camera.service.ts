@@ -15,22 +15,31 @@ export class CameraService {
   }
 
   // Makes the ui always show at max CAMERA_MAX_EMPTY_WINDOW_SPACE_PC percent of background while panning vertically
-  public normalizeVerticalTranslation(translate: Coords, canvasHeightPx: number, mapHeightPx: number): Coords {
+  public normalizeVerticalTranslation(translate: Coords, mapHeight: number, canvasHeight: number): Coords {
     // center the map vertically if its zoomed out very much
-    if (canvasHeightPx > mapHeightPx) {
-      translate.y = Math.floor((canvasHeightPx - mapHeightPx) / 2);
+    if (canvasHeight > mapHeight) {
+      translate.y = Math.floor((canvasHeight - mapHeight) / 2);
       return translate;
     }
 
     // move map up if there is too much space above the map
-    const maxEmptySpace = Math.floor(canvasHeightPx * CAMERA_MAX_EMPTY_WINDOW_SPACE_PC / 100);
+    const maxEmptySpace = Math.floor(canvasHeight * CAMERA_MAX_EMPTY_WINDOW_SPACE_PC / 100);
     if (translate.y > maxEmptySpace) { translate.y = maxEmptySpace; }
 
     // move map down if there is too much space under the map
-    const minTranslate = -(mapHeightPx - canvasHeightPx + maxEmptySpace);
+    const minTranslate = -(mapHeight - canvasHeight + maxEmptySpace);
     if (minTranslate > translate.y) { translate.y = minTranslate; }
 
     return translate;
+  }
+
+  // Keep translate within range of (-mapWidth + tileWidth/2) ... 0
+  public normalizeHorizontalTranslation(translate: Coords, mapWidth: number, tileWidth: number): Coords {
+    const mapWidthWithoutIndent = mapWidth - tileWidth / 2;
+    return {
+      x: (translate.x - mapWidthWithoutIndent) % mapWidthWithoutIndent,
+      y: translate.y
+    }
   }
 
 }

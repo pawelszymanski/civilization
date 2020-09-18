@@ -54,6 +54,8 @@ export class MapComponent implements OnInit, OnDestroy {
 
   shallRedraw = false;      // Changed to true on data and window size changes, changed to false on redraw
 
+  hoveredTile: Tile;
+
   animationFrameId: number;
 
   subscriptions: Subscription[] = [];
@@ -150,6 +152,9 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   onCanvasMousemove(event: MouseEvent) {
+    this.hoveredTile = this.eventTargetTile(event);
+    this.checkIfToRedraw();
+
     if (!this.isDragging) { return; }
 
     // new translate without normalization
@@ -159,8 +164,9 @@ export class MapComponent implements OnInit, OnDestroy {
     }
 
     // normalize and set
-    const normalizedTranslate = this.cameraService.normalizeVerticalTranslation(translate, this.CANVAS.height, this.mapHeight);
-    this.cameraStore.setTranslate(normalizedTranslate);
+    translate = this.cameraService.normalizeVerticalTranslation(translate, this.mapHeight, this.CANVAS.height);
+    translate = this.cameraService.normalizeHorizontalTranslation(translate,  this.mapWidth, this.tileWidth);
+    this.cameraStore.setTranslate(translate);
   }
 
   onCanvasMousedown(event: MouseEvent) {
@@ -170,7 +176,8 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   onCanvasClick(event: MouseEvent) {
-    console.info(123);
+    // const tile = this.findClickedTile(event);
+    // this.selectedTile = tile;
   }
 
   onCanvasWheel(event: WheelEvent) {
@@ -197,8 +204,45 @@ export class MapComponent implements OnInit, OnDestroy {
       x: -Math.round((canvasCoordsAtScreenCenter.x * scale) - (this.CANVAS.width / 2)),
       y: -Math.round((canvasCoordsAtScreenCenter.y * scale) - (this.CANVAS.height / 2))
     }
-    const normalizedTranslate = this.cameraService.normalizeVerticalTranslation(newTranslate, this.CANVAS.height, this.mapHeight);
+    const normalizedTranslate = this.cameraService.normalizeVerticalTranslation(newTranslate, this.mapHeight, this.CANVAS.height);
     this.cameraStore.setTranslate(normalizedTranslate);
+  }
+
+  // OTHER
+
+  eventTargetTile(event: MouseEvent): Tile {
+    const mapCoords: Coords = {x: event.pageX - this.camera.translate.x, y: event.pageY - this.camera.translate.y};
+    let y = -1; while (mapCoords.y + y > (y+1) * this.tileHeight * 0.75) {y++}
+    let x = -1; while (mapCoords.x > (x+1) * this.tileWidth) {x++}
+    if ((y % 2 === 1) && ((mapCoords.x % this.tileWidth) < (this.tileWidth / 2))) {x--}
+    return this.map.tiles.find(t => t.coords.x === x && t.coords.y === y);
+    // const candidateAndNeighbours = this.map.tiles.filter(t => t.coords.x >= x-1 && t.coords.x <= x+1 && t.coords.y >= y-1 && t.coords.y <= y+1);
+    // candidateAndNeighbours.forEach(tile => tile.distance = this.distance(mapCoords, this.tileCenterCoords(tile)));
+    // return candidateAndNeighbours.sort( (a, b) => {return a.distance > b.distance ? -1 : a.distance < b.distance ? 1 : 0}).pop();
+  }
+
+  isTileInViewport(tileCoordsOnCanvas: Coords): boolean {
+    return (tileCoordsOnCanvas.x + this.tileWidth >= 0) && (tileCoordsOnCanvas.x <= this.ctx.canvas.width) &&
+      (tileCoordsOnCanvas.y + this.tileHeight >= 0) && (tileCoordsOnCanvas.y <= this.ctx.canvas.height);
+  }
+
+  tileCoordsOnMap(tile: Tile): Coords {
+    // move tiles in the last column to "-1 column" to wrap the map; tiles in odd rows to be indented;
+    const oddRowFix = this.tileService.isTileInOddRow(tile) ? this.tileWidth / 2 : 0;
+    const lastColumnFix = (tile.coords.x + 1 === this.map.width) ? -this.mapWidth + this.tileWidth / 2 : 0;
+
+    return {
+      x: (tile.coords.x * this.tileWidth) + oddRowFix + lastColumnFix,
+      y: ((tile.coords.y * this.tileHeight * 0.75) - tile.coords.y)  // tile.coords.y is 0-based, no need for +/- 1
+    };
+  }
+
+  tileCoordsOnCanvas(tile: Tile): Coords {
+    const tileCoordsOnMap = this.tileCoordsOnMap(tile);
+    return {
+      x: tileCoordsOnMap.x + this.camera.translate.x,
+      y: tileCoordsOnMap.y + this.camera.translate.y
+    };
   }
 
   // DRAWING MAP
@@ -207,16 +251,15 @@ export class MapComponent implements OnInit, OnDestroy {
     this.updateSizeVariables();
     this.paintBackground();
     this.paintMapDecoration();
-    this.paintTiles();
+    this.iterateTilesAndPainVisible();
   }
 
   updateSizeVariables() {
     this.tileWidth = this.camera.tileSize * 0.9;
     this.tileHeight = this.camera.tileSize;
     this.mapWidth = this.tileWidth * this.map.width + Math.ceil(this.tileWidth * 0.5);
-    this.mapHeight = (this.tileHeight * this.map.height * 0.75) + Math.ceil(this.tileHeight * 0.25) - this.map.height + 1;  // this.map.height is 1-based, need +1
+    this.mapHeight = (this.tileHeight * this.map.height * 0.75) + Math.ceil(this.tileHeight * 0.25) - (this.map.height - 1);  // this.map.height is 1-based, need -1
   }
-
 
   paintBackground() {
     this.ctx.fillStyle = 'black';
@@ -228,25 +271,24 @@ export class MapComponent implements OnInit, OnDestroy {
     this.ctx.fillRect(0, this.camera.translate.y - 10, this.ctx.canvas.width, this.mapHeight + 20);
   }
 
-  paintTiles() {
+  iterateTilesAndPainVisible() {
     for (const tile of this.map.tiles) {
-      const tileCoords = this.tileCoords(tile);
-      if (this.isTileInViewport(tileCoords)) {
-        this.drawTile(tile, tileCoords);
+      let tileCoordsOnCanvas: Coords = null;
+
+      // Try basic (x, y) coords - if not on map then also try (x - mapWidth, y). Then if in viewport paint it.
+      const primaryCoordsCandidate = this.tileCoordsOnCanvas(tile);
+      if (this.isTileInViewport(primaryCoordsCandidate)) { tileCoordsOnCanvas = primaryCoordsCandidate; }
+
+      if (!tileCoordsOnCanvas) {
+        const alternativeCoordsCandidate = Object.assign({}, primaryCoordsCandidate);
+        alternativeCoordsCandidate.x = alternativeCoordsCandidate.x + (this.mapWidth - (this.tileWidth / 2));
+        if (this.isTileInViewport(alternativeCoordsCandidate)) { tileCoordsOnCanvas = alternativeCoordsCandidate; }
+      }
+
+      if (tileCoordsOnCanvas) {
+        this.paintTile(tile, tileCoordsOnCanvas);
       }
     }
-  }
-
-  isTileInViewport(tileCoords: Coords): boolean {
-    return (tileCoords.x + this.tileWidth >= 0) && (tileCoords.x <= this.ctx.canvas.width) &&
-           (tileCoords.y + this.tileHeight >= 0) && (tileCoords.y <= this.ctx.canvas.height);
-  }
-
-  tileCoords(tile: Tile): Coords {
-    return {
-      x: (((tile.coords.x * this.tileWidth) + (this.tileService.isTileInOddRow(tile) ? this.tileWidth / 2 : 0))) + this.camera.translate.x,
-      y: ((tile.coords.y * this.tileHeight * 0.75) - tile.coords.y) + this.camera.translate.y  // tile.coords.y is 0-based, no  need for +/- 1
-    };
   }
 
   createTilePath(tileCoords: Coords) {
@@ -334,15 +376,19 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   addTileInfoYieldOverlay(tile: Tile, tileCoords: Coords) {
-
+    // TODO
   }
 
-  drawTile(tile: Tile, tileCoords: Coords): void {
-    this.createTilePath(tileCoords);
+  paintTile(tile: Tile, tileCoordsOnCanvas: Coords): void {
+    this.createTilePath(tileCoordsOnCanvas)
     this.fillTerrainBase(tile);
-    if (this.mapUi.infoOverlay === TileInfoOverlayId.TEXT) { this.addTileInfoTextOverlay(tile, tileCoords) }
-    if (this.mapUi.infoOverlay === TileInfoOverlayId.YIELD) { this.addTileInfoYieldOverlay(tile, tileCoords) }
+    if (this.mapUi.infoOverlay === TileInfoOverlayId.TEXT) { this.addTileInfoTextOverlay(tile, tileCoordsOnCanvas) }
+    if (this.mapUi.infoOverlay === TileInfoOverlayId.YIELD) { this.addTileInfoYieldOverlay(tile, tileCoordsOnCanvas) }
     if (this.mapUi.showGrid) { this.ctx.stroke() }
+    if (this.hoveredTile && this.hoveredTile.coords.x === tile.coords.x && this.hoveredTile.coords.y === tile.coords.y) {
+      this.ctx.fillStyle = 'rgba(15, 15, 15, 15)';
+      this.ctx.fill()
+    }
   }
 
 }
