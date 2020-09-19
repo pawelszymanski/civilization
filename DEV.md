@@ -1,6 +1,6 @@
 ## WORKING ON
-- make tile background scale to tile size
-- make tile background move to match translate
+- use background colors for tiles on canvas 
+
 
 ## TODO
 -- GENERAL
@@ -34,6 +34,11 @@
 - can't pan after 2 loads
 - endless horizontal scrolling
 
+
+
+## HARD PROBLEMS:
+- Canvas: make tile background scale to tile size
+- Canvas: make tile background move to match translate
 
 
   

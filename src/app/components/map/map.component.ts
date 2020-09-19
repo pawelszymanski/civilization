@@ -4,10 +4,10 @@ import {Subscription} from 'rxjs';
 import {Camera} from '../../models/camera';
 import {Coords} from '../../models/utils';
 import {Map, Tile} from '../../models/map';
-import {TerrainBaseId} from '../../models/terrain';
 import {MapUi, TileInfoOverlayId} from '../../models/map-ui';
 
 import {CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP} from '../../consts/camera.const';
+import {TERRAIN_BASE_SET} from '../../consts/terrain.const';
 
 import {CameraService} from '../../services/camera.service';
 import {MouseService} from '../../services/mouse.service';
@@ -291,60 +291,21 @@ export class MapComponent implements OnInit, OnDestroy {
     }
   }
 
-  createTilePath(tileCoords: Coords) {
+  createTilePathOnCtx(tileCoordsOnCanvas: Coords) {
     this.ctx.beginPath();
-    this.ctx.moveTo(tileCoords.x + this.tileWidth * 0.50, tileCoords.y);
-    this.ctx.lineTo(tileCoords.x + this.tileWidth, tileCoords.y + this.tileHeight * 0.25);
-    this.ctx.lineTo(tileCoords.x + this.tileWidth, tileCoords.y + this.tileHeight * 0.75);
-    this.ctx.lineTo(tileCoords.x + this.tileWidth * 0.50, tileCoords.y + this.tileHeight);
-    this.ctx.lineTo(tileCoords.x, tileCoords.y + this.tileHeight * 0.75);
-    this.ctx.lineTo(tileCoords.x, tileCoords.y + this.tileHeight * 0.25);
+    this.ctx.moveTo(tileCoordsOnCanvas.x + this.tileWidth * 0.50, tileCoordsOnCanvas.y);
+    this.ctx.lineTo(tileCoordsOnCanvas.x + this.tileWidth, tileCoordsOnCanvas.y + this.tileHeight * 0.25);
+    this.ctx.lineTo(tileCoordsOnCanvas.x + this.tileWidth, tileCoordsOnCanvas.y + this.tileHeight * 0.75);
+    this.ctx.lineTo(tileCoordsOnCanvas.x + this.tileWidth * 0.50, tileCoordsOnCanvas.y + this.tileHeight);
+    this.ctx.lineTo(tileCoordsOnCanvas.x, tileCoordsOnCanvas.y + this.tileHeight * 0.75);
+    this.ctx.lineTo(tileCoordsOnCanvas.x, tileCoordsOnCanvas.y + this.tileHeight * 0.25);
     this.ctx.closePath();
   }
 
-  fillTerrainBase(tile: Tile) {
-    this.ctx.fillStyle = this.tileFillStyle(tile);
+  paintTerrain(tile: Tile, tileCoordsOnCanvas: Coords) {
+    this.createTilePathOnCtx(tileCoordsOnCanvas);
+    this.ctx.fillStyle = TERRAIN_BASE_SET[tile.terrain.base.id].ui.color;
     this.ctx.fill();
-  }
-
-  tileFillStyle(tile: Tile): CanvasPattern {
-    let imgElemId;
-    switch (tile.terrain.base.id) {
-      case TerrainBaseId.GRASSLAND_FLAT:
-      case TerrainBaseId.GRASSLAND_HILLS:
-      case TerrainBaseId.GRASSLAND_MOUNTAIN:
-        imgElemId = 'terrain-texture-grassland';
-        break;
-      case TerrainBaseId.PLAINS_FLAT:
-      case TerrainBaseId.PLAINS_HILLS:
-      case TerrainBaseId.PLAINS_MOUNTAIN:
-        imgElemId = 'terrain-texture-plains';
-        break;
-      case TerrainBaseId.DESERT_FLAT:
-      case TerrainBaseId.DESERT_HILLS:
-      case TerrainBaseId.DESERT_MOUNTAIN:
-        imgElemId = 'terrain-texture-desert';
-        break;
-      case TerrainBaseId.TUNDRA_FLAT:
-      case TerrainBaseId.TUNDRA_HILLS:
-      case TerrainBaseId.TUNDRA_MOUNTAIN:
-        imgElemId = 'terrain-texture-tundra';
-        break;
-      case TerrainBaseId.SNOW_FLAT:
-      case TerrainBaseId.SNOW_HILLS:
-      case TerrainBaseId.SNOW_MOUNTAIN:
-        imgElemId = 'terrain-texture-snow';
-        break;
-      case TerrainBaseId.LAKE:
-      case TerrainBaseId.COAST:
-        imgElemId = 'terrain-texture-coast';
-        break;
-      case TerrainBaseId.OCEAN:
-        imgElemId = 'terrain-texture-ocean';
-        break;
-    }
-    const imgElem = document.getElementById(imgElemId) as HTMLImageElement;
-    return this.ctx.createPattern(imgElem, 'repeat');
   }
 
   fillTextWithShadow(text: string, textColor: string, shadowColor: string, x: number, y: number, shadowDistance = 1) {
@@ -379,12 +340,16 @@ export class MapComponent implements OnInit, OnDestroy {
     // TODO
   }
 
+  paintGrid(tileCoordsOnCanvas: Coords) {
+    this.createTilePathOnCtx(tileCoordsOnCanvas);
+    this.ctx.stroke()
+  }
+
   paintTile(tile: Tile, tileCoordsOnCanvas: Coords): void {
-    this.createTilePath(tileCoordsOnCanvas)
-    this.fillTerrainBase(tile);
+    this.paintTerrain(tile, tileCoordsOnCanvas)
     if (this.mapUi.infoOverlay === TileInfoOverlayId.TEXT) { this.addTileInfoTextOverlay(tile, tileCoordsOnCanvas) }
     if (this.mapUi.infoOverlay === TileInfoOverlayId.YIELD) { this.addTileInfoYieldOverlay(tile, tileCoordsOnCanvas) }
-    if (this.mapUi.showGrid) { this.ctx.stroke() }
+    if (this.mapUi.showGrid) { this.paintGrid(tileCoordsOnCanvas) }
     if (this.hoveredTile && this.hoveredTile.coords.x === tile.coords.x && this.hoveredTile.coords.y === tile.coords.y) {
       this.ctx.fillStyle = 'rgba(15, 15, 15, 15)';
       this.ctx.fill()

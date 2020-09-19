@@ -119,23 +119,27 @@ export enum TerrainResourceTypeId {
   LUXURY
 }
 
-export interface TerrainUi {
+export interface TerrainUiCommon {
   name: string;
-  cssClass: string;
+  class: string;
 }
 
-export interface TerrainUiWithVariations extends TerrainUi {
-  cssVariations: number;
+export interface TerrainUiColor {
+  color: string;
+}
+
+export interface TerrainUiVariants {
+  variants: number;
 }
 
 export interface TerrainBaseWithVariation {
   id: TerrainBaseId;
-  variation: number;
+  uiVariant: number;
 }
 
 export interface TerrainFeatureWithVariation {
   id: TerrainFeatureId;
-  variation: number;
+  uiVariant: number;
 }
 
 export interface Terrain {
