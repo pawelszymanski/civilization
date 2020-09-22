@@ -1,34 +1,34 @@
 import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {Subscription} from 'rxjs';
 
-import {Camera} from '../../models/camera';
-import {Coords} from '../../models/utils';
-import {Map, Tile} from '../../models/map';
-import {MapUi, TileInfoOverlayId} from '../../models/map-ui';
+import {Camera} from '../../../models/camera';
+import {Coords} from '../../../models/utils';
+import {Map, Tile} from '../../../models/map';
+import {MapUi, TileInfoOverlayId} from '../../../models/map-ui';
 
-import {CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP} from '../../consts/camera.const';
-import {TERRAIN_BASE_SET} from '../../consts/terrain.const';
+import {CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP} from '../../../consts/camera.const';
+import {TERRAIN_BASE_SET} from '../../../consts/terrain.const';
 
-import {CameraService} from '../../services/camera.service';
-import {MouseService} from '../../services/mouse.service';
-import {TileService} from '../../services/tile.service';
+import {CameraService} from '../../../services/camera.service';
+import {MouseService} from '../../../services/mouse.service';
+import {TileService} from '../../../services/tile.service';
 
-import {CameraStore} from '../../stores/camera.store';
-import {MapStore} from '../../stores/map.store';
-import {MapUiStore} from '../../stores/map-ui.store';
+import {CameraStore} from '../../../stores/camera.store';
+import {MapStore} from '../../../stores/map.store';
+import {MapUiStore} from '../../../stores/map-ui.store';
 
-import {TerrainBaseNamePipe} from '../../pipes/terrain-base-name.pipe';
-import {TerrainFeatureNamePipe} from '../../pipes/terrain-feature-name.pipe';
-import {TerrainResourceNamePipe} from '../../pipes/terrain-resource-name.pipe';
-import {TerrainImprovementNamePipe} from '../../pipes/terrain-improvement-name.pipe';
+import {TerrainBaseNamePipe} from '../../../pipes/terrain-base-name.pipe';
+import {TerrainFeatureNamePipe} from '../../../pipes/terrain-feature-name.pipe';
+import {TerrainResourceNamePipe} from '../../../pipes/terrain-resource-name.pipe';
+import {TerrainImprovementNamePipe} from '../../../pipes/terrain-improvement-name.pipe';
 
 @Component({
-  selector: '.map-component',
-  templateUrl: './map.component.html',
-  styleUrls: ['map.component.scss'],
+  selector: '.strategic-map-on-canvas-component',
+  templateUrl: './strategic-map-on-canvas.component.html',
+  styleUrls: ['strategic-map-on-canvas.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class MapComponent implements OnInit, OnDestroy {
+export class StrategicMapOnCanvasComponent implements OnInit, OnDestroy {
 
   readonly CANVAS = {
     width: 600,
@@ -324,7 +324,7 @@ export class MapComponent implements OnInit, OnDestroy {
     const tileBottom = tileCoords.y + this.tileHeight;
 
     this.fillTextWithShadow(`${tile.coords.x}, ${tile.coords.y}`, 'lightgray', 'black', tileHorizontalCenter, tileBottom - 10);
-    if (this.tileWidth > 120) {
+    if (this.camera.zoomLevel >= 0) {
       const terrainBaseName = this.terrainBaseNamePipe.transform(tile.terrain.base.id).toUpperCase();
       const terrainFeatureName = this.terrainFeatureNamePipe.transform(tile.terrain.feature.id).toUpperCase();
       const terrainResourceName = this.terrainResourceNamePipe.transform(tile.terrain.resourceId).toUpperCase();

@@ -1,0 +1,234 @@
+@import '../../../../styles/mixins';
+@import '../../../../styles/variables';
+
+.strategic-map-in-html-component {
+  @include position-block(absolute, 0, 0, 0, 0, $z-index-game-map);
+
+  .game-map {
+    display: flex;
+
+    //&.animated {
+    //  transition: 0.5s all cubic-bezier(0.4, 0, 0.15, 1);
+    //}
+
+    @for $width from 1 through $max-map-width {
+      &.m-x-#{$width} {
+        width: calc((var(--tile-size) * 0.9 * #{$width}));;
+      }
+    }
+
+    // --------------------------
+    // Basic row and tile styling
+    // --------------------------
+    .game-map-column {
+      width: calc(var(--tile-size) * 0.9);
+      position: relative;
+
+      .game-map-tile {
+        width: calc(var(--tile-size) * 0.9) 0 0;
+        height: var(--tile-size);
+        text-align: center;
+        background-size: 180% 120%;
+        clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        margin-bottom: calc((var(--tile-size) / -4) - 1px);
+        @include disable-selection;
+        position: relative;
+
+        // Indent odd rows half a tile
+        &:nth-child(2n+0) {
+          left: calc(var(--tile-size) * 0.9 / 2);
+        }
+
+        // Make whole hexagon area hoverable
+        @for $i from 0 through ($max-map-height - 1) {
+          &:nth-child(#{$i}) {
+            z-index: $max-map-height - $i;
+          }
+        }
+
+        &:last-of-type {
+          margin-bottom: 0;
+        }
+
+      }
+    }
+
+    // ------------------------------------------------------------------------------------------------
+    // Make terrain background flow through tiles (since `background-attachment: fixed` is not working)
+    // ------------------------------------------------------------------------------------------------
+    .game-map-column {
+
+      .game-map-tile {
+
+        @for $i from 0 through ($max-map-width - 1) {
+          &:nth-of-type(2n+1) {
+            &.m-x-#{$i} {
+              background-position-x: $i * 125%;
+            }
+          }
+          &:nth-of-type(2n+0) {
+            &.m-x-#{$i} {
+              background-position-x: $i * 125% + 62.5%;
+            }
+          }
+        }
+
+        @for $i from 0 through ($max-map-height - 1) {
+          &.m-y-#{$i} {
+            background-position-y: -$i * 226%;
+          }
+        }
+
+      }
+
+    }
+
+    // ----------------------------
+    // Terrain, features, resources
+    // ----------------------------
+    .game-map-column {
+
+      .game-map-tile {
+
+        &:before {
+          content: '';
+          display: block;
+          @include position-block(absolute, 0, 0, 0, 0);
+          background-size: 100%;
+          background-position: center;
+          background-repeat: no-repeat;
+        }
+
+        // Base terrain texture. Based on the land type.
+        &[class*='m-base-grassland'] { background-image: url('/assets/game-map/terrain/textures/grassland.png'); }
+        &[class*='m-base-plains']    { background-image: url('/assets/game-map/terrain/textures/plains.png'); }
+        &[class*='m-base-desert']    { background-image: url('/assets/game-map/terrain/textures/desert.png'); }
+        &[class*='m-base-tundra']    { background-image: url('/assets/game-map/terrain/textures/tundra.png'); }
+        &[class*='m-base-snow']      { background-image: url('/assets/game-map/terrain/textures/snow.png'); }
+        &.m-base-lake,
+        &.m-base-coast { background-image: url('/assets/game-map/terrain/textures/coast.png'); }
+        &.m-base-ocean { background-image: url('/assets/game-map/terrain/textures/ocean.png'); }
+
+        // Hills. Example: `m-base-desert-hills-2`
+        @each $land-type in $terrain-base-land-type-list {
+          @for $variation from 1 through 3 {
+            &.m-base-#{$land-type}-hills-#{$variation} {
+              &:before { background-image: url('/assets/game-map/terrain/hills/#{$land-type}-hills-#{$variation}.webp'); }
+            }
+          }
+        }
+
+        // Mountains. Example: `m-base-snow-mountain-3`
+        @each $land-type in $terrain-base-land-type-list {
+          @for $variation from 1 through 5 {
+            &.m-base-#{$land-type}-mountain-#{$variation} {
+              &:before { background-image: url('/assets/game-map/terrain/mountain/mountain-#{$variation}.webp'); }
+            }
+          }
+        }
+
+        // Woods. Example: `m-feature-woods-1`
+        @for $variation from 1 through 1 {
+          &.m-feature-woods-#{$variation} {
+            &:before { background-image: url('/assets/game-map/terrain/features/woods-#{$variation}.webp'); }
+          }
+        }
+
+        // Rainforest. Example: `m-feature-rainforest-1`
+        @for $variation from 1 through 1 {
+          &.m-feature-rainforest-#{$variation} {
+            &:before { background-image: url('/assets/game-map/terrain/features/rainforest-#{$variation}.webp'); }
+          }
+        }
+
+        // Floodplains. Example: `m-feature-floodplains-1`
+        @for $variation from 1 through 1 {
+          &.m-feature-floodplains-#{$variation} {
+            &:before { background-image: url('/assets/game-map/terrain/features/floodplains-#{$variation}.webp'); }
+          }
+        }
+
+        // Marsh. Example: `m-feature-marsh-1`
+        @for $variation from 1 through 1 {
+          &.m-feature-marsh-#{$variation} {
+            &:before { background-image: url('/assets/game-map/terrain/features/marsh-#{$variation}.webp'); }
+          }
+        }
+
+        // Oasis. Example: `m-feature-oasis-1`
+        @for $variation from 1 through 1 {
+          &.m-feature-oasis-#{$variation} {
+            &:before { background-image: url('/assets/game-map/terrain/features/oasis-#{$variation}.webp'); }
+          }
+        }
+
+        // Reef. Example: `m-feature-reef-1`
+        @for $variation from 1 through 1 {
+          &.m-feature-reef-#{$variation} {
+            &:before { background-image: url('/assets/game-map/terrain/features/reef-#{$variation}.webp'); }
+          }
+        }
+
+        // Ice. Example: `m-feature-ice-1`
+        @for $variation from 1 through 1 {
+          &.m-feature-ice-#{$variation} {
+            &:before { background-image: url('/assets/game-map/terrain/features/ice-#{$variation}.webp'); }
+          }
+        }
+
+        // Woods ON Hills
+        @each $terrain-base in $terrain-base-land-type-list {
+          @for $woods-variation from 1 through 1 {
+            @for $hills-variation from 1 through 3 {
+              &.m-feature-woods-#{$woods-variation} {
+                &.m-base-#{$terrain-base}-hills-#{$hills-variation} {
+                  &:before {
+                    $woodsUrl: '/assets/game-map/terrain/features/woods-#{$woods-variation}.webp';
+                    $hillsUrl: '/assets/game-map/terrain/hills/#{$terrain-base}-hills-#{$hills-variation}.webp';
+                    background-image: url($woodsUrl), url($hillsUrl);
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        // Rainforest ON Hills
+        @each $terrain-base in $terrain-base-land-type-list {
+          @for $rainforest-variation from 1 through 1 {
+            @for $hills-variation from 1 through 3 {
+              &.m-feature-rainforest-#{$rainforest-variation} {
+                &.m-base-#{$terrain-base}-hills-#{$hills-variation} {
+                  &:before {
+                    $woodsUrl: '/assets/game-map/terrain/features/rainforest-#{$rainforest-variation}.webp';
+                    $hillsUrl: '/assets/game-map/terrain/hills/#{$terrain-base}-hills-#{$hills-variation}.webp';
+                    background-image: url($woodsUrl), url($hillsUrl);
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        // Resources. Example: `m-resource-amber`
+        @each $resource in $terrain-resource-list {
+          &.m-resource-#{$resource} {
+            &:after {
+              content: '';
+              display: block;
+              @include size(100%);
+              @include position-block(relative, calc(var(--tile-size) * -0.1), 0, 0, 0);
+              background: url('/assets/icons/terrain/resources/#{$resource}.webp') no-repeat;
+              background-position-x: center;
+              background-position-y: bottom;
+              background-size: calc(var(--tile-size) * 0.2 + 4px);
+            }
+          }
+        }
+
+      }
+
+    }
+
+  }
+}

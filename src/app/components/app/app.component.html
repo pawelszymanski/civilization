@@ -1,6 +1,7 @@
 <div class="main-menu-component" *ngIf="ui.showMainMenu"></div>
 
-<div class="map-component"></div>
+<div class="strategic-map-on-canvas-component" *ngIf="ui.mapType === MapTypeId.STRATEGIC_ON_CANVAS"></div>
+<div class="strategic-map-in-html-component" *ngIf="ui.mapType === MapTypeId.STRATEGIC_IN_HTML"></div>
 
 <!--<div class="status-bar-component"></div>-->
 <!--<div class="quick-links-component"></div>-->

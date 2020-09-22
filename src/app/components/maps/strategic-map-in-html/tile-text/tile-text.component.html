@@ -1,0 +1,8 @@
+<ng-container *ngIf="showFullInfo">
+  <p>{{ tile.terrain.base.id | terrainBaseName }}</p>
+  <p>{{ tile.terrain.feature.id | terrainFeatureName }}</p>
+  <p>{{ tile.terrain.improvementId | terrainImprovementName }}</p>
+  <p>{{ tile.terrain.resourceId | terrainResourceName }}</p>
+</ng-container>
+
+<p>{{ tile.coords.x }}, {{ tile.coords.y }}</p>

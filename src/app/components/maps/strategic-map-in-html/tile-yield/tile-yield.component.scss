@@ -1,0 +1,81 @@
+@import '../../../../../styles/mixins';
+@import '../../../../../styles/variables';
+
+.tile-yield-component {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  @include position-bottom-left(absolute, 40%, 15%);
+  width: calc(100% * 10/9 * 6/10);
+  height: calc(100% * 4/10);
+  font-size: calc(var(--tile-size) / 12.5);
+  line-height: calc(var(--tile-size) / 12.5);
+
+  .tile-yield-row {
+    display: flex;
+    flex-basis: 50%;
+    align-items: center;
+
+    .tile-yield-cell {
+      flex-basis: 33.33%;
+
+      .fa {
+        text-shadow: 1px .5px #0006, 0 0 2px #0009;
+        position: relative;
+
+        @for $i from 5 through 25 {
+          &.m-count-#{$i} {
+            &:after {
+              content: '#{$i}';
+            }
+          }
+        }
+
+        &[class*='m-count'] {
+          &:after {
+            background: white;
+            min-width: 10px;
+            height: 10px;
+            font-size: 10px;
+            line-height: 10px;
+            font-weight: bold;
+            position: absolute;
+            text-shadow: none;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 6px;
+            color: #222;
+            font-family: $font-family-primary;
+            border: 1px solid #000000cc;
+          }
+        }
+
+        &.fa-leaf {
+          color: forestgreen;
+        }
+        &.fa-cog {
+          color: darkorange;
+        }
+        &.fa-btc {
+          color: gold;
+        }
+        &.fa-flask {
+          color: royalblue;
+        }
+        &.fa-music {
+          color: purple;
+        }
+        &.fa-fire {
+          color: lightskyblue;
+        }
+        &.fa-bolt {
+          color: lightgoldenrodyellow;
+        }
+        &.fa-suitcase {
+          color: rebeccapurple;
+        }
+
+      }
+    }
+  }
+}

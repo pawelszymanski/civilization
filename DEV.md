@@ -1,11 +1,11 @@
 ## WORKING ON
-- use background colors for tiles on canvas 
+- restore html map component
 
 
 ## TODO
 -- GENERAL
-- onDestroy decorator
-- make resources and improvements have more visuals
+- move new map option to create game popup
+- options popup
 - map details: map name and description
 
 -- CANVAS
@@ -21,25 +21,23 @@
 - brush size
 - right click to remove selected item
 
-## DONE
-- add scale to camera dev tools
-- performance meter const TODO comment
-- toggle grid
-- tile info for canvas
-- remove font awesome
-- make dev tools component .component class
-- play now generates map
-- make sure all components have ngOnDestroy 
-- save MapUi in save
-- can't pan after 2 loads
-- endless horizontal scrolling
-
-
-
 ## HARD PROBLEMS:
 - Canvas: make tile background scale to tile size
 - Canvas: make tile background move to match translate
 
+## DONE
+- use background colors for tiles on canvas 
+- make sure all components have ngOnDestroy 
+- save MapUi in save
+- can't pan after 2 loads
+- endless horizontal scrolling
+- remove font awesome
+- make dev tools component .component class
+- play now generates map
+- add scale to camera dev tools
+- performance meter const TODO comment
+- toggle grid
+- tile info for canvas
 
   
 
