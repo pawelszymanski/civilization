@@ -1,27 +1,27 @@
-<!-- Tried making it only UL + LIs, yet for some reason it renders much slower when scrolling -->
-
-<div class="game-map"
+<ul class="map"
      #gameMapElem
      *ngIf="map"
-     [ngClass]="'m-x-' + map.width"
+     [ngClass]="['m-x-' + map.width, 'm-y-' + map.height]"
      [style.transform]="'translate(' + camera.translate.x + 'px, ' + camera.translate.y + 'px)'">
   <!--     [class.animated]="!isDragging && !isZooming"-->
 
-  <div class="game-map-column"
-       *ngFor="let x of [].constructor(map.width); let column = index;">
+  <li class="tile"
+       *ngFor="let tile of map.tiles"
+       [ngClass]="tile | tileCssClasses"
+       (mousedown)="onTileMouseDown($event)"
+       (mouseup)="onTileMouseUp($event)"
+       (wheel)="onTileWheel($event)"
+       (click)="onTileClick($event, tile)"
+       (dblclick)="onTileDblclick($event, tile)">
+    <div class="tile-yield-component" *ngIf="mapUi.infoOverlay === TileInfoOverlayId.YIELD" [yield]="tile.yield"></div>
+    <div class="tile-text-component" *ngIf="mapUi.infoOverlay === TileInfoOverlayId.TEXT" [tile]="tile" [showFullInfo]="camera.zoomLevel >= 0"></div>
+  </li>
 
-    <div class="game-map-tile"
-         *ngFor="let tile of map | tilesInColumn:column+1"
-         [ngClass]="tile | tileCssClasses"
-         (mousedown)="onTileMouseDown($event)"
-         (mouseup)="onTileMouseUp($event)"
-         (wheel)="onTileWheel($event)"
-         (click)="onTileClick($event, tile)"
-         (dblclick)="onTileDblclick($event, tile)">
-      <div class="tile-yield-component" *ngIf="mapUi.infoOverlay === TileInfoOverlayId.YIELD" [yield]="tile.yield"></div>
-      <div class="tile-text-component" *ngIf="mapUi.infoOverlay === TileInfoOverlayId.TEXT" [tile]="tile" [showFullInfo]="camera.zoomLevel >= 0"></div>
-    </div>
+</ul>
 
-  </div>
+<!--<div class="game-map-column"-->
+<!--     *ngFor="let x of [].constructor(map.width); let column = index;">-->
 
-</div>
+<!--  <div class="game-map-tile"-->
+<!--       *ngFor="let tile of map | tilesInColumn:column+1"-->
+<!--       [ngClass]="tile | tileCssClasses"-->

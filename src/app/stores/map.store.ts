@@ -22,48 +22,55 @@ export class MapStore {
     private generatorService: GeneratorService
   ) {}
 
-  private updateTileYield(tile: Tile) {
-    tile.yield = this.yieldService.calcTileYield(tile);
+  private tileIndex(coords): number {
+    return coords.x * this._map.value.height + coords.y;
   }
 
-  private updateTileAndNext(tile: Tile, map: Map) {
-    this.updateTileYield(tile);
-    this.next(map);
+  private duplicateTileOfCoords(coords: Coords): Tile {
+    return JSON.parse(JSON.stringify(this._map.value.tiles[this.tileIndex(coords)]));
+  }
+
+  private updateTileOfCoords(coords: Coords, tile: Tile) {
+    const map = this._map.getValue();
+    const tileIndex = this.tileIndex(coords);
+    tile.yield = this.yieldService.calcTileYield(tile);
+    map.tiles[tileIndex] = tile;
+    this.next(map); // TODO seems its not needed here
   }
 
   public setTileTerrainBase(coords: Coords, terrainBaseId: TerrainBaseId) {
-    const map = this._map.value;
-    const tile = map.tiles.find(t => t.coords.x === coords.x && t.coords.y === coords.y);
-    const variations = TERRAIN_BASE_SET[terrainBaseId].ui.variants;
-    tile.terrain.base = {id: terrainBaseId, uiVariant: this.generatorService.randomPositiveInteger(variations)};
-    this.updateTileAndNext(tile, map);
+    const tile = this.duplicateTileOfCoords(coords);
+    const variantCount = TERRAIN_BASE_SET[terrainBaseId].ui.variants;
+    const variant = this.generatorService.randomPositiveInteger(variantCount);
+    tile.terrain.base = {id: terrainBaseId, uiVariant: variant};
+    this.updateTileOfCoords(coords, tile);
   }
 
   public setTileTerrainFeature(coords: Coords, terrainFeatureId: TerrainFeatureId) {
-    const map = this._map.value;
-    const tile = map.tiles.find(t => t.coords.x === coords.x && t.coords.y === coords.y);
-    const variations = terrainFeatureId ? this.generatorService.randomPositiveInteger(TERRAIN_FEATURE_SET[terrainFeatureId].ui.variants) : null;
-    tile.terrain.feature = {id: terrainFeatureId, uiVariant: variations};
-    this.updateTileAndNext(tile, map);
+    const tile = this.duplicateTileOfCoords(coords);
+    if (terrainFeatureId === TerrainFeatureId.NONE) {
+      tile.terrain.feature = {id: terrainFeatureId, uiVariant: null};
+    } else {
+      const variantCount = TERRAIN_FEATURE_SET[terrainFeatureId].ui.variants;
+      const variant = this.generatorService.randomPositiveInteger(variantCount);
+      tile.terrain.feature = {id: terrainFeatureId, uiVariant: variant};
+    }
+    this.updateTileOfCoords(coords, tile);
   }
 
   public setTileTerrainResource(coords: Coords, terrainResourceId: TerrainResourceId) {
-    const map = this._map.value;
-    const tile = map.tiles.find(t => t.coords.x === coords.x && t.coords.y === coords.y);
+    const tile = this.duplicateTileOfCoords(coords);
     tile.terrain.resourceId = terrainResourceId;
-    this.updateTileAndNext(tile, map);
+    this.updateTileOfCoords(coords, tile);
   }
 
   public setTileTerrainImprovement(coords: Coords, terrainImprovementId: TerrainImprovementId) {
-    const map = this._map.value;
-    const tile = map.tiles.find(t => t.coords.x === coords.x && t.coords.y === coords.y);
+    const tile = this.duplicateTileOfCoords(coords);
     tile.terrain.improvementId = terrainImprovementId;
-    this.updateTileAndNext(tile, map);
+    this.updateTileOfCoords(coords, tile);
   }
 
   public next(map: Map) {
-    // TODO: for during development, remove later
-    // map.columns.forEach(column => column.tiles.forEach(tile => this.updateTileCssClassesAndYield(tile)))
     this._map.next(map);
   }
 

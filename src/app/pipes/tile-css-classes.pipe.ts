@@ -14,10 +14,16 @@ import {
 export class TileCssClassesPipe implements PipeTransform {
 
   transform(tile: Tile): string[] {
+    console.info('css classes pipe');
+
     const result = [
       `m-x-${tile.coords.x}`,
       `m-y-${tile.coords.y}`,
     ];
+
+    if (tile.coords.y % 2 === 1) {
+      result.push('m-indent');
+    }
 
     const base = TERRAIN_BASE_SET[tile.terrain.base.id];
     switch (base.id) {

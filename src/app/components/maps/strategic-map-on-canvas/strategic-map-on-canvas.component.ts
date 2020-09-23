@@ -165,7 +165,7 @@ export class StrategicMapOnCanvasComponent implements OnInit, OnDestroy {
 
     // normalize and set
     translate = this.cameraService.normalizeVerticalTranslation(translate, this.mapHeight, this.CANVAS.height);
-    translate = this.cameraService.normalizeHorizontalTranslation(translate,  this.mapWidth, this.tileWidth);
+    translate = this.cameraService.normalizeHorizontalTranslation(translate, this.mapWidth, this.tileWidth);
     this.cameraStore.setTranslate(translate);
   }
 

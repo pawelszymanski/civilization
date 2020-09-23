@@ -72,7 +72,6 @@ import {TerrainResourceNamePipe} from './pipes/terrain-resource-name.pipe';
 import {EraNamePipe} from './pipes/era-name.pipe';
 import {CivicNamePipe} from './pipes/ciciv-name.pipe';
 import {TechnologyNamePipe} from './pipes/technology-name.pipe';
-import {TilesInColumnPipe} from './pipes/tiles-in-column.pipe';
 import {TileCssClassesPipe} from './pipes/tile-css-classes.pipe';
 
 
@@ -144,7 +143,6 @@ const PIPES = [
   EraNamePipe,
   CivicNamePipe,
   TechnologyNamePipe,
-  TilesInColumnPipe,
   TileCssClassesPipe,
 ]
 

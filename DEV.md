@@ -1,14 +1,20 @@
 ## WORKING ON
-- restore html map component
-
+- add tile feature / resource / improvement validation
 
 ## TODO
--- GENERAL
+- html renderer: map wrapping
+- create sample map and put it in main menu
 - move new map option to create game popup
+
+
+
+
+-- GENERAL
 - options popup
 - map details: map name and description
 
 -- CANVAS
+- canvas: draw full canvas on the OnInit
 - iterate on eventTargetTile
 - restore tile yield
 - add terrain features
@@ -26,6 +32,10 @@
 - Canvas: make tile background move to match translate
 
 ## DONE
+- fix tile pipes not to execute all the time
+- restore font awesome
+- html map: update tile css classes on tile change
+- restore html map component
 - use background colors for tiles on canvas 
 - make sure all components have ngOnDestroy 
 - save MapUi in save
