@@ -14,8 +14,6 @@ import {
 export class TileCssClassesPipe implements PipeTransform {
 
   transform(tile: Tile): string[] {
-    console.info('css classes pipe');
-
     const result = [
       `m-x-${tile.coords.x}`,
       `m-y-${tile.coords.y}`,

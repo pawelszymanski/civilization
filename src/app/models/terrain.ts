@@ -128,23 +128,29 @@ export interface TerrainUiColor {
   color: string;
 }
 
-export interface TerrainUiVariants {
-  variants: number;
+export interface TerrainUiVariantCount {
+  variantCount: number;
 }
 
-export interface TerrainBaseWithVariation {
+export interface TerrainBaseWithVariant {
   id: TerrainBaseId;
   uiVariant: number;
 }
 
-export interface TerrainFeatureWithVariation {
+export interface TerrainFeatureWithVariant {
   id: TerrainFeatureId;
   uiVariant: number;
 }
 
 export interface Terrain {
-  base: TerrainBaseWithVariation;
-  feature: TerrainFeatureWithVariation;
+  base: TerrainBaseWithVariant;
+  feature: TerrainFeatureWithVariant;
   resourceId: TerrainResourceId;
   improvementId: TerrainImprovementId;
+}
+
+export interface SuitableTerrain {
+  baseId?: TerrainBaseId;
+  featureId?: TerrainFeatureId;
+  resourceId?: TerrainResourceId;
 }

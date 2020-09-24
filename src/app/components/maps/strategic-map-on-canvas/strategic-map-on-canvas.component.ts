@@ -228,7 +228,7 @@ export class StrategicMapOnCanvasComponent implements OnInit, OnDestroy {
 
   tileCoordsOnMap(tile: Tile): Coords {
     // move tiles in the last column to "-1 column" to wrap the map; tiles in odd rows to be indented;
-    const oddRowFix = this.tileService.isTileInOddRow(tile) ? this.tileWidth / 2 : 0;
+    const oddRowFix = (tile.coords.y % 2 === 1) ? this.tileWidth / 2 : 0;
     const lastColumnFix = (tile.coords.x + 1 === this.map.width) ? -this.mapWidth + this.tileWidth / 2 : 0;
 
     return {

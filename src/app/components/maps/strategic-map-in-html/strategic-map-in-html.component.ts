@@ -21,6 +21,7 @@ import {CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP} from '../../../consts/camera.const';
 
 import {CameraService} from '../../../services/camera.service';
 import {MouseService} from '../../../services/mouse.service';
+import {TileService} from '../../../services/tile.service';
 
 import {CameraStore} from '../../../stores/camera.store';
 import {UiStore} from '../../../stores/ui.store';
@@ -64,6 +65,7 @@ export class StrategicMapInHtmlComponent {
     private cdr: ChangeDetectorRef,
     private cameraService: CameraService,
     private mouseService: MouseService,
+    private tileService: TileService,
     private mapStore: MapStore,
     private mapUiStore: MapUiStore,
     private cameraStore: CameraStore,
@@ -186,17 +188,31 @@ export class StrategicMapInHtmlComponent {
   onTileClick(event: MouseEvent, tile: Tile) {
     if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
       switch (this.worldBuilderUi.tool) {
+
         case WorldBuilderToolId.TERRAIN_BASE:
-          this.mapStore.setTileTerrainBase(tile.coords, this.worldBuilderUi.terrainBase);
+          const baseId = this.worldBuilderUi.terrainBase;
+          this.mapStore.setTileTerrainBase(tile, baseId);
           break;
+
         case WorldBuilderToolId.TERRAIN_FEATURE:
-          this.mapStore.setTileTerrainFeature(tile.coords, this.worldBuilderUi.terrainFeature);
+          const featureId = this.worldBuilderUi.terrainFeature;
+          if (this.tileService.canFeatureBePutOnTile(featureId, tile)) {
+            this.mapStore.setTileTerrainFeature(tile, featureId);
+          }
           break;
+
         case WorldBuilderToolId.TERRAIN_RESOURCE:
-          this.mapStore.setTileTerrainResource(tile.coords, this.worldBuilderUi.terrainResource);
+          const resourceId = this.worldBuilderUi.terrainResource;
+          if (this.tileService.canResourceBePutOnTile(resourceId, tile)) {
+            this.mapStore.setTileTerrainResource(tile, resourceId);
+          }
           break;
+
         case WorldBuilderToolId.TERRAIN_IMPROVEMENT:
-          this.mapStore.setTileTerrainImprovement(tile.coords, this.worldBuilderUi.terrainImprovement);
+          const improvementId = this.worldBuilderUi.terrainImprovement;
+          if (this.tileService.canImprovementBePutOnTile(improvementId, tile)) {
+            this.mapStore.setTileTerrainImprovement(tile, improvementId);
+          }
           break;
       }
     }

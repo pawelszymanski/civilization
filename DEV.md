@@ -1,17 +1,17 @@
 ## WORKING ON
-- add tile feature / resource / improvement validation
+- create sample map and put it in main menu
 
 ## TODO
 - html renderer: map wrapping
-- create sample map and put it in main menu
 - move new map option to create game popup
-
 
 
 
 -- GENERAL
 - options popup
 - map details: map name and description
+- on terrain change validate tile terrain id it makes sense
+
 
 -- CANVAS
 - canvas: draw full canvas on the OnInit
@@ -24,14 +24,15 @@
 -- WORLD BUILDER:
 - hide hud for world builder
 - don't place anything when panning
-- brush size
 - right click to remove selected item
+- brush size
 
 ## HARD PROBLEMS:
 - Canvas: make tile background scale to tile size
 - Canvas: make tile background move to match translate
 
 ## DONE
+- add tile feature / resource / improvement validation
 - fix tile pipes not to execute all the time
 - restore font awesome
 - html map: update tile css classes on tile change
