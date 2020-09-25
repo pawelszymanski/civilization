@@ -2,13 +2,12 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 
 import {TerrainBaseId, TerrainFeatureId, TerrainResourceId, TerrainImprovementId} from '../models/terrain';
-import {Coords} from '../models/utils';
 import {Map, Tile} from '../models/map';
 
 import {TERRAIN_BASE_SET, TERRAIN_FEATURE_SET} from '../consts/terrain.const';
 
-import {YieldService} from '../services/yield.service';
 import {GeneratorService} from '../services/generator.service';
+import {TileYieldService} from '../services/tile-yield.service';
 
 @Injectable()
 export class MapStore {
@@ -18,7 +17,7 @@ export class MapStore {
   public readonly map: Observable<Map> = this._map.asObservable();
 
   constructor(
-    private yieldService: YieldService,
+    private tileYieldService: TileYieldService,
     private generatorService: GeneratorService
   ) {}
 
@@ -35,7 +34,7 @@ export class MapStore {
   }
 
   private updateTileYield(tile: Tile) {
-    tile.yield = this.yieldService.calcTileYield(tile);
+    this.tileYieldService.updateTileYield(tile);
   }
 
   private replaceTile(tile: Tile, newTile: Tile) {

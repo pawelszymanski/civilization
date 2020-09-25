@@ -266,6 +266,7 @@ export const TERRAIN_FEATURE_SET: TerrainFeatureSet = {
   [TerrainFeatureId.ICE]: {
     id: TerrainFeatureId.ICE,
     suitableTerrain: [
+      { baseId: TerrainBaseId.COAST },
       { baseId: TerrainBaseId.OCEAN },
     ],
     yield: {},
@@ -431,6 +432,7 @@ export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
     type: TerrainResourceTypeId.BONUS,
     suitableTerrain: [
       { baseId: TerrainBaseId.GRASSLAND_FLAT, featureId: TerrainFeatureId.NONE },
+      { featureId: TerrainFeatureId.FLOODPLAINS },
       { featureId: TerrainFeatureId.MARSH },
     ],
     yield: {  [YieldId.FOOD]: 1 },
@@ -442,9 +444,11 @@ export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
   [TerrainResourceId.SHEEP]: {
     id: TerrainResourceId.SHEEP,
     type: TerrainResourceTypeId.BONUS,
-    suitableTerrain: [  // Wiki says its desert and tundra hills too, silly
+    suitableTerrain: [
       { baseId: TerrainBaseId.GRASSLAND_HILLS, featureId: TerrainFeatureId.NONE },
       { baseId: TerrainBaseId.PLAINS_HILLS, featureId: TerrainFeatureId.NONE },
+      { baseId: TerrainBaseId.DESERT_HILLS, featureId: TerrainFeatureId.NONE },
+      { baseId: TerrainBaseId.TUNDRA_HILLS, featureId: TerrainFeatureId.NONE },
     ],
     yield: {  [YieldId.FOOD]: 1 },
     ui: {
@@ -829,8 +833,11 @@ export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
     type: TerrainResourceTypeId.LUXURY,
     suitableTerrain: [
       { baseId: TerrainBaseId.GRASSLAND_FLAT, featureId: TerrainFeatureId.WOODS },
+      { baseId: TerrainBaseId.GRASSLAND_HILLS, featureId: TerrainFeatureId.WOODS },
       { baseId: TerrainBaseId.PLAINS_FLAT, featureId: TerrainFeatureId.WOODS },
+      { baseId: TerrainBaseId.PLAINS_HILLS, featureId: TerrainFeatureId.WOODS },
       { baseId: TerrainBaseId.TUNDRA_FLAT, featureId: TerrainFeatureId.WOODS },
+      { baseId: TerrainBaseId.TUNDRA_HILLS, featureId: TerrainFeatureId.WOODS },
     ],
     yield: { [YieldId.CULTURE]: 1 },
     ui: {

@@ -13,21 +13,21 @@ import {Map, Tile} from '../../../models/map';
 import {Camera} from '../../../models/camera';
 import {Coords} from '../../../models/utils';
 import {SidebarId, Ui} from '../../../models/ui';
-import {WorldBuilderUi} from '../../../models/world-builder';
+import {WorldBuilderToolId, WorldBuilderUi} from '../../../models/world-builder';
 import {MapUi, TileInfoOverlayId} from '../../../models/map-ui';
-import {WorldBuilderToolId} from '../../../models/world-builder';
 
 import {CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP} from '../../../consts/camera.const';
 
 import {CameraService} from '../../../services/camera.service';
 import {MouseService} from '../../../services/mouse.service';
-import {TileService} from '../../../services/tile.service';
+import {TileTerrainService} from '../../../services/tile-terrain.service';
 
 import {CameraStore} from '../../../stores/camera.store';
 import {UiStore} from '../../../stores/ui.store';
 import {MapStore} from '../../../stores/map.store';
 import {MapUiStore} from '../../../stores/map-ui.store';
 import {WorldBuilderUiStore} from '../../../stores/world-builder-ui.store';
+import {TerrainBaseId, TerrainFeatureId, TerrainImprovementId, TerrainResourceId} from '../../../models/terrain';
 
 @Component({
   selector: '.strategic-map-in-html-component',
@@ -65,7 +65,7 @@ export class StrategicMapInHtmlComponent {
     private cdr: ChangeDetectorRef,
     private cameraService: CameraService,
     private mouseService: MouseService,
-    private tileService: TileService,
+    private tileTerrainService: TileTerrainService,
     private mapStore: MapStore,
     private mapUiStore: MapUiStore,
     private cameraStore: CameraStore,
@@ -89,7 +89,7 @@ export class StrategicMapInHtmlComponent {
       this.mapUiStore.mapUi.subscribe(mapUi => this.mapUi = mapUi),
       this.cameraStore.camera.subscribe(camera => {
         this.cameraService.htmlSpecific.setTileSizeCssVariable(CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP[camera.zoomLevel]);
-        this.camera = camera
+        this.camera = camera;
       }),
       this.uiStore.ui.subscribe(ui => this.ui = ui),
       this.worldBuilderUiStore.worldBuilderUi.subscribe(worldBuilderUi => this.worldBuilderUi = worldBuilderUi)
@@ -188,31 +188,46 @@ export class StrategicMapInHtmlComponent {
   onTileClick(event: MouseEvent, tile: Tile) {
     if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
       switch (this.worldBuilderUi.tool) {
-
         case WorldBuilderToolId.TERRAIN_BASE:
           const baseId = this.worldBuilderUi.terrainBase;
           this.mapStore.setTileTerrainBase(tile, baseId);
           break;
-
         case WorldBuilderToolId.TERRAIN_FEATURE:
           const featureId = this.worldBuilderUi.terrainFeature;
-          if (this.tileService.canFeatureBePutOnTile(featureId, tile)) {
+          if (this.tileTerrainService.canFeatureBePutOnTile(featureId, tile)) {
             this.mapStore.setTileTerrainFeature(tile, featureId);
           }
           break;
-
         case WorldBuilderToolId.TERRAIN_RESOURCE:
           const resourceId = this.worldBuilderUi.terrainResource;
-          if (this.tileService.canResourceBePutOnTile(resourceId, tile)) {
+          if (this.tileTerrainService.canResourceBePutOnTile(resourceId, tile)) {
             this.mapStore.setTileTerrainResource(tile, resourceId);
           }
           break;
-
         case WorldBuilderToolId.TERRAIN_IMPROVEMENT:
           const improvementId = this.worldBuilderUi.terrainImprovement;
-          if (this.tileService.canImprovementBePutOnTile(improvementId, tile)) {
+          if (this.tileTerrainService.canImprovementBePutOnTile(improvementId, tile)) {
             this.mapStore.setTileTerrainImprovement(tile, improvementId);
           }
+          break;
+      }
+    }
+  }
+
+  onTileContextmenu(event: MouseEvent, tile: Tile) {
+    if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
+      switch (this.worldBuilderUi.tool) {
+        case WorldBuilderToolId.TERRAIN_BASE:
+          this.mapStore.setTileTerrainBase(tile, TerrainBaseId.OCEAN);
+          break;
+        case WorldBuilderToolId.TERRAIN_FEATURE:
+          this.mapStore.setTileTerrainFeature(tile, TerrainFeatureId.NONE);
+          break;
+        case WorldBuilderToolId.TERRAIN_RESOURCE:
+          this.mapStore.setTileTerrainResource(tile, TerrainResourceId.NONE);
+          break;
+        case WorldBuilderToolId.TERRAIN_IMPROVEMENT:
+          this.mapStore.setTileTerrainImprovement(tile, TerrainImprovementId.NONE);
           break;
       }
     }

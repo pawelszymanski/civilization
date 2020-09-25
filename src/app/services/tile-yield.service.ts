@@ -3,10 +3,24 @@ import {Injectable} from '@angular/core';
 import {Tile} from '../models/map';
 import {Yield, YieldId} from '../models/yield';
 
-import {TERRAIN_BASE_SET, TERRAIN_FEATURE_SET, TERRAIN_RESOURCE_SET, TERRAIN_IMPROVEMENT_SET} from '../consts/terrain.const';
+import {
+  TERRAIN_BASE_SET,
+  TERRAIN_FEATURE_SET,
+  TERRAIN_IMPROVEMENT_SET,
+  TERRAIN_RESOURCE_SET
+} from '../consts/terrain.const';
+import {TerrainFeatureId} from '../models/terrain';
 
 @Injectable({providedIn: 'root'})
-export class YieldService {
+export class TileYieldService {
+
+  public removeTileYield(tile: Tile): void {
+    tile.yield = undefined;
+  }
+
+  public updateTileYield(tile: Tile): void {
+    tile.yield = this.calcTileYield(tile);
+  }
 
   public calcTileYield(tile: Tile): Yield {
     const result = {
@@ -19,6 +33,11 @@ export class YieldService {
       [YieldId.POWER]: 0,
       [YieldId.TOURISM]: 0
     };
+
+    // Ice does not give any resources
+    if (tile.terrain.feature.id === TerrainFeatureId.ICE) {
+      return result;
+    }
 
     const tileBaseYield = TERRAIN_BASE_SET[tile.terrain.base.id].yield;
     Object.keys(tileBaseYield).forEach(yieldId => {result[yieldId] += tileBaseYield[yieldId]});

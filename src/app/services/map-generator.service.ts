@@ -10,13 +10,13 @@ import {Coords} from '../models/utils';
 import {Map, Tile} from '../models/map';
 import {MapGeneratorSettings} from '../models/map-generator';
 
-import {YieldService} from './yield.service';
+import {TileYieldService} from './tile-yield.service';
 
 @Injectable({providedIn: 'root'})
 export class MapGeneratorService {
 
   constructor(
-    private yieldService: YieldService
+    private tileYieldService: TileYieldService
   ) {}
 
   private createEmptyOceanTile(coords: Coords): Tile {
@@ -30,7 +30,7 @@ export class MapGeneratorService {
       }
     } as unknown as Tile;
 
-    tile.yield = this.yieldService.calcTileYield(tile);
+    this.tileYieldService.updateTileYield(tile);
 
     return tile;
   }

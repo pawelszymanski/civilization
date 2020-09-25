@@ -7,6 +7,7 @@ import {MapUi} from '../../../../models/map-ui';
 import {Save} from '../../../../models/saves';
 
 import {GeneratorService} from '../../../../services/generator.service';
+import {SaveService} from '../../../../services/save.service';
 
 import {CameraStore} from '../../../../stores/camera.store';
 import {MapStore} from '../../../../stores/map.store';
@@ -34,6 +35,7 @@ export class SaveGameComponent implements OnInit, OnDestroy {
 
   constructor(
     private generatorService: GeneratorService,
+    private saveService: SaveService,
     private cameraStore: CameraStore,
     private mapStore: MapStore,
     private mapUiStore: MapUiStore,

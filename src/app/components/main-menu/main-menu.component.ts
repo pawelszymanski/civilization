@@ -1,15 +1,18 @@
 import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {Subscription} from 'rxjs';
 
+import {Map} from '../../models/map';
 import {Save} from '../../models/saves';
 import {MapSizeId} from '../../models/map-size';
 import {MapTypeId, ModalId, Ui} from '../../models/ui';
 import {LandmassValueId, MapGeneratorSettings, RainfallId, TemperatureId, WorldAgeId} from '../../models/map-generator';
 
 import {MAP_SIZE_SETTINGS_LIST} from '../../consts/map-size-settings.const';
+import {EARTH_MAP} from '../../consts/earth-map';
 
 import {MapGeneratorService} from '../../services/map-generator.service';
 import {SaveService} from '../../services/save.service';
+import {ZipService} from '../../services/zip.service';
 
 import {UiStore} from '../../stores/ui.store';
 import {MapStore} from '../../stores/map.store';
@@ -33,6 +36,7 @@ export class MainMenuComponent implements OnInit, OnDestroy {
   constructor(
     private mapGeneratorService: MapGeneratorService,
     private saveService: SaveService,
+    private zipService: ZipService,
     private uiStore: UiStore,
     private mapStore: MapStore,
     private savesStore: SavesStore
@@ -103,6 +107,12 @@ export class MainMenuComponent implements OnInit, OnDestroy {
     const newMap = this.mapGeneratorService.generateNewGameMap(mapGeneratorSetting);
     this.mapStore.next(newMap);
     this.uiStore.setMapType(MapTypeId.STRATEGIC_ON_CANVAS);
+    this.uiStore.hideMainMenu();
+  }
+
+  onPlayOnEarthClick() {
+    const earthMap = this.zipService.unzip(EARTH_MAP) as Map;
+    this.mapStore.next(earthMap);
     this.uiStore.hideMainMenu();
   }
 

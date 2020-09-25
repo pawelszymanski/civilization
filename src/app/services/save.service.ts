@@ -37,7 +37,7 @@ export class SaveService {
   }
 
   // Used in Load Game modal and Main Menu component
-  public loadSave(save: Save) {
+  public loadSave(save: Save): void {
     this.mapStore.next(save.map);
     this.mapUiStore.next(save.mapUi);
     this.cameraStore.next(save.camera);

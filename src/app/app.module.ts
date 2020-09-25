@@ -52,8 +52,9 @@ import {LocalStorageService} from './services/local-storage.service';
 import {MapGeneratorService} from './services/map-generator.service';
 import {MouseService} from './services/mouse.service';
 import {SaveService} from './services/save.service';
-import {TileService} from './services/tile.service';
-import {YieldService} from './services/yield.service';
+import {TileTerrainService} from './services/tile-terrain.service';
+import {TileYieldService} from './services/tile-yield.service';
+import {ZipService} from './services/zip.service';
 
 // STORES
 import {CameraStore} from './stores/camera.store';
@@ -121,8 +122,9 @@ const SERVICES = [
   MapGeneratorService,
   MouseService,
   SaveService,
-  TileService,
-  YieldService,
+  TileTerrainService,
+  TileYieldService,
+  ZipService,
 ]
 
 const STORES = [

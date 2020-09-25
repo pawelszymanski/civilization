@@ -69,9 +69,9 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   documentOnContextMenu(event: MouseEvent) {
-    // if (this.ui.sidebar !== SidebarId.DEV_TOOLS) {
-    //   event.preventDefault();
-    // }
+    if (this.ui.sidebar !== SidebarId.DEV_TOOLS) {
+      event.preventDefault();
+    }
   }
 
   documentOnKeydown(event: KeyboardEvent) {

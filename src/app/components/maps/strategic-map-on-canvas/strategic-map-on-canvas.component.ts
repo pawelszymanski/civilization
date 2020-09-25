@@ -11,7 +11,7 @@ import {TERRAIN_BASE_SET} from '../../../consts/terrain.const';
 
 import {CameraService} from '../../../services/camera.service';
 import {MouseService} from '../../../services/mouse.service';
-import {TileService} from '../../../services/tile.service';
+import {TileTerrainService} from '../../../services/tile-terrain.service';
 
 import {CameraStore} from '../../../stores/camera.store';
 import {MapStore} from '../../../stores/map.store';
@@ -62,7 +62,7 @@ export class StrategicMapOnCanvasComponent implements OnInit, OnDestroy {
 
   constructor(
     private cameraService: CameraService,
-    private tileService: TileService,
+    private tileTerrainService: TileTerrainService,
     private mouseService: MouseService,
     private cameraStore: CameraStore,
     private mapStore: MapStore,

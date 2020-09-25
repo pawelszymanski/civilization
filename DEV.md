@@ -1,20 +1,19 @@
 ## WORKING ON
-- create sample map and put it in main menu
+- minimap
+- canvas selected tile fix
+- canvas: draw full canvas on the OnInit
+
 
 ## TODO
-- html renderer: map wrapping
 - move new map option to create game popup
-
-
 
 -- GENERAL
 - options popup
 - map details: map name and description
 - on terrain change validate tile terrain id it makes sense
-
+- html renderer: map wrapping
 
 -- CANVAS
-- canvas: draw full canvas on the OnInit
 - iterate on eventTargetTile
 - restore tile yield
 - add terrain features
@@ -24,7 +23,6 @@
 -- WORLD BUILDER:
 - hide hud for world builder
 - don't place anything when panning
-- right click to remove selected item
 - brush size
 
 ## HARD PROBLEMS:
@@ -32,6 +30,8 @@
 - Canvas: make tile background move to match translate
 
 ## DONE
+- create sample map and put it in main menu
+- right click to remove selected world builder tool
 - add tile feature / resource / improvement validation
 - fix tile pipes not to execute all the time
 - restore font awesome
@@ -66,7 +66,7 @@
 - remove hover on tile since it was causing 17ms Update Layer tree
 - move change detection to OnPush to save 8ms
 - pointer-events: none; blocks events, also in children. But at a cost of a 50% of frame rate drop!!
-
+- your JSON can be huge 
 
 
 ## IDEAS TO SPEED UP 
@@ -87,3 +87,4 @@ var context = offscreen.getContext('2d');
 1. Web Assembly for huge operations
 1. Use pure pipes when possible to avoid recalculations
 1.  
+

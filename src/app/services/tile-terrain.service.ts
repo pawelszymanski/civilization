@@ -6,7 +6,7 @@ import {SuitableTerrain, TerrainFeatureId, TerrainImprovementId, TerrainResource
 import {TERRAIN_FEATURE_SET, TERRAIN_IMPROVEMENT_SET, TERRAIN_RESOURCE_SET} from '../consts/terrain.const';
 
 @Injectable({providedIn: 'root'})
-export class TileService {
+export class TileTerrainService {
 
   private isTileTerrainSuitableForItem(tile: Tile, suitableTerrainList: SuitableTerrain[]): boolean {
     for (const suitableTerrain of suitableTerrainList) {
