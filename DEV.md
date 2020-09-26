@@ -1,8 +1,8 @@
 ## WORKING ON
+- html renderer: map wrapping
+
 - minimap
 - canvas selected tile fix
-- canvas: draw full canvas on the OnInit
-
 
 ## TODO
 - move new map option to create game popup
@@ -10,8 +10,6 @@
 -- GENERAL
 - options popup
 - map details: map name and description
-- on terrain change validate tile terrain id it makes sense
-- html renderer: map wrapping
 
 -- CANVAS
 - iterate on eventTargetTile
@@ -30,6 +28,7 @@
 - Canvas: make tile background move to match translate
 
 ## DONE
+- canvas: draw full canvas on the OnInit
 - create sample map and put it in main menu
 - right click to remove selected world builder tool
 - add tile feature / resource / improvement validation

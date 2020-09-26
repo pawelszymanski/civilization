@@ -251,7 +251,7 @@ export class StrategicMapOnCanvasComponent implements OnInit, OnDestroy {
     this.updateSizeVariables();
     this.paintBackground();
     this.paintMapDecoration();
-    this.iterateTilesAndPainVisible();
+    this.iterateTilesAndPaintVisible();
   }
 
   updateSizeVariables() {
@@ -271,7 +271,7 @@ export class StrategicMapOnCanvasComponent implements OnInit, OnDestroy {
     this.ctx.fillRect(0, this.camera.translate.y - 10, this.ctx.canvas.width, this.mapHeight + 20);
   }
 
-  iterateTilesAndPainVisible() {
+  iterateTilesAndPaintVisible() {
     for (const tile of this.map.tiles) {
       let tileCoordsOnCanvas: Coords = null;
 
