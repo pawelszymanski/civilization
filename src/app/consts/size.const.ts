@@ -6,6 +6,10 @@ export const DEFAULT_SIZE: Size = {
     height: 0,
     halfWidth: 0,
     halfHeight: 0,
+    oneQuarterWidth: 0,
+    oneQuarterHeight: 0,
+    threeQuarterWidth: 0,
+    threeQuarterHeight: 0,
   },
   row: {
     width: 0,

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 
-import {FullSize, HalfSize, Size} from '../models/size';
+import {FullSize, HalfSize, QuarterSize, Size} from '../models/size';
 import {Coords} from '../models/utils';
 
 import {DEFAULT_SIZE} from '../consts/size.const';
@@ -17,7 +17,7 @@ export class SizeStore {
     this._size.next(sizeSet);
   }
 
-  public setTileSize(tileSize: FullSize & HalfSize) {
+  public setTileSize(tileSize: FullSize & HalfSize & QuarterSize) {
     this.next({...this._size.value, tile: tileSize});
   }
 

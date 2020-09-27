@@ -6,6 +6,7 @@ import {Coords} from '../../../models/utils';
 import {Map, Tile} from '../../../models/map';
 import {MapUi} from '../../../models/map-ui';
 import {Size} from '../../../models/size';
+import {SidebarId, Ui} from '../../../models/ui';
 
 import {CameraService} from '../../../services/camera.service';
 import {TileTerrainService} from '../../../services/tile-terrain.service';
@@ -13,11 +14,13 @@ import {TileUiService} from '../../../services/tile-ui.service';
 import {SizeService} from '../../../services/size.service';
 import {PaintMapService} from '../../../services/paint-map.service';
 import {MapZoomService} from '../../../services/map-zoom.service';
+import {WorldBuilderService} from '../../../services/world-builder.service';
 
 import {CameraStore} from '../../../stores/camera.store';
 import {SizeStore} from '../../../stores/size.store';
 import {MapStore} from '../../../stores/map.store';
 import {MapUiStore} from '../../../stores/map-ui.store';
+import {UiStore} from '../../../stores/ui.store';
 
 @Component({
   selector: '.strategic-map-on-canvas-component',
@@ -35,6 +38,7 @@ export class StrategicMapOnCanvasComponent implements OnInit, OnDestroy {
   size: Size;
   map: Map;
   mapUi: MapUi;
+  ui: Ui;
 
   dragStartCoords: Coords;  // Page x, y when mouse was pressed down
   dragStartOffset: Coords;  // Map element x, y when mouse was pressed down
@@ -51,11 +55,15 @@ export class StrategicMapOnCanvasComponent implements OnInit, OnDestroy {
     private mapZoomService: MapZoomService,
     private sizeService: SizeService, // Keep it here so it initializes
     private paintMapService: PaintMapService,
+    private worldBuilderService: WorldBuilderService,
     private cameraStore: CameraStore,
     private sizeStore: SizeStore,
     private mapStore: MapStore,
     private mapUiStore: MapUiStore,
+    private uiStore: UiStore,
   ) {}
+
+  // INIT
 
   ngOnInit() {
     this.initContext();
@@ -77,7 +85,8 @@ export class StrategicMapOnCanvasComponent implements OnInit, OnDestroy {
       this.cameraStore.camera.subscribe(camera => this.camera = camera),
       this.sizeStore.size.subscribe(size => this.size = size),
       this.mapStore.map.subscribe(map => this.map = map),
-      this.mapUiStore.mapUi.subscribe(mapUi => this.mapUi = mapUi)
+      this.mapUiStore.mapUi.subscribe(mapUi => this.mapUi = mapUi),
+      this.uiStore.ui.subscribe(ui => this.ui = ui),
     );
   }
 
@@ -126,8 +135,19 @@ export class StrategicMapOnCanvasComponent implements OnInit, OnDestroy {
   }
 
   onCanvasClick(event: MouseEvent) {
-    const eventOnMapCoordsPx = this.eventToMapCoordsPx(event);
-    this.tileUiService.mapCoordsToGridCoords(eventOnMapCoordsPx);
+    const tile = this.mouseEventToTile(event);
+
+    if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
+      this.worldBuilderService.handleTileClick(tile);
+    }
+  }
+
+  onCanvasContextmenu(event: MouseEvent) {
+    const tile = this.mouseEventToTile(event);
+
+    if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
+      this.worldBuilderService.handleTileContextmenu(tile);
+    }
   }
 
   onCanvasWheel(event: WheelEvent) {
@@ -135,6 +155,12 @@ export class StrategicMapOnCanvasComponent implements OnInit, OnDestroy {
   }
 
   // OTHER
+
+  mouseEventToTile(event: MouseEvent): Tile {
+    const eventOnMapCoordsPx = this.eventToMapCoordsPx(event);
+    const grid = this.tileUiService.mapCoordsToGridCoords(eventOnMapCoordsPx);
+    return this.map.tiles[grid.x * this.map.height + grid.y];
+  }
 
   eventToMapCoordsPx(event: MouseEvent): Coords {
     let x = event.clientX - this.camera.translate.x;

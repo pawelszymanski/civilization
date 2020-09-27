@@ -15,6 +15,10 @@ export class CameraService {
   constructor(
     private sizeStore: SizeStore,
   ) {
+    this.subscribeToData();
+  }
+
+  private subscribeToData(): void {
     this.sizeStore.size.subscribe(size => this.size = size);
   }
 

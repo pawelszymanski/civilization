@@ -57,6 +57,7 @@ import {TileYieldService} from './services/tile-yield.service';
 import {ZipService} from './services/zip.service';
 import {PaintMapService} from './services/paint-map.service';
 import {MapZoomService} from './services/map-zoom.service';
+import {WorldBuilderService} from './services/world-builder.service';
 
 // STORES
 import {CameraStore} from './stores/camera.store';
@@ -130,6 +131,7 @@ const SERVICES = [
   ZipService,
   PaintMapService,
   MapZoomService,
+  WorldBuilderService,
 ]
 
 const STORES = [

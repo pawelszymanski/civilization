@@ -24,7 +24,7 @@ export class TileUiService {
     this.subscribeToData();
   }
 
-  private subscribeToData() {
+  private subscribeToData(): void {
     this.cameraStore.camera.subscribe(camera => this.camera = camera);
     this.sizeStore.size.subscribe(size => this.size = size);
     this.mapStore.map.subscribe(map => this.map = map);
@@ -81,30 +81,56 @@ export class TileUiService {
   }
 
   // Visualization: https://stackoverflow.com/questions/7705228/hexagonal-grids-how-do-you-find-which-hexagon-a-point-is-in
-  public mapCoordsToGridCoords(eventCoords: Coords): Coords | null {
-    const y = Math.floor(eventCoords.y / this.size.row.height);
-    if ( (y < 0) || (y > this.map.height) ) { return null; }  // clicked above or bellow the map, no need to continue
+  public mapCoordsToGridCoords(mapCoords: Coords): Coords | null {
+    // Candidate Y coordinate
+    const y = Math.floor(mapCoords.y / this.size.row.height);
+    if ( y < 0 || y > this.map.height ) { return null; }  // clicked above or bellow the map, no need to continue
 
-    let x = Math.floor(eventCoords.x / this.size.tile.width);
+    // Candidate X coordinate
+    let x = Math.floor(mapCoords.x / this.size.tile.width);
     const isOddRow = (y % 2 === 1);
-    const clickedTileToLeft = ((eventCoords.x % this.size.tile.width) < this.size.tile.halfWidth);
+    const clickedTileToLeft = ((mapCoords.x % this.size.tile.width) < this.size.tile.halfWidth);  // Clicked a left side of the tile, since the row is indented means it's the tile to the left that was clicked
     if (isOddRow && clickedTileToLeft) { x -= 1; }
     if (x < 0) { x += this.map.width; }
     if (x === this.map.width) { x -= this.map.width; }
 
-    console.info(eventCoords.x, eventCoords.y, ' ==> ', x, y);
-    return;
+    // Check if in the wide rectangle in the center of the hex
+    const grid = { x, y };
+    const tileCoords = {
+      x: (mapCoords.x + this.size.tile.width + (isOddRow ? +this.size.tile.halfWidth : 0)) % this.size.tile.width,
+      y: (mapCoords.y + this.size.row.height) % this.size.row.height  // make sure its row height, otherwise obob
+    }
+
+    // Check if in the wide rectangle in the center of the hex
+    const isBelowOneQuarter = tileCoords.y >= this.size.tile.oneQuarterHeight;
+    const isAboveThreeQuarters = tileCoords.y <= this.size.tile.threeQuarterHeight;
+    if (isBelowOneQuarter && isAboveThreeQuarters) { return grid; }
+
+    const isAboveOneQuarter = tileCoords.y < this.size.tile.oneQuarterHeight;
+    const isLeft = tileCoords.x <= this.size.tile.halfWidth;
+
+    // Check upper left and right triangles
+    if (isAboveOneQuarter) {
+      const slope = this.size.tile.oneQuarterHeight / this.size.tile.halfWidth;   // y = ax + b, this is a
+      if (isLeft) {
+        const isOutside = this.size.tile.oneQuarterHeight - (tileCoords.x * slope) > tileCoords.y;
+        if (isOutside) {
+          return { x: isOddRow ? grid.x : grid.x - 1, y: grid.y - 1 };
+        } else {
+          return grid;
+        }
+      } else {
+        const isOutside = (tileCoords.x - this.size.tile.halfWidth) * slope > tileCoords.y;
+        if (isOutside) {
+          return { x: isOddRow ? grid.x + 1 : grid.x, y: grid.y - 1 };
+        } else {
+          return grid;
+        }
+      }
+    }
+
+    // Lower left and right triangles are also upper ones for tiles bellow so do not need to be checked
+    return null;
   }
 
 }
-
-// eventTargetTile(event: MouseEvent) {
-//   // const mapCoords: Coords = {x: event.pageX - this.camera.translate.x, y: event.pageY - this.camera.translate.y};
-//   // let y = -1; while (mapCoords.y + y > (y+1) * this.size.tile.height * 0.75) {y++}
-//   // let x = -1; while (mapCoords.x > (x+1) * this.size.tile.width) {x++}
-//   // if ((y % 2 === 1) && ((mapCoords.x % this.size.tile.width) < (this.size.tile.halfWidth))) {x--}
-//   // return this.map.tiles.find(t => t.grid.x === x && t.grid.y === y);
-//   // const candidateAndNeighbours = this.map.tiles.filter(t => t.coords.x >= x-1 && t.coords.x <= x+1 && t.coords.y >= y-1 && t.coords.y <= y+1);
-//   // candidateAndNeighbours.forEach(tile => tile.distance = this.distance(mapCoords, this.tileCenterCoords(tile)));
-//   // return candidateAndNeighbours.sort( (a, b) => {return a.distance > b.distance ? -1 : a.distance < b.distance ? 1 : 0}).pop();
-// }

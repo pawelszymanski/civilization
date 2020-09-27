@@ -44,31 +44,31 @@ export class PaintMapService {
     this.subscribeToData();
   }
 
-  private subscribeToData() {
+  private subscribeToData(): void {
     this.cameraStore.camera.subscribe(camera => this.camera = camera);
     this.sizeStore.size.subscribe(size => this.size = size);
     this.mapStore.map.subscribe(map => this.map = map);
     this.mapUiStore.mapUi.subscribe(mapUi => this.mapUi = mapUi);
   }
 
-  public paintMap(ctx: CanvasRenderingContext2D) {
+  public paintMap(ctx: CanvasRenderingContext2D): void {
     this.ctx = ctx;
     this.paintBackground();
     this.paintMapDecoration();
     this.paintTiles();
   }
 
-  private paintBackground() {
+  private paintBackground(): void {
     this.ctx.fillStyle = 'black';
     this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
   }
 
-  private paintMapDecoration() {
+  private paintMapDecoration(): void {
     this.ctx.fillStyle = 'gray';
     this.ctx.fillRect(0, this.camera.translate.y - 10, this.ctx.canvas.width, this.size.map.height + 20);
   }
 
-  private paintTiles() {
+  private paintTiles(): void {
     for (const tile of this.map.tiles) {
       const tileCoordsOnViewportPx = this.tileUiService.tileCoordsOnViewportPx(tile);
       const isInViewport = !!tileCoordsOnViewportPx;
@@ -78,7 +78,7 @@ export class PaintMapService {
     }
   }
 
-  private createTilePath(tileCoordsOnViewport: Coords) {
+  private createTilePath(tileCoordsOnViewport: Coords): void {
     this.ctx.beginPath();
     this.ctx.moveTo(tileCoordsOnViewport.x + this.size.vertices[0].x, tileCoordsOnViewport.y + this.size.vertices[0].y);
     this.ctx.lineTo(tileCoordsOnViewport.x + this.size.vertices[1].x, tileCoordsOnViewport.y + this.size.vertices[1].y);
@@ -89,7 +89,7 @@ export class PaintMapService {
     this.ctx.closePath();
   }
 
-  private paintTerrain(tile: Tile, tileCoords: Coords) {
+  private paintTerrain(tile: Tile, tileCoords: Coords): void {
     this.createTilePath(tileCoords);
     this.ctx.fillStyle = TERRAIN_BASE_SET[tile.terrain.base.id].ui.color;
     this.ctx.fill();
@@ -102,7 +102,7 @@ export class PaintMapService {
     this.ctx.fillText(text, x, y);
   }
 
-  private addTileInfoTextOverlay(tile: Tile, tileCoords: Coords) {
+  private addTileInfoTextOverlay(tile: Tile, tileCoords: Coords): void {
     this.ctx.font = '10px Calibri';
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'bottom';
@@ -123,11 +123,11 @@ export class PaintMapService {
     }
   }
 
-  private addTileInfoYieldOverlay(tile: Tile) {
+  private addTileInfoYieldOverlay(tile: Tile): void {
     // TODO
   }
 
-  private paintGrid(tile: Tile, tileCoords: Coords) {
+  private paintGrid(tile: Tile, tileCoords: Coords): void {
     this.createTilePath(tileCoords);
     this.ctx.stroke();
   }

@@ -10,10 +10,17 @@ export interface HalfSize {
   halfHeight: number;
 }
 
+export interface QuarterSize {
+  oneQuarterWidth: number;
+  oneQuarterHeight: number;
+  threeQuarterWidth: number;
+  threeQuarterHeight: number;
+}
+
 export interface Size {
-  tile: FullSize & HalfSize;      // Tile height is equal to tile size CSS variable, rest is calculated from height
-  row: FullSize;                  // Calculated
-  map: FullSize;                  // Calculated
-  viewport: FullSize & HalfSize;  // Calculated
-  vertices: Coords[];             // Calculated
+  tile: FullSize & HalfSize & QuarterSize;  // Tile height is equal to tile size CSS variable, rest is calculated from height
+  row: FullSize;                            // Calculated
+  map: FullSize;                            // Calculated
+  viewport: FullSize & HalfSize;            // Calculated
+  vertices: Coords[];                       // Calculated
 }

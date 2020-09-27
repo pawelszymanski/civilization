@@ -6,18 +6,22 @@ export class LocalStorageService {
   localStorage: Storage;
 
   constructor() {
+    this.initLocalStorage();
+  }
+
+  private initLocalStorage(): void {
     this.localStorage = window.localStorage;
   }
 
-  get(key: string): any {
+  public get(key: string): any {
     return JSON.parse(this.localStorage.getItem(key));
   }
 
-  set(key: string, value: any) {
+  public set(key: string, value: any): void {
     this.localStorage.setItem(key, JSON.stringify(value));
   }
 
-  remove(key: string) {
+  public remove(key: string): void {
     this.localStorage.removeItem(key);
   }
 

@@ -1,13 +1,8 @@
 ## WORKING ON
-- use html overlay for events, remove cameraService.htmlSpecific
 - use APP_INITIALIZATION injection token for size service init  
-- strop px data before saving
-
 
 - html renderer: map wrapping
 - minimap
-- canvas selected tile fix
-- extract items from constructor in services
 
 ## TODO
 - move new map option to create game popup
@@ -33,6 +28,10 @@
 - Canvas: make tile background move to match translate
 
 ## DONE
+- update earth save
+- extract items from constructor in services
+- canvas selected tile fix
+- use html overlay for events, remove cameraService.htmlSpecific
 - extract map zoom service
 - extract size service
 - extract pain map on canvas service

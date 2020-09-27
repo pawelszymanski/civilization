@@ -27,7 +27,7 @@ export class MapZoomService {
     this.subscribeToData();
   }
 
-  private subscribeToData() {
+  private subscribeToData(): void {
     this.cameraStore.camera.subscribe(camera => this.camera = camera);
     this.sizeStore.size.subscribe(size => this.size = size);
   }

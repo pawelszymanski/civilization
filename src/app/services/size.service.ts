@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 
 import {Map} from '../models/map';
 import {Camera} from '../models/camera';
-import {FullSize, HalfSize} from '../models/size';
+import {FullSize, HalfSize, QuarterSize} from '../models/size';
 
 import {MapStore} from '../stores/map.store';
 import {CameraStore} from '../stores/camera.store';
@@ -26,33 +26,37 @@ export class SizeService {
     this.updateViewport();
   }
 
-  private subscribeToData() {
+  private subscribeToData(): void {
     this.cameraStore.camera.subscribe(camera => this.onCameraNext(camera));
     this.mapStore.map.subscribe(map => this.onMapNext(map));
   }
 
-  private onCameraNext(camera: Camera) {
+  private onCameraNext(camera: Camera): void {
     this.camera = camera;
     this.updateAll();
   }
 
-  private onMapNext(map: Map) {
+  private onMapNext(map: Map): void {
     this.map = map;
     this.updateAll();
   }
 
-  private initWindowResizeEvent() {
+  private initWindowResizeEvent(): void {
     window.addEventListener('resize', () => {
       this.updateViewport();
     });
   }
 
-  private calcTile(): FullSize & HalfSize {
+  private calcTile(): FullSize & HalfSize & QuarterSize {
     return {
       width: Math.floor(this.camera.tileSize * 0.9),
       height: Math.floor(this.camera.tileSize),
-      halfWidth: Math.floor(this.camera.tileSize * 0.9 / 2),
-      halfHeight: Math.floor(this.camera.tileSize / 2)
+      halfWidth: Math.floor(this.camera.tileSize * 0.9 * 0.50),
+      halfHeight: Math.floor(this.camera.tileSize * 0.50),
+      oneQuarterWidth: Math.floor(this.camera.tileSize * 0.9 * 0.25),
+      oneQuarterHeight: Math.floor(this.camera.tileSize * 0.25),
+      threeQuarterWidth: Math.floor(this.camera.tileSize * 0.9 * 0.75),
+      threeQuarterHeight: Math.floor(this.camera.tileSize * 0.75)
     }
   }
 
@@ -79,23 +83,23 @@ export class SizeService {
     }
   }
 
-  private calcVertices(tile: FullSize & HalfSize): Coords[] {
+  private calcVertices(tile: FullSize & HalfSize & QuarterSize): Coords[] {
     return [
-      {x: tile.halfWidth, y: 0},
-      {x: tile.width, y: Math.floor(tile.height * 0.25)},
-      {x: tile.width, y: Math.floor(tile.height * 0.75)},
-      {x: tile.halfWidth, y: tile.height},
-      {x: 0, y: Math.floor(tile.height * 0.75)},
-      {x: 0, y: Math.floor(tile.height * 0.25)}
+      { x: tile.halfWidth, y: 0 },
+      { x: tile.width, y: tile.oneQuarterHeight },
+      { x: tile.width, y: tile.threeQuarterHeight },
+      { x: tile.halfWidth, y: tile.height },
+      { x: 0, y: tile.threeQuarterHeight },
+      { x: 0, y: tile.oneQuarterHeight }
     ];
   }
 
-  private updateViewport() {
+  private updateViewport(): void {
     const viewport = this.calcViewport();
     this.sizeStore.setViewportSize(viewport);
   }
 
-  private updateAll() {
+  private updateAll(): void {
     if (this.camera && this.map) {
 
       const tile = this.calcTile();
