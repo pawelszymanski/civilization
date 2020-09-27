@@ -15,11 +15,11 @@ export class TileCssClassesPipe implements PipeTransform {
 
   transform(tile: Tile): string[] {
     const result = [
-      `m-x-${tile.coords.x}`,
-      `m-y-${tile.coords.y}`,
+      `m-x-${tile.grid.x}`,
+      `m-y-${tile.grid.y}`,
     ];
 
-    if (tile.coords.y % 2 === 1) {
+    if (tile.grid.y % 2 === 1) {
       result.push('m-indent');
     }
 

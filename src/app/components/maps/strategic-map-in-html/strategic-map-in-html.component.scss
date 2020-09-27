@@ -30,12 +30,14 @@
 .strategic-map-in-html-component {
   @include position-block(absolute, 0, 0, 0, 0, $z-index-game-map);
 
+  .overlay {
+    position: absolute;
+    z-index: 1;
+    background: transparent;
+  }
+
   .map {
     display: block;
-
-    //&.animated {
-    //  transition: 0.5s all cubic-bezier(0.4, 0, 0.15, 1);
-    //}
 
     @for $x from 1 through $max-map-tiles-x {
       &.m-x-#{$x} {

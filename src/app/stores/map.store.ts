@@ -39,7 +39,7 @@ export class MapStore {
 
   private replaceTile(tile: Tile, newTile: Tile) {
     const map = this._map.getValue();
-    const tileIndex = this.tileIndex(tile.coords);
+    const tileIndex = this.tileIndex(tile.grid);
     map.tiles[tileIndex] = newTile;
     this.next(map); // TODO seems its not needed here
   }

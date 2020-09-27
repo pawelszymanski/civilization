@@ -1,28 +1,33 @@
+<!-- For some reason overlay needs to be before map elem, otherwise it kills performance -->
+<div class="overlay"
+     [style.transform]="'translate(' + camera.translate.x + 'px, ' + camera.translate.y + 'px)'"
+     [style.width]="size.map.width + 'px'"
+     [style.height]="size.map.height + 'px'"
+     (mousedown)="onOverlayMouseDown($event)"
+     (mouseup)="onOverlayMouseUp($event)"
+     (wheel)="onOverlayWheel($event)"
+     (click)="onOverlayClick($event)"
+     (contextmenu)="onOverlayContextmenu($event)"
+     (dblclick)="onOverlayDblclick($event)">
+</div>
+
 <ul class="map"
-     #gameMapElem
-     *ngIf="map"
-     [ngClass]="['m-x-' + map.width, 'm-y-' + map.height]"
-     [style.transform]="'translate(' + camera.translate.x + 'px, ' + camera.translate.y + 'px)'">
-  <!--     [class.animated]="!isDragging && !isZooming"-->
+    *ngIf="map"
+    [style.transform]="'translate(' + camera.translate.x + 'px, ' + camera.translate.y + 'px)'"
+    [style.width]="size.map.width + 'px'"
+    [style.height]="size.map.height + 'px'">
 
   <li class="tile"
-       *ngFor="let tile of map.tiles"
-       [ngClass]="tile | tileCssClasses"
-       (mousedown)="onTileMouseDown($event)"
-       (mouseup)="onTileMouseUp($event)"
-       (wheel)="onTileWheel($event)"
-       (click)="onTileClick($event, tile)"
-       (contextmenu)="onTileContextmenu($event, tile)"
-       (dblclick)="onTileDblclick($event, tile)">
+      *ngFor="let tile of map.tiles"
+      [ngClass]="tile | tileCssClasses">
     <div class="tile-yield-component" *ngIf="mapUi.infoOverlay === TileInfoOverlayId.YIELD" [yield]="tile.yield"></div>
     <div class="tile-text-component" *ngIf="mapUi.infoOverlay === TileInfoOverlayId.TEXT" [tile]="tile" [showFullInfo]="camera.zoomLevel >= 0"></div>
   </li>
 
 </ul>
 
-<!--<div class="game-map-column"-->
-<!--     *ngFor="let x of [].constructor(map.width); let column = index;">-->
 
-<!--  <div class="game-map-tile"-->
-<!--       *ngFor="let tile of map | tilesInColumn:column+1"-->
-<!--       [ngClass]="tile | tileCssClasses"-->
+
+<!--      [style.display]="tile.isVisible ? 'block' : 'none'"-->
+<!--      [style.left]="tile.isVisible ? (tile.px.x + 'px') : ''"-->
+<!--      [style.top]="tile.isVisible ? (tile.px.y + 'px') : ''"-->

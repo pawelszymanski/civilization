@@ -1,8 +1,13 @@
 ## WORKING ON
-- html renderer: map wrapping
+- use html overlay for events, remove cameraService.htmlSpecific
+- use APP_INITIALIZATION injection token for size service init  
+- strop px data before saving
 
+
+- html renderer: map wrapping
 - minimap
 - canvas selected tile fix
+- extract items from constructor in services
 
 ## TODO
 - move new map option to create game popup
@@ -28,6 +33,9 @@
 - Canvas: make tile background move to match translate
 
 ## DONE
+- extract map zoom service
+- extract size service
+- extract pain map on canvas service
 - canvas: draw full canvas on the OnInit
 - create sample map and put it in main menu
 - right click to remove selected world builder tool
@@ -65,7 +73,8 @@
 - remove hover on tile since it was causing 17ms Update Layer tree
 - move change detection to OnPush to save 8ms
 - pointer-events: none; blocks events, also in children. But at a cost of a 50% of frame rate drop!!
-- your JSON can be huge 
+- your JSON can grow huge quickly (as in a save game with yield data)!
+- replace events on tiles to an overlay to remove hit tests  
 
 
 ## IDEAS TO SPEED UP 

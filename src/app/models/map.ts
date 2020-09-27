@@ -3,9 +3,9 @@ import {Terrain} from './terrain';
 import {Yield} from './yield';
 
 export interface Tile {
-  coords: Coords;        // Provided, 0-indexed
-  terrain: Terrain;      // Provided
-  yield: Yield;          // Recalculated on change
+  grid: Coords;            // Provided, 0-indexed location on the map
+  terrain: Terrain;        // Provided
+  yield: Yield;            // Calculated
 }
 
 export interface Map {

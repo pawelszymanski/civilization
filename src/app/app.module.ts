@@ -45,19 +45,22 @@ import {GenerateMapFormComponent} from './components/sidebars/dev-tools/componen
 
 // SERVICES
 import {CameraService} from './services/camera.service';
-import {StrategicMapInHtmlCameraService} from './services/strategic-map-in-html-camera.service';
+import {SizeService} from './services/size.service';
 import {GeneratorService} from './services/generator.service';
 import {KeyboardService} from './services/keyboard.service';
 import {LocalStorageService} from './services/local-storage.service';
 import {MapGeneratorService} from './services/map-generator.service';
-import {MouseService} from './services/mouse.service';
 import {SaveService} from './services/save.service';
 import {TileTerrainService} from './services/tile-terrain.service';
+import {TileUiService} from './services/tile-ui.service';
 import {TileYieldService} from './services/tile-yield.service';
 import {ZipService} from './services/zip.service';
+import {PaintMapService} from './services/paint-map.service';
+import {MapZoomService} from './services/map-zoom.service';
 
 // STORES
 import {CameraStore} from './stores/camera.store';
+import {SizeStore} from './stores/size.store';
 import {KeyBindingsStore} from './stores/key-bindings.store';
 import {MapStore} from './stores/map.store';
 import {MapUiStore} from './stores/map-ui.store';
@@ -115,20 +118,23 @@ const DIRECTIVES = [
 
 const SERVICES = [
   CameraService,
-  StrategicMapInHtmlCameraService,
+  SizeService,
   GeneratorService,
   KeyboardService,
   LocalStorageService,
   MapGeneratorService,
-  MouseService,
   SaveService,
   TileTerrainService,
+  TileUiService,
   TileYieldService,
   ZipService,
+  PaintMapService,
+  MapZoomService,
 ]
 
 const STORES = [
   CameraStore,
+  SizeStore,
   KeyBindingsStore,
   MapStore,
   MapUiStore,

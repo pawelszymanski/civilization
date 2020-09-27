@@ -2,9 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
   NgZone,
-  ViewChild,
   ViewEncapsulation
 } from '@angular/core';
 import {Subscription} from 'rxjs';
@@ -15,19 +13,20 @@ import {Coords} from '../../../models/utils';
 import {SidebarId, Ui} from '../../../models/ui';
 import {WorldBuilderToolId, WorldBuilderUi} from '../../../models/world-builder';
 import {MapUi, TileInfoOverlayId} from '../../../models/map-ui';
-
-import {CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP} from '../../../consts/camera.const';
+import {TerrainBaseId, TerrainFeatureId, TerrainImprovementId, TerrainResourceId} from '../../../models/terrain';
+import {Size} from '../../../models/size';
 
 import {CameraService} from '../../../services/camera.service';
-import {MouseService} from '../../../services/mouse.service';
+import {MapZoomService} from '../../../services/map-zoom.service';
 import {TileTerrainService} from '../../../services/tile-terrain.service';
+import {TileUiService} from '../../../services/tile-ui.service';
 
 import {CameraStore} from '../../../stores/camera.store';
+import {SizeStore} from '../../../stores/size.store';
 import {UiStore} from '../../../stores/ui.store';
 import {MapStore} from '../../../stores/map.store';
 import {MapUiStore} from '../../../stores/map-ui.store';
 import {WorldBuilderUiStore} from '../../../stores/world-builder-ui.store';
-import {TerrainBaseId, TerrainFeatureId, TerrainImprovementId, TerrainResourceId} from '../../../models/terrain';
 
 @Component({
   selector: '.strategic-map-in-html-component',
@@ -40,18 +39,16 @@ export class StrategicMapInHtmlComponent {
 
   TileInfoOverlayId = TileInfoOverlayId;
 
-  map: Map = null;
-  mapUi: MapUi = null;
-  camera: Camera = null;
+  map: Map;
+  mapUi: MapUi;
+  camera: Camera;
+  size: Size;
   ui: Ui;
   worldBuilderUi: WorldBuilderUi;
-
-  @ViewChild('gameMapElem') gameMapElem: ElementRef;  // Map elem reference
 
   dragStartCoords: Coords;  // Page x, y when mouse was pressed down
   dragStartOffset: Coords;  // Map element x, y when mouse was pressed down
 
-  isZooming = false;
   isDragging = false;
   dragHandler: Function;
 
@@ -64,18 +61,22 @@ export class StrategicMapInHtmlComponent {
     private ngZone: NgZone,
     private cdr: ChangeDetectorRef,
     private cameraService: CameraService,
-    private mouseService: MouseService,
     private tileTerrainService: TileTerrainService,
+    private tileUiService: TileUiService,
+    private mapZoomService: MapZoomService,
     private mapStore: MapStore,
     private mapUiStore: MapUiStore,
     private cameraStore: CameraStore,
+    private sizeStore: SizeStore,
     private uiStore: UiStore,
     private worldBuilderUiStore: WorldBuilderUiStore,
   ) {}
 
   ngOnInit() {
     this.subscribeToData();
-    this.requestAnimationFrame();
+    this.ngZone.runOutsideAngular(() => {
+      this.requestAnimationFrame();
+    });
   }
 
   ngOnDestroy() {
@@ -87,10 +88,8 @@ export class StrategicMapInHtmlComponent {
     this.subscriptions.push(
       this.mapStore.map.subscribe(map => this.map = map),
       this.mapUiStore.mapUi.subscribe(mapUi => this.mapUi = mapUi),
-      this.cameraStore.camera.subscribe(camera => {
-        this.cameraService.htmlSpecific.setTileSizeCssVariable(CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP[camera.zoomLevel]);
-        this.camera = camera;
-      }),
+      this.cameraStore.camera.subscribe(camera => this.camera = camera),
+      this.sizeStore.size.subscribe(size => this.size = size),
       this.uiStore.ui.subscribe(ui => this.ui = ui),
       this.worldBuilderUiStore.worldBuilderUi.subscribe(worldBuilderUi => this.worldBuilderUi = worldBuilderUi)
     );
@@ -99,7 +98,7 @@ export class StrategicMapInHtmlComponent {
   requestAnimationFrame() {
     this.animationFrameId = window.requestAnimationFrame(() => {
       this.requestAnimationFrame();
-      this.cdr.detectChanges();
+      this.cdr.markForCheck();
     });
   }
 
@@ -109,11 +108,6 @@ export class StrategicMapInHtmlComponent {
 
   cancelAnimationFrame() {
     window.cancelAnimationFrame(this.animationFrameId);
-  }
-
-  normalizeVerticalTranslation(translate: Coords): Coords {
-    const gameMapElemHeight = this.gameMapElem.nativeElement.offsetHeight;
-    return this.cameraService.normalizeVerticalTranslation(translate, gameMapElemHeight, this.window.innerHeight);
   }
 
   startDrag(event: MouseEvent) {
@@ -134,7 +128,7 @@ export class StrategicMapInHtmlComponent {
     }
 
     // normalize and set
-    translate = this.normalizeVerticalTranslation(translate);
+    translate = this.cameraService.normalizeVerticalTranslation(translate);
     this.cameraStore.setTranslate(translate);
   }
 
@@ -143,116 +137,96 @@ export class StrategicMapInHtmlComponent {
     document.removeEventListener('mousemove', this.dragHandler as any);
   }
 
-  onTileMouseDown(event: MouseEvent) {
+  // EVENTS
+
+  onOverlayMouseDown(event: MouseEvent) {
     if (this.isDragging) { this.stopDrag(); }  // Unfortunately sometimes dragging is not disabled properly
     if (event.button === 0) {
       this.startDrag(event)
     }
   }
 
-  onTileMouseUp(event: MouseEvent) {
+  onOverlayMouseUp(event: MouseEvent) {
     if (event.button === 0) {
       this.stopDrag()
     }
   }
 
-  onTileWheel(event: WheelEvent) {
-    this.isZooming = true;
-
-    // calculate new zoom level
-    const step = this.mouseService.wheelEventToStep(event);
-    const currentZoomLevel = this.camera.zoomLevel;
-    const newZoomLevel = this.cameraService.normalizeZoomLevel(currentZoomLevel + step);
-    if (newZoomLevel === currentZoomLevel) { return; }
-
-    // calculate new translate
-    const currentTranslate = this.camera.translate;
-    const mapCoordsAtScreenCenter = this.cameraService.htmlSpecific.mapCoordsAtScreenCenter(currentTranslate);
-    const scale = CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP[newZoomLevel] / CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP[currentZoomLevel];
-
-    // set zoom level first so it can used in normalization of the translation
-    this.cameraStore.setZoomLevel(newZoomLevel);
-    this.cameraService.htmlSpecific.setTileSizeCssVariable(CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP[newZoomLevel]);
-
-    // calculate new translate, normalize then set it
-    const newTranslate: Coords = {
-      x: -Math.round((mapCoordsAtScreenCenter.x * scale) - (this.window.innerWidth / 2)),
-      y: -Math.round((mapCoordsAtScreenCenter.y * scale) - (this.window.innerHeight / 2))
-    }
-    const normalizedTranslate = this.normalizeVerticalTranslation(newTranslate);
-    this.cameraStore.setTranslate(normalizedTranslate);
-
-    window.setTimeout(() => {this.isZooming = false;}, 0);
+  onOverlayWheel(event: WheelEvent) {
+    this.mapZoomService.handleWheelEvent(event);
   }
 
-  onTileClick(event: MouseEvent, tile: Tile) {
-    if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
-      switch (this.worldBuilderUi.tool) {
-        case WorldBuilderToolId.TERRAIN_BASE:
-          const baseId = this.worldBuilderUi.terrainBase;
-          this.mapStore.setTileTerrainBase(tile, baseId);
-          break;
-        case WorldBuilderToolId.TERRAIN_FEATURE:
-          const featureId = this.worldBuilderUi.terrainFeature;
-          if (this.tileTerrainService.canFeatureBePutOnTile(featureId, tile)) {
-            this.mapStore.setTileTerrainFeature(tile, featureId);
-          }
-          break;
-        case WorldBuilderToolId.TERRAIN_RESOURCE:
-          const resourceId = this.worldBuilderUi.terrainResource;
-          if (this.tileTerrainService.canResourceBePutOnTile(resourceId, tile)) {
-            this.mapStore.setTileTerrainResource(tile, resourceId);
-          }
-          break;
-        case WorldBuilderToolId.TERRAIN_IMPROVEMENT:
-          const improvementId = this.worldBuilderUi.terrainImprovement;
-          if (this.tileTerrainService.canImprovementBePutOnTile(improvementId, tile)) {
-            this.mapStore.setTileTerrainImprovement(tile, improvementId);
-          }
-          break;
-      }
-    }
+  onOverlayClick(event: MouseEvent) {
+    const eventOnMapCoordsPx = { x: event.offsetX, y: event.offsetY }
+    this.tileUiService.mapCoordsToGridCoords(eventOnMapCoordsPx);
+
+    // if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
+    //   switch (this.worldBuilderUi.tool) {
+    //     case WorldBuilderToolId.TERRAIN_BASE:
+    //       const baseId = this.worldBuilderUi.terrainBase;
+    //       this.mapStore.setTileTerrainBase(tile, baseId);
+    //       break;
+    //     case WorldBuilderToolId.TERRAIN_FEATURE:
+    //       const featureId = this.worldBuilderUi.terrainFeature;
+    //       if (this.tileTerrainService.canFeatureBePutOnTile(featureId, tile)) {
+    //         this.mapStore.setTileTerrainFeature(tile, featureId);
+    //       }
+    //       break;
+    //     case WorldBuilderToolId.TERRAIN_RESOURCE:
+    //       const resourceId = this.worldBuilderUi.terrainResource;
+    //       if (this.tileTerrainService.canResourceBePutOnTile(resourceId, tile)) {
+    //         this.mapStore.setTileTerrainResource(tile, resourceId);
+    //       }
+    //       break;
+    //     case WorldBuilderToolId.TERRAIN_IMPROVEMENT:
+    //       const improvementId = this.worldBuilderUi.terrainImprovement;
+    //       if (this.tileTerrainService.canImprovementBePutOnTile(improvementId, tile)) {
+    //         this.mapStore.setTileTerrainImprovement(tile, improvementId);
+    //       }
+    //       break;
+    //   }
+    // }
   }
 
-  onTileContextmenu(event: MouseEvent, tile: Tile) {
-    if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
-      switch (this.worldBuilderUi.tool) {
-        case WorldBuilderToolId.TERRAIN_BASE:
-          this.mapStore.setTileTerrainBase(tile, TerrainBaseId.OCEAN);
-          break;
-        case WorldBuilderToolId.TERRAIN_FEATURE:
-          this.mapStore.setTileTerrainFeature(tile, TerrainFeatureId.NONE);
-          break;
-        case WorldBuilderToolId.TERRAIN_RESOURCE:
-          this.mapStore.setTileTerrainResource(tile, TerrainResourceId.NONE);
-          break;
-        case WorldBuilderToolId.TERRAIN_IMPROVEMENT:
-          this.mapStore.setTileTerrainImprovement(tile, TerrainImprovementId.NONE);
-          break;
-      }
-    }
+  onOverlayContextmenu(event: MouseEvent) {
+    // if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
+    //   switch (this.worldBuilderUi.tool) {
+    //     case WorldBuilderToolId.TERRAIN_BASE:
+    //       this.mapStore.setTileTerrainBase(tile, TerrainBaseId.OCEAN);
+    //       break;
+    //     case WorldBuilderToolId.TERRAIN_FEATURE:
+    //       this.mapStore.setTileTerrainFeature(tile, TerrainFeatureId.NONE);
+    //       break;
+    //     case WorldBuilderToolId.TERRAIN_RESOURCE:
+    //       this.mapStore.setTileTerrainResource(tile, TerrainResourceId.NONE);
+    //       break;
+    //     case WorldBuilderToolId.TERRAIN_IMPROVEMENT:
+    //       this.mapStore.setTileTerrainImprovement(tile, TerrainImprovementId.NONE);
+    //       break;
+    //   }
+    // }
   }
 
-  onTileDblclick(event: MouseEvent, tile: Tile) {
-    if (this.ui.sidebar !== SidebarId.WORLD_BUILDER) {
-      const currentTranslate = this.camera.translate;
-      const mapCoordsAtScreenCenter = this.cameraService.htmlSpecific.mapCoordsAtScreenCenter(currentTranslate);
-      const centerOfClickedTile = this.cameraService.htmlSpecific.centerOfTheTileCoords(tile);
-
-      // The vector we need to apply to translation to move to desired position
-      const translateVector: Coords = {
-        x: mapCoordsAtScreenCenter.x - centerOfClickedTile.x,
-        y: mapCoordsAtScreenCenter.y - centerOfClickedTile.y
-      }
-
-      // Calculate new translate, normalize it and use
-      const newTranslate = {
-        x: currentTranslate.x + translateVector.x,
-        y: currentTranslate.y + translateVector.y
-      }
-      const normalizedTranslate = this.normalizeVerticalTranslation(newTranslate);
-      this.cameraStore.setTranslate(normalizedTranslate);
-    }
+  onOverlayDblclick(event: MouseEvent) {
+    // if (this.ui.sidebar !== SidebarId.WORLD_BUILDER) {
+    //   const currentTranslate = this.camera.translate;
+    //   const mapCoordsAtScreenCenter = this.cameraService.htmlSpecific.mapCoordsAtScreenCenter(currentTranslate);
+    //   const centerOfClickedTile = this.cameraService.htmlSpecific.centerOfTheTileCoords(tile); // TODO removed, use tile coords + .5 width and height
+    //
+    //   // The vector we need to apply to translation to move to desired position
+    //   const translateVector: Coords = {
+    //     x: mapCoordsAtScreenCenter.x - centerOfClickedTile.x,
+    //     y: mapCoordsAtScreenCenter.y - centerOfClickedTile.y
+    //   }
+    //
+    //   // Calculate new translate, normalize it and use
+    //   const newTranslate = {
+    //     x: currentTranslate.x + translateVector.x,
+    //     y: currentTranslate.y + translateVector.y
+    //   }
+    //   const normalizedTranslate = this.normalizeVerticalTranslation(newTranslate);
+    //   this.cameraStore.setTranslate(normalizedTranslate);
+    // }
   }
 
 }
