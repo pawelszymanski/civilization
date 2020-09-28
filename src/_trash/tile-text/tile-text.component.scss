@@ -1,5 +1,5 @@
-@import '../../../../../styles/mixins';
-@import '../../../../../styles/variables';
+@import '../../styles/mixins';
+@import '../../styles/variables';
 
 .tile-text-component {
   @include position-block(absolute, auto, 0, 0, 0);

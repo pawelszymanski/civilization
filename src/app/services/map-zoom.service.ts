@@ -61,7 +61,7 @@ export class MapZoomService {
       x: -Math.round((canvasCoordsAtScreenCenter.x * scale) - (this.size.screen.width / 2)),
       y: -Math.round((canvasCoordsAtScreenCenter.y * scale) - (this.size.screen.height / 2))
     }
-    const normalizedTranslate = this.cameraService.normalizeVerticalTranslation(newTranslate);
+    const normalizedTranslate = this.cameraService.normalizeTranslation(newTranslate);
     this.cameraStore.setTranslate(normalizedTranslate);
   }
 

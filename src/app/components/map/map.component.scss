@@ -1,31 +1,41 @@
-@import '../../../../styles/mixins';
-@import '../../../../styles/variables';
+@import '../../../styles/mixins';
+@import '../../../styles/variables';
 
-.strategic-map-in-html-component {
+.map-component {
   @include position-block(absolute, 0, 0, 0, 0, $z-index-game-map);
 
   .overlay {
-    @include position-block(absolute, 0, 0, 0, 0, $max-map-tiles-y + 2);
+    @include position-block(absolute, 0, 0, 0, 0, 3);
     background: transparent;
   }
 
+  canvas {
+    @include position-block(absolute, 0, 0, 0, 0, 2);
+  }
+
   .map {
-    @include position-block(absolute, 0, 0, 0, 0, $max-map-tiles-y + 1);
+    @include position-block(absolute, 0, 0, 0, 0, 1);
     display: block;
 
     .tile {
       display: block;
       position: absolute;
-      text-align: center;
       background-size: 180% 120%;
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-      @include disable-selection;
 
       // Dimensions
-      @for $size from 1 through 600 {
+      @for $size from 1 through $max-tile-size {
         &.m-size-#{$size} {
           width: #{$size * 0.9}px;
           height: #{$size}px;
+          //clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+          clip-path: polygon(
+              #{$size * 0.45}px 0,
+              #{$size * 0.90}px #{$size * 0.25}px,
+              #{$size * 0.90}px #{$size * 0.75}px,
+              #{$size * 0.45}px #{$size}px,
+              0 #{$size * 0.75}px,
+              0 #{$size * 0.25}px
+          );
         }
       }
 
@@ -185,7 +195,7 @@
           }
 
           // Resource icon location
-          @for $size from 1 through 600 {
+          @for $size from 1 through $max-tile-size {
             &.m-size-#{$size} {
               &:after {
                 @include position-block(relative, #{$size * -0.1}px, 0, 0, 0);

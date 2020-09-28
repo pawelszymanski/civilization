@@ -1,8 +1,8 @@
 import {Component, Input, OnChanges, ViewEncapsulation} from '@angular/core';
 
-import {Yield, YieldId, YieldOfType} from '../../../../models/yield';
+import {Yield, YieldId, YieldOfType} from '../../app/models/yield';
 
-import {YIELD_ID_TO_ICON_CLASS_MAP, YIELD_IDS_IN_ORDER} from '../../../../consts/yield.const';
+import {YIELD_ID_TO_ICON_CLASS_MAP, YIELD_IDS_IN_ORDER} from '../../app/consts/yield.const';
 
 @Component({
   selector: '.tile-yield-component',

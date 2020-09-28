@@ -1,6 +1,5 @@
 export enum MapTypeId {
-  STRATEGIC_ON_CANVAS,
-  STRATEGIC_IN_HTML
+  STRATEGIC
 }
 
 export enum ModalId {

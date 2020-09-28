@@ -1,6 +1,6 @@
 import {Component, Input, ViewEncapsulation} from '@angular/core';
 
-import {Tile} from '../../../../models/map';
+import {Tile} from '../../app/models/map';
 
 @Component({
   selector: '.tile-text-component',

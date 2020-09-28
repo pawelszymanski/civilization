@@ -83,7 +83,7 @@ export class MainMenuComponent implements OnInit, OnDestroy {
     const latestTimestamp = this.saves.map(save => save.timestamp).sort().pop();
     const saveToBeLoaded = this.saves.find(save => save.timestamp === latestTimestamp);
     this.saveService.loadSave(saveToBeLoaded);
-    this.uiStore.setMapType(MapTypeId.STRATEGIC_ON_CANVAS);
+    this.uiStore.setMapType(MapTypeId.STRATEGIC);
     this.uiStore.hideMainMenu();
   }
 
@@ -106,7 +106,7 @@ export class MainMenuComponent implements OnInit, OnDestroy {
     }
     const newMap = this.mapGeneratorService.generateNewGameMap(mapGeneratorSetting);
     this.mapStore.next(newMap);
-    this.uiStore.setMapType(MapTypeId.STRATEGIC_ON_CANVAS);
+    this.uiStore.setMapType(MapTypeId.STRATEGIC);
     this.uiStore.hideMainMenu();
   }
 

@@ -1,9 +1,9 @@
 import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {Subscription} from 'rxjs';
 
-import {MapTypeId, Ui} from '../../../../../models/ui';
+import {MapTypeId, Ui} from '../../app/models/ui';
 
-import {UiStore} from '../../../../../stores/ui.store';
+import {UiStore} from '../../app/stores/ui.store';
 
 @Component({
   selector: '.map-selection-form-component',

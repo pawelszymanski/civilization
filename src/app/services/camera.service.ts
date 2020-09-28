@@ -29,31 +29,26 @@ export class CameraService {
     return zoomLevel;
   }
 
-  // Makes the ui always show at max CAMERA_MAX_EMPTY_WINDOW_SPACE_PC percent of background while panning vertically
-  public normalizeVerticalTranslation(translate: Coords): Coords {
+  // Vertically: limits empty space on top and bottom of the map
+  // Horizontally: Keep translate within range of (-mapWidth + tileWidth/2) ... 0
+  public normalizeTranslation(translate: Coords): Coords {
+    // normalize X
+    translate.x = (translate.x - this.size.row.width) % this.size.row.width;
+
     // center the map vertically if its zoomed out very much
     if (this.size.screen.height > this.size.map.height) {
       translate.y = Math.floor((this.size.screen.height - this.size.map.height) / 2);
       return translate;
-    }
+    } else {
+      // move map up if there is too much space above the map
+      const maxEmptySpace = Math.floor(this.size.screen.height * CAMERA_MAX_EMPTY_WINDOW_SPACE_PC / 100);
+      if (translate.y > maxEmptySpace) { translate.y = maxEmptySpace; }
 
-    // move map up if there is too much space above the map
-    const maxEmptySpace = Math.floor(this.size.screen.height * CAMERA_MAX_EMPTY_WINDOW_SPACE_PC / 100);
-    if (translate.y > maxEmptySpace) { translate.y = maxEmptySpace; }
+      // move map down if there is too much space under the map
+      const minTranslate = -(this.size.map.height - this.size.screen.height + maxEmptySpace);
+      if (minTranslate > translate.y) { translate.y = minTranslate; }
 
-    // move map down if there is too much space under the map
-    const minTranslate = -(this.size.map.height - this.size.screen.height + maxEmptySpace);
-    if (minTranslate > translate.y) { translate.y = minTranslate; }
-
-    return translate;
-  }
-
-  // Keep translate within range of (-mapWidth + tileWidth/2) ... 0
-  public normalizeHorizontalTranslation(translate: Coords): Coords {
-    const mapWidthWithoutIndent = this.size.map.width - this.size.tile.halfWidth;
-    return {
-      x: (translate.x - mapWidthWithoutIndent) % mapWidthWithoutIndent,
-      y: translate.y
+      return translate;
     }
   }
 

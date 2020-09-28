@@ -7,11 +7,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppComponent} from './components/app/app.component';
 import {MainMenuComponent} from './components/main-menu/main-menu.component';
 
-// maps
-import {StrategicMapOnCanvasComponent} from './components/maps/strategic-map-on-canvas/strategic-map-on-canvas.component';
-import {StrategicMapInHtmlComponent} from './components/maps/strategic-map-in-html/strategic-map-in-html.component';
-import {TileTextComponent} from './components/maps/strategic-map-in-html/tile-text/tile-text.component';
-import {TileYieldComponent} from './components/maps/strategic-map-in-html/tile-yield/tile-yield.component';
+// map
+import {MapComponent} from './components/map/map.component';
 
 // hud
 import {StatusBarComponent} from './components/hud/status-bar/status-bar.component';
@@ -38,7 +35,6 @@ import {WorldBuilderComponent} from './components/sidebars/world-builder/world-b
 import {DevToolsComponent} from './components/sidebars/dev-tools/dev-tools.component';
 import {PerformanceChartComponent} from './components/sidebars/dev-tools/components/performance-chart/performance-chart.component';
 import {CameraFormComponent} from './components/sidebars/dev-tools/components/camera-form/camera-form.component';
-import {MapSelectionFormComponent} from './components/sidebars/dev-tools/components/map-selection-form/map-selection-form.component';
 import {GenerateMapFormComponent} from './components/sidebars/dev-tools/components/generate-map-form/generate-map-form.component';
 
 // DIRECTIVES
@@ -84,11 +80,8 @@ const COMPONENTS = [
   // general
   AppComponent,
   MainMenuComponent,
-  // maps
-  StrategicMapOnCanvasComponent,
-  StrategicMapInHtmlComponent,
-  TileTextComponent,
-  TileYieldComponent,
+  // map
+  MapComponent,
   // hud
   StatusBarComponent,
   QuickLinksComponent,
@@ -110,7 +103,6 @@ const COMPONENTS = [
   DevToolsComponent,
   PerformanceChartComponent,
   CameraFormComponent,
-  MapSelectionFormComponent,
   GenerateMapFormComponent,
 ]
 

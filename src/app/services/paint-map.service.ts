@@ -53,14 +53,13 @@ export class PaintMapService {
 
   public paintMap(ctx: CanvasRenderingContext2D): void {
     this.ctx = ctx;
-    this.paintBackground();
-    this.paintMapDecoration();
+    this.clearBackground();
+    // this.paintMapDecoration();
     this.paintTiles();
   }
 
-  private paintBackground(): void {
-    this.ctx.fillStyle = 'black';
-    this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+  private clearBackground(): void {
+    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
   }
 
   private paintMapDecoration(): void {
@@ -70,10 +69,8 @@ export class PaintMapService {
 
   private paintTiles(): void {
     for (const tile of this.map.tiles) {
-      const coordsOnScreenPx = this.tileUiService.tileCoordsOnScreenPx(tile);
-      const isOnScreen = !!coordsOnScreenPx;
-      if (isOnScreen) {
-        this.paintTile(tile, coordsOnScreenPx);
+      if (tile.isVisible) {
+        this.paintTile(tile);
       }
     }
   }
@@ -89,8 +86,8 @@ export class PaintMapService {
     this.ctx.closePath();
   }
 
-  private paintTerrain(tile: Tile, tileCoords: Coords): void {
-    this.createTilePath(tileCoords);
+  private paintTerrain(tile: Tile): void {
+    this.createTilePath(tile.px);
     this.ctx.fillStyle = TERRAIN_BASE_SET[tile.terrain.base.id].ui.color;
     this.ctx.fill();
   }
@@ -102,13 +99,13 @@ export class PaintMapService {
     this.ctx.fillText(text, x, y);
   }
 
-  private addTileInfoTextOverlay(tile: Tile, tileCoords: Coords): void {
+  private addTileInfoTextOverlay(tile: Tile): void {
     this.ctx.font = '10px Calibri';
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'bottom';
 
-    const tileHorizontalCenter = tileCoords.x + this.size.tile.halfWidth;
-    const tileBottom = tileCoords.y + this.size.tile.height;
+    const tileHorizontalCenter = tile.px.x + this.size.tile.halfWidth;
+    const tileBottom = tile.px.y + this.size.tile.height;
 
     this.fillTextWithShadow(`${tile.grid.x}, ${tile.grid.y}`, 'lightgray', 'black', tileHorizontalCenter, tileBottom - 10);
     if (this.camera.zoomLevel >= 0) {
@@ -127,16 +124,16 @@ export class PaintMapService {
     // TODO
   }
 
-  private paintGrid(tile: Tile, tileCoords: Coords): void {
-    this.createTilePath(tileCoords);
+  private paintGrid(tile: Tile): void {
+    this.createTilePath(tile.px);
     this.ctx.stroke();
   }
 
-  private paintTile(tile: Tile, tileCoords: Coords): void {
-    this.paintTerrain(tile, tileCoords)
-    if (this.mapUi.infoOverlay === TileInfoOverlayId.TEXT) { this.addTileInfoTextOverlay(tile, tileCoords) }
+  private paintTile(tile: Tile): void {
+    // this.paintTerrain(tile, tileCoords)
+    if (this.mapUi.infoOverlay === TileInfoOverlayId.TEXT) { this.addTileInfoTextOverlay(tile) }
     if (this.mapUi.infoOverlay === TileInfoOverlayId.YIELD) { this.addTileInfoYieldOverlay(tile) }
-    if (this.mapUi.showGrid) { this.paintGrid(tile, tileCoords) }
+    if (this.mapUi.showGrid) { this.paintGrid(tile) }
   }
 
 }

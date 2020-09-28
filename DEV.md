@@ -1,6 +1,8 @@
 ## WORKING ON
 - merge html and canvas maps into one component
+
 - use APP_INITIALIZATION injection token for size service init
+- strip extra props from tiles on save
 - minimap
 
 ## TODO
@@ -21,6 +23,9 @@
 - hide hud for world builder
 - don't place anything when panning
 - brush size
+
+## QUESTIONS
+- 
 
 ## HARD PROBLEMS:
 - Canvas: make tile background scale to tile size
@@ -77,7 +82,8 @@
 - replace events on tiles to an overlay to remove hit tests  
 - replace `calc(var(--tile-size) */+ x)` into size-xx classes, that did change recalculate style 60s + other 10ms into recalc style 25, layout 6, layer tree 10, paint 12; total savings of 17ms = ~25% PLUS spread one big blocking time nto few
 - remove two components per tile with *ngIf="mapUi.infoOverlay === TileInfoOverlayId.xxx", ~3ms on frame on change detection
-
+- clip path % => px => + 13% = FPS 26.6 ??????????
+- 
  
 
 ## IDEAS TO SPEED UP 

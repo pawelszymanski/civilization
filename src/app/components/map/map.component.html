@@ -1,0 +1,28 @@
+<!-- For some reason overlay needs to be before map elem, otherwise it kills performance -->
+<div class="overlay"
+     (mousedown)="onMousedown($event)"
+     (mouseup)="onMouseup()"
+     (click)="onClick($event)"
+     (dblclick)="onDblclick($event)"
+     (contextmenu)="onContextmenu($event)"
+     (wheel)="onWheel($event)">
+</div>
+
+<canvas #canvas
+        [width]="size.screen.width"
+        [height]="size.screen.height">
+</canvas>
+
+<ul class="map" *ngIf="map">
+
+  <li class="tile"
+      *ngFor="let tile of map.tiles"
+      [style.display]="tile.isVisible ? 'block' : 'none'"
+      [style.transform]="tile.isVisible ? 'translate(' + tile.px.x + 'px, ' + tile.px.y + 'px)' : ''"
+      [ngClass]="tile.isVisible ? (tile | tileCssClasses:camera.tileSize) : ''">
+  </li>
+
+</ul>
+
+<!--<div class="tile-yield-component" *ngIf="mapUi.infoOverlay === TileInfoOverlayId.YIELD" [yield]="tile.yield"></div>-->
+<!--<div class="tile-text-component" *ngIf="mapUi.infoOverlay === TileInfoOverlayId.TEXT" [tile]="tile" [showFullInfo]="camera.zoomLevel >= 0"></div>-->
