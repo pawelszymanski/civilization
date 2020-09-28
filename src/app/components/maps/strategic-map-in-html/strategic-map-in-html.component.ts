@@ -7,11 +7,11 @@ import {
 } from '@angular/core';
 import {Subscription} from 'rxjs';
 
-import {Map, Tile} from '../../../models/map';
+import {Map} from '../../../models/map';
 import {Camera} from '../../../models/camera';
 import {Coords} from '../../../models/utils';
 import {SidebarId, Ui} from '../../../models/ui';
-import {MapUi, TileInfoOverlayId} from '../../../models/map-ui';
+import {MapUi} from '../../../models/map-ui';
 import {Size} from '../../../models/size';
 
 import {CameraService} from '../../../services/camera.service';
@@ -25,13 +25,6 @@ import {SizeStore} from '../../../stores/size.store';
 import {UiStore} from '../../../stores/ui.store';
 import {MapStore} from '../../../stores/map.store';
 import {MapUiStore} from '../../../stores/map-ui.store';
-import {
-  TERRAIN_BASE_SET,
-  TERRAIN_FEATURE_SET,
-  TERRAIN_IMPROVEMENT_SET,
-  TERRAIN_RESOURCE_SET
-} from '../../../consts/terrain.const';
-import {TerrainBaseId} from '../../../models/terrain';
 
 @Component({
   selector: '.strategic-map-in-html-component',
@@ -41,8 +34,6 @@ import {TerrainBaseId} from '../../../models/terrain';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StrategicMapInHtmlComponent {
-
-  TileInfoOverlayId = TileInfoOverlayId;
 
   map: Map;
   mapUi: MapUi;

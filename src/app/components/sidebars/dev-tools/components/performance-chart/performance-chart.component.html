@@ -1,9 +1,18 @@
 <h3>FPS meter</h3>
 <form>
-  <button [class.active]="performanceMeterMode === PerformanceMeterModeId.SINGLE_FRAME_TIME"
-          (click)="setMeterMode(PerformanceMeterModeId.SINGLE_FRAME_TIME)">Single frame time (ms)</button>
-  <button [class.active]="performanceMeterMode === PerformanceMeterModeId.SINGLE_FPS"
-          (click)="setMeterMode(PerformanceMeterModeId.SINGLE_FPS)">Single FPS</button>
+
+  <button [class.active]="performanceMeterMode === PerformanceMeterModeId.FRAME"
+          (click)="setMeterMode(PerformanceMeterModeId.FRAME)">
+    Single frame
+    <ng-container *ngIf="performanceMeterMode === PerformanceMeterModeId.FRAME">({{ averageFrame }}ms)</ng-container>
+  </button>
+
+  <button [class.active]="performanceMeterMode === PerformanceMeterModeId.FPS"
+          (click)="setMeterMode(PerformanceMeterModeId.FPS)">
+    Single FPS
+    <ng-container *ngIf="performanceMeterMode === PerformanceMeterModeId.FPS">({{ averageFps }})</ng-container>
+  </button>
+
 </form>
 
 <canvas #canvas width="360" height="120"></canvas>

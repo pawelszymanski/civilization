@@ -8,6 +8,7 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
+import {interval, Subscription} from 'rxjs';
 
 import {PerformanceMeterModeId} from '../../../../../models/performance-meter';
 import {Millisecond} from '../../../../../models/utils';
@@ -25,6 +26,8 @@ import {GeneratorService} from '../../../../../services/generator.service';
 })
 export class PerformanceChartComponent implements OnInit, OnDestroy {
 
+  readonly AVERAGE_VALUE_INTERVAL = 500;
+
   @ViewChild('canvas', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
 
   ctx: CanvasRenderingContext2D;
@@ -34,9 +37,14 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
 
   performanceMeterMode: PerformanceMeterModeId;
   PerformanceMeterModeId = PerformanceMeterModeId;
+
   recordedValues: number[] = [];
+  averageFrame: string;
+  averageFps: string;
 
   animationFrameId: number;
+
+  subscriptions: Subscription[] = [];
 
   constructor(
     private ngZone: NgZone,
@@ -46,11 +54,13 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.initContext();
-    this.setMeterMode(PerformanceMeterModeId.SINGLE_FRAME_TIME);
+    this.setMeterMode(PerformanceMeterModeId.FRAME);
     this.initRequestAnimationFrame();
+    this.initAverageValuesCalculations();
   }
 
   ngOnDestroy() {
+    this.unsubscribeFromData();
     this.cancelAnimationFrame();
   }
 
@@ -63,6 +73,16 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
       this.then = this.generatorService.nowMilliseconds();
       this.requestAnimationFrame();
     });
+  }
+
+  initAverageValuesCalculations() {
+    this.subscriptions.push(
+      interval(this.AVERAGE_VALUE_INTERVAL).subscribe(() => this.updateAverageValues())
+    )
+  }
+
+  unsubscribeFromData() {
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   cancelAnimationFrame() {
@@ -91,10 +111,10 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
 
   addMeterData(frameTime: Millisecond) {
     switch (this.performanceMeterMode) {
-      case PerformanceMeterModeId.SINGLE_FRAME_TIME:
+      case PerformanceMeterModeId.FRAME:
         this.recordedValues.push(frameTime);
         break;
-      case PerformanceMeterModeId.SINGLE_FPS:
+      case PerformanceMeterModeId.FPS:
         this.recordedValues.push(Math.floor(1000 / frameTime));
         break;
     }
@@ -151,6 +171,22 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
       const y1 = CANVAS.HEIGHT - barHeight;
       this.ctx.fillRect(x1, y1, CHART.WIDTH_TO_RESULTS_RATIO - 1, barHeight);
     });
+  }
+
+  updateAverageValues() {
+    const sum = this.recordedValues.reduce((a, b) => a + b, 0);
+    const average = (sum / this.recordedValues.length).toFixed(2);
+
+    switch (this.performanceMeterMode) {
+      case PerformanceMeterModeId.FRAME:
+        this.averageFrame = average;
+        this.averageFps = null;
+        break;
+      case PerformanceMeterModeId.FPS:
+        this.averageFrame = null;
+        this.averageFps = average;
+        break;
+    }
   }
 
 }

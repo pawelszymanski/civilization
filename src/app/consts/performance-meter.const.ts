@@ -21,6 +21,6 @@ export const CHART = {
 }
 
 export const PERFORMANCE_MODE_TO_RANGE_MAP = {
-  [PerformanceMeterModeId.SINGLE_FRAME_TIME]: CHART.MAX_SINGLE_FRAME_VALUE,
-  [PerformanceMeterModeId.SINGLE_FPS]: CHART.MAX_SINGLE_FPS_VALUE
+  [PerformanceMeterModeId.FRAME]: CHART.MAX_SINGLE_FRAME_VALUE,
+  [PerformanceMeterModeId.FPS]: CHART.MAX_SINGLE_FPS_VALUE
 }
