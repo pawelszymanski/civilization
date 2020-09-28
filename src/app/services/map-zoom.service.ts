@@ -47,8 +47,8 @@ export class MapZoomService {
     // calculate new translate
     const currentTranslate = this.camera.translate;
     const canvasCoordsAtScreenCenter = {
-      x: Math.floor((this.size.viewport.width / 2) - currentTranslate.x),
-      y: Math.floor((this.size.viewport.height / 2) - currentTranslate.y)
+      x: Math.floor((this.size.screen.width / 2) - currentTranslate.x),
+      y: Math.floor((this.size.screen.height / 2) - currentTranslate.y)
     };
 
     const scale = CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP[newZoomLevel] / CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP[currentZoomLevel];
@@ -58,8 +58,8 @@ export class MapZoomService {
 
     // calculate new translate, normalize then set it
     const newTranslate: Coords = {
-      x: -Math.round((canvasCoordsAtScreenCenter.x * scale) - (this.size.viewport.width / 2)),
-      y: -Math.round((canvasCoordsAtScreenCenter.y * scale) - (this.size.viewport.height / 2))
+      x: -Math.round((canvasCoordsAtScreenCenter.x * scale) - (this.size.screen.width / 2)),
+      y: -Math.round((canvasCoordsAtScreenCenter.y * scale) - (this.size.screen.height / 2))
     }
     const normalizedTranslate = this.cameraService.normalizeVerticalTranslation(newTranslate);
     this.cameraStore.setTranslate(normalizedTranslate);

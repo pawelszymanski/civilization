@@ -8,8 +8,8 @@
   @include position-bottom-left(absolute, 40%, 15%);
   width: calc(100% * 10/9 * 6/10);
   height: calc(100% * 4/10);
-  font-size: calc(var(--tile-size) / 12.5);
-  line-height: calc(var(--tile-size) / 12.5);
+  //font-size: calc(var(--tile-size) / 12.5);
+  //line-height: calc(var(--tile-size) / 12.5);
 
   .tile-yield-row {
     display: flex;

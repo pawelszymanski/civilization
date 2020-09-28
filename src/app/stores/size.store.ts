@@ -29,12 +29,12 @@ export class SizeStore {
     this.next({...this._size.value, map: mapSize});
   }
 
-  public setViewportSize(viewportSize: FullSize & HalfSize) {
-    this.next({...this._size.value, viewport: viewportSize});
-  }
-
   public setVertices(vertices: Coords[]) {
     this.next({...this._size.value, vertices: vertices});
+  }
+
+  public setScreenSize(screenSize: FullSize & HalfSize) {
+    this.next({...this._size.value, screen: screenSize});
   }
 
 }

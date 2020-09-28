@@ -23,7 +23,7 @@ export class SizeService {
   ) {
     this.subscribeToData();
     this.initWindowResizeEvent();
-    this.updateViewport();
+    this.updateScreen();
   }
 
   private subscribeToData(): void {
@@ -43,7 +43,7 @@ export class SizeService {
 
   private initWindowResizeEvent(): void {
     window.addEventListener('resize', () => {
-      this.updateViewport();
+      this.updateScreen();
     });
   }
 
@@ -74,15 +74,6 @@ export class SizeService {
     }
   }
 
-  private calcViewport(): FullSize & HalfSize {
-    return {
-      width: this.window.innerWidth,
-      height: this.window.innerHeight,
-      halfWidth: Math.floor(this.window.innerWidth / 2),
-      halfHeight: Math.floor(this.window.innerHeight / 2)
-    }
-  }
-
   private calcVertices(tile: FullSize & HalfSize & QuarterSize): Coords[] {
     return [
       { x: tile.halfWidth, y: 0 },
@@ -94,9 +85,18 @@ export class SizeService {
     ];
   }
 
-  private updateViewport(): void {
-    const viewport = this.calcViewport();
-    this.sizeStore.setViewportSize(viewport);
+  private calcScreen(): FullSize & HalfSize {
+    return {
+      width: this.window.innerWidth,
+      height: this.window.innerHeight,
+      halfWidth: Math.floor(this.window.innerWidth / 2),
+      halfHeight: Math.floor(this.window.innerHeight / 2)
+    }
+  }
+
+  private updateScreen(): void {
+    const screen = this.calcScreen();
+    this.sizeStore.setScreenSize(screen);
   }
 
   private updateAll(): void {
@@ -105,10 +105,10 @@ export class SizeService {
       const tile = this.calcTile();
       const row = this.calcRow(tile);
       const map = this.calcMap(tile, row);
-      const viewport = this.calcViewport();
+      const screen = this.calcScreen();
       const vertices = this.calcVertices(tile);
 
-      this.sizeStore.next({ tile, row, map, viewport, vertices });
+      this.sizeStore.next({ tile, row, map, screen, vertices });
     }
   }
 

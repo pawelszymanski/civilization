@@ -13,15 +13,12 @@ import {
 @Pipe({name: 'tileCssClasses'})
 export class TileCssClassesPipe implements PipeTransform {
 
-  transform(tile: Tile): string[] {
+  transform(tile: Tile, tileSize: number): string[] {
     const result = [
       `m-x-${tile.grid.x}`,
       `m-y-${tile.grid.y}`,
+      `m-size-${tileSize}`,
     ];
-
-    if (tile.grid.y % 2 === 1) {
-      result.push('m-indent');
-    }
 
     const base = TERRAIN_BASE_SET[tile.terrain.base.id];
     switch (base.id) {

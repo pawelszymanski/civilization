@@ -25,6 +25,13 @@ import {SizeStore} from '../../../stores/size.store';
 import {UiStore} from '../../../stores/ui.store';
 import {MapStore} from '../../../stores/map.store';
 import {MapUiStore} from '../../../stores/map-ui.store';
+import {
+  TERRAIN_BASE_SET,
+  TERRAIN_FEATURE_SET,
+  TERRAIN_IMPROVEMENT_SET,
+  TERRAIN_RESOURCE_SET
+} from '../../../consts/terrain.const';
+import {TerrainBaseId} from '../../../models/terrain';
 
 @Component({
   selector: '.strategic-map-in-html-component',
@@ -96,7 +103,12 @@ export class StrategicMapInHtmlComponent {
   requestAnimationFrame() {
     this.animationFrameId = window.requestAnimationFrame(() => {
       this.requestAnimationFrame();
-      this.cdr.markForCheck();
+      for (let tile of this.map.tiles) {
+        const tileCoordsOnScreenPx = this.tileUiService.tileCoordsOnScreenPx(tile);
+        if (tileCoordsOnScreenPx) { tile.px = tileCoordsOnScreenPx; }
+        tile.isVisible = !!tileCoordsOnScreenPx;
+      }
+      this.cdr.detectChanges();
     });
   }
 
@@ -128,7 +140,7 @@ export class StrategicMapInHtmlComponent {
   }
 
   onOverlayClick(event: MouseEvent) {
-    const tile = this.mouseEventToTile(event);
+    const tile = this.tileUiService.mouseEventToTile(event);
 
     if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
       this.worldBuilderService.handleTileClick(tile);
@@ -136,7 +148,7 @@ export class StrategicMapInHtmlComponent {
   }
 
   onOverlayContextmenu(event: MouseEvent) {
-    const tile = this.mouseEventToTile(event);
+    const tile = this.tileUiService.mouseEventToTile(event);
 
     if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
       this.worldBuilderService.handleTileContextmenu(tile);
@@ -169,12 +181,6 @@ export class StrategicMapInHtmlComponent {
 
   // OTHER
 
-  mouseEventToTile(event: MouseEvent): Tile {
-    const eventOnMapCoordsPx = { x: event.offsetX, y: event.offsetY }
-    const grid = this.tileUiService.mapCoordsToGridCoords(eventOnMapCoordsPx);
-    return this.map.tiles[grid.x * this.map.height + grid.y];
-  }
-
   startDrag(event: MouseEvent) {
     this.dragStartCoords = {x: event.pageX, y: event.pageY};
     this.dragStartOffset = {x: this.camera.translate.x, y: this.camera.translate.y};
@@ -194,6 +200,7 @@ export class StrategicMapInHtmlComponent {
 
     // normalize and set
     translate = this.cameraService.normalizeVerticalTranslation(translate);
+    translate = this.cameraService.normalizeHorizontalTranslation(translate);
     this.cameraStore.setTranslate(translate);
   }
 

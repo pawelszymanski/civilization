@@ -1,7 +1,6 @@
 ## WORKING ON
-- use APP_INITIALIZATION injection token for size service init  
-
-- html renderer: map wrapping
+- merge html and canvas maps into one component
+- use APP_INITIALIZATION injection token for size service init
 - minimap
 
 ## TODO
@@ -28,6 +27,8 @@
 - Canvas: make tile background move to match translate
 
 ## DONE
+- remove var from css
+- html renderer: map wrapping
 - update earth save
 - extract items from constructor in services
 - canvas selected tile fix
@@ -74,7 +75,9 @@
 - pointer-events: none; blocks events, also in children. But at a cost of a 50% of frame rate drop!!
 - your JSON can grow huge quickly (as in a save game with yield data)!
 - replace events on tiles to an overlay to remove hit tests  
-
+- replace `calc(var(--tile-size) */+ x)` into size-xx classes, that did change recalculate style 60s + other 10ms into recalc style 25, layout 6, layer tree 10, paint 12; total savings of 17ms = ~25% PLUS spread one big blocking time nto few
+ 
+ 
 
 ## IDEAS TO SPEED UP 
 1. Use modern CSS over JS calculations 

@@ -6,6 +6,8 @@ export interface Tile {
   grid: Coords;            // Provided, 0-indexed location on the map
   terrain: Terrain;        // Provided
   yield: Yield;            // Calculated
+  isVisible?: boolean;
+  px?: Coords;
 }
 
 export interface Map {

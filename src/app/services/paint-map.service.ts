@@ -70,22 +70,22 @@ export class PaintMapService {
 
   private paintTiles(): void {
     for (const tile of this.map.tiles) {
-      const tileCoordsOnViewportPx = this.tileUiService.tileCoordsOnViewportPx(tile);
-      const isInViewport = !!tileCoordsOnViewportPx;
-      if (isInViewport) {
-        this.paintTile(tile, tileCoordsOnViewportPx);
+      const coordsOnScreenPx = this.tileUiService.tileCoordsOnScreenPx(tile);
+      const isOnScreen = !!coordsOnScreenPx;
+      if (isOnScreen) {
+        this.paintTile(tile, coordsOnScreenPx);
       }
     }
   }
 
-  private createTilePath(tileCoordsOnViewport: Coords): void {
+  private createTilePath(coordsOnScreen: Coords): void {
     this.ctx.beginPath();
-    this.ctx.moveTo(tileCoordsOnViewport.x + this.size.vertices[0].x, tileCoordsOnViewport.y + this.size.vertices[0].y);
-    this.ctx.lineTo(tileCoordsOnViewport.x + this.size.vertices[1].x, tileCoordsOnViewport.y + this.size.vertices[1].y);
-    this.ctx.lineTo(tileCoordsOnViewport.x + this.size.vertices[2].x, tileCoordsOnViewport.y + this.size.vertices[2].y);
-    this.ctx.lineTo(tileCoordsOnViewport.x + this.size.vertices[3].x, tileCoordsOnViewport.y + this.size.vertices[3].y);
-    this.ctx.lineTo(tileCoordsOnViewport.x + this.size.vertices[4].x, tileCoordsOnViewport.y + this.size.vertices[4].y);
-    this.ctx.lineTo(tileCoordsOnViewport.x + this.size.vertices[5].x, tileCoordsOnViewport.y + this.size.vertices[5].y);
+    this.ctx.moveTo(coordsOnScreen.x + this.size.vertices[0].x, coordsOnScreen.y + this.size.vertices[0].y);
+    this.ctx.lineTo(coordsOnScreen.x + this.size.vertices[1].x, coordsOnScreen.y + this.size.vertices[1].y);
+    this.ctx.lineTo(coordsOnScreen.x + this.size.vertices[2].x, coordsOnScreen.y + this.size.vertices[2].y);
+    this.ctx.lineTo(coordsOnScreen.x + this.size.vertices[3].x, coordsOnScreen.y + this.size.vertices[3].y);
+    this.ctx.lineTo(coordsOnScreen.x + this.size.vertices[4].x, coordsOnScreen.y + this.size.vertices[4].y);
+    this.ctx.lineTo(coordsOnScreen.x + this.size.vertices[5].x, coordsOnScreen.y + this.size.vertices[5].y);
     this.ctx.closePath();
   }
 

@@ -135,7 +135,7 @@ export class StrategicMapOnCanvasComponent implements OnInit, OnDestroy {
   }
 
   onCanvasClick(event: MouseEvent) {
-    const tile = this.mouseEventToTile(event);
+    const tile = this.tileUiService.mouseEventToTile(event);
 
     if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
       this.worldBuilderService.handleTileClick(tile);
@@ -143,7 +143,7 @@ export class StrategicMapOnCanvasComponent implements OnInit, OnDestroy {
   }
 
   onCanvasContextmenu(event: MouseEvent) {
-    const tile = this.mouseEventToTile(event);
+    const tile = this.tileUiService.mouseEventToTile(event);
 
     if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
       this.worldBuilderService.handleTileContextmenu(tile);
@@ -155,18 +155,5 @@ export class StrategicMapOnCanvasComponent implements OnInit, OnDestroy {
   }
 
   // OTHER
-
-  mouseEventToTile(event: MouseEvent): Tile {
-    const eventOnMapCoordsPx = this.eventToMapCoordsPx(event);
-    const grid = this.tileUiService.mapCoordsToGridCoords(eventOnMapCoordsPx);
-    return this.map.tiles[grid.x * this.map.height + grid.y];
-  }
-
-  eventToMapCoordsPx(event: MouseEvent): Coords {
-    let x = event.clientX - this.camera.translate.x;
-    if (x >= this.size.row.width) { x -= this.size.row.width; }
-    let y = event.clientY - this.camera.translate.y;
-    return { x, y };
-  }
 
 }

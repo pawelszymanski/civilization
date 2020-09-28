@@ -4,7 +4,7 @@
 $radius: 3px;
 $color: red;
 
-.viewport-center-marker-component {
+.screen-center-marker-component {
   @include position-block(fixed, calc(50% - #{$radius}), auto, auto, calc(50% - #{$radius}), $z-index-hud);
   @include size($radius * 2);
   border-radius: $radius;

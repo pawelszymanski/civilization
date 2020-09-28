@@ -32,17 +32,17 @@ export class CameraService {
   // Makes the ui always show at max CAMERA_MAX_EMPTY_WINDOW_SPACE_PC percent of background while panning vertically
   public normalizeVerticalTranslation(translate: Coords): Coords {
     // center the map vertically if its zoomed out very much
-    if (this.size.viewport.height > this.size.map.height) {
-      translate.y = Math.floor((this.size.viewport.height - this.size.map.height) / 2);
+    if (this.size.screen.height > this.size.map.height) {
+      translate.y = Math.floor((this.size.screen.height - this.size.map.height) / 2);
       return translate;
     }
 
     // move map up if there is too much space above the map
-    const maxEmptySpace = Math.floor(this.size.viewport.height * CAMERA_MAX_EMPTY_WINDOW_SPACE_PC / 100);
+    const maxEmptySpace = Math.floor(this.size.screen.height * CAMERA_MAX_EMPTY_WINDOW_SPACE_PC / 100);
     if (translate.y > maxEmptySpace) { translate.y = maxEmptySpace; }
 
     // move map down if there is too much space under the map
-    const minTranslate = -(this.size.map.height - this.size.viewport.height + maxEmptySpace);
+    const minTranslate = -(this.size.map.height - this.size.screen.height + maxEmptySpace);
     if (minTranslate > translate.y) { translate.y = minTranslate; }
 
     return translate;

@@ -1,92 +1,35 @@
 @import '../../../../styles/mixins';
 @import '../../../../styles/variables';
 
-@function tile-width() {
-  @return calc(var(--tile-size) * 0.9);
-}
-
-@function tile-height() {
-  @return var(--tile-size);
-}
-
-// JS: mapWidth = tileWidth * map.width + Math.ceil(tileWidth * 0.5);
-@function map-width($x) {
-  $base-width: calc(#{tile-width()} * #{$x});
-  $indent-width: calc(#{tile-width()} * 0.5);
-  @return calc(#{$base-width} + #{$indent-width});
-}
-
-@function row-height() {
-  @return calc((#{tile-height()} * 0.75) - 1px);
-}
-
-// JS: mapHeight = (tileHeight * map.height * 0.75) + Math.ceil(tileHeight * 0.25) - (map.height - 1);
-@function map-height($y) {
-  $base-height: calc(#{row-height()} * #{$y});
-  $first-tile-quarter: calc(#{tile-height()} * 0.25);
-  @return calc(#{$base-height} + #{$first-tile-quarter});
-}
-
 .strategic-map-in-html-component {
   @include position-block(absolute, 0, 0, 0, 0, $z-index-game-map);
 
   .overlay {
-    position: absolute;
-    z-index: 1;
+    @include position-block(absolute, 0, 0, 0, 0, $max-map-tiles-y + 2);
     background: transparent;
   }
 
   .map {
+    @include position-block(absolute, 0, 0, 0, 0, $max-map-tiles-y + 1);
     display: block;
 
-    @for $x from 1 through $max-map-tiles-x {
-      &.m-x-#{$x} {
-        width: map-width($x);
-      }
-    }
-
-    @for $y from 1 through $max-map-tiles-y {
-      &.m-y-#{$y} {
-        height: map-height($y);
-      }
-    }
-
-    // ------------------
-    // Basic tile styling
-    // ------------------
     .tile {
       display: block;
       position: absolute;
-      width: tile-width();
-      height: tile-height();
       text-align: center;
       background-size: 180% 120%;
       clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-      margin-bottom: calc((var(--tile-size) / -4) - 1px);
       @include disable-selection;
 
-      @for $x from 0 through ($max-map-tiles-x - 1) {
-        &.m-x-#{$x} {
-          left: calc(#{tile-width()} * #{$x});
-          &.m-indent {
-            left: calc(#{tile-width()} * (#{$x} + 0.5));
-          }
+      // Dimensions
+      @for $size from 1 through 600 {
+        &.m-size-#{$size} {
+          width: #{$size * 0.9}px;
+          height: #{$size}px;
         }
       }
 
-      @for $y from 0 through ($max-map-tiles-y - 1) {
-        &.m-y-#{$y} {
-          top: calc(#{row-height()} * #{$y});
-        }
-      }
-
-    }
-
-    // ------------------------------------------------------------------------------------------------
-    // Make terrain background flow through tiles (since `background-attachment: fixed` is not working)
-    // ------------------------------------------------------------------------------------------------
-    .tile {
-
+      // Make terrain background flow through tiles (since `background-attachment: fixed` is not working)
       @for $i from 0 through ($max-map-tiles-x - 1) {
         &:nth-of-type(2n+1) {
           &.m-x-#{$i} {
@@ -103,17 +46,10 @@
       @for $i from 0 through ($max-map-tiles-y - 1) {
         &.m-y-#{$i} {
           background-position-y: -$i * 226%;
-          z-index: $max-map-tiles-y - $i;       // Make whole hexagon area hoverable
         }
       }
 
-    }
-
-    // ----------------------------
-    // Terrain, features, resources
-    // ----------------------------
-    .tile {
-
+      // Terrain, features, resources base
       &:before {
         content: '';
         display: block;
@@ -237,16 +173,27 @@
       // Resources. Example: `m-resource-amber`
       @each $resource in $terrain-resource-list {
         &.m-resource-#{$resource} {
+
+          // Base
           &:after {
             content: '';
             display: block;
             @include size(100%);
-            @include position-block(relative, calc(var(--tile-size) * -0.1), 0, 0, 0);
             background: url('/assets/icons/terrain/resources/#{$resource}.webp') no-repeat;
             background-position-x: center;
             background-position-y: bottom;
-            background-size: calc(var(--tile-size) * 0.2 + 4px);
           }
+
+          // Resource icon location
+          @for $size from 1 through 600 {
+            &.m-size-#{$size} {
+              &:after {
+                @include position-block(relative, #{$size * -0.1}px, 0, 0, 0);
+                background-size: #{($size * 0.2) + 4}px;
+              }
+            }
+          }
+
         }
       }
 

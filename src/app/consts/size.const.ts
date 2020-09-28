@@ -19,7 +19,7 @@ export const DEFAULT_SIZE: Size = {
     width: 0,
     height: 0,
   },
-  viewport: {
+  screen: {
     width: 0,
     height: 0,
     halfWidth: 0,

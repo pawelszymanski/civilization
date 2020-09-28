@@ -17,7 +17,7 @@ import {TileYieldComponent} from './components/maps/strategic-map-in-html/tile-y
 import {StatusBarComponent} from './components/hud/status-bar/status-bar.component';
 import {QuickLinksComponent} from './components/hud/quick-links/quick-links.component';
 import {MiniMapComponent} from './components/hud/mini-map/mini-map.component';
-import {ViewportCenterMarkerComponent} from './components/hud/viewport-center-marker/viewport-center-marker.component';
+import {ScreenCenterMarkerComponent} from './components/hud/screen-center-marker/screen-center-marker.component';
 
 // gameplay modals
 import {CivicTreeComponent} from './components/modals/research/civic-tree/civic-tree.component';
@@ -93,7 +93,7 @@ const COMPONENTS = [
   StatusBarComponent,
   QuickLinksComponent,
   MiniMapComponent,
-  ViewportCenterMarkerComponent,
+  ScreenCenterMarkerComponent,
   // gameplay modals
   CivicTreeComponent,
   TechnologyTreeComponent,

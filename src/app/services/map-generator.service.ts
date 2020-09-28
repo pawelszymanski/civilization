@@ -19,9 +19,9 @@ export class MapGeneratorService {
     private tileYieldService: TileYieldService
   ) {}
 
-  private createEmptyOceanTile(coords: Coords): Tile {
+  private createEmptyOceanTile(grid: Coords): Tile {
     const tile = {
-      coords,
+      grid,
       terrain: {
         base: {id: TerrainBaseId.OCEAN, variation: 1},
         feature: {id: TerrainFeatureId.NONE, variation: null},
