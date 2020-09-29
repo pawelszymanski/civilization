@@ -55,67 +55,72 @@ export class MapCanvasService {
     this.mapUiStore.mapUi.subscribe(mapUi => this.mapUi = mapUi);
   }
 
-  public paintTileExtras(ctx: CanvasRenderingContext2D): void {
+  private setCtxShadow(color: string, blur: number, offsetX: number, offsetY: number): void {
+    this.ctx.shadowColor = color;
+    this.ctx.shadowBlur = blur;
+    this.ctx.shadowOffsetX = offsetX;
+    this.ctx.shadowOffsetY = offsetY;
+  }
+
+  private setCommonStyles(): void {
+    // grid
+    this.ctx.lineWidth = 1;
+    this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
+
+    // tile text
+    this.ctx.font = '12px Calibri';
+    this.ctx.textAlign = 'center';
+    this.ctx.textBaseline = 'bottom';
+    this.ctx.fillStyle = 'white';
+
+    this.setCtxShadow('black', 2, 0, 0);
+  }
+
+  public paintCanvas(ctx: CanvasRenderingContext2D): void {
     this.ctx = ctx;
+    this.setCommonStyles();
     this.clearCanvas();
-    this.setCtxGridStrokeStyle();
 
     for (const tile of this.map.tiles) {
       if (tile.isVisible) {
-        if (this.mapUi.infoOverlay === TileInfoOverlayId.TEXT) { this.addTileInfoTextOverlay(tile); }
-        if (this.mapUi.infoOverlay === TileInfoOverlayId.YIELD) { this.addTileInfoYieldOverlay(tile); }
-        if (this.mapUi.showGrid) { this.paintGridThreeSides(tile); }
+        if (this.mapUi.infoOverlay === TileInfoOverlayId.TEXT) { this.paintTileInfoText(tile); }
+        if (this.mapUi.infoOverlay === TileInfoOverlayId.YIELD) { this.paintTileInfoYield(tile); }
+        if (this.mapUi.showGrid) { this.paintRightSideEdges(tile); }
       }
     }
 
     if (this.mapUi.showGrid) {
-      for (const tile of this.firstRowTiles) { if (tile.isVisible) { this.paintGridTopLeft(tile); } }
-      for (const tile of this.lastRowTiles) { if (tile.isVisible) { this.paintGridBottomLeft(tile); } }
+      for (const tile of this.firstRowTiles) { if (tile.isVisible) { this.paintTopLeftEdge(tile); } }
+      for (const tile of this.lastRowTiles) { if (tile.isVisible) { this.paintBottomLeftEdge(tile); } }
     }
   }
 
-  private clearCanvas(): void {
+  public clearCanvas(): void {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
   }
 
-  private fillTextWithShadow(text: string, textColor: string, shadowColor: string, x: number, y: number, shadowDistance = 1) {
-    this.ctx.fillStyle = shadowColor;
-    this.ctx.fillText(text, x + shadowDistance, y + shadowDistance);
-    this.ctx.fillStyle = textColor;
-    this.ctx.fillText(text, x, y);
-  }
-
-  private addTileInfoTextOverlay(tile: Tile): void {
-    this.ctx.font = '10px Calibri';
-    this.ctx.textAlign = 'center';
-    this.ctx.textBaseline = 'bottom';
-
+  private paintTileInfoText(tile: Tile): void {
     const tileHorizontalCenter = tile.px.x + this.size.tile.halfWidth;
     const tileBottom = tile.px.y + this.size.tile.height;
 
-    this.fillTextWithShadow(`${tile.grid.x}, ${tile.grid.y}`, 'lightgray', 'black', tileHorizontalCenter, tileBottom - 10);
-    if (this.camera.zoomLevel >= 0) {
+    this.ctx.fillText(`${tile.grid.x}, ${tile.grid.y}`, tileHorizontalCenter, tileBottom - 12);
+    if (this.size.tile.width >= 130) {
       const terrainBaseName = this.terrainBaseNamePipe.transform(tile.terrain.base.id).toUpperCase();
       const terrainFeatureName = this.terrainFeatureNamePipe.transform(tile.terrain.feature.id).toUpperCase();
       const terrainResourceName = this.terrainResourceNamePipe.transform(tile.terrain.resourceId).toUpperCase();
       const terrainImprovementName = this.terrainImprovementNamePipe.transform(tile.terrain.improvementId).toUpperCase();
-      this.fillTextWithShadow(terrainImprovementName, 'lightgray', 'black', tileHorizontalCenter, tileBottom - 20);
-      this.fillTextWithShadow(terrainResourceName, 'lightgray', 'black', tileHorizontalCenter, tileBottom - 30);
-      this.fillTextWithShadow(terrainFeatureName, 'lightgray', 'black', tileHorizontalCenter, tileBottom - 40);
-      this.fillTextWithShadow(terrainBaseName, 'lightgray', 'black', tileHorizontalCenter, tileBottom - 50);
+      this.ctx.fillText(terrainImprovementName, tileHorizontalCenter, tileBottom - 26);
+      this.ctx.fillText(terrainResourceName, tileHorizontalCenter, tileBottom - 40);
+      this.ctx.fillText(terrainFeatureName, tileHorizontalCenter, tileBottom - 54);
+      this.ctx.fillText(terrainBaseName, tileHorizontalCenter, tileBottom - 68);
     }
   }
 
-  private addTileInfoYieldOverlay(tile: Tile): void {
+  private paintTileInfoYield(tile: Tile): void {
     // TODO
   }
 
-  private setCtxGridStrokeStyle(): void {
-    this.ctx.lineWidth = 1;
-    this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
-  }
-
-  private paintGridThreeSides(tile: Tile): void {
+  private paintRightSideEdges(tile: Tile): void {
     this.ctx.beginPath();
     this.ctx.moveTo(tile.px.x + this.size.vertices[0].x, tile.px.y + this.size.vertices[0].y + 0.5);
     this.ctx.lineTo(tile.px.x + this.size.vertices[1].x, tile.px.y + this.size.vertices[1].y + 0.5);
@@ -124,14 +129,15 @@ export class MapCanvasService {
     this.ctx.stroke();
   }
 
-  private paintGridTopLeft(tile: Tile): void {
+  // Paints top left  three right sides of the tile
+  private paintTopLeftEdge(tile: Tile): void {
     this.ctx.beginPath();
     this.ctx.moveTo(tile.px.x + this.size.vertices[5].x, tile.px.y + this.size.vertices[5].y + 0.5);
     this.ctx.lineTo(tile.px.x + this.size.vertices[0].x, tile.px.y + this.size.vertices[0].y + 0.5);
     this.ctx.stroke();
   }
 
-  private paintGridBottomLeft(tile: Tile): void {
+  private paintBottomLeftEdge(tile: Tile): void {
     this.ctx.beginPath();
     this.ctx.moveTo(tile.px.x + this.size.vertices[3].x, tile.px.y + this.size.vertices[3].y - 1);
     this.ctx.lineTo(tile.px.x + this.size.vertices[4].x, tile.px.y + this.size.vertices[4].y - 1);

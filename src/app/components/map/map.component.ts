@@ -10,11 +10,11 @@ import {
 import {DOCUMENT} from '@angular/common';
 import {Subscription} from 'rxjs';
 
-import {Map, Tile} from '../../models/map';
+import {Map} from '../../models/map';
 import {Camera} from '../../models/camera';
 import {Coords} from '../../models/utils';
 import {SidebarId, Ui} from '../../models/ui';
-import {MapUi} from '../../models/map-ui';
+import {MapUi, TileInfoOverlayId} from '../../models/map-ui';
 import {Size} from '../../models/size';
 
 import {CameraService} from '../../services/camera.service';
@@ -109,8 +109,9 @@ export class MapComponent {
     this.animationFrameId = this.window.requestAnimationFrame(() => {
       this.requestAnimationFrame();
       if (!!this.camera && !!this.size && !!this.map && !!this.mapUi) {
-        this.calcTileCoordsAndVisibility();
-        this.mapCanvasService.paintTileExtras(this.ctx);
+        this.updateTilesUiData();
+        const isCanvasInUse = this.mapUi.showGrid || this.mapUi.infoOverlay !== TileInfoOverlayId.NONE;
+        isCanvasInUse ? this.mapCanvasService.paintCanvas(this.ctx) : this.mapCanvasService.clearCanvas();
         this.cdr.detectChanges();
       }
     });
@@ -157,7 +158,7 @@ export class MapComponent {
 
   // OTHER
 
-  calcTileCoordsAndVisibility() {
+  updateTilesUiData() {
     for (let tile of this.map.tiles) {
       const tileCoordsOnScreenPx = this.tileUiService.tileCoordsOnScreenPx(tile);
       if (tileCoordsOnScreenPx) { tile.px = tileCoordsOnScreenPx; }
