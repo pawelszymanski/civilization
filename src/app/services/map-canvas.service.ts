@@ -1,12 +1,9 @@
 import {Injectable} from '@angular/core';
 
-import {Coords} from '../models/utils';
 import {Tile, Map} from '../models/map';
 import {MapUi, TileInfoOverlayId} from '../models/map-ui';
 import {Camera} from '../models/camera';
 import {Size} from '../models/size';
-
-import {TERRAIN_BASE_SET} from '../consts/terrain.const';
 
 import {TileUiService} from './tile-ui.service';
 
@@ -21,7 +18,7 @@ import {TerrainImprovementNamePipe} from '../pipes/terrain-improvement-name.pipe
 import {TerrainResourceNamePipe} from '../pipes/terrain-resource-name.pipe';
 
 @Injectable({providedIn: 'root'})
-export class PaintMapService {
+export class MapCanvasService {
 
   camera: Camera;
   size: Size;
@@ -29,6 +26,9 @@ export class PaintMapService {
   mapUi: MapUi;
 
   ctx: CanvasRenderingContext2D;
+
+  firstRowTiles: Tile[];
+  lastRowTiles: Tile[];
 
   constructor(
     private tileUiService: TileUiService,
@@ -47,49 +47,35 @@ export class PaintMapService {
   private subscribeToData(): void {
     this.cameraStore.camera.subscribe(camera => this.camera = camera);
     this.sizeStore.size.subscribe(size => this.size = size);
-    this.mapStore.map.subscribe(map => this.map = map);
+    this.mapStore.map.subscribe(map => {
+      this.map = map;
+      this.firstRowTiles = this.map.tiles.filter(t => t.grid.y === 0);
+      this.lastRowTiles = this.map.tiles.filter(t => t.grid.y === this.map.height-1);
+    });
     this.mapUiStore.mapUi.subscribe(mapUi => this.mapUi = mapUi);
   }
 
-  public paintMap(ctx: CanvasRenderingContext2D): void {
+  public paintTileExtras(ctx: CanvasRenderingContext2D): void {
     this.ctx = ctx;
-    this.clearBackground();
-    // this.paintMapDecoration();
-    this.paintTiles();
-  }
+    this.clearCanvas();
+    this.setCtxGridStrokeStyle();
 
-  private clearBackground(): void {
-    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-  }
-
-  private paintMapDecoration(): void {
-    this.ctx.fillStyle = 'gray';
-    this.ctx.fillRect(0, this.camera.translate.y - 10, this.ctx.canvas.width, this.size.map.height + 20);
-  }
-
-  private paintTiles(): void {
     for (const tile of this.map.tiles) {
       if (tile.isVisible) {
-        this.paintTile(tile);
+        if (this.mapUi.infoOverlay === TileInfoOverlayId.TEXT) { this.addTileInfoTextOverlay(tile); }
+        if (this.mapUi.infoOverlay === TileInfoOverlayId.YIELD) { this.addTileInfoYieldOverlay(tile); }
+        if (this.mapUi.showGrid) { this.paintGridThreeSides(tile); }
       }
+    }
+
+    if (this.mapUi.showGrid) {
+      for (const tile of this.firstRowTiles) { if (tile.isVisible) { this.paintGridTopLeft(tile); } }
+      for (const tile of this.lastRowTiles) { if (tile.isVisible) { this.paintGridBottomLeft(tile); } }
     }
   }
 
-  private createTilePath(coordsOnScreen: Coords): void {
-    this.ctx.beginPath();
-    this.ctx.moveTo(coordsOnScreen.x + this.size.vertices[0].x, coordsOnScreen.y + this.size.vertices[0].y);
-    this.ctx.lineTo(coordsOnScreen.x + this.size.vertices[1].x, coordsOnScreen.y + this.size.vertices[1].y);
-    this.ctx.lineTo(coordsOnScreen.x + this.size.vertices[2].x, coordsOnScreen.y + this.size.vertices[2].y);
-    this.ctx.lineTo(coordsOnScreen.x + this.size.vertices[3].x, coordsOnScreen.y + this.size.vertices[3].y);
-    this.ctx.lineTo(coordsOnScreen.x + this.size.vertices[4].x, coordsOnScreen.y + this.size.vertices[4].y);
-    this.ctx.lineTo(coordsOnScreen.x + this.size.vertices[5].x, coordsOnScreen.y + this.size.vertices[5].y);
-    this.ctx.closePath();
-  }
-
-  private paintTerrain(tile: Tile): void {
-    this.createTilePath(tile.px);
-    this.ctx.fillStyle = TERRAIN_BASE_SET[tile.terrain.base.id].ui.color;
-    this.ctx.fill();
+  private clearCanvas(): void {
+    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
   }
 
   private fillTextWithShadow(text: string, textColor: string, shadowColor: string, x: number, y: number, shadowDistance = 1) {
@@ -124,16 +110,48 @@ export class PaintMapService {
     // TODO
   }
 
-  private paintGrid(tile: Tile): void {
-    this.createTilePath(tile.px);
+  private setCtxGridStrokeStyle(): void {
+    this.ctx.lineWidth = 1;
+    this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
+  }
+
+  private paintGridThreeSides(tile: Tile): void {
+    this.ctx.beginPath();
+    this.ctx.moveTo(tile.px.x + this.size.vertices[0].x, tile.px.y + this.size.vertices[0].y + 0.5);
+    this.ctx.lineTo(tile.px.x + this.size.vertices[1].x, tile.px.y + this.size.vertices[1].y + 0.5);
+    this.ctx.lineTo(tile.px.x + this.size.vertices[2].x, tile.px.y + this.size.vertices[2].y - 1);
+    this.ctx.lineTo(tile.px.x + this.size.vertices[3].x, tile.px.y + this.size.vertices[3].y - 1);
     this.ctx.stroke();
   }
 
-  private paintTile(tile: Tile): void {
-    // this.paintTerrain(tile, tileCoords)
-    if (this.mapUi.infoOverlay === TileInfoOverlayId.TEXT) { this.addTileInfoTextOverlay(tile) }
-    if (this.mapUi.infoOverlay === TileInfoOverlayId.YIELD) { this.addTileInfoYieldOverlay(tile) }
-    if (this.mapUi.showGrid) { this.paintGrid(tile) }
+  private paintGridTopLeft(tile: Tile): void {
+    this.ctx.beginPath();
+    this.ctx.moveTo(tile.px.x + this.size.vertices[5].x, tile.px.y + this.size.vertices[5].y + 0.5);
+    this.ctx.lineTo(tile.px.x + this.size.vertices[0].x, tile.px.y + this.size.vertices[0].y + 0.5);
+    this.ctx.stroke();
+  }
+
+  private paintGridBottomLeft(tile: Tile): void {
+    this.ctx.beginPath();
+    this.ctx.moveTo(tile.px.x + this.size.vertices[3].x, tile.px.y + this.size.vertices[3].y - 1);
+    this.ctx.lineTo(tile.px.x + this.size.vertices[4].x, tile.px.y + this.size.vertices[4].y - 1);
+    this.ctx.stroke();
   }
 
 }
+
+// private paintMapDecoration(): void {
+//   this.ctx.fillStyle = 'gray';
+//   this.ctx.fillRect(0, this.camera.translate.y - 10, this.ctx.canvas.width, this.size.map.height + 20);
+// }
+
+// private createTilePath(coordsOnScreen: Coords): void {
+//   this.ctx.beginPath();
+//   this.ctx.moveTo(coordsOnScreen.x + this.size.vertices[0].x, coordsOnScreen.y + this.size.vertices[0].y);
+//   this.ctx.lineTo(coordsOnScreen.x + this.size.vertices[1].x, coordsOnScreen.y + this.size.vertices[1].y);
+//   this.ctx.lineTo(coordsOnScreen.x + this.size.vertices[2].x, coordsOnScreen.y + this.size.vertices[2].y);
+//   this.ctx.lineTo(coordsOnScreen.x + this.size.vertices[3].x, coordsOnScreen.y + this.size.vertices[3].y);
+//   this.ctx.lineTo(coordsOnScreen.x + this.size.vertices[4].x, coordsOnScreen.y + this.size.vertices[4].y);
+//   this.ctx.lineTo(coordsOnScreen.x + this.size.vertices[5].x, coordsOnScreen.y + this.size.vertices[5].y);
+//   this.ctx.closePath();
+// }

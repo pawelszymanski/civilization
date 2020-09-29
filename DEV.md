@@ -1,8 +1,8 @@
 ## WORKING ON
 - merge html and canvas maps into one component
 
-- use APP_INITIALIZATION injection token for size service init
 - strip extra props from tiles on save
+- use APP_INITIALIZATION injection token for size service init
 - minimap
 
 ## TODO
@@ -97,8 +97,50 @@
            }
 ` => &.m-odd => 17.5ms => 16.0ms style calc
 - `.map-compponent {.map {.tile {}}}` => `.tile {}` +1.2FPS on full screen 60px!
+- `this.ngZone.runOutsideAngular(() => {
+     this.document.addEventListener('mousemove', this.dragHandlerRef as any);
+   });` to avoid detect changes on mouse move
+- pure pipe of TileCssClassesPipe to not execute classes, only style changes
+- Make grid draw only 3 sides so tiles can share grid lines 
+```javascript
+  private paintGrid(tile: Tile): void {
+    this.ctx.beginPath();
+    this.ctx.moveTo(tile.px.x + this.size.vertices[0].x, tile.px.y + this.size.vertices[0].y);
+    this.ctx.lineTo(tile.px.x + this.size.vertices[1].x, tile.px.y + this.size.vertices[1].y);
+    this.ctx.lineTo(tile.px.x + this.size.vertices[2].x, tile.px.y + this.size.vertices[2].y);
+    this.ctx.lineTo(tile.px.x + this.size.vertices[3].x, tile.px.y + this.size.vertices[3].y);
+    this.ctx.lineTo(tile.px.x + this.size.vertices[4].x, tile.px.y + this.size.vertices[4].y);
+    this.ctx.lineTo(tile.px.x + this.size.vertices[5].x, tile.px.y + this.size.vertices[5].y);
+    this.ctx.closePath();
+    this.ctx.stroke();
+  }
+```
+=>
+```javascript
+  private paintGridThreeSides(tile: Tile): void {
+    this.ctx.beginPath();
+    this.ctx.moveTo(tile.px.x + this.size.vertices[0].x, tile.px.y + this.size.vertices[0].y + 0.5);
+    this.ctx.lineTo(tile.px.x + this.size.vertices[1].x, tile.px.y + this.size.vertices[1].y + 0.5);
+    this.ctx.lineTo(tile.px.x + this.size.vertices[2].x, tile.px.y + this.size.vertices[2].y - 1);
+    this.ctx.lineTo(tile.px.x + this.size.vertices[3].x, tile.px.y + this.size.vertices[3].y - 1);
+    this.ctx.stroke();
+  }
 
+  private paintGridTopLeft(tile: Tile): void {
+    this.ctx.beginPath();
+    this.ctx.moveTo(tile.px.x + this.size.vertices[5].x, tile.px.y + this.size.vertices[5].y + 0.5);
+    this.ctx.lineTo(tile.px.x + this.size.vertices[0].x, tile.px.y + this.size.vertices[0].y + 0.5);
+    this.ctx.stroke();
+  }
 
+  private paintGridBottomLeft(tile: Tile): void {
+    this.ctx.beginPath();
+    this.ctx.moveTo(tile.px.x + this.size.vertices[3].x, tile.px.y + this.size.vertices[3].y - 1);
+    this.ctx.lineTo(tile.px.x + this.size.vertices[4].x, tile.px.y + this.size.vertices[4].y - 1);
+    this.ctx.stroke();
+  }
+```
+=> ~3ms on earth for 20px tile (full map)
 
 ## IDEAS TO SPEED UP 
 1. Use modern CSS over JS calculations 

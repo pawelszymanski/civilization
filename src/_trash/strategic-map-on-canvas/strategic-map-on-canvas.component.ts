@@ -12,7 +12,7 @@ import {CameraService} from '../../app/services/camera.service';
 import {TileTerrainService} from '../../app/services/tile-terrain.service';
 import {TileUiService} from '../../app/services/tile-ui.service';
 import {SizeService} from '../../app/services/size.service';
-import {PaintMapService} from '../../app/services/paint-map.service';
+import {StrategicMapCanvasService} from '../../app/services/paint-map.service';
 import {MapZoomService} from '../../app/services/map-zoom.service';
 import {WorldBuilderService} from '../../app/services/world-builder.service';
 
@@ -54,7 +54,7 @@ export class StrategicMapOnCanvasComponent implements OnInit, OnDestroy {
     private tileUiService: TileUiService,
     private mapZoomService: MapZoomService,
     private sizeService: SizeService, // Keep it here so it initializes
-    private paintMapService: PaintMapService,
+    private paintMapService: StrategicMapCanvasService,
     private worldBuilderService: WorldBuilderService,
     private cameraStore: CameraStore,
     private sizeStore: SizeStore,
@@ -94,7 +94,7 @@ export class StrategicMapOnCanvasComponent implements OnInit, OnDestroy {
     this.animationFrameId = window.requestAnimationFrame(() => {
       this.requestAnimationFrame();
       if (this.camera && this.size && this.map && this.mapUi) {
-        this.paintMapService.paintMap(this.ctx);
+        this.paintMapService.paintTileExtras(this.ctx);
       }
     });
   }

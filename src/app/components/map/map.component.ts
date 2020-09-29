@@ -22,7 +22,7 @@ import {TileTerrainService} from '../../services/tile-terrain.service';
 import {TileUiService} from '../../services/tile-ui.service';
 import {MapZoomService} from '../../services/map-zoom.service';
 import {WorldBuilderService} from '../../services/world-builder.service';
-import {PaintMapService} from '../../services/paint-map.service';
+import {MapCanvasService} from '../../services/map-canvas.service';
 
 import {UiStore} from '../../stores/ui.store';
 import {MapStore} from '../../stores/map.store';
@@ -69,7 +69,7 @@ export class MapComponent {
     private tileUiService: TileUiService,
     private mapZoomService: MapZoomService,
     private worldBuilderService: WorldBuilderService,
-    private paintMapService: PaintMapService,
+    private mapCanvasService: MapCanvasService,
     private sizeService: SizeService,
     private uiStore: UiStore,
     private mapStore: MapStore,
@@ -110,7 +110,7 @@ export class MapComponent {
       this.requestAnimationFrame();
       if (!!this.camera && !!this.size && !!this.map && !!this.mapUi) {
         this.calcTileCoordsAndVisibility();
-        // this.paintMapService.paintMap(this.ctx);
+        this.mapCanvasService.paintTileExtras(this.ctx);
         this.cdr.detectChanges();
       }
     });
@@ -141,30 +141,6 @@ export class MapComponent {
     if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
       this.worldBuilderService.handleTileClick(tile);
     }
-  }
-
-  onDblclick(event: MouseEvent) {
-    // const tile = this.mouseEventToTile(event);
-    //
-    // if (this.ui.sidebar !== SidebarId.WORLD_BUILDER) {
-    //   const currentTranslate = this.camera.translate;
-    //   const mapCoordsAtScreenCenter = this.cameraService.mapCoordsAtScreenCenter(currentTranslate);
-    //   const centerOfClickedTile = this.cameraService.centerOfTheTileCoords(tile); // TODO removed, use tile coords + .5 width and height
-    //
-    //   // The vector we need to apply to translation to move to desired position
-    //   const translateVector: Coords = {
-    //     x: mapCoordsAtScreenCenter.x - centerOfClickedTile.x,
-    //     y: mapCoordsAtScreenCenter.y - centerOfClickedTile.y
-    //   }
-    //
-    //   // Calculate new translate, normalize it and use
-    //   const newTranslate = {
-    //     x: currentTranslate.x + translateVector.x,
-    //     y: currentTranslate.y + translateVector.y
-    //   }
-    //   const normalizedTranslate = this.cameraService.normalizeTranslation(newTranslate);
-    //   this.cameraStore.setTranslate(normalizedTranslate);
-    // }
   }
 
   onContextmenu(event: MouseEvent) {
@@ -217,3 +193,27 @@ export class MapComponent {
   }
 
 }
+
+// onDblclick(event: MouseEvent) {
+//   const tile = this.mouseEventToTile(event);
+//
+//   if (this.ui.sidebar !== SidebarId.WORLD_BUILDER) {
+//     const currentTranslate = this.camera.translate;
+//     const mapCoordsAtScreenCenter = this.cameraService.mapCoordsAtScreenCenter(currentTranslate);
+//     const centerOfClickedTile = this.cameraService.centerOfTheTileCoords(tile); // TODO removed, use tile coords + .5 width and height
+//
+//     // The vector we need to apply to translation to move to desired position
+//     const translateVector: Coords = {
+//       x: mapCoordsAtScreenCenter.x - centerOfClickedTile.x,
+//       y: mapCoordsAtScreenCenter.y - centerOfClickedTile.y
+//     }
+//
+//     // Calculate new translate, normalize it and use
+//     const newTranslate = {
+//       x: currentTranslate.x + translateVector.x,
+//       y: currentTranslate.y + translateVector.y
+//     }
+//     const normalizedTranslate = this.cameraService.normalizeTranslation(newTranslate);
+//     this.cameraStore.setTranslate(normalizedTranslate);
+//   }
+// }

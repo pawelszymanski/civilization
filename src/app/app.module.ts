@@ -51,7 +51,7 @@ import {TileTerrainService} from './services/tile-terrain.service';
 import {TileUiService} from './services/tile-ui.service';
 import {TileYieldService} from './services/tile-yield.service';
 import {ZipService} from './services/zip.service';
-import {PaintMapService} from './services/paint-map.service';
+import {MapCanvasService} from './services/map-canvas.service';
 import {MapZoomService} from './services/map-zoom.service';
 import {WorldBuilderService} from './services/world-builder.service';
 
@@ -121,7 +121,7 @@ const SERVICES = [
   TileUiService,
   TileYieldService,
   ZipService,
-  PaintMapService,
+  MapCanvasService,
   MapZoomService,
   WorldBuilderService,
 ]
