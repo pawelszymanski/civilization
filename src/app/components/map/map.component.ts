@@ -10,26 +10,26 @@ import {
 import {DOCUMENT} from '@angular/common';
 import {Subscription} from 'rxjs';
 
-import {Map} from '../../models/map';
+import {Map, Tile} from '../../models/map';
 import {Camera} from '../../models/camera';
 import {Coords} from '../../models/utils';
 import {SidebarId, Ui} from '../../models/ui';
 import {MapUi, TileInfoOverlayId} from '../../models/map-ui';
 import {Size} from '../../models/size';
 
-import {CameraService} from '../../services/camera.service';
 import {TileTerrainService} from '../../services/tile-terrain.service';
 import {TileUiService} from '../../services/tile-ui.service';
 import {MapZoomService} from '../../services/map-zoom.service';
 import {WorldBuilderService} from '../../services/world-builder.service';
 import {MapCanvasService} from '../../services/map-canvas.service';
+import {SizeService} from '../../services/size.service';
 
 import {UiStore} from '../../stores/ui.store';
 import {MapStore} from '../../stores/map.store';
 import {MapUiStore} from '../../stores/map-ui.store';
 import {CameraStore} from '../../stores/camera.store';
 import {SizeStore} from '../../stores/size.store';
-import {SizeService} from '../../services/size.service';
+import {WorldBuilderHoveredTilesStore} from '../../stores/world-builder-hovered-tiles.store';
 
 @Component({
   selector: '.map-component',
@@ -51,7 +51,7 @@ export class MapComponent {
   size: Size;
 
   dragStartCoords: Coords;  // Page x, y when mouse was pressed down
-  dragStartOffset: Coords;  // Map element x, y when mouse was pressed down
+  dragStartTranslate: Coords;  // Map element x, y when mouse was pressed down
   isDragging = false;
   dragHandlerRef: Function;
 
@@ -64,7 +64,6 @@ export class MapComponent {
     private window: Window,
     private ngZone: NgZone,
     private cdr: ChangeDetectorRef,
-    private cameraService: CameraService,
     private tileTerrainService: TileTerrainService,
     private tileUiService: TileUiService,
     private mapZoomService: MapZoomService,
@@ -76,6 +75,7 @@ export class MapComponent {
     private mapUiStore: MapUiStore,
     private cameraStore: CameraStore,
     private sizeStore: SizeStore,
+    private worldBuilderHoveredTilesStore: WorldBuilderHoveredTilesStore,
   ) {}
 
   // INIT
@@ -110,8 +110,7 @@ export class MapComponent {
       this.requestAnimationFrame();
       if (!!this.camera && !!this.size && !!this.map && !!this.mapUi) {
         this.updateTilesUiData();
-        const isCanvasInUse = this.mapUi.showGrid || this.mapUi.infoOverlay !== TileInfoOverlayId.NONE;
-        isCanvasInUse ? this.mapCanvasService.paintCanvas(this.ctx) : this.mapCanvasService.clearCanvas();
+        this.isCanvasInUse() ? this.mapCanvasService.paintCanvas(this.ctx) : this.mapCanvasService.clearCanvas();
         this.cdr.detectChanges();
       }
     });
@@ -132,11 +131,20 @@ export class MapComponent {
     this.startDrag(event);
   }
 
-  onMouseup() {
-    this.stopDrag();
+  onMousemove(event: MouseEvent) {  // Intended for the hover effects
+    const isPlacingTerrain = (this.ui.sidebar === SidebarId.WORLD_BUILDER) && !this.isDragging;
+    const tiles = isPlacingTerrain ? this.tileUiService.circleOfTiles(this.tileUiService.mouseEventToTile(event), 2) : [];
+    this.worldBuilderHoveredTilesStore.next(tiles);
   }
 
-  onClick(event: MouseEvent) {
+  onMouseup(event: MouseEvent) {
+    this.stopDrag();
+
+    const dragDistance = this.vectorLength({x: event.pageX, y: event.pageY}, this.dragStartCoords);
+    if (dragDistance === 0)  { this.onClick(event); }  // With no excessive dragging count as a click
+  }
+
+  onClick(event: MouseEvent) {  // artificial, comes after decision making in onMouseup
     const tile = this.tileUiService.mouseEventToTile(event);
 
     if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
@@ -158,6 +166,10 @@ export class MapComponent {
 
   // OTHER
 
+  vectorLength(vector1: Coords, vector2: Coords): number {
+    return Math.sqrt( (vector1.x - vector2.x) ** 2 + (vector1.y - vector2.y) ** 2 );
+  }
+
   updateTilesUiData() {
     for (let tile of this.map.tiles) {
       const tileCoordsOnScreenPx = this.tileUiService.tileCoordsOnScreenPx(tile);
@@ -168,9 +180,10 @@ export class MapComponent {
 
   startDrag(event: MouseEvent) {
     this.dragStartCoords = {x: event.pageX, y: event.pageY};
-    this.dragStartOffset = {x: this.camera.translate.x, y: this.camera.translate.y};
+    this.dragStartTranslate = {x: this.camera.translate.x, y: this.camera.translate.y};
 
     // Need to store drag handler since .bind(this) changes the reference
+    // ngZone.runOutsideAngular to avoid change detection ov every mousemove event
     this.dragHandlerRef = this.dragHandler.bind(this);
     this.ngZone.runOutsideAngular(() => {
       this.document.addEventListener('mousemove', this.dragHandlerRef as any);
@@ -180,17 +193,21 @@ export class MapComponent {
 
   dragHandler(event: MouseEvent) {
     let translate = {
-      x: this.dragStartOffset.x + event.pageX - this.dragStartCoords.x,
-      y: this.dragStartOffset.y + event.pageY - this.dragStartCoords.y
+      x: this.dragStartTranslate.x + event.pageX - this.dragStartCoords.x,
+      y: this.dragStartTranslate.y + event.pageY - this.dragStartCoords.y
     }
-
-    const normalizedTranslation = this.cameraService.normalizeTranslation(translate);
-    this.cameraStore.setTranslate(normalizedTranslation);
+    this.cameraStore.setTranslate(translate);
   }
 
   stopDrag() {
     this.document.removeEventListener('mousemove', this.dragHandlerRef as any);
     this.isDragging = false;
+  }
+
+  isCanvasInUse(): boolean {
+    return this.ui.sidebar === SidebarId.WORLD_BUILDER ||
+           this.mapUi.showGrid ||
+           this.mapUi.infoOverlay !== TileInfoOverlayId.NONE;
   }
 
 }
@@ -214,7 +231,6 @@ export class MapComponent {
 //       x: currentTranslate.x + translateVector.x,
 //       y: currentTranslate.y + translateVector.y
 //     }
-//     const normalizedTranslate = this.cameraService.normalizeTranslation(newTranslate);
 //     this.cameraStore.setTranslate(normalizedTranslate);
 //   }
 // }

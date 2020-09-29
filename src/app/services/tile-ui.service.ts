@@ -125,10 +125,31 @@ export class TileUiService {
     return { x, y };
   }
 
+  // Returns Tile for a given mouse event. Supposed to be defined always.
   public mouseEventToTile(event: MouseEvent): Tile {
     const eventOnMapCoordsPx = this.eventToMapCoordsPx(event);
     const grid = this.mapCoordsToGridCoords(eventOnMapCoordsPx);
     return this.map.tiles[grid.x * this.map.height + grid.y];
+  }
+
+  private normalizeTileSet(tiles: Tile[]): Tile[] {
+    return tiles;
+  }
+
+  // Returns all tiles in the distance exactly equal radius from the center tile (an 'onion ring' from tiles), normalized for existence
+  public ringOfTiles(centerTile: Tile, radius: number = 0): Tile[] {
+    if (radius === 0) { return [centerTile]; }
+
+    const result = [centerTile];  // TODO
+    return this.normalizeTileSet(result);
+  }
+
+  // Returns all tiles in the distance equal or lower to radius from the center tile (a bigger hexagon), normalized for existence
+  public circleOfTiles(centerTile: Tile, radius: number = 0): Tile[] {
+    if (radius === 0) { return [centerTile]; }
+
+    const result = [centerTile];  // TODO
+    return this.normalizeTileSet(result);
   }
 
 }

@@ -1,28 +1,15 @@
 ## WORKING ON
-- merge html and canvas maps into one component
-
-- strip extra props from tiles on save
-- use APP_INITIALIZATION injection token for size service init
-- minimap
+- the world builder: brush size
+- tile ui service sphere + donut
 
 ## TODO
+- strip extra props from tiles on save
+- use APP_INITIALIZATION injection token for size service init
+- draw minimap
 - move new map option to create game popup
-
--- GENERAL
-- options popup
-- map details: map name and description
-
--- CANVAS
-- iterate on eventTargetTile
-- restore tile yield
-- add terrain features
-- add terrain resources
-- click coords to tile decode
-
--- WORLD BUILDER:
 - hide hud for world builder
-- don't place anything when panning
-- brush size
+- options popup
+- restore tile yield
 
 ## QUESTIONS
 - 
@@ -32,6 +19,10 @@
 - Canvas: make tile background move to match translate
 
 ## DONE
+- the world builder: hovered tile
+- the world builder: don't place anything when panning
+- click coords to tile decode
+- merge html and canvas maps into one component
 - remove var from css
 - html renderer: map wrapping
 - update earth save
@@ -101,6 +92,7 @@
      this.document.addEventListener('mousemove', this.dragHandlerRef as any);
    });` to avoid detect changes on mouse move
 - pure pipe of TileCssClassesPipe to not execute classes, only style changes
+- remove shadow from tiles and text `this.setCtxShadow('black', 2, 0, 0);` => full map 20px 11.7 => 25.4 FPS, use .5 in canvas to draw shadowy shapes 
 - Make grid draw only 3 sides so tiles can share grid lines 
 ```javascript
   private paintGrid(tile: Tile): void {

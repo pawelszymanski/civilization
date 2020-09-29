@@ -1,8 +1,8 @@
 <!-- For some reason overlay needs to be before map elem, otherwise it kills performance -->
 <div class="overlay"
      (mousedown)="onMousedown($event)"
-     (mouseup)="onMouseup()"
-     (click)="onClick($event)"
+     (mousemove)="onMousemove($event)"
+     (mouseup)="onMouseup($event)"
      (contextmenu)="onContextmenu($event)"
      (wheel)="onWheel($event)">
 </div>

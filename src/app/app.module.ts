@@ -64,6 +64,7 @@ import {MapUiStore} from './stores/map-ui.store';
 import {SavesStore} from './stores/saves.store';
 import {UiStore} from './stores/ui.store';
 import {WorldBuilderUiStore} from './stores/world-builder-ui.store';
+import {WorldBuilderHoveredTilesStore} from './stores/world-builder-hovered-tiles.store';
 
 // PIPES
 import {TerrainBaseNamePipe} from './pipes/terrain-base-name.pipe';
@@ -135,6 +136,7 @@ const STORES = [
   SavesStore,
   UiStore,
   WorldBuilderUiStore,
+  WorldBuilderHoveredTilesStore,
 ]
 
 const PIPES = [
