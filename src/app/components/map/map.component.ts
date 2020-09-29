@@ -10,7 +10,7 @@ import {
 import {DOCUMENT} from '@angular/common';
 import {Subscription} from 'rxjs';
 
-import {Map} from '../../models/map';
+import {Map, Tile} from '../../models/map';
 import {Camera} from '../../models/camera';
 import {Coords} from '../../models/utils';
 import {SidebarId, Ui} from '../../models/ui';
@@ -53,7 +53,7 @@ export class MapComponent {
   dragStartCoords: Coords;  // Page x, y when mouse was pressed down
   dragStartOffset: Coords;  // Map element x, y when mouse was pressed down
   isDragging = false;
-  dragHandler: Function;
+  dragHandlerRef: Function;
 
   animationFrameId: number;
 
@@ -127,30 +127,12 @@ export class MapComponent {
   // EVENTS
 
   onMousedown(event: MouseEvent) {
-    this.dragStartCoords = {x: event.pageX, y: event.pageY};
-    this.dragStartOffset = {x: this.camera.translate.x, y: this.camera.translate.y};
-
-    // Need to store drag handler since .bind(this) changes the reference
-    this.dragHandler = this.onMousemove.bind(this);
-    this.ngZone.runOutsideAngular(() => {
-      this.document.addEventListener('mousemove', this.dragHandler as any);
-    });
-    this.isDragging = true;
-  }
-
-  onMousemove(event: MouseEvent) {
-    let translate = {
-      x: this.dragStartOffset.x + event.pageX - this.dragStartCoords.x,
-      y: this.dragStartOffset.y + event.pageY - this.dragStartCoords.y
-    }
-
-    const normalizedTranslation = this.cameraService.normalizeTranslation(translate);
-    this.cameraStore.setTranslate(normalizedTranslation);
+    if (this.isDragging) { this.stopDrag(); }  // Unfortunately sometimes dragging is not disabled properly, ie try dragging out of the window, release button and come back
+    this.startDrag(event);
   }
 
   onMouseup() {
-    this.document.removeEventListener('mousemove', this.dragHandler as any);
-    this.isDragging = false;
+    this.stopDrag();
   }
 
   onClick(event: MouseEvent) {
@@ -205,6 +187,33 @@ export class MapComponent {
       if (tileCoordsOnScreenPx) { tile.px = tileCoordsOnScreenPx; }
       tile.isVisible = !!tileCoordsOnScreenPx;
     }
+  }
+
+  startDrag(event: MouseEvent) {
+    this.dragStartCoords = {x: event.pageX, y: event.pageY};
+    this.dragStartOffset = {x: this.camera.translate.x, y: this.camera.translate.y};
+
+    // Need to store drag handler since .bind(this) changes the reference
+    this.dragHandlerRef = this.dragHandler.bind(this);
+    this.ngZone.runOutsideAngular(() => {
+      this.document.addEventListener('mousemove', this.dragHandlerRef as any);
+    });
+    this.isDragging = true;
+  }
+
+  dragHandler(event: MouseEvent) {
+    let translate = {
+      x: this.dragStartOffset.x + event.pageX - this.dragStartCoords.x,
+      y: this.dragStartOffset.y + event.pageY - this.dragStartCoords.y
+    }
+
+    const normalizedTranslation = this.cameraService.normalizeTranslation(translate);
+    this.cameraStore.setTranslate(normalizedTranslation);
+  }
+
+  stopDrag() {
+    this.document.removeEventListener('mousemove', this.dragHandlerRef as any);
+    this.isDragging = false;
   }
 
 }

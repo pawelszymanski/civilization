@@ -21,6 +21,10 @@ export class TileCssClassesPipe implements PipeTransform {
       `m-size-${tileSize}`,
     ];
 
+    if (tile.grid.y % 2 === 1) {
+      result.push('m-odd');
+    }
+
     const base = TERRAIN_BASE_SET[tile.terrain.base.id];
     switch (base.id) {
       case TerrainBaseId.DESERT_HILLS:

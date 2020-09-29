@@ -69,7 +69,7 @@
 
 ## TO TEST
 - using el.classList.add / remove
-
+- requestIdleCallback()
 
 
 
@@ -83,8 +83,22 @@
 - replace `calc(var(--tile-size) */+ x)` into size-xx classes, that did change recalculate style 60s + other 10ms into recalc style 25, layout 6, layer tree 10, paint 12; total savings of 17ms = ~25% PLUS spread one big blocking time nto few
 - remove two components per tile with *ngIf="mapUi.infoOverlay === TileInfoOverlayId.xxx", ~3ms on frame on change detection
 - clip path % => px => + 13% = FPS 26.6 ??????????
-- 
- 
+- contain: strict === contain: layout style size; slows down rendering, but why?
+- *ngFor="let tile of visible(map.tiles)" => increases paint time 2ms -> 6ms
+- `        &:nth-of-type(2n+1) {
+             &.m-x-#{$i} {
+               background-position-x: $i * 125%;
+             }
+           }
+           &:nth-of-type(2n+0) {
+             &.m-x-#{$i} {
+               background-position-x: $i * 125% + 62.5%;
+             }
+           }
+` => &.m-odd => 17.5ms => 16.0ms style calc
+- `.map-compponent {.map {.tile {}}}` => `.tile {}` +1.2FPS on full screen 60px!
+
+
 
 ## IDEAS TO SPEED UP 
 1. Use modern CSS over JS calculations 
