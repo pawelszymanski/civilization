@@ -1,6 +1,5 @@
 ## WORKING ON
-- the world builder: brush size
-- tile ui service sphere + donut
+- extract vectorLength
 
 ## TODO
 - strip extra props from tiles on save
@@ -19,6 +18,8 @@
 - Canvas: make tile background move to match translate
 
 ## DONE
+- the world builder: brush size
+- tile ui service sphere
 - the world builder: hovered tile
 - the world builder: don't place anything when panning
 - click coords to tile decode
@@ -53,7 +54,11 @@
 - toggle grid
 - tile info for canvas
 
-  
+## KNOWN BUGS
+- tile background pattern breaks on tiles x -1/0
+- opening wold builder does not select tile before mousemove
+- zooming in/out is slightly off vertically
+- last in row tile right bottom triangle is not clickable, same x=0 left bottom
 
 
   

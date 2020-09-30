@@ -97,7 +97,9 @@ export class MapCanvasService {
       for (const tile of this.lastRowTiles) { if (tile.isVisible) { this.paintBottomLeftEdge(tile); } }
     }
 
-    this.wbHoveredTiles.forEach(tile => this.paintTileHighlight(tile, TileHighlightId.WB_TERRAIN_PLACEMENT));
+    this.wbHoveredTiles.forEach(tile => {
+      if (tile.isVisible) { this.paintTileHighlight(tile, TileHighlightId.WB_TERRAIN_PLACEMENT) }
+    });
   }
 
   public clearCanvas(): void {
@@ -146,24 +148,24 @@ export class MapCanvasService {
 
   private paintRightSideEdges(tile: Tile): void {
     this.ctx.beginPath();
-    this.ctx.moveTo(tile.px.x + this.size.vertices[0].x, tile.px.y + this.size.vertices[0].y + 0.5);
-    this.ctx.lineTo(tile.px.x + this.size.vertices[1].x, tile.px.y + this.size.vertices[1].y + 0.5);
-    this.ctx.lineTo(tile.px.x + this.size.vertices[2].x, tile.px.y + this.size.vertices[2].y - 1);
-    this.ctx.lineTo(tile.px.x + this.size.vertices[3].x, tile.px.y + this.size.vertices[3].y - 1);
+    this.ctx.moveTo(tile.px.x + this.size.vertices[0].x, tile.px.y + this.size.vertices[0].y);
+    this.ctx.lineTo(tile.px.x + this.size.vertices[1].x, tile.px.y + this.size.vertices[1].y);
+    this.ctx.lineTo(tile.px.x + this.size.vertices[2].x, tile.px.y + this.size.vertices[2].y);
+    this.ctx.lineTo(tile.px.x + this.size.vertices[3].x, tile.px.y + this.size.vertices[3].y);
     this.ctx.stroke();
   }
 
   private paintTopLeftEdge(tile: Tile): void {
     this.ctx.beginPath();
-    this.ctx.moveTo(tile.px.x + this.size.vertices[5].x, tile.px.y + this.size.vertices[5].y + 0.5);
-    this.ctx.lineTo(tile.px.x + this.size.vertices[0].x, tile.px.y + this.size.vertices[0].y + 0.5);
+    this.ctx.moveTo(tile.px.x + this.size.vertices[5].x, tile.px.y + this.size.vertices[5].y);
+    this.ctx.lineTo(tile.px.x + this.size.vertices[0].x, tile.px.y + this.size.vertices[0].y);
     this.ctx.stroke();
   }
 
   private paintBottomLeftEdge(tile: Tile): void {
     this.ctx.beginPath();
-    this.ctx.moveTo(tile.px.x + this.size.vertices[3].x, tile.px.y + this.size.vertices[3].y - 1);
-    this.ctx.lineTo(tile.px.x + this.size.vertices[4].x, tile.px.y + this.size.vertices[4].y - 1);
+    this.ctx.moveTo(tile.px.x + this.size.vertices[3].x, tile.px.y + this.size.vertices[3].y);
+    this.ctx.lineTo(tile.px.x + this.size.vertices[4].x, tile.px.y + this.size.vertices[4].y);
     this.ctx.stroke();
   }
 

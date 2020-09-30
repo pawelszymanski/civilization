@@ -54,9 +54,9 @@ export class SizeService {
       halfWidth: Math.floor(this.camera.tileSize * 0.9 * 0.50),
       halfHeight: Math.floor(this.camera.tileSize * 0.50),
       oneQuarterWidth: Math.floor(this.camera.tileSize * 0.9 * 0.25),
-      oneQuarterHeight: Math.floor(this.camera.tileSize * 0.25),
+      oneQuarterHeight: Math.floor(this.camera.tileSize * 0.25) + 1,
       threeQuarterWidth: Math.floor(this.camera.tileSize * 0.9 * 0.75),
-      threeQuarterHeight: Math.floor(this.camera.tileSize * 0.75)
+      threeQuarterHeight: Math.floor(this.camera.tileSize * 0.75) - 1
     }
   }
 

@@ -7,7 +7,7 @@ import {
   TerrainResourceId,
   TerrainImprovementId
 } from '../../../models/terrain';
-import {WorldBuilderToolId} from '../../../models/world-builder';
+import {WorldBuilderBrushSizeId, WorldBuilderToolId} from '../../../models/world-builder';
 import {WorldBuilderUi} from '../../../models/world-builder';
 
 import {TERRAIN_BASE_LIST, TERRAIN_FEATURE_LIST, TERRAIN_RESOURCE_LIST, TERRAIN_IMPROVEMENT_LIST} from '../../../consts/terrain.const';
@@ -32,6 +32,7 @@ export class WorldBuilderComponent implements OnInit, OnDestroy {
   TerrainImprovementId = TerrainImprovementId;
 
   WorldBuilderToolId = WorldBuilderToolId;
+  WorldBuilderBrushSizeId = WorldBuilderBrushSizeId;
 
   worldBuilderUi: WorldBuilderUi;
 
@@ -57,6 +58,10 @@ export class WorldBuilderComponent implements OnInit, OnDestroy {
 
   unsubscribeFromData() {
     this.subscriptions.forEach(s => s.unsubscribe());
+  }
+
+  onBrushSizeClick(brushSize: WorldBuilderBrushSizeId) {
+    this.worldBuilderUiStore.setBrushSize(brushSize);
   }
 
   onToolClick(tool: WorldBuilderToolId) {

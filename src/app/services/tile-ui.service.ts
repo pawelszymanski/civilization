@@ -73,6 +73,10 @@ export class TileUiService {
     return coordsOnScreenPx;
   }
 
+  private verifyGridCoordsOutOfBounds(gridCoords: Coords): Coords | null {
+    return (gridCoords.y >= 0 && gridCoords.y < this.map.height) ? gridCoords : null;
+  }
+
   // Visualization: https://stackoverflow.com/questions/7705228/hexagonal-grids-how-do-you-find-which-hexagon-a-point-is-in
   private mapCoordsToGridCoords(mapCoords: Coords): Coords | null {
     // Candidate Y coordinate
@@ -97,7 +101,7 @@ export class TileUiService {
     // Check if in the wide rectangle in the center of the hex
     const isBelowOneQuarter = tileCoords.y >= this.size.tile.oneQuarterHeight;
     const isAboveThreeQuarters = tileCoords.y <= this.size.tile.threeQuarterHeight;
-    if (isBelowOneQuarter && isAboveThreeQuarters) { return grid; }
+    if (isBelowOneQuarter && isAboveThreeQuarters) { return this.verifyGridCoordsOutOfBounds(grid); }
 
     const isAboveOneQuarter = tileCoords.y < this.size.tile.oneQuarterHeight;
     const isLeft = tileCoords.x <= this.size.tile.halfWidth;
@@ -107,10 +111,12 @@ export class TileUiService {
       const slope = this.size.tile.oneQuarterHeight / this.size.tile.halfWidth;   // y = ax + b, this is a
       if (isLeft) {
         const isOutside = this.size.tile.oneQuarterHeight - (tileCoords.x * slope) > tileCoords.y;
-        return isOutside ? { x: isOddRow ? grid.x : grid.x - 1, y: grid.y - 1 } : grid;
+        const candidate = isOutside ? { x: isOddRow ? grid.x : grid.x - 1, y: grid.y - 1 } : grid;
+        return this.verifyGridCoordsOutOfBounds(candidate);
       } else {
         const isOutside = (tileCoords.x - this.size.tile.halfWidth) * slope > tileCoords.y;
-        return isOutside ? { x: isOddRow ? grid.x + 1 : grid.x, y: grid.y - 1 } : grid;
+        const candidate = isOutside ? { x: isOddRow ? grid.x + 1 : grid.x, y: grid.y - 1 } : grid;
+        return this.verifyGridCoordsOutOfBounds(candidate);
       }
     }
 
@@ -125,31 +131,31 @@ export class TileUiService {
     return { x, y };
   }
 
-  // Returns Tile for a given mouse event. Supposed to be defined always.
-  public mouseEventToTile(event: MouseEvent): Tile {
+  // Returns Tile for a given mouse event. MIGHT BE NULL since this.mapCoordsToGridCoords might be null
+  public mouseEventToTile(event: MouseEvent): Tile | null {
     const eventOnMapCoordsPx = this.eventToMapCoordsPx(event);
-    const grid = this.mapCoordsToGridCoords(eventOnMapCoordsPx);
-    return this.map.tiles[grid.x * this.map.height + grid.y];
-  }
-
-  private normalizeTileSet(tiles: Tile[]): Tile[] {
-    return tiles;
-  }
-
-  // Returns all tiles in the distance exactly equal radius from the center tile (an 'onion ring' from tiles), normalized for existence
-  public ringOfTiles(centerTile: Tile, radius: number = 0): Tile[] {
-    if (radius === 0) { return [centerTile]; }
-
-    const result = [centerTile];  // TODO
-    return this.normalizeTileSet(result);
+    const gridCoords = this.mapCoordsToGridCoords(eventOnMapCoordsPx);
+    return gridCoords ? this.map.tiles[gridCoords.x * this.map.height + gridCoords.y] : null;
   }
 
   // Returns all tiles in the distance equal or lower to radius from the center tile (a bigger hexagon), normalized for existence
-  public circleOfTiles(centerTile: Tile, radius: number = 0): Tile[] {
+  public tilesInRadius(centerTile: Tile, radius: number = 0): Tile[] {
     if (radius === 0) { return [centerTile]; }
 
-    const result = [centerTile];  // TODO
-    return this.normalizeTileSet(result);
+    let candidateCoords = [];
+    const isCenterOddRow = centerTile.grid.y % 2 === 1;
+    for (let y = -radius; y <= radius; y++) {
+      const yDelta = Math.abs(y);
+      const fromX = -radius + (isCenterOddRow ? Math.ceil(yDelta/2) : Math.floor(yDelta/2));
+      const toX = fromX + 2*radius - yDelta;
+      for (let x = fromX; x <= toX; x++) {
+        candidateCoords.push( { x: centerTile.grid.x + x, y: centerTile.grid.y + y } );
+      }
+    }
+
+    return candidateCoords
+      .filter(coords => ( (coords.y >= 0) && (coords.y < this.map.height) ))
+      .map(coords => this.map.tiles[((coords.x + this.map.width) % this.map.width) * this.map.height + coords.y] )
   }
 
 }

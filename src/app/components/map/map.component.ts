@@ -10,12 +10,13 @@ import {
 import {DOCUMENT} from '@angular/common';
 import {Subscription} from 'rxjs';
 
-import {Map, Tile} from '../../models/map';
+import {Map} from '../../models/map';
 import {Camera} from '../../models/camera';
 import {Coords} from '../../models/utils';
 import {SidebarId, Ui} from '../../models/ui';
 import {MapUi, TileInfoOverlayId} from '../../models/map-ui';
 import {Size} from '../../models/size';
+import {WorldBuilderUi} from '../../models/world-builder';
 
 import {TileTerrainService} from '../../services/tile-terrain.service';
 import {TileUiService} from '../../services/tile-ui.service';
@@ -30,6 +31,7 @@ import {MapUiStore} from '../../stores/map-ui.store';
 import {CameraStore} from '../../stores/camera.store';
 import {SizeStore} from '../../stores/size.store';
 import {WorldBuilderHoveredTilesStore} from '../../stores/world-builder-hovered-tiles.store';
+import {WorldBuilderUiStore} from '../../stores/world-builder-ui.store';
 
 @Component({
   selector: '.map-component',
@@ -49,6 +51,7 @@ export class MapComponent {
   mapUi: MapUi;
   camera: Camera;
   size: Size;
+  worldBuilderUi: WorldBuilderUi;
 
   dragStartCoords: Coords;  // Page x, y when mouse was pressed down
   dragStartTranslate: Coords;  // Map element x, y when mouse was pressed down
@@ -76,6 +79,7 @@ export class MapComponent {
     private cameraStore: CameraStore,
     private sizeStore: SizeStore,
     private worldBuilderHoveredTilesStore: WorldBuilderHoveredTilesStore,
+    private worldBuilderUiStore: WorldBuilderUiStore,
   ) {}
 
   // INIT
@@ -102,6 +106,7 @@ export class MapComponent {
       this.mapUiStore.mapUi.subscribe(mapUi => this.mapUi = mapUi),
       this.cameraStore.camera.subscribe(camera => this.camera = camera),
       this.sizeStore.size.subscribe(size => this.size = size),
+      this.worldBuilderUiStore.worldBuilderUi.subscribe(worldBuilderUi => this.worldBuilderUi = worldBuilderUi),
     );
   }
 
@@ -132,9 +137,13 @@ export class MapComponent {
   }
 
   onMousemove(event: MouseEvent) {  // Intended for the hover effects
-    const isPlacingTerrain = (this.ui.sidebar === SidebarId.WORLD_BUILDER) && !this.isDragging;
-    const tiles = isPlacingTerrain ? this.tileUiService.circleOfTiles(this.tileUiService.mouseEventToTile(event), 2) : [];
-    this.worldBuilderHoveredTilesStore.next(tiles);
+    if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
+      const hoveredTile = this.tileUiService.mouseEventToTile(event);
+      if (hoveredTile) {
+        const tiles = !this.isDragging ? this.tileUiService.tilesInRadius(hoveredTile, this.worldBuilderUi.brushSize) : [];
+        this.worldBuilderHoveredTilesStore.next(tiles);
+      }
+    }
   }
 
   onMouseup(event: MouseEvent) {
@@ -146,6 +155,7 @@ export class MapComponent {
 
   onClick(event: MouseEvent) {  // artificial, comes after decision making in onMouseup
     const tile = this.tileUiService.mouseEventToTile(event);
+    if (!tile) { return; }
 
     if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
       this.worldBuilderService.handleTileClick(tile);
@@ -154,6 +164,7 @@ export class MapComponent {
 
   onContextmenu(event: MouseEvent) {
     const tile = this.tileUiService.mouseEventToTile(event);
+    if (!tile) { return; }
 
     if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
       this.worldBuilderService.handleTileContextmenu(tile);
@@ -183,7 +194,7 @@ export class MapComponent {
     this.dragStartTranslate = {x: this.camera.translate.x, y: this.camera.translate.y};
 
     // Need to store drag handler since .bind(this) changes the reference
-    // ngZone.runOutsideAngular to avoid change detection ov every mousemove event
+    // ngZone.runOutsideAngular is to avoid change detection ov every mousemove event
     this.dragHandlerRef = this.dragHandler.bind(this);
     this.ngZone.runOutsideAngular(() => {
       this.document.addEventListener('mousemove', this.dragHandlerRef as any);

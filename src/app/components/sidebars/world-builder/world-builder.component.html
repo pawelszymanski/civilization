@@ -1,5 +1,18 @@
 <h2>World Builder</h2>
 
+<section class="brush-size">
+  <div class="world-builder-button m-brush-size-small"
+       [class.active]="worldBuilderUi.brushSize === WorldBuilderBrushSizeId.SMALL"
+       (click)="onBrushSizeClick(WorldBuilderBrushSizeId.SMALL)"></div>
+  <div class="world-builder-button m-brush-size-medium"
+       [class.active]="worldBuilderUi.brushSize === WorldBuilderBrushSizeId.MEDIUM"
+       (click)="onBrushSizeClick(WorldBuilderBrushSizeId.MEDIUM)"></div>
+  <div class="world-builder-button m-brush-size-large"
+       [class.active]="worldBuilderUi.brushSize === WorldBuilderBrushSizeId.LARGE"
+       (click)="onBrushSizeClick(WorldBuilderBrushSizeId.LARGE)"></div>
+</section>
+
+
 <section class="tool-selection">
   <div class="world-builder-button m-terrain-base"
        [class.active]="worldBuilderUi.tool === WorldBuilderToolId.TERRAIN_BASE"
