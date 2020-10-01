@@ -1,21 +1,29 @@
 ## WORKING ON
 - extract vectorLength
+- inject ctx to map-canvas service in constructor
+- use APP_INITIALIZATION injection token for size service init
 
 ## TODO
 - strip extra props from tiles on save
-- use APP_INITIALIZATION injection token for size service init
 - draw minimap
 - move new map option to create game popup
 - hide hud for world builder
 - options popup
 - restore tile yield
 
+## BUGS
+- bug: opening wold builder does not select tile before mousemove
+- bug: zooming in/out is slightly off vertically
+- bug: last in row tile right bottom triangle is not clickable, same x=0 left bottom
+- bug: placing overlay vs green tiles mismatch
+
 ## QUESTIONS
 - 
 
-## HARD PROBLEMS:
+## HARD PROBLEMS / KNOWN BUGS:
 - Canvas: make tile background scale to tile size
 - Canvas: make tile background move to match translate
+- bug: tile background pattern breaks on tiles x -1/0
 
 ## DONE
 - the world builder: brush size
@@ -54,18 +62,13 @@
 - toggle grid
 - tile info for canvas
 
-## KNOWN BUGS
-- tile background pattern breaks on tiles x -1/0
-- opening wold builder does not select tile before mousemove
-- zooming in/out is slightly off vertically
-- last in row tile right bottom triangle is not clickable, same x=0 left bottom
-
-
   
 
 ## TO TEST
 - using el.classList.add / remove
 - requestIdleCallback()
+- do not sanitize styles: this._domSanitizer.bypassSecurityTrustStyle(`repeat(auto-fit,minmax(256px,1fr))`)
+- the preconnect option on the rel attribute: https://medium.com/javascript-in-plain-english/improve-css-performance-in-3-easy-ways-1ce3632e2cdc
 
 
 

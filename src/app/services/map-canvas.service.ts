@@ -62,6 +62,7 @@ export class MapCanvasService {
     this.sizeStore.size.subscribe(size => this.size = size);
     this.mapStore.map.subscribe(map => {
       this.map = map;
+      console.info(123)
       this.firstRowTiles = this.map.tiles.filter(t => t.grid.y === 0);
       this.lastRowTiles = this.map.tiles.filter(t => t.grid.y === this.map.height-1);
     });
@@ -80,9 +81,9 @@ export class MapCanvasService {
   }
 
   public paintCanvas(ctx: CanvasRenderingContext2D): void {
-    this.ctx = ctx;
+    if (!this.ctx) { this.ctx = ctx; }  // All public methods need to check if cts is bound to this as those might m
     this.setCommonStyles();
-    this.clearCanvas();
+    this.clearCanvas(ctx);
 
     for (const tile of this.map.tiles) {
       if (tile.isVisible) {
@@ -102,7 +103,8 @@ export class MapCanvasService {
     });
   }
 
-  public clearCanvas(): void {
+  public clearCanvas(ctx: CanvasRenderingContext2D): void {
+    if (!this.ctx) { this.ctx = ctx; }  // All public methods need to check if cts is bound to this
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
   }
 

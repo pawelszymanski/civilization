@@ -38,12 +38,8 @@ export class TileUiService {
 
   // Coords on the screen in pixels
   private coordsOnScreenPx(tile: Tile): Coords {
-    // Indentation for tiles in odd rows
-    const indentation = (tile.grid.y % 2 === 1) ? this.size.tile.halfWidth : 0;
-
-    // This fills empty space caused by indentation filled by tiles from last column
-    const firstColumnFix = (tile.grid.x === this.map.width - 1) ? -this.size.row.width : 0;
-
+    const indentation = (tile.grid.y % 2 === 1) ? this.size.tile.halfWidth : 0;  // Indentation for tiles in odd rows
+    const firstColumnFix = (tile.grid.x === this.map.width - 1) ? -this.size.row.width : 0;  // This fills empty space caused by indentation filled by tiles from last column
     return {
       x: (tile.grid.x * this.size.tile.width) + this.camera.translate.x + indentation + firstColumnFix,
       y: (tile.grid.y * this.size.row.height) + this.camera.translate.y
@@ -77,8 +73,18 @@ export class TileUiService {
     return (gridCoords.y >= 0 && gridCoords.y < this.map.height) ? gridCoords : null;
   }
 
+  private normalizeGridX(x: number): number {
+    return (x + this.map.width) % this.map.width;
+  }
+
+  private areGridCoordsValid(gridCoords: Coords): boolean {
+    const isYok = (gridCoords.x >= 0 && gridCoords.x < this.map.width);
+    const isXok = (gridCoords.y >= 0 && gridCoords.y < this.map.height);
+    return (isXok && isYok);
+  }
+
   // Visualization: https://stackoverflow.com/questions/7705228/hexagonal-grids-how-do-you-find-which-hexagon-a-point-is-in
-  private mapCoordsToGridCoords(mapCoords: Coords): Coords | null {
+  private mapCoordsPxToGridCoords(mapCoords: Coords): Coords | null {
     // Candidate Y coordinate
     const y = Math.floor(mapCoords.y / this.size.row.height);
     if ( y < 0 || y > this.map.height ) { return null; }  // clicked above or bellow the map, no need to continue
@@ -99,24 +105,25 @@ export class TileUiService {
     }
 
     // Check if in the wide rectangle in the center of the hex
-    const isBelowOneQuarter = tileCoords.y >= this.size.tile.oneQuarterHeight;
-    const isAboveThreeQuarters = tileCoords.y <= this.size.tile.threeQuarterHeight;
-    if (isBelowOneQuarter && isAboveThreeQuarters) { return this.verifyGridCoordsOutOfBounds(grid); }
-
-    const isAboveOneQuarter = tileCoords.y < this.size.tile.oneQuarterHeight;
-    const isLeft = tileCoords.x <= this.size.tile.halfWidth;
+    const isAboveOneQuarter = tileCoords.y >= this.size.tile.oneQuarterHeight;
+    const isBellowThreeQuarters = tileCoords.y <= this.size.tile.threeQuarterHeight;
+    if (isAboveOneQuarter && isBellowThreeQuarters) {
+      return this.areGridCoordsValid(grid) ? grid : null;
+    }
 
     // Check upper left and right triangles
-    if (isAboveOneQuarter) {
+    if (!isAboveOneQuarter) {
       const slope = this.size.tile.oneQuarterHeight / this.size.tile.halfWidth;   // y = ax + b, this is a
-      if (isLeft) {
+      if (tileCoords.x <= this.size.tile.halfWidth) {  // left side of the tile
         const isOutside = this.size.tile.oneQuarterHeight - (tileCoords.x * slope) > tileCoords.y;
         const candidate = isOutside ? { x: isOddRow ? grid.x : grid.x - 1, y: grid.y - 1 } : grid;
-        return this.verifyGridCoordsOutOfBounds(candidate);
+        candidate.x = this.normalizeGridX(candidate.x);
+        return this.areGridCoordsValid(candidate) ? candidate : null;
       } else {
         const isOutside = (tileCoords.x - this.size.tile.halfWidth) * slope > tileCoords.y;
         const candidate = isOutside ? { x: isOddRow ? grid.x + 1 : grid.x, y: grid.y - 1 } : grid;
-        return this.verifyGridCoordsOutOfBounds(candidate);
+        candidate.x = this.normalizeGridX(candidate.x);
+        return this.areGridCoordsValid(candidate) ? candidate : null;
       }
     }
 
@@ -131,31 +138,32 @@ export class TileUiService {
     return { x, y };
   }
 
-  // Returns Tile for a given mouse event. MIGHT BE NULL since this.mapCoordsToGridCoords might be null
+  // Returns Tile for a given mouse event. MIGHT BE NULL since this.mapCoordsPxToGridCoords might be null
   public mouseEventToTile(event: MouseEvent): Tile | null {
-    const eventOnMapCoordsPx = this.eventToMapCoordsPx(event);
-    const gridCoords = this.mapCoordsToGridCoords(eventOnMapCoordsPx);
-    return gridCoords ? this.map.tiles[gridCoords.x * this.map.height + gridCoords.y] : null;
+    const mapCoordsPx = this.eventToMapCoordsPx(event);
+    const grid = this.mapCoordsPxToGridCoords(mapCoordsPx);
+    return grid ? this.map.tiles[grid.x * this.map.height + grid.y] : null;
   }
 
-  // Returns all tiles in the distance equal or lower to radius from the center tile (a bigger hexagon), normalized for existence
+  // Returns all tiles in the distance equal or lower to radius from the center tile (a bigger hexagon)
+  // Normalized for position  existence
   public tilesInRadius(centerTile: Tile, radius: number = 0): Tile[] {
     if (radius === 0) { return [centerTile]; }
 
-    let candidateCoords = [];
+    let candidates = [];
     const isCenterOddRow = centerTile.grid.y % 2 === 1;
     for (let y = -radius; y <= radius; y++) {
       const yDelta = Math.abs(y);
       const fromX = -radius + (isCenterOddRow ? Math.ceil(yDelta/2) : Math.floor(yDelta/2));
       const toX = fromX + 2*radius - yDelta;
       for (let x = fromX; x <= toX; x++) {
-        candidateCoords.push( { x: centerTile.grid.x + x, y: centerTile.grid.y + y } );
+        candidates.push( { x: centerTile.grid.x + x, y: centerTile.grid.y + y } );
       }
     }
 
-    return candidateCoords
-      .filter(coords => ( (coords.y >= 0) && (coords.y < this.map.height) ))
-      .map(coords => this.map.tiles[((coords.x + this.map.width) % this.map.width) * this.map.height + coords.y] )
+    return candidates
+      .filter(grid => ( (grid.y >= 0) && (grid.y < this.map.height) ))
+      .map(grid => this.map.tiles[((grid.x + this.map.width) % this.map.width) * this.map.height + grid.y] )
   }
 
 }

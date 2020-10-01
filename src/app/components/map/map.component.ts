@@ -115,7 +115,7 @@ export class MapComponent {
       this.requestAnimationFrame();
       if (!!this.camera && !!this.size && !!this.map && !!this.mapUi) {
         this.updateTilesUiData();
-        this.isCanvasInUse() ? this.mapCanvasService.paintCanvas(this.ctx) : this.mapCanvasService.clearCanvas();
+        this.isCanvasInUse() ? this.mapCanvasService.paintCanvas(this.ctx) : this.mapCanvasService.clearCanvas(this.ctx);
         this.cdr.detectChanges();
       }
     });
@@ -137,20 +137,22 @@ export class MapComponent {
   }
 
   onMousemove(event: MouseEvent) {  // Intended for the hover effects
-    if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
+    if (this.ui.sidebar === SidebarId.WORLD_BUILDER && !this.isDragging) {
       const hoveredTile = this.tileUiService.mouseEventToTile(event);
       if (hoveredTile) {
-        const tiles = !this.isDragging ? this.tileUiService.tilesInRadius(hoveredTile, this.worldBuilderUi.brushSize) : [];
-        this.worldBuilderHoveredTilesStore.next(tiles);
+        const tilesInRadius = this.tileUiService.tilesInRadius(hoveredTile, this.worldBuilderUi.brushSize);
+        this.worldBuilderHoveredTilesStore.next(tilesInRadius);
+      } else {
+        this.worldBuilderHoveredTilesStore.next([]);
       }
     }
   }
 
-  onMouseup(event: MouseEvent) {
+onMouseup(event: MouseEvent) {
     this.stopDrag();
 
     const dragDistance = this.vectorLength({x: event.pageX, y: event.pageY}, this.dragStartCoords);
-    if (dragDistance === 0)  { this.onClick(event); }  // With no excessive dragging count as a click
+    if (dragDistance < 3)  { this.onClick(event); }  // With no excessive dragging count as a click
   }
 
   onClick(event: MouseEvent) {  // artificial, comes after decision making in onMouseup
@@ -216,9 +218,9 @@ export class MapComponent {
   }
 
   isCanvasInUse(): boolean {
-    return this.ui.sidebar === SidebarId.WORLD_BUILDER ||
-           this.mapUi.showGrid ||
-           this.mapUi.infoOverlay !== TileInfoOverlayId.NONE;
+    return this.ui.sidebar === SidebarId.WORLD_BUILDER ||        // drawing hovered tiles
+           this.mapUi.showGrid ||                                // grid
+           this.mapUi.infoOverlay !== TileInfoOverlayId.NONE;    // tile overlay of any kind
   }
 
 }
