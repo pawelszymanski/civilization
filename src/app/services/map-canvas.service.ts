@@ -62,7 +62,6 @@ export class MapCanvasService {
     this.sizeStore.size.subscribe(size => this.size = size);
     this.mapStore.map.subscribe(map => {
       this.map = map;
-      console.info(123)
       this.firstRowTiles = this.map.tiles.filter(t => t.grid.y === 0);
       this.lastRowTiles = this.map.tiles.filter(t => t.grid.y === this.map.height-1);
     });
