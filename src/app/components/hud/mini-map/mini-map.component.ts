@@ -4,10 +4,12 @@ import {Subscription} from 'rxjs';
 import {Camera} from '../../../models/camera';
 import {Map} from '../../../models/map';
 import {Size} from '../../../models/size';
+import {Coords} from '../../../models/utils';
 
 import {CameraStore} from '../../../stores/camera.store';
 import {SizeStore} from '../../../stores/size.store';
 import {MapStore} from '../../../stores/map.store';
+import {TERRAIN_BASE_SET} from '../../../consts/terrain.const';
 
 @Component({
   selector: '.mini-map-component',
@@ -21,9 +23,13 @@ export class MiniMapComponent implements OnInit, OnDestroy {
 
   ctx: CanvasRenderingContext2D;
 
+  vertices: Coords[];
+
   camera: Camera;
   size: Size;
   map: Map;
+
+  isDragging = false;
 
   animationFrameId: number;
 
@@ -75,19 +81,62 @@ export class MiniMapComponent implements OnInit, OnDestroy {
     window.cancelAnimationFrame(this.animationFrameId);
   }
 
+  // EVENTS
+
+  onClick(event: MouseEvent) {
+    const m = this.eventToMapCoords(event);
+    this.cameraStore.setTranslate(m);
+  }
+
+  onMousedown() {
+    this.isDragging = true;
+  }
+
+  onMousemove(event: MouseEvent) {
+    if (this.isDragging) {
+      const m = this.eventToMapCoords(event);
+      this.cameraStore.setTranslate(m);
+    }
+  }
+
+  onMouseup() {
+    this.isDragging = false;
+  }
+
+  // OTHER
+
+  eventToMapCoords(event: MouseEvent): Coords {
+    return {
+      x: Math.floor(-event.offsetX * (this.size.row.width/this.ctx.canvas.width)) + this.size.screen.halfWidth,
+      y: Math.floor(-event.offsetY * (this.size.map.height/this.ctx.canvas.height)) + this.size.screen.halfHeight
+    };
+  }
+
   drawMinimap() {
     this.clearMinimap();
-    // this.drawTiles();
+    this.drawTiles();
     this.drawViewport();
   }
 
   clearMinimap() {
-    this.ctx.fillStyle = 'gray';
+    this.ctx.fillStyle = 'black';
     this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
   }
 
   drawTiles() {
-
+    const scale = { x: this.size.row.width / this.ctx.canvas.width, y: this.size.map.height / this.ctx.canvas.width };
+    for (let tile of this.map.tiles) {
+      this.ctx.beginPath();
+      this.ctx.moveTo((tile.px.x + this.size.vertices[0].x) * scale.x, (tile.px.y + this.size.vertices[0].y) * scale.y);
+      this.ctx.lineTo((tile.px.x + this.size.vertices[1].x) * scale.x, (tile.px.y + this.size.vertices[1].y) * scale.y);
+      this.ctx.lineTo((tile.px.x + this.size.vertices[2].x) * scale.x, (tile.px.y + this.size.vertices[2].y) * scale.y);
+      this.ctx.lineTo((tile.px.x + this.size.vertices[3].x) * scale.x, (tile.px.y + this.size.vertices[3].y) * scale.y);
+      this.ctx.lineTo((tile.px.x + this.size.vertices[4].x) * scale.x, (tile.px.y + this.size.vertices[4].y) * scale.y);
+      this.ctx.lineTo((tile.px.x + this.size.vertices[5].x) * scale.x, (tile.px.y + this.size.vertices[5].y) * scale.y);
+      this.ctx.closePath();
+      this.ctx.fillStyle = TERRAIN_BASE_SET[tile.terrain.base.id].ui.color;
+      this.ctx.fill();
+    }
   }
 
   drawViewport() {
@@ -123,15 +172,3 @@ export class MiniMapComponent implements OnInit, OnDestroy {
   }
 
 }
-
-// this.ctx.beginPath();
-// this.ctx.moveTo(0, CANVAS.HEIGHT * 0.25 + .5);
-// this.ctx.lineTo(CANVAS.WIDTH, CANVAS.HEIGHT * 0.25 + .5);
-// this.ctx.moveTo(0, CANVAS.HEIGHT * 0.50 + .5);
-// this.ctx.lineTo(CANVAS.WIDTH, CANVAS.HEIGHT * 0.50 + .5);
-// this.ctx.moveTo(0, CANVAS.HEIGHT * 0.75 + .5);
-// this.ctx.lineTo(CANVAS.WIDTH, CANVAS.HEIGHT * 0.75 + .5);
-// this.ctx.stroke();
-//
-// this.ctx.font = CANVAS.LEGEND_FONT;
-// this.ctx.fillStyle = CANVAS.LEGEND_FILL_STYLE;

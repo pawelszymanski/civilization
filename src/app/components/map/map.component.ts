@@ -130,7 +130,6 @@ export class MapComponent {
   }
 
   // EVENTS
-
   onMousedown(event: MouseEvent) {
     if (this.isDragging) { this.stopDrag(); }  // Unfortunately sometimes dragging is not disabled properly, ie try dragging out of the window, release button and come back
     this.startDrag(event);
@@ -148,7 +147,7 @@ export class MapComponent {
     }
   }
 
-onMouseup(event: MouseEvent) {
+  onMouseup(event: MouseEvent) {
     this.stopDrag();
 
     const dragDistance = this.vectorLength({x: event.pageX, y: event.pageY}, this.dragStartCoords);
