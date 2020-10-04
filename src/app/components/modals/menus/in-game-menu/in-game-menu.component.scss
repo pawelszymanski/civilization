@@ -9,7 +9,6 @@ $popup-width: $in-game-menu-button-width + $padding + $padding;
   @include size($popup-width, auto);
   padding: $padding;
   background: gray;
-  @include display-block-when-active;
 
   .item {
     @include in-game-menu-button;

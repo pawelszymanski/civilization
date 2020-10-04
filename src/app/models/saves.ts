@@ -15,12 +15,17 @@ export interface SaveListOptions {
   sortOrder: SaveSortOrderId;
 }
 
-export interface Save {
+export interface SaveHeader {
   name: string;
   uuid: Uuid;
   timestamp: Timestamp;
   isAutosave: boolean;
+}
+
+export interface SaveData {
   gameplayUi: GameplayUi;
   camera: Camera;
   map: Map;
 }
+
+export type Save = SaveHeader & SaveData;

@@ -8,11 +8,11 @@ import {Save} from '../../../../models/saves';
 
 import {GeneratorService} from '../../../../services/generator.service';
 import {SaveService} from '../../../../services/save.service';
+import {LocalStorageService} from '../../../../services/local-storage.service';
 
 import {CameraStore} from '../../../../stores/camera.store';
 import {MapStore} from '../../../../stores/map.store';
 import {GameplayUiStore} from '../../../../stores/gameplay-ui.store';
-import {SavesStore} from '../../../../stores/saves.store';
 import {UiStore} from '../../../../stores/ui.store';
 
 @Component({
@@ -29,22 +29,23 @@ export class SaveGameComponent implements OnInit, OnDestroy {
   gameplayUi: GameplayUi;
   camera: Camera;
 
-  save: Save;
+  usedStoragePc: number;
 
   subscriptions: Subscription[] = [];
 
   constructor(
     private generatorService: GeneratorService,
     private saveService: SaveService,
+    private localStorageService: LocalStorageService,
     private cameraStore: CameraStore,
     private mapStore: MapStore,
     private gameplayUiStore: GameplayUiStore,
-    private savesStore: SavesStore,
-    private uiStore: UiStore
+    private uiStore: UiStore,
   ) {}
 
   ngOnInit() {
     this.subscribeToData();
+    this.getUsedLocalStorageSpace();
   }
 
   ngOnDestroy() {
@@ -59,12 +60,16 @@ export class SaveGameComponent implements OnInit, OnDestroy {
     );
   }
 
+  getUsedLocalStorageSpace() {
+    this.usedStoragePc = this.localStorageService.getUsagePc();
+  }
+
   unsubscribeFromData() {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   canGameBeSaved(): boolean {
-    return (this.saveName && !!this.map);
+    return (this.usedStoragePc < 100 && this.saveName && !!this.map);
   }
 
   onSaveGameClick() {
@@ -80,7 +85,7 @@ export class SaveGameComponent implements OnInit, OnDestroy {
       map: this.map,
     }
 
-    this.savesStore.addSave(save);
+    this.saveService.save(save);
     this.saveName = '';
     this.uiStore.closeModal();
   }

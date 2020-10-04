@@ -1,7 +1,8 @@
 ## WORKING ON
-- add overlay for modals
 - strip extra props from tiles on save
 - use separate local storage keys for each save game 
+- show used local storage space indicator
+
 - extract vectorLength
 
 ## TODO
@@ -29,6 +30,7 @@
 - bug: tile background pattern breaks on tiles x -1/0
 
 ## DONE
+- add overlay for modals
 - hide hud for world builder
 - enable toggling of the minimap
 - bug: clear wb selected tiles on WB close

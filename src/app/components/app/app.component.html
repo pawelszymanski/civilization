@@ -22,9 +22,9 @@
 
 <!-- MODALS (SHARED) -->
 <div class="modal-overlay" [class.active]="ui.modal !== ModalId.NONE">
-  <div class="in-game-menu-component" [class.active]="ui.modal === ModalId.IN_GAME_MENU"></div>
-  <div class="save-game-component" [class.active]="ui.modal === ModalId.SAVE_GAME"></div>
-  <div class="load-game-component" [class.active]="ui.modal === ModalId.LOAD_GAME"></div>
-  <div class="game-options-menu-component" [class.active]="ui.modal === ModalId.GAMEPLAY_OPTIONS_MENU"></div>
-  <div class="exit-game-confirmation-component" [class.active]="ui.modal === ModalId.EXIT_GAME_CONFIRMATION"></div>
+  <div class="in-game-menu-component" *ngIf="ui.modal === ModalId.IN_GAME_MENU"></div>
+  <div class="save-game-component" *ngIf="ui.modal === ModalId.SAVE_GAME"></div>
+  <div class="load-game-component" *ngIf="ui.modal === ModalId.LOAD_GAME"></div>
+  <div class="game-options-menu-component" *ngIf="ui.modal === ModalId.GAMEPLAY_OPTIONS_MENU"></div>
+  <div class="exit-game-confirmation-component" *ngIf="ui.modal === ModalId.EXIT_GAME_CONFIRMATION"></div>
 </div>

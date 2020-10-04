@@ -18,7 +18,11 @@ $popup-height: $header-height + $tech-tree-height + $scrollbar-height;
   @include size(100%, $popup-height);
   background: #9f9787;
   border-bottom: 16px solid gray;
-  @include display-block-when-active;
+  display: none;
+
+  &.active {
+    display: block;
+  }
 
   .title {
     @include size(100%, 32px);

@@ -61,7 +61,7 @@ import {SizeStore} from './stores/size.store';
 import {KeyBindingsStore} from './stores/key-bindings.store';
 import {MapStore} from './stores/map.store';
 import {GameplayUiStore} from './stores/gameplay-ui.store';
-import {SavesStore} from './stores/saves.store';
+import {SaveHeadersStore} from './stores/save-headers.store';
 import {UiStore} from './stores/ui.store';
 import {WorldBuilderUiStore} from './stores/world-builder-ui.store';
 import {WorldBuilderHoveredTilesStore} from './stores/world-builder-hovered-tiles.store';
@@ -133,7 +133,7 @@ const STORES = [
   KeyBindingsStore,
   MapStore,
   GameplayUiStore,
-  SavesStore,
+  SaveHeadersStore,
   UiStore,
   WorldBuilderUiStore,
   WorldBuilderHoveredTilesStore,

@@ -1,4 +1,4 @@
-<form class="filters" [formGroup]="saveListOptionsForm" novalidate>
+<form class="filters" [formGroup]="saveHeaderListOptionsForm" novalidate>
   <label for="show-autosaves">Autosaves</label>
   <input type="checkbox" id="show-autosaves" formControlName="showAutosaves">
   <label for="sort-order">Sort by</label>
@@ -11,14 +11,14 @@
 </form>
 
 <ul class="save-list">
-  <li class="save-item" *ngFor="let save of filteredAndSortedSaves"
-      [class.active]="isSaveGameItemSelected(save)"
-      (click)="onSaveGameItemClick(save.uuid)"
-      (dblclick)="onSaveGameItemDblClick()">{{ save.name }}</li>
+  <li class="save-item" *ngFor="let save of filteredAndSortedSaveHeaders"
+      [class.active]="isSaveGameHeaderSelected(save)"
+      (click)="onSaveHeaderClick(save.uuid)"
+      (dblclick)="onSaveHeaderDblClick()">{{ save.name }}</li>
 </ul>
 
-<div class="delete-button" [class.disabled]="!selectedSave" (click)="onDeleteClick()">Delete</div>
+<div class="delete-button" [class.disabled]="!selectedSaveHeader" (click)="onDeleteClick()">Delete</div>
 
-<div class="save-details-component" [save]="selectedSave"></div>
+<div class="save-details-component" [save]="selectedSaveHeader"></div>
 
-<div class="load-game-button" [class.disabled]="!selectedSave" (click)="onLoadGameClick()">Load game</div>
+<div class="load-game-button" [class.disabled]="!selectedSaveHeader" (click)="onLoadGameClick()">Load game</div>

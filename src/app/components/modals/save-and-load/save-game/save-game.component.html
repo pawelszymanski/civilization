@@ -1,3 +1,10 @@
+<p class="used-space"
+   [class.m-ok]="usedStoragePc < 75"
+   [class.m-warning]="usedStoragePc >= 75 && usedStoragePc < 100"
+   [class.m-error]="usedStoragePc >= 100">
+  Using {{ usedStoragePc | number:'1.0-0' }}% of local storage space.
+</p>
+
 <form class="save-options" novalidate>
   <input type="text" name="saveName" [(ngModel)]="saveName">
 </form>

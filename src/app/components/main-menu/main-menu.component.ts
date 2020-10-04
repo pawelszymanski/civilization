@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {Subscription} from 'rxjs';
 
 import {Map} from '../../models/map';
-import {Save} from '../../models/saves';
+import {SaveHeader} from '../../models/saves';
 import {MapSizeId} from '../../models/map-size';
 import {ModalId, ScreenId, Ui} from '../../models/ui';
 import {LandmassValueId, MapGeneratorSettings, RainfallId, TemperatureId, WorldAgeId} from '../../models/map-generator';
@@ -16,7 +16,7 @@ import {ZipService} from '../../services/zip.service';
 
 import {UiStore} from '../../stores/ui.store';
 import {MapStore} from '../../stores/map.store';
-import {SavesStore} from '../../stores/saves.store';
+import {SaveHeadersStore} from '../../stores/save-headers.store';
 
 @Component({
   selector: '.main-menu-component',
@@ -27,7 +27,7 @@ import {SavesStore} from '../../stores/saves.store';
 export class MainMenuComponent implements OnInit, OnDestroy {
 
   ui: Ui;
-  saves: Save[];
+  saveHeaders: SaveHeader[];
 
   showSinglePlayerMenu = false;
 
@@ -39,7 +39,7 @@ export class MainMenuComponent implements OnInit, OnDestroy {
     private zipService: ZipService,
     private uiStore: UiStore,
     private mapStore: MapStore,
-    private savesStore: SavesStore
+    private saveHeadersStore: SaveHeadersStore
   ) {}
 
   ngOnInit() {
@@ -53,7 +53,7 @@ export class MainMenuComponent implements OnInit, OnDestroy {
   subscribeToData() {
     this.subscriptions.push(
       this.uiStore.ui.subscribe(ui => this.ui = ui),
-      this.savesStore.saves.subscribe(saves => this.saves = saves)
+      this.saveHeadersStore.saveHeaders.subscribe(saveHeaders => this.saveHeaders = saveHeaders)
     );
   }
 
@@ -62,7 +62,7 @@ export class MainMenuComponent implements OnInit, OnDestroy {
   }
 
   get noSavesPresent(): boolean {
-    return this.saves.length === 0;
+    return this.saveHeaders.length === 0;
   }
 
   onSinglePlayerClick() {
@@ -80,9 +80,9 @@ export class MainMenuComponent implements OnInit, OnDestroy {
 
   onResumeGameClick() {
     if (this.noSavesPresent) { return; }
-    const latestTimestamp = this.saves.map(save => save.timestamp).sort().pop();
-    const saveToBeLoaded = this.saves.find(save => save.timestamp === latestTimestamp);
-    this.saveService.loadSave(saveToBeLoaded);
+    const latestTimestamp = this.saveHeaders.map(save => save.timestamp).sort().pop();
+    const saveToBeLoaded = this.saveHeaders.find(save => save.timestamp === latestTimestamp);
+    this.saveService.load(saveToBeLoaded.uuid);
     this.uiStore.setScreen(ScreenId.GAMEPLAY);
   }
 

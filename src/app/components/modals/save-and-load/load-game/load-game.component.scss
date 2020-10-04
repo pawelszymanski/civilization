@@ -8,11 +8,8 @@ $button-height: $in-game-menu-button-height;
   @include position-top-left(absolute, 10%, calc(50% - #{$button-width}), $z-index-modal);
   @include size($button-width * 2, 70%);
   background: #9f9787;
-  display: none;
+  display: flex;
   flex-flow: column wrap;
-  &.active {
-    display: flex;
-  }
 
   form.filters {
     @include size($button-width, $button-height);
