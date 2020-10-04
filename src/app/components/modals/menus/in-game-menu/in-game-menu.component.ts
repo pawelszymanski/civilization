@@ -1,6 +1,6 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
-import {ModalId} from '../../../../models/ui';
+import {ModalId, ScreenId} from '../../../../models/ui';
 
 import {UiStore} from '../../../../stores/ui.store';
 
@@ -34,7 +34,7 @@ export class InGameMenuComponent {
 
   onExitToMainMenuClick() {
     this.uiStore.closeModal();
-    this.uiStore.showMainMenu();
+    this.uiStore.setScreen(ScreenId.MAIN_MENU);
   }
 
   onExitToGoogleClick() {

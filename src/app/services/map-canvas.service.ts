@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 
 import {Tile, Map, TileHighlightId} from '../models/map';
-import {MapUi, TileInfoOverlayId} from '../models/map-ui';
+import {GameplayUi, TileInfoOverlayId} from '../models/gameplay-ui';
 import {Camera} from '../models/camera';
 import {Size} from '../models/size';
 
@@ -20,7 +20,7 @@ import {TileUiService} from './tile-ui.service';
 import {MapStore} from '../stores/map.store';
 import {CameraStore} from '../stores/camera.store';
 import {SizeStore} from '../stores/size.store';
-import {MapUiStore} from '../stores/map-ui.store';
+import {GameplayUiStore} from '../stores/gameplay-ui.store';
 import {WorldBuilderHoveredTilesStore} from '../stores/world-builder-hovered-tiles.store';
 
 import {TerrainBaseNamePipe} from '../pipes/terrain-base-name.pipe';
@@ -34,7 +34,7 @@ export class MapCanvasService {
   camera: Camera;
   size: Size;
   map: Map;
-  mapUi: MapUi;
+  gameplayUi: GameplayUi;
   wbHoveredTiles: Tile[] = [];
 
   ctx: CanvasRenderingContext2D;
@@ -47,7 +47,7 @@ export class MapCanvasService {
     private mapStore: MapStore,
     private cameraStore: CameraStore,
     private sizeStore: SizeStore,
-    private mapUiStore: MapUiStore,
+    private gameplayUiStore: GameplayUiStore,
     private worldBuilderHoveredTilesStore: WorldBuilderHoveredTilesStore,
     private terrainBaseNamePipe: TerrainBaseNamePipe,
     private terrainFeatureNamePipe: TerrainFeatureNamePipe,
@@ -65,7 +65,7 @@ export class MapCanvasService {
       this.firstRowTiles = this.map.tiles.filter(t => t.grid.y === 0);
       this.lastRowTiles = this.map.tiles.filter(t => t.grid.y === this.map.height-1);
     });
-    this.mapUiStore.mapUi.subscribe(mapUi => this.mapUi = mapUi);
+    this.gameplayUiStore.gameplayUi.subscribe(gameplayUi => this.gameplayUi = gameplayUi);
     this.worldBuilderHoveredTilesStore.wbHoveredTiles.subscribe(wbHoveredTiles => this.wbHoveredTiles = wbHoveredTiles);
   }
 
@@ -86,13 +86,13 @@ export class MapCanvasService {
 
     for (const tile of this.map.tiles) {
       if (tile.isVisible) {
-        if (this.mapUi.infoOverlay === TileInfoOverlayId.TEXT) { this.paintTileInfoText(tile); }
-        if (this.mapUi.infoOverlay === TileInfoOverlayId.YIELD) { this.paintTileInfoYield(tile); }
-        if (this.mapUi.showGrid) { this.paintRightSideEdges(tile); }
+        if (this.gameplayUi.infoOverlay === TileInfoOverlayId.TEXT) { this.paintTileInfoText(tile); }
+        if (this.gameplayUi.infoOverlay === TileInfoOverlayId.YIELD) { this.paintTileInfoYield(tile); }
+        if (this.gameplayUi.showGrid) { this.paintRightSideEdges(tile); }
       }
     }
 
-    if (this.mapUi.showGrid) {
+    if (this.gameplayUi.showGrid) {
       for (const tile of this.firstRowTiles) { if (tile.isVisible) { this.paintTopLeftEdge(tile); } }
       for (const tile of this.lastRowTiles) { if (tile.isVisible) { this.paintBottomLeftEdge(tile); } }
     }

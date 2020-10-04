@@ -4,14 +4,14 @@ import {Subscription} from 'rxjs';
 
 import {Save, SaveSortOrderId} from '../../../../models/saves';
 import {Uuid} from '../../../../models/utils';
-import {ModalId} from '../../../../models/ui';
+import {ModalId, ScreenId} from '../../../../models/ui';
 
 import {GeneratorService} from '../../../../services/generator.service';
 import {SaveService} from '../../../../services/save.service';
 
 import {CameraStore} from '../../../../stores/camera.store';
 import {MapStore} from '../../../../stores/map.store';
-import {MapUiStore} from '../../../../stores/map-ui.store';
+import {GameplayUiStore} from '../../../../stores/gameplay-ui.store';
 import {SavesStore} from '../../../../stores/saves.store';
 import {UiStore} from '../../../../stores/ui.store';
 
@@ -41,7 +41,7 @@ export class LoadGameComponent implements OnInit, OnDestroy {
     private saveService: SaveService,
     private cameraStore: CameraStore,
     private mapStore: MapStore,
-    private mapUiStore: MapUiStore,
+    private gameplayUiStore: GameplayUiStore,
     private savesStore: SavesStore,
     private uiStore: UiStore
   ) {}
@@ -108,7 +108,7 @@ export class LoadGameComponent implements OnInit, OnDestroy {
     this.saveService.loadSave(saveToBeLoaded);
     this.selectedSaveUuid = undefined;
     this.uiStore.toggleModal(ModalId.LOAD_GAME);
-    this.uiStore.hideMainMenu();
+    this.uiStore.setScreen(ScreenId.GAMEPLAY);
   }
 
 }

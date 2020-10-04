@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 
-import {MapTypeId, ModalId, SidebarId, Ui} from '../models/ui';
+import {ModalId, ScreenId, SidebarId, Ui} from '../models/ui';
 
 import {DEFAULT_UI} from '../consts/ui.const';
 
@@ -12,21 +12,12 @@ export class UiStore {
 
   public readonly ui: Observable<Ui> = this._ui.asObservable();
 
-  // MAIN MENU
-  public hideMainMenu() {
-    this._ui.next({...this._ui.value, showMainMenu: false});
+  // SCREEN
+  public setScreen(screenId: ScreenId) {
+    this._ui.next({...this._ui.value, screen: screenId});
   }
 
-  public showMainMenu() {
-    this._ui.next({...this._ui.value, showMainMenu: true});
-  }
-
-  // MAP TYPE
-  public setMapType(mapTypeId: MapTypeId) {
-    this._ui.next({...this._ui.value, mapType: mapTypeId});
-  }
-
-  // MODALS
+  // MODAL
   public openModal(modalId: ModalId) {
     this._ui.next({...this._ui.value, modal: modalId});
   }
@@ -40,7 +31,7 @@ export class UiStore {
     this._ui.next({...this._ui.value, modal: newModalId});
   }
 
-  // SIDEBARS
+  // SIDEBAR
   public openSidebar(sidebarId: SidebarId) {
     this._ui.next({...this._ui.value, sidebar: sidebarId});
   }
@@ -59,8 +50,8 @@ export class UiStore {
     const ui = this._ui.value;
     if (ui.sidebar !== SidebarId.NONE) { this.closeSidebar(); return; }
     if (ui.modal !== ModalId.NONE) { this.closeModal(); return; }
-    if (ui.showMainMenu) { this.openModal(ModalId.EXIT_GAME_CONFIRMATION); return; }
-    if (!ui.showMainMenu) { this.openModal(ModalId.IN_GAME_MENU); return; }
+    if (ui.screen === ScreenId.MAIN_MENU) { this.openModal(ModalId.EXIT_GAME_CONFIRMATION); return; }
+    if (ui.screen === ScreenId.GAMEPLAY) { this.openModal(ModalId.IN_GAME_MENU); return; }
   }
 
 }

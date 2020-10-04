@@ -2,14 +2,14 @@ import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {Subscription} from 'rxjs';
 
 import {KeyBindings, UserActionId} from '../../models/key-bindings';
-import {ModalId, MapTypeId, SidebarId, Ui} from '../../models/ui';
-import {TileInfoOverlayId, TileResourceOverlayId} from '../../models/map-ui';
+import {ModalId, ScreenId, SidebarId, Ui} from '../../models/ui';
+import {GameplayUi, TileInfoOverlayId, TileResourceOverlayId} from '../../models/gameplay-ui';
 
 import {KeyboardService} from '../../services/keyboard.service';
 
-import {KeyBindingsStore} from '../../stores/key-bindings.store';
 import {UiStore} from '../../stores/ui.store';
-import {MapUiStore} from '../../stores/map-ui.store';
+import {GameplayUiStore} from '../../stores/gameplay-ui.store';
+import {KeyBindingsStore} from '../../stores/key-bindings.store';
 
 @Component({
   selector: '.app-component',
@@ -20,19 +20,20 @@ import {MapUiStore} from '../../stores/map-ui.store';
 export class AppComponent implements OnInit, OnDestroy {
 
   ModalId = ModalId;
-  MapTypeId = MapTypeId;
+  ScreenId = ScreenId;
   SidebarId = SidebarId;
 
-  keyBindings: KeyBindings;
   ui: Ui;
+  gameplayUi: GameplayUi;
+  keyBindings: KeyBindings;
 
   subscriptions: Subscription[] = [];
 
   constructor(
     private keyboardService: KeyboardService,
-    private keyBindingsStore: KeyBindingsStore,
     private uiStore: UiStore,
-    private mapUiStore: MapUiStore
+    private gameplayUiStore: GameplayUiStore,
+    private keyBindingsStore: KeyBindingsStore,
   ) {}
 
   ngOnInit() {
@@ -42,8 +43,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
   subscribeToData() {
     this.subscriptions.push(
+      this.uiStore.ui.subscribe(ui => this.ui = ui),
+      this.gameplayUiStore.gameplayUi.subscribe(gameplayUi => this.gameplayUi = gameplayUi),
       this.keyBindingsStore.keyBindings.subscribe(keyBindings => this.keyBindings = keyBindings),
-      this.uiStore.ui.subscribe(ui => this.ui = ui)
     );
   }
 
@@ -75,7 +77,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   documentOnKeydown(event: KeyboardEvent) {
-    console.info(123)
     // proceed only if outside of an input
     const isInput = (event.target as HTMLElement).tagName.toUpperCase() === 'INPUT';
     if (isInput) { return; }
@@ -91,10 +92,11 @@ export class AppComponent implements OnInit, OnDestroy {
     if (userActionId == UserActionId.TOGGLE_MAP_EDITOR)  { this.uiStore.toggleSidebar(SidebarId.WORLD_BUILDER) } else
     if (userActionId == UserActionId.TOGGLE_DEV_TOOLS)   { this.uiStore.toggleSidebar(SidebarId.DEV_TOOLS) } else
 
-    if (userActionId == UserActionId.TOGGLE_TILE_INFO_OVERLAY_YIELD)   { this.mapUiStore.toggleTileInfoOverlay(TileInfoOverlayId.YIELD) } else
-    if (userActionId == UserActionId.TOGGLE_TILE_INFO_OVERLAY_TEXT)    { this.mapUiStore.toggleTileInfoOverlay(TileInfoOverlayId.TEXT) } else
-    if (userActionId == UserActionId.TOGGLE_TILE_RESOURCE_OVERLAY_ALL) { this.mapUiStore.toggleTileResourceOverlay(TileResourceOverlayId.ALL) } else
-    if (userActionId == UserActionId.TOGGLE_GRID) { this.mapUiStore.toggleGrid() }
+    if (userActionId == UserActionId.TOGGLE_TILE_INFO_OVERLAY_YIELD)   { this.gameplayUiStore.toggleTileInfoOverlay(TileInfoOverlayId.YIELD) } else
+    if (userActionId == UserActionId.TOGGLE_TILE_INFO_OVERLAY_TEXT)    { this.gameplayUiStore.toggleTileInfoOverlay(TileInfoOverlayId.TEXT) } else
+    if (userActionId == UserActionId.TOGGLE_TILE_RESOURCE_OVERLAY_ALL) { this.gameplayUiStore.toggleTileResourceOverlay(TileResourceOverlayId.ALL) } else
+    if (userActionId == UserActionId.TOGGLE_MINIMAP) { this.gameplayUiStore.toggleMinimap() }
+    if (userActionId == UserActionId.TOGGLE_GRID) { this.gameplayUiStore.toggleGrid() }
   }
 
 }

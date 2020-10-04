@@ -60,7 +60,7 @@ import {CameraStore} from './stores/camera.store';
 import {SizeStore} from './stores/size.store';
 import {KeyBindingsStore} from './stores/key-bindings.store';
 import {MapStore} from './stores/map.store';
-import {MapUiStore} from './stores/map-ui.store';
+import {GameplayUiStore} from './stores/gameplay-ui.store';
 import {SavesStore} from './stores/saves.store';
 import {UiStore} from './stores/ui.store';
 import {WorldBuilderUiStore} from './stores/world-builder-ui.store';
@@ -132,7 +132,7 @@ const STORES = [
   SizeStore,
   KeyBindingsStore,
   MapStore,
-  MapUiStore,
+  GameplayUiStore,
   SavesStore,
   UiStore,
   WorldBuilderUiStore,

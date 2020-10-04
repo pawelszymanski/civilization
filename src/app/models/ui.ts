@@ -1,5 +1,6 @@
-export enum MapTypeId {
-  STRATEGIC
+export enum ScreenId {
+  MAIN_MENU,
+  GAMEPLAY,
 }
 
 export enum ModalId {
@@ -20,8 +21,7 @@ export enum SidebarId {
 }
 
 export interface Ui {
-  showMainMenu: boolean;
-  mapType: MapTypeId;
+  screen: ScreenId
   modal: ModalId;
   sidebar: SidebarId;
 }

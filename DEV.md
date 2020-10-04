@@ -1,4 +1,5 @@
 ## WORKING ON
+- add overlay for modals
 - strip extra props from tiles on save
 - use separate local storage keys for each save game 
 - extract vectorLength
@@ -18,6 +19,7 @@
 - bug: zooming in/out is slightly off vertically
 - bug: last in row tile right bottom triangle is not clickable, same x=0 left bottom
 - bug: placing overlay vs green tiles mismatch
+- bug: minimap showing up is glitched, delayed
 
 ## QUESTIONS
 - 
@@ -28,6 +30,7 @@
 - bug: tile background pattern breaks on tiles x -1/0
 
 ## DONE
+- enable toggling of the minimap
 - bug: clear wb selected tiles on WB close
 - decrease map canvas worker size: reduce imports
 - fix WB: update map only one per click (rather than for each selected tile) 

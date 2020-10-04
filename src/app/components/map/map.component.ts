@@ -14,7 +14,7 @@ import {Map} from '../../models/map';
 import {Camera} from '../../models/camera';
 import {Coords} from '../../models/utils';
 import {SidebarId, Ui} from '../../models/ui';
-import {MapUi, TileInfoOverlayId} from '../../models/map-ui';
+import {GameplayUi, TileInfoOverlayId} from '../../models/gameplay-ui';
 import {Size} from '../../models/size';
 import {WorldBuilderUi} from '../../models/world-builder';
 
@@ -27,7 +27,7 @@ import {SizeService} from '../../services/size.service';
 
 import {UiStore} from '../../stores/ui.store';
 import {MapStore} from '../../stores/map.store';
-import {MapUiStore} from '../../stores/map-ui.store';
+import {GameplayUiStore} from '../../stores/gameplay-ui.store';
 import {CameraStore} from '../../stores/camera.store';
 import {SizeStore} from '../../stores/size.store';
 import {WorldBuilderHoveredTilesStore} from '../../stores/world-builder-hovered-tiles.store';
@@ -48,7 +48,7 @@ export class MapComponent {
 
   ui: Ui;
   map: Map;
-  mapUi: MapUi;
+  gameplayUi: GameplayUi;
   camera: Camera;
   size: Size;
   worldBuilderUi: WorldBuilderUi;
@@ -75,7 +75,7 @@ export class MapComponent {
     private sizeService: SizeService,
     private uiStore: UiStore,
     private mapStore: MapStore,
-    private mapUiStore: MapUiStore,
+    private gameplayUiStore: GameplayUiStore,
     private cameraStore: CameraStore,
     private sizeStore: SizeStore,
     private worldBuilderHoveredTilesStore: WorldBuilderHoveredTilesStore,
@@ -103,7 +103,7 @@ export class MapComponent {
     this.subscriptions.push(
       this.uiStore.ui.subscribe(ui => this.ui = ui),
       this.mapStore.map.subscribe(map => this.map = map),
-      this.mapUiStore.mapUi.subscribe(mapUi => this.mapUi = mapUi),
+      this.gameplayUiStore.gameplayUi.subscribe(gameplayUi => this.gameplayUi = gameplayUi),
       this.cameraStore.camera.subscribe(camera => this.camera = camera),
       this.sizeStore.size.subscribe(size => this.size = size),
       this.worldBuilderUiStore.worldBuilderUi.subscribe(worldBuilderUi => this.worldBuilderUi = worldBuilderUi),
@@ -113,7 +113,7 @@ export class MapComponent {
   requestAnimationFrame() {
     this.animationFrameId = this.window.requestAnimationFrame(() => {
       this.requestAnimationFrame();
-      if (!!this.camera && !!this.size && !!this.map && !!this.mapUi) {
+      if (!!this.camera && !!this.size && !!this.map && !!this.gameplayUi) {
         this.updateTilesUiData();
         this.isCanvasInUse() ? this.mapCanvasService.paintCanvas(this.ctx) : this.mapCanvasService.clearCanvas(this.ctx);
         this.cdr.detectChanges();
@@ -218,8 +218,8 @@ export class MapComponent {
 
   isCanvasInUse(): boolean {
     return this.ui.sidebar === SidebarId.WORLD_BUILDER ||        // drawing hovered tiles
-           this.mapUi.showGrid ||                                // grid
-           this.mapUi.infoOverlay !== TileInfoOverlayId.NONE;    // tile overlay of any kind
+           this.gameplayUi.showGrid ||                                // grid
+           this.gameplayUi.infoOverlay !== TileInfoOverlayId.NONE;    // tile overlay of any kind
   }
 
 }

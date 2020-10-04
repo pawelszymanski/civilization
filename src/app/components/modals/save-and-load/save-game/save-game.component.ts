@@ -3,7 +3,7 @@ import {Subscription} from 'rxjs';
 
 import {Camera} from '../../../../models/camera';
 import {Map} from '../../../../models/map';
-import {MapUi} from '../../../../models/map-ui';
+import {GameplayUi} from '../../../../models/gameplay-ui';
 import {Save} from '../../../../models/saves';
 
 import {GeneratorService} from '../../../../services/generator.service';
@@ -11,7 +11,7 @@ import {SaveService} from '../../../../services/save.service';
 
 import {CameraStore} from '../../../../stores/camera.store';
 import {MapStore} from '../../../../stores/map.store';
-import {MapUiStore} from '../../../../stores/map-ui.store';
+import {GameplayUiStore} from '../../../../stores/gameplay-ui.store';
 import {SavesStore} from '../../../../stores/saves.store';
 import {UiStore} from '../../../../stores/ui.store';
 
@@ -26,7 +26,7 @@ export class SaveGameComponent implements OnInit, OnDestroy {
   saveName = '';
 
   map: Map;
-  mapUi: MapUi;
+  gameplayUi: GameplayUi;
   camera: Camera;
 
   save: Save;
@@ -38,7 +38,7 @@ export class SaveGameComponent implements OnInit, OnDestroy {
     private saveService: SaveService,
     private cameraStore: CameraStore,
     private mapStore: MapStore,
-    private mapUiStore: MapUiStore,
+    private gameplayUiStore: GameplayUiStore,
     private savesStore: SavesStore,
     private uiStore: UiStore
   ) {}
@@ -54,7 +54,7 @@ export class SaveGameComponent implements OnInit, OnDestroy {
   subscribeToData() {
     this.subscriptions.push(
       this.mapStore.map.subscribe(map => this.map = map),
-      this.mapUiStore.mapUi.subscribe(mapUi => this.mapUi = mapUi),
+      this.gameplayUiStore.gameplayUi.subscribe(gameplayUi => this.gameplayUi = gameplayUi),
       this.cameraStore.camera.subscribe(camera => this.camera = camera)
     );
   }
@@ -75,9 +75,9 @@ export class SaveGameComponent implements OnInit, OnDestroy {
       uuid: this.generatorService.uuid(),
       timestamp: this.generatorService.nowIsoString(),
       isAutosave: false,
-      map: this.map,
-      mapUi: this.mapUi,
+      gameplayUi: this.gameplayUi,
       camera: this.camera,
+      map: this.map,
     }
 
     this.savesStore.addSave(save);

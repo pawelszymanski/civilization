@@ -2,17 +2,17 @@ import {Injectable} from '@angular/core';
 
 import {Save, SaveListOptions, SaveSortOrderId} from '../models/saves';
 
-import {MapStore} from '../stores/map.store';
-import {MapUiStore} from '../stores/map-ui.store';
+import {GameplayUiStore} from '../stores/gameplay-ui.store';
 import {CameraStore} from '../stores/camera.store';
+import {MapStore} from '../stores/map.store';
 
 @Injectable({providedIn: 'root'})
 export class SaveService {
 
   constructor(
+    private gameplayUiStore: GameplayUiStore,
+    private cameraStore: CameraStore,
     private mapStore: MapStore,
-    private mapUiStore: MapUiStore,
-    private cameraStore: CameraStore
   ) {}
 
   public getFilteredAndSortedSaves(saves: Save[], options: SaveListOptions): Save[] {
@@ -38,9 +38,9 @@ export class SaveService {
 
   // Used in Load Game modal and Main Menu component
   public loadSave(save: Save): void {
-    this.mapStore.next(save.map);
-    this.mapUiStore.next(save.mapUi);
+    this.gameplayUiStore.next(save.gameplayUi);
     this.cameraStore.next(save.camera);
+    this.mapStore.next(save.map);
   }
 
 }

@@ -4,7 +4,7 @@ import {Subscription} from 'rxjs';
 import {Map} from '../../models/map';
 import {Save} from '../../models/saves';
 import {MapSizeId} from '../../models/map-size';
-import {MapTypeId, ModalId, Ui} from '../../models/ui';
+import {ModalId, ScreenId, Ui} from '../../models/ui';
 import {LandmassValueId, MapGeneratorSettings, RainfallId, TemperatureId, WorldAgeId} from '../../models/map-generator';
 
 import {MAP_SIZE_SETTINGS_LIST} from '../../consts/map-size-settings.const';
@@ -83,8 +83,7 @@ export class MainMenuComponent implements OnInit, OnDestroy {
     const latestTimestamp = this.saves.map(save => save.timestamp).sort().pop();
     const saveToBeLoaded = this.saves.find(save => save.timestamp === latestTimestamp);
     this.saveService.loadSave(saveToBeLoaded);
-    this.uiStore.setMapType(MapTypeId.STRATEGIC);
-    this.uiStore.hideMainMenu();
+    this.uiStore.setScreen(ScreenId.GAMEPLAY);
   }
 
   onLoadGameClick() {
@@ -106,14 +105,13 @@ export class MainMenuComponent implements OnInit, OnDestroy {
     }
     const newMap = this.mapGeneratorService.generateNewGameMap(mapGeneratorSetting);
     this.mapStore.next(newMap);
-    this.uiStore.setMapType(MapTypeId.STRATEGIC);
-    this.uiStore.hideMainMenu();
+    this.uiStore.setScreen(ScreenId.GAMEPLAY);
   }
 
   onPlayOnEarthClick() {
     const earthMap = this.zipService.unzip(EARTH_MAP) as Map;
     this.mapStore.next(earthMap);
-    this.uiStore.hideMainMenu();
+    this.uiStore.setScreen(ScreenId.GAMEPLAY);
   }
 
   onCreateGameClick() {
