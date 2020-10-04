@@ -75,6 +75,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   documentOnKeydown(event: KeyboardEvent) {
+    console.info(123)
     // proceed only if outside of an input
     const isInput = (event.target as HTMLElement).tagName.toUpperCase() === 'INPUT';
     if (isInput) { return; }

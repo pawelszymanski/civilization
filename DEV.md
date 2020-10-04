@@ -1,5 +1,6 @@
 ## WORKING ON
 - strip extra props from tiles on save
+- use separate local storage keys for each save game 
 - extract vectorLength
 
 ## TODO
@@ -27,6 +28,7 @@
 - bug: tile background pattern breaks on tiles x -1/0
 
 ## DONE
+- bug: clear wb selected tiles on WB close
 - decrease map canvas worker size: reduce imports
 - fix WB: update map only one per click (rather than for each selected tile) 
 - draw minimap

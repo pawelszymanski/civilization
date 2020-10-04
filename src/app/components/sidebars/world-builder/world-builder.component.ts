@@ -13,6 +13,7 @@ import {WorldBuilderUi} from '../../../models/world-builder';
 import {TERRAIN_BASE_LIST, TERRAIN_FEATURE_LIST, TERRAIN_RESOURCE_LIST, TERRAIN_IMPROVEMENT_LIST} from '../../../consts/terrain.const';
 
 import {WorldBuilderUiStore} from '../../../stores/world-builder-ui.store';
+import {WorldBuilderHoveredTilesStore} from '../../../stores/world-builder-hovered-tiles.store';
 
 @Component({
   selector: '.world-builder-component',
@@ -39,7 +40,8 @@ export class WorldBuilderComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
 
   constructor(
-    private worldBuilderUiStore: WorldBuilderUiStore
+    private worldBuilderUiStore: WorldBuilderUiStore,
+    private worldBuilderHoveredTilesStore: WorldBuilderHoveredTilesStore,
   ) {}
 
   ngOnInit() {
@@ -48,6 +50,7 @@ export class WorldBuilderComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.unsubscribeFromData();
+    this.clearSelectedTiles();
   }
 
   subscribeToData() {
@@ -58,6 +61,10 @@ export class WorldBuilderComponent implements OnInit, OnDestroy {
 
   unsubscribeFromData() {
     this.subscriptions.forEach(s => s.unsubscribe());
+  }
+
+  clearSelectedTiles() {
+    this.worldBuilderHoveredTilesStore.next([]);
   }
 
   onBrushSizeClick(brushSize: WorldBuilderBrushSizeId) {

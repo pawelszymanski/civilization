@@ -61,6 +61,7 @@ export class MiniMapComponent implements OnInit, OnDestroy {
   }
 
   createCanvasWorker() {
+    // Needs to be a type: module, https://stackoverflow.com/questions/48045569/whats-the-difference-between-a-classic-and-module-web-worker
     this.canvasWorker = new Worker('./../../../workers/minimap-canvas.worker', {type: 'module'})
     this.canvasWorker.onmessage = (message) => { this.cachedMinimapImageData = message.data; }
   }
