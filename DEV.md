@@ -1,16 +1,16 @@
 ## WORKING ON
-- only one next of map per many tiles changed in WB
-
+- strip extra props from tiles on save
 - extract vectorLength
-- inject ctx to map-canvas service in constructor
-- use APP_INITIALIZATION injection token for size service init
 
 ## TODO
-- strip extra props from tiles on save
 - move new map option to create game popup
 - hide hud for world builder
 - options popup
 - restore tile yield
+
+## TECHNICAL TO DO
+- inject ctx to map-canvas service in constructor
+- use APP_INITIALIZATION injection token for size service init
 
 ## BUGS
 - bug: opening wold builder does not select tile before mousemove
@@ -27,6 +27,7 @@
 - bug: tile background pattern breaks on tiles x -1/0
 
 ## DONE
+- fix WB: update map only one per click (rather than for each selected tile) 
 - draw minimap
 - the world builder: brush size
 - tile ui service sphere

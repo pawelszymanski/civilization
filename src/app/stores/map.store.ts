@@ -8,6 +8,7 @@ import {TERRAIN_BASE_SET, TERRAIN_FEATURE_SET} from '../consts/terrain.const';
 
 import {GeneratorService} from '../services/generator.service';
 import {TileYieldService} from '../services/tile-yield.service';
+import {TileTerrainService} from '../services/tile-terrain.service';
 
 @Injectable()
 export class MapStore {
@@ -17,67 +18,80 @@ export class MapStore {
   public readonly map: Observable<Map> = this._map.asObservable();
 
   constructor(
+    private generatorService: GeneratorService,
     private tileYieldService: TileYieldService,
-    private generatorService: GeneratorService
+    private tileTerrainService: TileTerrainService,
   ) {}
 
   public next(map: Map) {
     this._map.next(map);
   }
 
-  private tileIndex(coords): number {
-    return coords.x * this._map.value.height + coords.y;
+  private tileIndex(tile: Tile): number {
+    return tile.grid.x * this._map.value.height + tile.grid.y;
   }
 
-  private cloneTile(tile: Tile): Tile {
-    return JSON.parse(JSON.stringify(tile));
+  private deepCopyTiles(tiles: Tile[]): Tile[] {
+    return tiles.map(tile => JSON.parse(JSON.stringify(tile)));
   }
 
-  private updateTileYield(tile: Tile) {
-    this.tileYieldService.updateTileYield(tile);
-  }
-
-  private replaceTile(tile: Tile, newTile: Tile) {
+  private updateTiles(tiles: Tile[]) {
     const map = this._map.getValue();
-    const tileIndex = this.tileIndex(tile.grid);
-    map.tiles[tileIndex] = newTile;
-    this.next(map); // TODO seems its not needed here
-  }
-
-  public setTileTerrainBase(tile: Tile, terrainBaseId: TerrainBaseId) {
-    const newTile = this.cloneTile(tile);
-    const variantCount = TERRAIN_BASE_SET[terrainBaseId].ui.variantCount;
-    const variant = this.generatorService.randomPositiveInteger(variantCount);
-    newTile.terrain.base = {id: terrainBaseId, uiVariant: variant};
-    this.updateTileYield(newTile);
-    this.replaceTile(tile, newTile);
-  }
-
-  public setTileTerrainFeature(tile: Tile, terrainFeatureId: TerrainFeatureId) {
-    const newTile = this.cloneTile(tile);
-    if (terrainFeatureId === TerrainFeatureId.NONE) {
-      newTile.terrain.feature = {id: terrainFeatureId, uiVariant: null};
-    } else {
-      const variantCount = TERRAIN_FEATURE_SET[terrainFeatureId].ui.variantCount;
-      const variant = this.generatorService.randomPositiveInteger(variantCount);
-      newTile.terrain.feature = {id: terrainFeatureId, uiVariant: variant};
+    for (let tile of tiles) {
+      const tileIndex = this.tileIndex(tile);
+      map.tiles[tileIndex] = tile;
     }
-    this.updateTileYield(newTile);
-    this.replaceTile(tile, newTile);
+    this.next(map);
   }
 
-  public setTileTerrainResource(tile: Tile, terrainResourceId: TerrainResourceId) {
-    const newTile = this.cloneTile(tile);
-    newTile.terrain.resourceId = terrainResourceId;
-    this.updateTileYield(newTile);
-    this.replaceTile(tile, newTile);
+  public setTilesTerrainBase(tiles: Tile[], terrainBaseId: TerrainBaseId) {
+    const newTiles = this.deepCopyTiles(tiles);
+    newTiles.forEach(newTile => {
+      const variantCount = TERRAIN_BASE_SET[terrainBaseId].ui.variantCount;  // There is no TerrainBaseId.NONE, it's always some terrain that is listed in TERRAIN_BASE_SET
+      const variant = this.generatorService.randomPositiveInteger(variantCount);
+      newTile.terrain.base = {id: terrainBaseId, uiVariant: variant};
+      this.tileYieldService.updateTileYield(newTile);
+    });
+    this.updateTiles(newTiles);
   }
 
-  public setTileTerrainImprovement(tile: Tile, terrainImprovementId: TerrainImprovementId) {
-    const newTile = this.cloneTile(tile);
-    newTile.terrain.improvementId = terrainImprovementId;
-    this.updateTileYield(newTile);
-    this.replaceTile(tile, newTile);
+  public setTilesTerrainFeature(tiles: Tile[], terrainFeatureId: TerrainFeatureId) {
+    const newTiles = this.deepCopyTiles(tiles);
+    newTiles.forEach(newTile => {
+      if (terrainFeatureId === TerrainFeatureId.NONE) {  // Check for TerrainFeatureId.NONE since it has to have uiVariant set manually (not listed in the TERRAIN_FEATURE_SET)
+        newTile.terrain.feature = {id: TerrainFeatureId.NONE, uiVariant: null};
+      } else {
+        if (this.tileTerrainService.canFeatureBePutOnTile(terrainFeatureId, newTile)) {
+          const variantCount = TERRAIN_FEATURE_SET[terrainFeatureId].ui.variantCount;
+          const variant = this.generatorService.randomPositiveInteger(variantCount);
+          newTile.terrain.feature = {id: terrainFeatureId, uiVariant: variant};
+        }
+      }
+      this.tileYieldService.updateTileYield(newTile);
+    });
+    this.updateTiles(newTiles);
+  }
+
+  public setTilesTerrainResource(tiles: Tile[], terrainResourceId: TerrainResourceId) {
+    const newTiles = this.deepCopyTiles(tiles);
+    newTiles.forEach(newTile => {
+      if (this.tileTerrainService.canResourceBePutOnTile(terrainResourceId, newTile)) {
+        newTile.terrain.resourceId = terrainResourceId;  // Resources do not have any ui variants
+        this.tileYieldService.updateTileYield(newTile);
+      }
+    });
+    this.updateTiles(newTiles);
+  }
+
+  public setTilesTerrainImprovement(tiles: Tile[], terrainImprovementId: TerrainImprovementId) {
+    const newTiles = this.deepCopyTiles(tiles);
+    newTiles.forEach(newTile => {
+      if (this.tileTerrainService.canImprovementBePutOnTile(terrainImprovementId, newTile)) {
+        newTile.terrain.improvementId = terrainImprovementId;  // Improvements do not have any ui variants
+        this.tileYieldService.updateTileYield(newTile);
+      }
+    });
+    this.updateTiles(newTiles);
   }
 
 }

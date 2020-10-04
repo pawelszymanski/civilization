@@ -159,7 +159,7 @@ export class MapComponent {
     if (!tile) { return; }
 
     if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
-      this.worldBuilderService.handleTileClick(tile);
+      this.worldBuilderService.handleTileClick();
     }
   }
 
@@ -168,7 +168,7 @@ export class MapComponent {
     if (!tile) { return; }
 
     if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
-      this.worldBuilderService.handleTileContextmenu(tile);
+      this.worldBuilderService.handleTileContextmenu();
     }
   }
 
