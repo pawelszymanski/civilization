@@ -4,4 +4,16 @@
 .app-component {
   @include size(100%);
   position: relative;
+
+  .modal-overlay {
+    @include position-block(absolute, 0, 0, 0, 0, -1);
+    background-color: rgba(0, 0, 0, 0);
+    transition: background-color 0.35s linear;
+
+    &.active {
+      background-color: rgba(0, 0, 0, 0.25);
+      z-index: $z-index-modal;
+    }
+  }
+
 }

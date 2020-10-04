@@ -7,8 +7,8 @@
 <ng-container *ngIf="ui.screen === ScreenId.GAMEPLAY">
   <div class="map-component"></div>
 
-  <div class="status-bar-component" *ngIf="ui.sidebar !== SidebarId.DEV_TOOLS"></div>
-  <div class="quick-links-component" *ngIf="ui.sidebar !== SidebarId.DEV_TOOLS"></div>
+  <div class="status-bar-component" *ngIf="ui.sidebar !== SidebarId.WORLD_BUILDER"></div>
+  <div class="quick-links-component" *ngIf="ui.sidebar !== SidebarId.WORLD_BUILDER"></div>
   <div class="mini-map-component" *ngIf="gameplayUi.showMinimap"></div>
 
   <div class="civic-tree-component research-tree-modal" [class.active]="ui.modal === ModalId.CIVIC_TREE"></div>
@@ -21,10 +21,10 @@
 </ng-container>
 
 <!-- MODALS (SHARED) -->
-<ng-container>
+<div class="modal-overlay" [class.active]="ui.modal !== ModalId.NONE">
   <div class="in-game-menu-component" [class.active]="ui.modal === ModalId.IN_GAME_MENU"></div>
   <div class="save-game-component" [class.active]="ui.modal === ModalId.SAVE_GAME"></div>
   <div class="load-game-component" [class.active]="ui.modal === ModalId.LOAD_GAME"></div>
   <div class="game-options-menu-component" [class.active]="ui.modal === ModalId.GAMEPLAY_OPTIONS_MENU"></div>
   <div class="exit-game-confirmation-component" [class.active]="ui.modal === ModalId.EXIT_GAME_CONFIRMATION"></div>
-</ng-container>
+</div>

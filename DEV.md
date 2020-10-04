@@ -6,7 +6,6 @@
 
 ## TODO
 - move new map option to create game popup
-- hide hud for world builder
 - options popup
 - restore tile yield
 
@@ -30,6 +29,7 @@
 - bug: tile background pattern breaks on tiles x -1/0
 
 ## DONE
+- hide hud for world builder
 - enable toggling of the minimap
 - bug: clear wb selected tiles on WB close
 - decrease map canvas worker size: reduce imports
