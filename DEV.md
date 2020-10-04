@@ -1,11 +1,12 @@
 ## WORKING ON
+- only one next of map per many tiles changed in WB
+
 - extract vectorLength
 - inject ctx to map-canvas service in constructor
 - use APP_INITIALIZATION injection token for size service init
 
 ## TODO
 - strip extra props from tiles on save
-- draw minimap
 - move new map option to create game popup
 - hide hud for world builder
 - options popup
@@ -26,6 +27,7 @@
 - bug: tile background pattern breaks on tiles x -1/0
 
 ## DONE
+- draw minimap
 - the world builder: brush size
 - tile ui service sphere
 - the world builder: hovered tile

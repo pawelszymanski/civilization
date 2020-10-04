@@ -6,11 +6,14 @@ import {Map} from '../../../models/map';
 import {Size} from '../../../models/size';
 import {Coords} from '../../../models/utils';
 
+import {VIEWPORT_LINE_STYLE, VIEWPORT_LINE_WIDTH, MINIMAP_WIDTH, MINIMAP_HEIGHT} from '../../../consts/minimap.const';
+
 import {CameraStore} from '../../../stores/camera.store';
 import {SizeStore} from '../../../stores/size.store';
 import {MapStore} from '../../../stores/map.store';
-import {TERRAIN_BASE_SET} from '../../../consts/terrain.const';
 
+// General flow: Subscribe to map. When map changes send it over to worker to generate new minimap.
+// On worker message combine map form worker (and cache it) with the viewport added locally.
 @Component({
   selector: '.mini-map-component',
   templateUrl: './mini-map.component.html',
@@ -19,17 +22,21 @@ import {TERRAIN_BASE_SET} from '../../../consts/terrain.const';
 })
 export class MiniMapComponent implements OnInit, OnDestroy {
 
+  MINIMAP_WIDTH = MINIMAP_WIDTH;
+  MINIMAP_HEIGHT = MINIMAP_HEIGHT;
+
   @ViewChild('canvas', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
 
   ctx: CanvasRenderingContext2D;
-
-  vertices: Coords[];
 
   camera: Camera;
   size: Size;
   map: Map;
 
   isDragging = false;
+
+  canvasWorker: Worker;
+  cachedMinimapImageData: ImageData;
 
   animationFrameId: number;
 
@@ -42,6 +49,7 @@ export class MiniMapComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.createCanvasWorker();
     this.initContext();
     this.subscribeToData();
     this.requestAnimationFrame();
@@ -52,24 +60,33 @@ export class MiniMapComponent implements OnInit, OnDestroy {
     this.cancelAnimationFrame();
   }
 
+  createCanvasWorker() {
+    this.canvasWorker = new Worker('./../../../workers/minimap-canvas.worker', {type: 'module'})
+    this.canvasWorker.onmessage = (message) => { this.cachedMinimapImageData = message.data; }
+  }
+
   initContext() {
     this.ctx = this.canvas.nativeElement.getContext('2d')
-    this.ctx.strokeStyle = 'white';
-    this.ctx.lineWidth = 1;
   }
 
   subscribeToData() {
     this.subscriptions.push(
       this.cameraStore.camera.subscribe(camera => this.camera = camera),
       this.sizeStore.size.subscribe(size => this.size = size),
-      this.mapStore.map.subscribe(map => this.map = map),
+      this.mapStore.map.subscribe(map => {
+        this.map = map;
+        if (this.map) { this.canvasWorker.postMessage(map); }
+      })
     );
   }
 
   requestAnimationFrame() {
     this.animationFrameId = window.requestAnimationFrame(() => {
       this.requestAnimationFrame();
-      if (this.map) { this.drawMinimap(); }
+      if (this.cachedMinimapImageData) {
+        this.pasteCachedMinimap();
+        this.drawViewport();
+      }
     });
   }
 
@@ -83,19 +100,16 @@ export class MiniMapComponent implements OnInit, OnDestroy {
 
   // EVENTS
 
-  onClick(event: MouseEvent) {
-    const m = this.eventToMapCoords(event);
-    this.cameraStore.setTranslate(m);
-  }
-
-  onMousedown() {
+  onMousedown(event: MouseEvent) {
+    const mapCoords = this.eventToMapCoords(event);
+    this.cameraStore.setTranslate(mapCoords);
     this.isDragging = true;
   }
 
   onMousemove(event: MouseEvent) {
     if (this.isDragging) {
-      const m = this.eventToMapCoords(event);
-      this.cameraStore.setTranslate(m);
+      const mapCoords = this.eventToMapCoords(event);
+      this.cameraStore.setTranslate(mapCoords);
     }
   }
 
@@ -112,31 +126,8 @@ export class MiniMapComponent implements OnInit, OnDestroy {
     };
   }
 
-  drawMinimap() {
-    this.clearMinimap();
-    this.drawTiles();
-    this.drawViewport();
-  }
-
-  clearMinimap() {
-    this.ctx.fillStyle = 'black';
-    this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-  }
-
-  drawTiles() {
-    const scale = { x: this.size.row.width / this.ctx.canvas.width, y: this.size.map.height / this.ctx.canvas.width };
-    for (let tile of this.map.tiles) {
-      this.ctx.beginPath();
-      this.ctx.moveTo((tile.px.x + this.size.vertices[0].x) * scale.x, (tile.px.y + this.size.vertices[0].y) * scale.y);
-      this.ctx.lineTo((tile.px.x + this.size.vertices[1].x) * scale.x, (tile.px.y + this.size.vertices[1].y) * scale.y);
-      this.ctx.lineTo((tile.px.x + this.size.vertices[2].x) * scale.x, (tile.px.y + this.size.vertices[2].y) * scale.y);
-      this.ctx.lineTo((tile.px.x + this.size.vertices[3].x) * scale.x, (tile.px.y + this.size.vertices[3].y) * scale.y);
-      this.ctx.lineTo((tile.px.x + this.size.vertices[4].x) * scale.x, (tile.px.y + this.size.vertices[4].y) * scale.y);
-      this.ctx.lineTo((tile.px.x + this.size.vertices[5].x) * scale.x, (tile.px.y + this.size.vertices[5].y) * scale.y);
-      this.ctx.closePath();
-      this.ctx.fillStyle = TERRAIN_BASE_SET[tile.terrain.base.id].ui.color;
-      this.ctx.fill();
-    }
+  pasteCachedMinimap() {
+    this.ctx.putImageData(this.cachedMinimapImageData, 0, 0);
   }
 
   drawViewport() {
@@ -149,6 +140,9 @@ export class MiniMapComponent implements OnInit, OnDestroy {
     const bottom = this.ctx.canvas.height * bottomRatio;
     const left = this.ctx.canvas.width * leftRatio;
     const right = this.ctx.canvas.width * rightRatio;
+
+    this.ctx.strokeStyle = VIEWPORT_LINE_STYLE;
+    this.ctx.lineWidth = VIEWPORT_LINE_WIDTH;
 
     this.drawLine(left, top, left, bottom);
     this.drawLine(right, top, right, bottom);
