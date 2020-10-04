@@ -5,7 +5,6 @@ import {
   TerrainImprovementId,
   TerrainResourceId,
   TerrainResourceTypeId,
-  TerrainUiColor,
   TerrainUiCommon,
   TerrainUiVariantCount
 } from '../models/terrain';
@@ -15,7 +14,7 @@ import {Yield, YieldId} from '../models/yield';
 interface TerrainBase {
   id: TerrainBaseId;
   yield: Partial<Yield>;
-  ui: TerrainUiCommon & TerrainUiColor & TerrainUiVariantCount;
+  ui: TerrainUiCommon & TerrainUiVariantCount;
 }
 
 type TerrainBaseSet = {
@@ -68,7 +67,6 @@ export const TERRAIN_BASE_SET: TerrainBaseSet = {
     ui: {
       name: 'Grassland',
       class: 'm-base-grassland-flat',
-      color: '#708735',
       variantCount: 1,
     },
   },
@@ -78,7 +76,6 @@ export const TERRAIN_BASE_SET: TerrainBaseSet = {
     ui: {
       name: 'Grassland (Hills)',
       class: 'm-base-grassland-hills',
-      color: '#708735',
       variantCount: 3,
     },
   },
@@ -88,7 +85,6 @@ export const TERRAIN_BASE_SET: TerrainBaseSet = {
     ui: {
       name: 'Grassland (Mountain)',
       class: 'm-base-grassland-mountain',
-      color: '#708735',
       variantCount: 5,
     },
   },
@@ -98,7 +94,6 @@ export const TERRAIN_BASE_SET: TerrainBaseSet = {
     ui: {
       name: 'Plains',
       class: 'm-base-plains-flat',
-      color: '#9fa036',
       variantCount: 1,
     },
   },
@@ -108,7 +103,6 @@ export const TERRAIN_BASE_SET: TerrainBaseSet = {
     ui: {
       name: 'Plains (Hills)',
       class: 'm-base-plains-hills',
-      color: '#9fa036',
       variantCount: 3,
     },
   },
@@ -118,7 +112,6 @@ export const TERRAIN_BASE_SET: TerrainBaseSet = {
     ui: {
       name: 'Plains (Mountain)',
       class: 'm-base-plains-mountain',
-      color: '#9fa036',
       variantCount: 5,
     },
   },
@@ -128,7 +121,6 @@ export const TERRAIN_BASE_SET: TerrainBaseSet = {
     ui: {
       name: 'Desert',
       class: 'm-base-desert-flat',
-      color: '#efca73',
       variantCount: 1,
     },
   },
@@ -138,7 +130,6 @@ export const TERRAIN_BASE_SET: TerrainBaseSet = {
     ui: {
       name: 'Desert (Hills)',
       class: 'm-base-desert-hills',
-      color: '#efca73',
       variantCount: 3,
     },
   },
@@ -148,7 +139,6 @@ export const TERRAIN_BASE_SET: TerrainBaseSet = {
     ui: {
       name: 'Desert (Mountain)',
       class: 'm-base-desert-mountain',
-      color: '#efca73',
       variantCount: 5,
     },
   },
@@ -158,7 +148,6 @@ export const TERRAIN_BASE_SET: TerrainBaseSet = {
     ui: {
       name: 'Tundra',
       class: 'm-base-tundra-flat',
-      color: '#918f63',
       variantCount: 1,
     },
   },
@@ -168,7 +157,6 @@ export const TERRAIN_BASE_SET: TerrainBaseSet = {
     ui: {
       name: 'Tundra (Hills)',
       class: 'm-base-tundra-hills',
-      color: '#918f63',
       variantCount: 3,
     },
   },
@@ -178,7 +166,6 @@ export const TERRAIN_BASE_SET: TerrainBaseSet = {
     ui: {
       name: 'Tundra (Mountain)',
       class: 'm-base-tundra-mountain',
-      color: '#918f63',
       variantCount: 5,
     },
   },
@@ -188,7 +175,6 @@ export const TERRAIN_BASE_SET: TerrainBaseSet = {
     ui: {
       name: 'Snow',
       class: 'm-base-snow-flat',
-      color: '#d2e4f5',
       variantCount: 1,
     },
   },
@@ -198,7 +184,6 @@ export const TERRAIN_BASE_SET: TerrainBaseSet = {
     ui: {
       name: 'Snow (Hills)',
       class: 'm-base-snow-hills',
-      color: '#d2e4f5',
       variantCount: 3,
     },
   },
@@ -208,7 +193,6 @@ export const TERRAIN_BASE_SET: TerrainBaseSet = {
     ui: {
       name: 'Snow (Mountain)',
       class: 'm-base-snow-mountain',
-      color: '#d2e4f5',
       variantCount: 5,
     },
   },
@@ -218,7 +202,6 @@ export const TERRAIN_BASE_SET: TerrainBaseSet = {
     ui: {
       name: 'Lake',
       class: 'm-base-lake',
-      color: '#2e5878',
       variantCount: 1,
     },
   },
@@ -228,7 +211,6 @@ export const TERRAIN_BASE_SET: TerrainBaseSet = {
     ui: {
       name: 'Coast',
       class: 'm-base-coast',
-      color: '#2e5878',
       variantCount: 1,
     },
   },
@@ -238,7 +220,6 @@ export const TERRAIN_BASE_SET: TerrainBaseSet = {
     ui: {
       name: 'Ocean',
       class: 'm-base-ocean',
-      color: '#2b2f55',
       variantCount: 1,
     },
   }

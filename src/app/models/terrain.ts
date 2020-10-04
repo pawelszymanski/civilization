@@ -124,10 +124,6 @@ export interface TerrainUiCommon {
   class: string;
 }
 
-export interface TerrainUiColor {
-  color: string;
-}
-
 export interface TerrainUiVariantCount {
   variantCount: number;
 }

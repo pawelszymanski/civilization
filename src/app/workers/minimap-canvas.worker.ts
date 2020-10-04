@@ -1,8 +1,7 @@
 import {Map, Tile} from '../models/map';
 import {Coords} from '../models/utils';
 
-import {TERRAIN_BASE_SET} from '../consts/terrain.const';
-import {MINIMAP_HEIGHT, MINIMAP_WIDTH, MINIMAP_BACKGROUND_STYLE} from '../consts/minimap.const';
+import {MINIMAP_HEIGHT, MINIMAP_WIDTH, MINIMAP_BACKGROUND_STYLE, TERRAIN_BASE_TO_COLOR_MAP} from '../consts/minimap.const';
 
 new class MinimapCanvas {
 
@@ -32,6 +31,7 @@ new class MinimapCanvas {
     this.paintBackground();
     this.paintTiles(map);
     const imageData = this.ctx.getImageData(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+    // @ts-ignore
     postMessage(imageData);
   }
 
@@ -71,7 +71,7 @@ new class MinimapCanvas {
 
     for (let tile of map.tiles) {
       const coordsPx = this.calcTileCoords(tile, tileSize);
-      const color = TERRAIN_BASE_SET[tile.terrain.base.id].ui.color;
+      const color = TERRAIN_BASE_TO_COLOR_MAP[tile.terrain.base.id];
 
       this.paintTile(coordsPx, tileSize, color);
 

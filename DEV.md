@@ -27,6 +27,7 @@
 - bug: tile background pattern breaks on tiles x -1/0
 
 ## DONE
+- decrease map canvas worker size: reduce imports
 - fix WB: update map only one per click (rather than for each selected tile) 
 - draw minimap
 - the world builder: brush size
@@ -86,6 +87,7 @@
 - remove two components per tile with *ngIf="mapUi.infoOverlay === TileInfoOverlayId.xxx", ~3ms on frame on change detection
 - clip path % => px => + 13% = FPS 26.6 ??????????
 - contain: strict === contain: layout style size; slows down rendering, but why?
+- remove big imports from workers as those will be placed inline in the worker module during compilation: ~1500 lines => ~400 lines of compiled worked module from TERRAIN_BASE_SET => TERRAIN_BASE_TO_COLOR_MAP 
 - *ngFor="let tile of visible(map.tiles)" => increases paint time 2ms -> 6ms
 - `        &:nth-of-type(2n+1) {
              &.m-x-#{$i} {
