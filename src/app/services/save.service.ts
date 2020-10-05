@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 
 import {Save, SaveData, SaveHeader} from '../models/saves';
 import {Uuid} from '../models/utils';
@@ -25,6 +25,7 @@ export class SaveService {
     private cameraStore: CameraStore,
     private mapStore: MapStore,
     private saveHeadersStore: SaveHeadersStore,
+    private ngZone: NgZone,
   ) {}
 
   private extractSaveHeader(save: Save): SaveHeader {
@@ -44,19 +45,29 @@ export class SaveService {
     }
   }
 
-  public save(save: Save): void {
-    const saveHeader = this.extractSaveHeader(save);
-    this.saveHeadersStore.add(saveHeader);
-
-    const saveData = this.extractSaveData(save);
+  private stripCalculatedData(saveData: SaveData) {
     for (const tile of saveData.map.tiles) {
       delete tile.isVisible;
       delete tile.px;
       delete tile.yield;
     }
-    const saveDataZipped = this.zipService.zip(saveData);
-    const key = this.LOCAL_STORAGE_SAVE_PREFIX + save.uuid;
-    this.localStorageService.set(key, saveDataZipped);
+  }
+
+  public save(save: Save): void {
+    const saveHeader = this.extractSaveHeader(save);
+    this.saveHeadersStore.add(saveHeader);
+
+    const saveData = this.extractSaveData(save);
+    this.stripCalculatedData(saveData);
+
+    const worker = new Worker('./../workers/zip.worker', {type: 'module'})
+    worker.postMessage(saveData);
+
+    worker.onmessage = (message) => {
+      const key = this.LOCAL_STORAGE_SAVE_PREFIX + save.uuid;
+      const zippedSaveData = message.data;
+      this.localStorageService.set(key, zippedSaveData);
+    }
   }
 
   // Used in Load Game modal and Main Menu component

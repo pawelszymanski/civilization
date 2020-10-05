@@ -1,14 +1,10 @@
 ## WORKING ON
-- strip extra props from tiles on save
-- use separate local storage keys for each save game 
-- show used local storage space indicator
-
-- extract vectorLength
-
-## TODO
 - move new map option to create game popup
 - options popup
+
+## TODO
 - restore tile yield
+- use offscreen canvas for map
 
 ## TECHNICAL TO DO
 - inject ctx to map-canvas service in constructor
@@ -30,6 +26,11 @@
 - bug: tile background pattern breaks on tiles x -1/0
 
 ## DONE
+- fix minimap
+- unzip worker
+- strip extra props from tiles on save
+- use separate local storage keys for each save game 
+- show used local storage space indicator
 - add overlay for modals
 - hide hud for world builder
 - enable toggling of the minimap
