@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {Subscription} from 'rxjs';
 
 import {Camera} from '../../../models/camera';
@@ -41,6 +41,8 @@ export class MiniMapComponent implements OnInit, OnDestroy {
   animationFrameId: number;
 
   subscriptions: Subscription[] = [];
+
+  @HostBinding('style.top') public hostTop: string = 'calc(100% - ' + MINIMAP_HEIGHT + 'px)';  // Without this minimap renders not 0, but +4px to the bottom, no clue why
 
   constructor(
     private cameraStore: CameraStore,

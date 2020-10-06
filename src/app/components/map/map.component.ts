@@ -97,6 +97,7 @@ export class MapComponent {
 
   initContext() {
     this.ctx = this.canvas.nativeElement.getContext('2d');
+    this.mapCanvasService.setContextRef(this.ctx);
   }
 
   subscribeToData() {
@@ -115,7 +116,7 @@ export class MapComponent {
       this.requestAnimationFrame();
       if (!!this.camera && !!this.size && !!this.map && !!this.gameplayUi) {
         this.updateTilesUiData();
-        this.isCanvasInUse() ? this.mapCanvasService.paintCanvas(this.ctx) : this.mapCanvasService.clearCanvas(this.ctx);
+        this.isCanvasInUse() ? this.mapCanvasService.paintCanvas() : this.mapCanvasService.clearCanvas();
         this.cdr.detectChanges();
       }
     });
@@ -217,7 +218,7 @@ export class MapComponent {
   }
 
   isCanvasInUse(): boolean {
-    return this.ui.sidebar === SidebarId.WORLD_BUILDER ||        // drawing hovered tiles
+    return this.ui.sidebar === SidebarId.WORLD_BUILDER ||             // drawing hovered tiles
            this.gameplayUi.showGrid ||                                // grid
            this.gameplayUi.infoOverlay !== TileInfoOverlayId.NONE;    // tile overlay of any kind
   }

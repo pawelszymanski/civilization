@@ -5,6 +5,7 @@ import {TerrainBaseId, TerrainFeatureId, TerrainResourceId, TerrainImprovementId
 import {Map, Tile} from '../models/map';
 
 import {TERRAIN_BASE_SET, TERRAIN_FEATURE_SET} from '../consts/terrain.const';
+import {DEFAULT_MAP} from '../consts/map.const';
 
 import {GeneratorService} from '../services/generator.service';
 import {TileYieldService} from '../services/tile-yield.service';
@@ -13,7 +14,7 @@ import {TileTerrainService} from '../services/tile-terrain.service';
 @Injectable()
 export class MapStore {
 
-  private _map: BehaviorSubject<Map> = new BehaviorSubject(undefined);
+  private _map: BehaviorSubject<Map> = new BehaviorSubject(DEFAULT_MAP);
 
   public readonly map: Observable<Map> = this._map.asObservable();
 

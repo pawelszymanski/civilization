@@ -1,6 +1,7 @@
+<!-- Keep the ternary width and height to avoid host becoming visible too fast -->
 <canvas #canvas
-        [width]="MINIMAP_WIDTH"
-        [height]="MINIMAP_HEIGHT"
+        [width]="cachedMinimapImageData ? MINIMAP_WIDTH : 0"
+        [height]="cachedMinimapImageData ? MINIMAP_HEIGHT : 0"
         (mousedown)="onMousedown($event)"
         (mousemove)="onMousemove($event)"
         (mouseup)="onMouseup()">

@@ -79,10 +79,13 @@ export class MapCanvasService {
     this.ctx.fillStyle = TILE_INFO_TEXT_STYLE;
   }
 
-  public paintCanvas(ctx: CanvasRenderingContext2D): void {
-    if (!this.ctx) { this.ctx = ctx; }  // All public methods need to check if cts is bound to this as those might m
+  public setContextRef(ctx: CanvasRenderingContext2D): void {
+    this.ctx = ctx;
+  }
+
+  public paintCanvas(): void {
     this.setCommonStyles();
-    this.clearCanvas(ctx);
+    this.clearCanvas();
 
     for (const tile of this.map.tiles) {
       if (tile.isVisible) {
@@ -102,8 +105,7 @@ export class MapCanvasService {
     });
   }
 
-  public clearCanvas(ctx: CanvasRenderingContext2D): void {
-    if (!this.ctx) { this.ctx = ctx; }  // All public methods need to check if cts is bound to this
+  public clearCanvas(): void {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
   }
 

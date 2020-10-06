@@ -1,8 +1,8 @@
 ## WORKING ON
 - move new map option to create game popup
-- options popup
 
 ## TODO
+- options popup
 - restore tile yield
 - use offscreen canvas for map
 
@@ -11,11 +11,7 @@
 - use APP_INITIALIZATION injection token for size service init
 
 ## BUGS
-- bug: opening wold builder does not select tile before mousemove
 - bug: zooming in/out is slightly off vertically
-- bug: last in row tile right bottom triangle is not clickable, same x=0 left bottom
-- bug: placing overlay vs green tiles mismatch
-- bug: minimap showing up is glitched, delayed
 
 ## QUESTIONS
 - 
@@ -25,8 +21,14 @@
 - Canvas: make tile background move to match translate
 - bug: tile background pattern breaks on tiles x -1/0
 
+## BUGS THAT WILL NOT BE FIXED
+- bug: opening wold builder does not select tile before mousemove
+
 ## DONE
-- fix minimap
+- bug: minimap showing up is glitched, delayed
+- bug: grid is not longer draw after exiting to main menu
+- bug: placing overlay vs green tiles mismatch
+- N/A bug: last in row tile right bottom triangle is not clickable, same x=0 left bottom
 - unzip worker
 - strip extra props from tiles on save
 - use separate local storage keys for each save game 

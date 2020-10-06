@@ -32,11 +32,11 @@
       //clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
       clip-path: polygon(
           #{$size * 0.45}px 0,
-          #{$size * 0.90}px #{$size * 0.25}px,
-          #{$size * 0.90}px #{$size * 0.75}px,
+          #{$size * 0.90}px #{$size * 0.251}px,
+          #{$size * 0.90}px #{$size * 0.749}px,
           #{$size * 0.45}px #{$size}px,
-          0 #{$size * 0.75}px,
-          0 #{$size * 0.25}px
+          0 #{$size * 0.749}px,
+          0 #{$size * 0.251}px
       );
     }
   }
