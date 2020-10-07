@@ -11,17 +11,19 @@
   <div class="quick-links-component" *ngIf="ui.sidebar !== SidebarId.WORLD_BUILDER"></div>
   <div class="mini-map-component" *ngIf="gameplayUi.showMinimap"></div>
 
-  <div class="civic-tree-component research-tree-modal" [class.active]="ui.modal === ModalId.CIVIC_TREE"></div>
-  <div class="technology-tree-component research-tree-modal" [class.active]="ui.modal === ModalId.TECHNOLOGY_TREE"></div>
-
   <div class="dev-tools-component" *ngIf="ui.sidebar === SidebarId.DEV_TOOLS"></div>
   <div class="world-builder-component" *ngIf="ui.sidebar === SidebarId.WORLD_BUILDER"></div>
 
   <div class="screen-center-marker-component" *ngIf="ui.sidebar === SidebarId.DEV_TOOLS"></div>
 </ng-container>
 
-<!-- MODALS (SHARED) -->
+<!-- MODALS -->
 <div class="modal-overlay" [class.active]="ui.modal !== ModalId.NONE">
+  <ng-container *ngIf="ui.screen === ScreenId.GAMEPLAY">
+    <div class="civic-tree-component research-tree-modal" [class.active]="ui.modal === ModalId.CIVIC_TREE"></div>
+    <div class="technology-tree-component research-tree-modal" [class.active]="ui.modal === ModalId.TECHNOLOGY_TREE"></div>
+  </ng-container>
+
   <div class="in-game-menu-component" *ngIf="ui.modal === ModalId.IN_GAME_MENU"></div>
   <div class="save-game-component" *ngIf="ui.modal === ModalId.SAVE_GAME"></div>
   <div class="load-game-component" *ngIf="ui.modal === ModalId.LOAD_GAME"></div>
