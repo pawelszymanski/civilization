@@ -1,6 +1,5 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
-import {TechnologyIdWithEraCoords, TechnologyTreeEra} from '../../../../models/technologies';
 import {Ui} from '../../../../models/ui';
 
 import {TECHNOLOGY_TREE} from '../../../../consts/technology-tree.const';
@@ -22,15 +21,6 @@ export class TechnologyTreeComponent {
   constructor(
     private uiStore: UiStore
   ) {}
-
-  getEraElemClass(era: TechnologyTreeEra): string {
-    const columns = era.technologies.map(tech => tech.eraCoords.x).sort().pop() + 1;
-    return `m-columns-${columns}`;
-  }
-
-  getTechnologyElemClass(technologyIdWithEraCoords: TechnologyIdWithEraCoords): string {
-    return `m-offset-${technologyIdWithEraCoords.eraCoords.x}-${technologyIdWithEraCoords.eraCoords.y}`;
-  }
 
   onCloseButtonClick() {
     this.uiStore.closeModal();

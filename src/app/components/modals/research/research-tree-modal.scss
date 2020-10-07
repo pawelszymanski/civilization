@@ -68,7 +68,7 @@ $popup-height: $header-height + $tech-tree-height + $scrollbar-height;
           }
         }
 
-        .item {
+        .research-item {
           position: absolute;
           @include size($tech-tile-width, $tech-tile-height);
           border: 1px solid gray;
@@ -82,13 +82,13 @@ $popup-height: $header-height + $tech-tree-height + $scrollbar-height;
             }
           }
 
-          .item-icon {
+          .research-item-icon {
             @include position-top-left(absolute, 0, 0, 1);
             @include size($tech-tile-icon-size, $tech-tile-icon-size);
             background: #55534f
           }
 
-          .item-name {
+          .research-item-name {
             @include position-top-right(absolute, 0, 0, 1);
             width: calc(100% - #{$tech-tile-icon-size});
             background: #627862;

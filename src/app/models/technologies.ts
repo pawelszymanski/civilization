@@ -1,6 +1,3 @@
-import {EraId} from './era';
-import {Coords} from './utils';
-
 export enum TechnologyId {
   POTTERY,
   ANIMAL_HUSBANDRY,
@@ -78,15 +75,3 @@ export interface Technology {
   prerequisites: TechnologyId[];
   cost: number;
 }
-
-export interface TechnologyIdWithEraCoords {
-  id: TechnologyId;
-  eraCoords: Coords;
-}
-
-export interface TechnologyTreeEra {
-  id: EraId;
-  technologies: TechnologyIdWithEraCoords[]
-}
-
-export type TechnologyTree = TechnologyTreeEra[];

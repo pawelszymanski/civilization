@@ -1,5 +1,6 @@
 import {EraId} from '../models/era';
-import {TechnologyId, TechnologyTree} from '../models/technologies';
+import {TechnologyId} from '../models/technologies';
+import {TechnologyTree} from '../models/research-tree';
 
 export const TECHNOLOGY_TREE: TechnologyTree = [
   {

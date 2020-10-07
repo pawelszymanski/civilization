@@ -1,5 +1,6 @@
 import {EraId} from '../models/era';
-import {CivicId, CivicTree} from '../models/civics';
+import {CivicId} from '../models/civics';
+import {CivicTree} from '../models/research-tree';
 
 export const CIVIC_TREE: CivicTree = [
   {

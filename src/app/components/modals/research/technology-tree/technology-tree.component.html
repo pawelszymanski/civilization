@@ -2,10 +2,10 @@
 <i class="close-button fa fa-close" (click)="onCloseButtonClick()"></i>
 <div class="tree-viewport">
   <ul class="eras">
-    <li class="era" *ngFor="let era of TECHNOLOGY_TREE" [ngClass]="getEraElemClass(era)">
-      <div class="item" *ngFor="let technology of era.technologies" [ngClass]="getTechnologyElemClass(technology)">
-        <div class="item-icon"></div>
-        <p class="item-name">{{ technology.id | technologyName }}</p>
+    <li class="era" *ngFor="let era of TECHNOLOGY_TREE" [ngClass]="era | eraElemClass">
+      <div class="research-item" *ngFor="let technology of era.technologies" [ngClass]="technology | researchItemElemClass">
+        <div class="research-item-icon"></div>
+        <p class="research-item-name">{{ technology.id | technologyName }}</p>
       </div>
     </li>
   </ul>

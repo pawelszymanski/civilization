@@ -1,6 +1,3 @@
-import {Coords} from './utils';
-import {EraId} from './era';
-
 export enum CivicId {
   CODE_OF_LAWS,
   CRAFTSMANSHIP,
@@ -64,15 +61,3 @@ export interface Civic {
   prerequisites: CivicId[];
   cost: number;
 }
-
-export interface CivicIdWithEraCoords {
-  id: CivicId;
-  eraCoords: Coords;
-}
-
-export interface CivicTreeEra {
-  id: EraId;
-  civics: CivicIdWithEraCoords[]
-}
-
-export type CivicTree = CivicTreeEra[];
