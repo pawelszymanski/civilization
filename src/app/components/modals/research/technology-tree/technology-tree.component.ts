@@ -3,6 +3,7 @@ import {Component, ViewEncapsulation} from '@angular/core';
 import {Ui} from '../../../../models/ui';
 
 import {TECHNOLOGY_TREE} from '../../../../consts/technology-tree.const';
+import {TECHNOLOGY_SET} from '../../../../consts/technologies.const';
 
 import {UiStore} from '../../../../stores/ui.store';
 
@@ -15,6 +16,7 @@ import {UiStore} from '../../../../stores/ui.store';
 export class TechnologyTreeComponent {
 
   TECHNOLOGY_TREE = TECHNOLOGY_TREE;
+  TECHNOLOGY_SET = TECHNOLOGY_SET;
 
   ui: Ui;
 

@@ -75,7 +75,8 @@ import {EraNamePipe} from './pipes/era-name.pipe';
 import {CivicNamePipe} from './pipes/ciciv-name.pipe';
 import {TechnologyNamePipe} from './pipes/technology-name.pipe';
 import {TileCssClassesPipe} from './pipes/tile-css-classes.pipe';
-import {EraElemClassPipe} from './pipes/era-elem-class.pipe';
+import {TechnologyTreeEraElemClassPipe} from './pipes/technology-tree-era-elem-class.pipe';
+import {CivicTreeEraElemClassPipe} from './pipes/civic-tree-era-elem-class.pipe';
 import {ResearchItemElemClassPipe} from './pipes/research-item-elem-class.pipe';
 
 
@@ -150,7 +151,8 @@ const PIPES = [
   CivicNamePipe,
   TechnologyNamePipe,
   TileCssClassesPipe,
-  EraElemClassPipe,
+  TechnologyTreeEraElemClassPipe,
+  CivicTreeEraElemClassPipe,
   ResearchItemElemClassPipe,
 ]
 

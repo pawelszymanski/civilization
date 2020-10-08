@@ -22,7 +22,7 @@ export enum CivicId {
   DIVINE_RIGHT,
   EXPLORATION,
   HUMANISM,
-  DIPLOMACY_SERVICE,
+  DIPLOMACTIC_SERVICE,
   REFORMED_CHURCH,
   MERCANTILISM,
   THE_ENLIGHTENMENT,
@@ -60,4 +60,8 @@ export interface Civic {
   id: CivicId;
   prerequisites: CivicId[];
   cost: number;
+  ui: {
+    name: string;
+    class: string;
+  }
 }

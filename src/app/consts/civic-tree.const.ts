@@ -44,7 +44,7 @@ export const CIVIC_TREE: CivicTree = [
     civics: [
       {id: CivicId.EXPLORATION, eraCoords: {x: 0, y: 0}},
       {id: CivicId.HUMANISM, eraCoords: {x: 0, y: 2}},
-      {id: CivicId.DIPLOMACY_SERVICE, eraCoords: {x: 0, y: 4}},
+      {id: CivicId.DIPLOMACTIC_SERVICE, eraCoords: {x: 0, y: 4}},
       {id: CivicId.REFORMED_CHURCH, eraCoords: {x: 0, y: 6}},
       {id: CivicId.MERCANTILISM, eraCoords: {x: 1, y: 2}},
       {id: CivicId.THE_ENLIGHTENMENT, eraCoords: {x: 1, y: 4}}

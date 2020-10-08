@@ -25,6 +25,7 @@
 - bug: opening wold builder does not select tile before mousemove
 
 ## DONE
+- make research trees display icons, populate the research data
 - bug: minimap showing up is glitched, delayed
 - bug: grid is not longer draw after exiting to main menu
 - bug: placing overlay vs green tiles mismatch

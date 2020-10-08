@@ -65,7 +65,7 @@ export const TECHNOLOGY_TREE: TechnologyTree = [
       {id: TechnologyId.INDUSTRIALIZATION, eraCoords: {x: 0, y: 1}},
       {id: TechnologyId.SCIENTIFIC_THEORY, eraCoords: {x: 0, y: 2}},
       {id: TechnologyId.BALLISTICS, eraCoords: {x: 0, y: 4}},
-      {id: TechnologyId.MILITARY_SERVICE, eraCoords: {x: 0, y: 6}},
+      {id: TechnologyId.MILITARY_SCIENCE, eraCoords: {x: 0, y: 6}},
       {id: TechnologyId.STEAM_POWER, eraCoords: {x: 1, y: 0}},
       {id: TechnologyId.SANITATION, eraCoords: {x: 1, y: 2}},
       {id: TechnologyId.ECONOMICS, eraCoords: {x: 1, y: 3}},

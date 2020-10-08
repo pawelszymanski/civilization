@@ -38,7 +38,7 @@ export enum TechnologyId {
   INDUSTRIALIZATION,
   SCIENTIFIC_THEORY,
   BALLISTICS,
-  MILITARY_SERVICE,
+  MILITARY_SCIENCE,
   STEAM_POWER,
   SANITATION,
   ECONOMICS,
@@ -74,4 +74,8 @@ export interface Technology {
   id: TechnologyId;
   prerequisites: TechnologyId[];
   cost: number;
+  ui: {
+    name: string;
+    class: string;
+  }
 }

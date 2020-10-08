@@ -85,7 +85,22 @@ $popup-height: $header-height + $tech-tree-height + $scrollbar-height;
           .research-item-icon {
             @include position-top-left(absolute, 0, 0, 1);
             @include size($tech-tile-icon-size, $tech-tile-icon-size);
-            background: #55534f
+            background-size: 80%;
+            background-repeat: no-repeat;
+            background-position: center;
+
+            @each $technology in $technology-list {
+              &.m-#{$technology} {
+                background-image: url('/assets/icons/technologies/#{$technology}.webp');
+              }
+            }
+
+            @each $civic in $civic-list {
+              &.m-#{$civic} {
+                background-image: url('/assets/icons/civics/#{$civic}.webp');
+              }
+            }
+
           }
 
           .research-item-name {
