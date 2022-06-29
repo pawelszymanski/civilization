@@ -29,4 +29,4 @@ export const TERRAIN_BASE_TO_COLOR_MAP = {
   [TerrainBaseId.LAKE]: '#2e5878',
   [TerrainBaseId.COAST]: '#2e5878',
   [TerrainBaseId.OCEAN]: '#2b2f55',
-}
+};

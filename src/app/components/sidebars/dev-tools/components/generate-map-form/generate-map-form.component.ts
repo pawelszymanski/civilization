@@ -35,14 +35,14 @@ export class GenerateMapFormComponent {
     worldAge: WorldAgeId.STANDARD,
     temperature: TemperatureId.STANDARD,
     rainfall: RainfallId.STANDARD
-  }
+  };
 
   constructor(
     private mapGeneratorService: MapGeneratorService,
     private mapStore: MapStore
   ) {}
 
-  onMapSizeIdChange(mapSizeId: MapSizeId) {
+  onMapSizeIdChange(mapSizeId: MapSizeId): void {
     const mapSizeSettings = MAP_SIZE_SETTINGS_LIST.find(mss => mss.id === Number(mapSizeId));
     if (mapSizeSettings) {
       this.mapGeneratorSettings.width = mapSizeSettings.width;
@@ -52,7 +52,7 @@ export class GenerateMapFormComponent {
     }
   }
 
-  onGenerateGameMapClick() {
+  onGenerateGameMapClick(): void {
     const map = this.mapGeneratorService.generateNewGameMap(this.mapGeneratorSettings);
     this.mapStore.next(map);
   }

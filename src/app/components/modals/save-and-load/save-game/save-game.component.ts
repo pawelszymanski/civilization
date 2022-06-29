@@ -43,16 +43,16 @@ export class SaveGameComponent implements OnInit, OnDestroy {
     private uiStore: UiStore,
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.subscribeToData();
     this.getUsedLocalStorageSpace();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.unsubscribeFromData();
   }
 
-  subscribeToData() {
+  subscribeToData(): void {
     this.subscriptions.push(
       this.mapStore.map.subscribe(map => this.map = map),
       this.gameplayUiStore.gameplayUi.subscribe(gameplayUi => this.gameplayUi = gameplayUi),
@@ -60,11 +60,11 @@ export class SaveGameComponent implements OnInit, OnDestroy {
     );
   }
 
-  getUsedLocalStorageSpace() {
+  getUsedLocalStorageSpace(): void {
     this.usedStoragePc = this.localStorageService.getUsagePc();
   }
 
-  unsubscribeFromData() {
+  unsubscribeFromData(): void {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
@@ -72,7 +72,7 @@ export class SaveGameComponent implements OnInit, OnDestroy {
     return (this.usedStoragePc < 100 && this.saveName && !!this.map);
   }
 
-  onSaveGameClick() {
+  onSaveGameClick(): void {
     if (!this.canGameBeSaved()) { return; }
 
     const save: Save = {
@@ -83,7 +83,7 @@ export class SaveGameComponent implements OnInit, OnDestroy {
       gameplayUi: this.gameplayUi,
       camera: this.camera,
       map: this.map,
-    }
+    };
 
     this.saveService.save(save);
     this.saveName = '';

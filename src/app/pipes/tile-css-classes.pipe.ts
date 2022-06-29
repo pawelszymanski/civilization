@@ -42,7 +42,7 @@ export class TileCssClassesPipe implements PipeTransform {
         result.push(cssClass + '-' + variation);
         break;
       default:
-        result.push(base.ui.class)
+        result.push(base.ui.class);
     }
 
     if (tile.terrain.feature.id) {
@@ -52,11 +52,11 @@ export class TileCssClassesPipe implements PipeTransform {
     }
 
     if (tile.terrain.resourceId) {
-      result.push(TERRAIN_RESOURCE_SET[tile.terrain.resourceId].ui.class)
+      result.push(TERRAIN_RESOURCE_SET[tile.terrain.resourceId].ui.class);
     }
 
     if (tile.terrain.improvementId) {
-      result.push(TERRAIN_IMPROVEMENT_SET[tile.terrain.improvementId].ui.class)
+      result.push(TERRAIN_IMPROVEMENT_SET[tile.terrain.improvementId].ui.class);
     }
 
     return result;

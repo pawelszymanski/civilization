@@ -36,41 +36,41 @@ export class CameraFormComponent implements OnInit, OnDestroy {
     private cameraStore: CameraStore
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.subscribeToData();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.unsubscribeFromData();
   }
 
-  subscribeToData() {
+  subscribeToData(): void {
     this.subscriptions.push(
       this.cameraStore.camera.subscribe(camera => this.camera = camera)
     );
   }
 
-  unsubscribeFromData() {
+  unsubscribeFromData(): void {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
-  onZoomLevelChange(zoomLevel: number) {
+  onZoomLevelChange(zoomLevel: number): void {
     this.cameraStore.setZoomLevel(zoomLevel);
   }
 
-  onTileSizeChange(tileSize: number) {
+  onTileSizeChange(tileSize: number): void {
     this.cameraStore.setTileSize(tileSize);
   }
 
-  onTranslateXChange(translateX: number) {
+  onTranslateXChange(translateX: number): void {
     this.cameraStore.setTranslate({ ...this.camera.translate, x: translateX });
   }
 
-  onTranslateYChange(translateY: number) {
+  onTranslateYChange(translateY: number): void {
     this.cameraStore.setTranslate({ ...this.camera.translate, y: translateY });
   }
 
-  onResetCameraClick() {
+  onResetCameraClick(): void {
     this.cameraStore.resetAll();
   }
 

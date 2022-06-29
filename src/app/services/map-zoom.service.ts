@@ -37,7 +37,7 @@ export class MapZoomService {
     return -(Math.abs(wheelEvent.deltaY) / wheelEvent.deltaY) as Step;
   }
 
-  public handleWheelEvent(event: WheelEvent) {
+  public handleWheelEvent(event: WheelEvent): void {
     // calculate new zoom level
     const step = this.wheelEventToStep(event);
     const currentZoomLevel = this.camera.zoomLevel;
@@ -60,7 +60,7 @@ export class MapZoomService {
     const newTranslate: Coords = {
       x: -Math.round((canvasCoordsAtScreenCenter.x * scale) - (this.size.screen.width / 2)),
       y: -Math.round((canvasCoordsAtScreenCenter.y * scale) - (this.size.screen.height / 2))
-    }
+    };
     this.cameraStore.setTranslate(newTranslate);
   }
 

@@ -14,6 +14,7 @@ import {TileTerrainService} from '../services/tile-terrain.service';
 @Injectable()
 export class MapStore {
 
+  // tslint:disable-next-line:variable-name
   private _map: BehaviorSubject<Map> = new BehaviorSubject(DEFAULT_MAP);
 
   public readonly map: Observable<Map> = this._map.asObservable();
@@ -24,7 +25,7 @@ export class MapStore {
     private tileTerrainService: TileTerrainService,
   ) {}
 
-  public next(map: Map) {
+  public next(map: Map): void {
     this._map.next(map);
   }
 
@@ -36,16 +37,16 @@ export class MapStore {
     return tiles.map(tile => JSON.parse(JSON.stringify(tile)));
   }
 
-  private updateTiles(tiles: Tile[]) {
+  private updateTiles(tiles: Tile[]): void {
     const map = this._map.getValue();
-    for (let tile of tiles) {
+    for (const tile of tiles) {
       const tileIndex = this.tileIndex(tile);
       map.tiles[tileIndex] = tile;
     }
     this.next(map);
   }
 
-  public setTilesTerrainBase(tiles: Tile[], terrainBaseId: TerrainBaseId) {
+  public setTilesTerrainBase(tiles: Tile[], terrainBaseId: TerrainBaseId): void {
     const newTiles = this.deepCopyTiles(tiles);
     newTiles.forEach(newTile => {
       const variantCount = TERRAIN_BASE_SET[terrainBaseId].ui.variantCount;  // There is no TerrainBaseId.NONE, it's always some terrain that is listed in TERRAIN_BASE_SET
@@ -56,7 +57,7 @@ export class MapStore {
     this.updateTiles(newTiles);
   }
 
-  public setTilesTerrainFeature(tiles: Tile[], terrainFeatureId: TerrainFeatureId) {
+  public setTilesTerrainFeature(tiles: Tile[], terrainFeatureId: TerrainFeatureId): void {
     const newTiles = this.deepCopyTiles(tiles);
     newTiles.forEach(newTile => {
       if (terrainFeatureId === TerrainFeatureId.NONE) {  // Check for TerrainFeatureId.NONE since it has to have uiVariant set manually (not listed in the TERRAIN_FEATURE_SET)
@@ -73,7 +74,7 @@ export class MapStore {
     this.updateTiles(newTiles);
   }
 
-  public setTilesTerrainResource(tiles: Tile[], terrainResourceId: TerrainResourceId) {
+  public setTilesTerrainResource(tiles: Tile[], terrainResourceId: TerrainResourceId): void {
     const newTiles = this.deepCopyTiles(tiles);
     newTiles.forEach(newTile => {
       if (this.tileTerrainService.canResourceBePutOnTile(terrainResourceId, newTile)) {
@@ -84,7 +85,7 @@ export class MapStore {
     this.updateTiles(newTiles);
   }
 
-  public setTilesTerrainImprovement(tiles: Tile[], terrainImprovementId: TerrainImprovementId) {
+  public setTilesTerrainImprovement(tiles: Tile[], terrainImprovementId: TerrainImprovementId): void {
     const newTiles = this.deepCopyTiles(tiles);
     newTiles.forEach(newTile => {
       if (this.tileTerrainService.canImprovementBePutOnTile(terrainImprovementId, newTile)) {

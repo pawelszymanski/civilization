@@ -14,12 +14,12 @@ export class ExitGameConfirmationComponent {
     private uiStore: UiStore
   ) {}
 
-  onNoClick() {
+  onNoClick(): void {
     this.uiStore.closeModal();
   }
 
-  onYesClick() {
-    window.location.href = 'http://google.com';
+  onYesClick(): void {
+    window.location.href = 'https://google.com';
   }
 
 }

@@ -16,21 +16,21 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.subscribeToData();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.unsubscribeFromData();
   }
 
-  subscribeToData() {
+  subscribeToData(): void {
     this.subscriptions.push(
-      // ...
+      // TODO...
     );
   }
 
-  unsubscribeFromData() {
+  unsubscribeFromData(): void {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 

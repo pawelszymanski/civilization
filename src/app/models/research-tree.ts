@@ -10,7 +10,7 @@ export interface TechnologyIdWithEraCoords {
 
 export interface TechnologyTreeEra {
   id: EraId;
-  technologies: TechnologyIdWithEraCoords[]
+  technologies: TechnologyIdWithEraCoords[];
 }
 
 export type TechnologyTree = TechnologyTreeEra[];
@@ -24,7 +24,7 @@ export interface CivicIdWithEraCoords {
 
 export interface CivicTreeEra {
   id: EraId;
-  civics: CivicIdWithEraCoords[]
+  civics: CivicIdWithEraCoords[];
 }
 
 export type CivicTree = CivicTreeEra[];

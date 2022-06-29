@@ -11,7 +11,7 @@ export enum YieldId {
 
 export type Yield = {
   [key in YieldId]: number;
-}
+};
 
 export interface YieldOfType {
   type: YieldId;

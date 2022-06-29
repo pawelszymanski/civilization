@@ -26,23 +26,23 @@ export class InGameMenuComponent {
     private mapStore: MapStore,
   ) {}
 
-  onReturnToGameClick() {
+  onReturnToGameClick(): void {
     this.uiStore.closeModal();
   }
 
-  onSaveGameClick() {
+  onSaveGameClick(): void {
     this.uiStore.openModal(ModalId.SAVE_GAME);
   }
 
-  onLoadGameClick() {
+  onLoadGameClick(): void {
     this.uiStore.openModal(ModalId.LOAD_GAME);
   }
 
-  onOptionsClick() {
+  onOptionsClick(): void {
     this.uiStore.openModal(ModalId.GAMEPLAY_OPTIONS_MENU);
   }
 
-  onExitToMainMenuClick() {
+  onExitToMainMenuClick(): void {
     this.uiStore.closeModal();
     this.gameplayUiStore.next(DEFAULT_GAMEPLAY_UI);
     this.cameraStore.next(DEFAULT_CAMERA);
@@ -50,7 +50,7 @@ export class InGameMenuComponent {
     this.uiStore.setScreen(ScreenId.MAIN_MENU);
   }
 
-  onExitToGoogleClick() {
+  onExitToGoogleClick(): void {
     this.uiStore.openModal(ModalId.EXIT_GAME_CONFIRMATION);
   }
 

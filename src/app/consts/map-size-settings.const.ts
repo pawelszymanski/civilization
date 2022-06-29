@@ -85,4 +85,4 @@ export const MAP_SIZE_SETTINGS_LIST: MapSizeSettings[] = [
     continents: 6,
     islands: 6
   }
-]
+];

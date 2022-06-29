@@ -9,7 +9,7 @@ export const YIELD_IDS_IN_ORDER = [
   YieldId.FAITH,
   YieldId.POWER,
   YieldId.TOURISM
-]
+];
 
 export const YIELD_ID_TO_ICON_CLASS_MAP = {
   [YieldId.FOOD]: 'fa-leaf',
@@ -20,4 +20,4 @@ export const YIELD_ID_TO_ICON_CLASS_MAP = {
   [YieldId.FAITH]: 'fa-fire',
   [YieldId.POWER]: 'fa-bolt',
   [YieldId.TOURISM]: 'fa-suitcase'
-}
+};

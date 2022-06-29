@@ -12,6 +12,7 @@ export class SaveHeadersStore {
 
   private readonly LOCAL_STORAGE_SAVE_HEADERS_KEY = 'Saves';
 
+  // tslint:disable-next-line:variable-name
   private _saveHeaders: BehaviorSubject<SaveHeader[]> = new BehaviorSubject([]);
 
   public readonly saveHeaders: Observable<SaveHeader[]> = this._saveHeaders.asObservable();
@@ -24,7 +25,7 @@ export class SaveHeadersStore {
     this.getLocalSaveHeaders();
   }
 
-  private getLocalSaveHeaders() {
+  private getLocalSaveHeaders(): void {
     const data = this.localStorageService.get(this.LOCAL_STORAGE_SAVE_HEADERS_KEY);
     if (data) {
       const saveIds = this.zipService.unzip(data) as SaveHeader[];
@@ -32,12 +33,12 @@ export class SaveHeadersStore {
     }
   }
 
-  private persistSaveHeaders() {
+  private persistSaveHeaders(): void {
     const saveIdsZipped = this.zipService.zip(this._saveHeaders.value);
     this.localStorageService.set(this.LOCAL_STORAGE_SAVE_HEADERS_KEY, saveIdsZipped);
   }
 
-  private next(saveHeaders: SaveHeader[]) {
+  private next(saveHeaders: SaveHeader[]): void {
     this._saveHeaders.next(saveHeaders);
   }
 

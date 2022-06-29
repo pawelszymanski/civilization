@@ -56,7 +56,7 @@ export class MapComponent {
   dragStartCoords: Coords;  // Page x, y when mouse was pressed down
   dragStartTranslate: Coords;  // Map element x, y when mouse was pressed down
   isDragging = false;
-  dragHandlerRef: Function;
+  dragHandlerRef: () => void;
 
   animationFrameId: number;
 
@@ -84,23 +84,23 @@ export class MapComponent {
 
   // INIT
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.initContext();
     this.subscribeToData();
     this.requestAnimationFrame();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.unsubscribeFromData();
     this.cancelAnimationFrame();
   }
 
-  initContext() {
+  initContext(): void {
     this.ctx = this.canvas.nativeElement.getContext('2d');
     this.mapCanvasService.setContextRef(this.ctx);
   }
 
-  subscribeToData() {
+  subscribeToData(): void {
     this.subscriptions.push(
       this.uiStore.ui.subscribe(ui => this.ui = ui),
       this.mapStore.map.subscribe(map => this.map = map),
@@ -111,7 +111,7 @@ export class MapComponent {
     );
   }
 
-  requestAnimationFrame() {
+  requestAnimationFrame(): void {
     this.animationFrameId = this.window.requestAnimationFrame(() => {
       this.requestAnimationFrame();
       if (!!this.camera && !!this.size && !!this.map && !!this.gameplayUi) {
@@ -122,21 +122,22 @@ export class MapComponent {
     });
   }
 
-  unsubscribeFromData() {
+  unsubscribeFromData(): void {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
-  cancelAnimationFrame() {
+  cancelAnimationFrame(): void {
     this.window.cancelAnimationFrame(this.animationFrameId);
   }
 
   // EVENTS
-  onMousedown(event: MouseEvent) {
-    if (this.isDragging) { this.stopDrag(); }  // Unfortunately sometimes dragging is not disabled properly, ie try dragging out of the window, release button and come back
+  onMousedown(event: MouseEvent): void {
+    // TODO: BUG: Unfortunately sometimes dragging is not disabled properly, ie try dragging out of the window, release button and come back
+    if (this.isDragging) { this.stopDrag(); }
     this.startDrag(event);
   }
 
-  onMousemove(event: MouseEvent) {  // Intended for the hover effects
+  onMousemove(event: MouseEvent): void {  // Intended for the hover effects
     if (this.ui.sidebar === SidebarId.WORLD_BUILDER && !this.isDragging) {
       const hoveredTile = this.tileUiService.mouseEventToTile(event);
       if (hoveredTile) {
@@ -148,14 +149,14 @@ export class MapComponent {
     }
   }
 
-  onMouseup(event: MouseEvent) {
+  onMouseup(event: MouseEvent): void {
     this.stopDrag();
 
     const dragDistance = this.vectorLength({x: event.pageX, y: event.pageY}, this.dragStartCoords);
     if (dragDistance < 3)  { this.onClick(event); }  // With no excessive dragging count as a click
   }
 
-  onClick(event: MouseEvent) {  // artificial, comes after decision making in onMouseup
+  onClick(event: MouseEvent): void {  // artificial, comes after decision-making in onMouseup
     const tile = this.tileUiService.mouseEventToTile(event);
     if (!tile) { return; }
 
@@ -164,7 +165,7 @@ export class MapComponent {
     }
   }
 
-  onContextmenu(event: MouseEvent) {
+  onContextmenu(event: MouseEvent): void {
     const tile = this.tileUiService.mouseEventToTile(event);
     if (!tile) { return; }
 
@@ -173,7 +174,7 @@ export class MapComponent {
     }
   }
 
-  onWheel(event: WheelEvent) {
+  onWheel(event: WheelEvent): void {
     this.mapZoomService.handleWheelEvent(event);
   }
 
@@ -183,15 +184,15 @@ export class MapComponent {
     return Math.sqrt( (vector1.x - vector2.x) ** 2 + (vector1.y - vector2.y) ** 2 );
   }
 
-  updateTilesUiData() {
-    for (let tile of this.map.tiles) {
+  updateTilesUiData(): void {
+    for (const tile of this.map.tiles) {
       const tileCoordsOnScreenPx = this.tileUiService.tileCoordsOnScreenPx(tile);
       if (tileCoordsOnScreenPx) { tile.px = tileCoordsOnScreenPx; }
       tile.isVisible = !!tileCoordsOnScreenPx;
     }
   }
 
-  startDrag(event: MouseEvent) {
+  startDrag(event: MouseEvent): void {
     this.dragStartCoords = {x: event.pageX, y: event.pageY};
     this.dragStartTranslate = {x: this.camera.translate.x, y: this.camera.translate.y};
 
@@ -204,15 +205,15 @@ export class MapComponent {
     this.isDragging = true;
   }
 
-  dragHandler(event: MouseEvent) {
-    let translate = {
+  dragHandler(event: MouseEvent): void {
+    const translate = {
       x: this.dragStartTranslate.x + event.pageX - this.dragStartCoords.x,
       y: this.dragStartTranslate.y + event.pageY - this.dragStartCoords.y
-    }
+    };
     this.cameraStore.setTranslate(translate);
   }
 
-  stopDrag() {
+  stopDrag(): void {
     this.document.removeEventListener('mousemove', this.dragHandlerRef as any);
     this.isDragging = false;
   }

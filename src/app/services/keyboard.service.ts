@@ -11,16 +11,16 @@ export class KeyboardService {
     const keyCode = event.code as KeyCodeId;
 
     let modifiers = KEY_MODIFIER_NONE;
-    if (event.shiftKey) {modifiers += KEY_MODIFIER_SHIFT}
-    if (event.ctrlKey) {modifiers += KEY_MODIFIER_CTRL}
-    if (event.altKey) {modifiers += KEY_MODIFIER_ALT}
+    if (event.shiftKey) { modifiers += KEY_MODIFIER_SHIFT; }
+    if (event.ctrlKey) { modifiers += KEY_MODIFIER_CTRL; }
+    if (event.altKey) { modifiers += KEY_MODIFIER_ALT; }
 
-    return {keyCode, modifiers}
+    return {keyCode, modifiers};
   }
 
   public findMatchingActionId(keyBindings: KeyBindings, keyBinding: KeyBinding): UserActionId {
     const userActionIds: UserActionId[] = Object.keys(keyBindings).map(id => id as undefined as UserActionId);
-    for (let userActionId of userActionIds) {
+    for (const userActionId of userActionIds) {
       const actionKeyBinding = keyBindings[userActionId];
       if (actionKeyBinding.keyCode === keyBinding.keyCode && actionKeyBinding.modifiers === keyBinding.modifiers) {
         return userActionId;

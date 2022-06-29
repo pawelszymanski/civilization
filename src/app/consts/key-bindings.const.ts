@@ -16,4 +16,4 @@ export const DEFAULT_KEY_BINDINGS: KeyBindings = {
   [UserActionId.TOGGLE_CIVICS_TREE]: {keyCode: KeyCodeId.KeyC, modifiers: KEY_MODIFIER_NONE},
   [UserActionId.TOGGLE_MAP_EDITOR]: {keyCode: KeyCodeId.KeyB, modifiers: KEY_MODIFIER_NONE},
   [UserActionId.TOGGLE_DEV_TOOLS]: {keyCode: KeyCodeId.KeyD, modifiers: KEY_MODIFIER_NONE}
-}
+};

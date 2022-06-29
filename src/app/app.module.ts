@@ -108,10 +108,10 @@ const COMPONENTS = [
   PerformanceChartComponent,
   CameraFormComponent,
   GenerateMapFormComponent,
-]
+];
 
 const DIRECTIVES = [
-]
+];
 
 const SERVICES = [
   CameraService,
@@ -128,7 +128,7 @@ const SERVICES = [
   MapCanvasService,
   MapZoomService,
   WorldBuilderService,
-]
+];
 
 const STORES = [
   CameraStore,
@@ -140,7 +140,7 @@ const STORES = [
   UiStore,
   WorldBuilderUiStore,
   WorldBuilderHoveredTilesStore,
-]
+];
 
 const PIPES = [
   TerrainBaseNamePipe,
@@ -154,7 +154,7 @@ const PIPES = [
   TechnologyTreeEraElemClassPipe,
   CivicTreeEraElemClassPipe,
   ResearchItemElemClassPipe,
-]
+];
 
 @NgModule({
   declarations: [

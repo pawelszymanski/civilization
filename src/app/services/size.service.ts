@@ -57,21 +57,21 @@ export class SizeService {
       oneQuarterHeight: Math.floor(this.camera.tileSize * 0.25) + 1,
       threeQuarterWidth: Math.floor(this.camera.tileSize * 0.9 * 0.75),
       threeQuarterHeight: Math.floor(this.camera.tileSize * 0.75) - 1
-    }
+    };
   }
 
   private calcRow(tile: FullSize & HalfSize): FullSize {
     return {
       width: tile.width * this.map.width,
       height: Math.floor(tile.height * 0.75) - 1
-    }
+    };
   }
 
   private calcMap(tile: FullSize & HalfSize, row: FullSize): FullSize {
     return {
       width: (tile.width * this.map.width) + tile.halfWidth,
       height: (row.height * this.map.height) + Math.floor(tile.height * 0.25) + 1  // this.map.height is 1-based, need -1
-    }
+    };
   }
 
   private calcVertices(tile: FullSize & HalfSize & QuarterSize): Coords[] {
@@ -91,7 +91,7 @@ export class SizeService {
       height: this.window.innerHeight,
       halfWidth: Math.floor(this.window.innerWidth / 2),
       halfHeight: Math.floor(this.window.innerHeight / 2)
-    }
+    };
   }
 
   private updateScreen(): void {

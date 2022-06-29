@@ -43,11 +43,11 @@ export class MapGeneratorService {
       tiles: [],
       width,
       height
-    }
+    };
 
     for (let x = 0; x < width; x++) {
       for (let y = 0; y < height; y++) {
-        map.tiles.push(this.createEmptyOceanTile({x, y}))
+        map.tiles.push(this.createEmptyOceanTile({x, y}));
       }
     }
 

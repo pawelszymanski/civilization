@@ -19,44 +19,44 @@ interface TerrainBase {
 
 type TerrainBaseSet = {
   [key in TerrainBaseId]: TerrainBase;
-}
+};
 
 
 
 interface TerrainFeature {
   id: TerrainFeatureId;
-  suitableTerrain: SuitableTerrain[]
+  suitableTerrain: SuitableTerrain[];
   yield: Partial<Yield>;
   ui: TerrainUiCommon & TerrainUiVariantCount;
 }
 
 // All but TerrainFeatureId.NONE
-type TerrainFeatureSet = Omit<{[key in TerrainFeatureId]: TerrainFeature;}, TerrainFeatureId.NONE>;
+type TerrainFeatureSet = Omit<{[key in TerrainFeatureId]: TerrainFeature; }, TerrainFeatureId.NONE>;
 
 
 
 interface TerrainResource {
   id: TerrainResourceId;
   type: TerrainResourceTypeId;
-  suitableTerrain: SuitableTerrain[]
+  suitableTerrain: SuitableTerrain[];
   yield: Partial<Yield>;
   ui: TerrainUiCommon;
 }
 
 // All but TerrainResourceId.NONE
-type TerrainResourceSet = Omit<{[key in TerrainResourceId]: TerrainResource;}, TerrainResourceId.NONE>;
+type TerrainResourceSet = Omit<{[key in TerrainResourceId]: TerrainResource; }, TerrainResourceId.NONE>;
 
 
 
 interface TerrainImprovement {
   id: TerrainImprovementId;
-  suitableTerrain: SuitableTerrain[]
+  suitableTerrain: SuitableTerrain[];
   yield: Partial<Yield>;
   ui: TerrainUiCommon;
 }
 
 // All but TerrainImprovementId.NONE
-type TerrainImprovementSet = Omit<{[key in TerrainImprovementId]: TerrainImprovement;}, TerrainImprovementId.NONE>;
+type TerrainImprovementSet = Omit<{[key in TerrainImprovementId]: TerrainImprovement; }, TerrainImprovementId.NONE>;
 
 
 
@@ -223,7 +223,7 @@ export const TERRAIN_BASE_SET: TerrainBaseSet = {
       variantCount: 1,
     },
   }
-}
+};
 export const TERRAIN_BASE_LIST: TerrainBase[] = Object.keys(TERRAIN_BASE_SET).map(key => TERRAIN_BASE_SET[key]);
 
 
@@ -323,7 +323,7 @@ export const TERRAIN_FEATURE_SET: TerrainFeatureSet = {
       variantCount: 1,
     },
   }
-}
+};
 export const TERRAIN_FEATURE_LIST: TerrainFeature[] = Object.keys(TERRAIN_FEATURE_SET).map(key => TERRAIN_FEATURE_SET[key]);
 
 
@@ -850,7 +850,7 @@ export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
     ],
     yield: { [YieldId.FOOD]: 2 },
     ui: {
-      name:'Spices',
+      name: 'Spices',
       class: 'm-resource-spices',
     },
   },
@@ -936,7 +936,7 @@ export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
       class: 'm-resource-wine',
     },
   }
-}
+};
 export const TERRAIN_RESOURCE_LIST: TerrainResource[] = Object.keys(TERRAIN_RESOURCE_SET).map(key => TERRAIN_RESOURCE_SET[key]);
 
 
@@ -1098,7 +1098,8 @@ export const TERRAIN_IMPROVEMENT_SET: TerrainImprovementSet = {
       class: 'm-improvement-seaside-resort',
     },
   },
-  // +1 Production from each adjacent Fishing Boat, Fishing Boats receive +1 Production from each adjacent Seastead, +1 Culture and Tourism for each adjacent Reef, +2 Housing.
+  // +1 Production from each adjacent Fishing Boat, Fishing Boats receive +1 Production from each adjacent Seastead,
+  // +1 Culture and Tourism for each adjacent Reef, +2 Housing.
   [TerrainImprovementId.SEASTEAD]: {
     id: TerrainImprovementId.SEASTEAD,
     suitableTerrain: [],
@@ -1136,5 +1137,5 @@ export const TERRAIN_IMPROVEMENT_SET: TerrainImprovementSet = {
       class: 'm-improvement-wind-farm',
     },
   }
-}
+};
 export const TERRAIN_IMPROVEMENT_LIST: TerrainImprovement[] = Object.keys(TERRAIN_IMPROVEMENT_SET).map(key => TERRAIN_IMPROVEMENT_SET[key]);

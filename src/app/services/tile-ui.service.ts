@@ -13,7 +13,7 @@ import {MapStore} from '../stores/map.store';
 export class TileUiService {
 
   camera: Camera;
-  size: Size
+  size: Size;
   map: Map;
 
   constructor(
@@ -102,7 +102,7 @@ export class TileUiService {
     const tileCoords = {
       x: (mapCoords.x + this.size.tile.width + (isOddRow ? +this.size.tile.halfWidth : 0)) % this.size.tile.width,
       y: (mapCoords.y + this.size.row.height) % this.size.row.height  // make sure its row height, otherwise obob
-    }
+    };
 
     // Check if in the wide rectangle in the center of the hex
     const isAboveOneQuarter = tileCoords.y >= this.size.tile.oneQuarterHeight;
@@ -134,7 +134,7 @@ export class TileUiService {
   private eventToMapCoordsPx(event: MouseEvent): Coords {
     let x = event.clientX - this.camera.translate.x;
     if (x >= this.size.row.width) { x -= this.size.row.width; }
-    let y = event.clientY - this.camera.translate.y;
+    const y = event.clientY - this.camera.translate.y;
     return { x, y };
   }
 
@@ -150,12 +150,12 @@ export class TileUiService {
   public tilesInRadius(centerTile: Tile, radius: number = 0): Tile[] {
     if (radius === 0) { return [centerTile]; }
 
-    let candidates = [];
+    const candidates = [];
     const isCenterOddRow = centerTile.grid.y % 2 === 1;
     for (let y = -radius; y <= radius; y++) {
       const yDelta = Math.abs(y);
-      const fromX = -radius + (isCenterOddRow ? Math.ceil(yDelta/2) : Math.floor(yDelta/2));
-      const toX = fromX + 2*radius - yDelta;
+      const fromX = -radius + (isCenterOddRow ? Math.ceil(yDelta / 2) : Math.floor(yDelta / 2));
+      const toX = fromX + 2 * radius - yDelta;
       for (let x = fromX; x <= toX; x++) {
         candidates.push( { x: centerTile.grid.x + x, y: centerTile.grid.y + y } );
       }
@@ -163,7 +163,7 @@ export class TileUiService {
 
     return candidates
       .filter(grid => ( (grid.y >= 0) && (grid.y < this.map.height) ))
-      .map(grid => this.map.tiles[((grid.x + this.map.width) % this.map.width) * this.map.height + grid.y] )
+      .map(grid => this.map.tiles[((grid.x + this.map.width) % this.map.width) * this.map.height + grid.y] );
   }
 
 }

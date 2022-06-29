@@ -44,50 +44,50 @@ export class WorldBuilderComponent implements OnInit, OnDestroy {
     private worldBuilderHoveredTilesStore: WorldBuilderHoveredTilesStore,
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.subscribeToData();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.unsubscribeFromData();
     this.clearSelectedTiles();
   }
 
-  subscribeToData() {
+  subscribeToData(): void {
     this.subscriptions.push(
       this.worldBuilderUiStore.worldBuilderUi.subscribe(worldBuilderUi => this.worldBuilderUi = worldBuilderUi)
     );
   }
 
-  unsubscribeFromData() {
+  unsubscribeFromData(): void {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
-  clearSelectedTiles() {
+  clearSelectedTiles(): void {
     this.worldBuilderHoveredTilesStore.next([]);
   }
 
-  onBrushSizeClick(brushSize: WorldBuilderBrushSizeId) {
+  onBrushSizeClick(brushSize: WorldBuilderBrushSizeId): void {
     this.worldBuilderUiStore.setBrushSize(brushSize);
   }
 
-  onToolClick(tool: WorldBuilderToolId) {
+  onToolClick(tool: WorldBuilderToolId): void {
     this.worldBuilderUiStore.setTool(tool);
   }
 
-  onTerrainBaseClick(terrainBase: TerrainBaseId) {
+  onTerrainBaseClick(terrainBase: TerrainBaseId): void {
     this.worldBuilderUiStore.setTerrainBase(terrainBase);
   }
 
-  onTerrainFeatureClick(terrainFeature: TerrainFeatureId) {
+  onTerrainFeatureClick(terrainFeature: TerrainFeatureId): void {
     this.worldBuilderUiStore.setTerrainFeature(terrainFeature);
   }
 
-  onTerrainResourceClick(terrainResource: TerrainResourceId) {
+  onTerrainResourceClick(terrainResource: TerrainResourceId): void {
     this.worldBuilderUiStore.setTerrainResource(terrainResource);
   }
 
-  onTerrainImprovementClick(terrainImprovement: TerrainImprovementId) {
+  onTerrainImprovementClick(terrainImprovement: TerrainImprovementId): void {
     this.worldBuilderUiStore.setTerrainImprovement(terrainImprovement);
   }
 

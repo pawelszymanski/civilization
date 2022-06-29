@@ -14,7 +14,7 @@ export enum TileResourceOverlayId {
 
 export interface GameplayUi {
   infoOverlay: TileInfoOverlayId;
-  resourceOverlay: TileResourceOverlayId
+  resourceOverlay: TileResourceOverlayId;
   showGrid: boolean;
   showMinimap: boolean;
 }

@@ -132,4 +132,4 @@ export interface KeyBinding {
 
 export type KeyBindings = {
   [key in UserActionId]: KeyBinding;
-}
+};

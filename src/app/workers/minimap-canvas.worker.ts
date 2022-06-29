@@ -3,6 +3,7 @@ import {Coords} from '../models/utils';
 
 import {MINIMAP_HEIGHT, MINIMAP_WIDTH, MINIMAP_BACKGROUND_STYLE, TERRAIN_BASE_TO_COLOR_MAP} from '../consts/minimap.const';
 
+// tslint:disable-next-line:new-parens no-unused-expression
 new class MinimapCanvasWorker {
 
   // True: render perfect rectangle. False: Render map with top and bottom hexes fully displayed.
@@ -42,13 +43,13 @@ new class MinimapCanvasWorker {
   calcTileSize(map: Map): Coords {
     const tileWidth = this.ctx.canvas.width / map.width;
 
-    // * 3: rows overlap, so every tile takes 3/4 of it's height on the map
+    // * 3: rows overlap, so every tile takes 3/4 of it is height on the map
     // -1: is to not count very top and very bottom triangles (to keep output a rectangle). To include them use +1.
     const heightFourths = (map.height * 3) + (this.CUT_TOP_AND_BOTTOM_HEXES ? -1 : 1);
     const oneFourth = this.ctx.canvas.height / heightFourths;
     const tileHeight = oneFourth * 4;
 
-    return { x: tileWidth, y: tileHeight }
+    return { x: tileWidth, y: tileHeight };
   }
 
   calcTileCoords(tile: Tile, tileSize: Coords): Coords {
@@ -58,7 +59,7 @@ new class MinimapCanvasWorker {
     return {
       x: tile.grid.x * tileSize.x + oddRowFix,
       y: (tile.grid.y * tileSize.y * 0.75) + topAndBottomHexesFix
-    }
+    };
   }
 
   paintBackground(): void {
@@ -69,21 +70,21 @@ new class MinimapCanvasWorker {
   paintTiles(map: Map): void {
     const tileSize = this.calcTileSize(map);
 
-    for (let tile of map.tiles) {
+    for (const tile of map.tiles) {
       const coordsPx = this.calcTileCoords(tile, tileSize);
       const color = TERRAIN_BASE_TO_COLOR_MAP[tile.terrain.base.id];
 
       this.paintTile(coordsPx, tileSize, color);
 
       // Paint odd row tiles in the last column also on the left edge of the map
-      if (tile.grid.x === map.width-1 && this.isOddRow(tile)) {
+      if (tile.grid.x === map.width - 1 && this.isOddRow(tile)) {
         coordsPx.x -= map.width * tileSize.x;
         this.paintTile(coordsPx, tileSize, color);
       }
     }
   }
 
-  paintTile(coordsPx: Coords, tileSize:Coords, color: string): void {
+  paintTile(coordsPx: Coords, tileSize: Coords, color: string): void {
     this.ctx.beginPath();
     this.ctx.moveTo( coordsPx.x + (tileSize.x * 0.50), coordsPx.y );
     this.ctx.lineTo( coordsPx.x + tileSize.x, coordsPx.y + (tileSize.y * 0.25) );
@@ -96,4 +97,4 @@ new class MinimapCanvasWorker {
     this.ctx.fill();
   }
 
-}
+};

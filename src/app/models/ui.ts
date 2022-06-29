@@ -21,7 +21,7 @@ export enum SidebarId {
 }
 
 export interface Ui {
-  screen: ScreenId
+  screen: ScreenId;
   modal: ModalId;
   sidebar: SidebarId;
 }

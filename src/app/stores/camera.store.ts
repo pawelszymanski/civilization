@@ -10,6 +10,7 @@ import {CameraService} from '../services/camera.service';
 @Injectable()
 export class CameraStore {
 
+  // tslint:disable-next-line:variable-name
   private _camera: BehaviorSubject<Camera> = new BehaviorSubject(DEFAULT_CAMERA);
 
   public readonly camera: Observable<Camera> = this._camera.asObservable();
@@ -18,23 +19,23 @@ export class CameraStore {
     private cameraService: CameraService,
   ) {}
 
-  public next(camera: Camera) {
+  public next(camera: Camera): void {
     this._camera.next(camera);
   }
 
-  public setTileSize(tileSize: number) {
+  public setTileSize(tileSize: number): void {
     this.next({...this._camera.value, tileSize});
   }
 
-  public setTranslate(translate: Coords) {
+  public setTranslate(translate: Coords): void {
     this.next({...this._camera.value, translate: this.cameraService.normalizeTranslation(translate)});
   }
 
-  public setZoomLevel(zoomLevel: number) {
+  public setZoomLevel(zoomLevel: number): void {
     this.next({...this._camera.value, zoomLevel, tileSize: CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP[zoomLevel]});
   }
 
-  public resetAll() {
+  public resetAll(): void {
     this.next({...DEFAULT_CAMERA});
   }
 

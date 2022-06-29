@@ -77,5 +77,5 @@ export interface Technology {
   ui: {
     name: string;
     class: string;
-  }
+  };
 }

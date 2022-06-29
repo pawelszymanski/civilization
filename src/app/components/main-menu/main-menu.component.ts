@@ -42,22 +42,22 @@ export class MainMenuComponent implements OnInit, OnDestroy {
     private saveHeadersStore: SaveHeadersStore
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.subscribeToData();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.unsubscribeFromData();
   }
 
-  subscribeToData() {
+  subscribeToData(): void {
     this.subscriptions.push(
       this.uiStore.ui.subscribe(ui => this.ui = ui),
       this.saveHeadersStore.saveHeaders.subscribe(saveHeaders => this.saveHeaders = saveHeaders)
     );
   }
 
-  unsubscribeFromData() {
+  unsubscribeFromData(): void {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
@@ -65,20 +65,20 @@ export class MainMenuComponent implements OnInit, OnDestroy {
     return this.saveHeaders.length === 0;
   }
 
-  onSinglePlayerClick() {
+  onSinglePlayerClick(): void {
     this.showSinglePlayerMenu = true;
   }
 
-  onOptionsClick() {
+  onOptionsClick(): void {
     // TODO
     this.showSinglePlayerMenu = false;
   }
 
-  onExitToGoogleClick() {
+  onExitToGoogleClick(): void {
     this.uiStore.openModal(ModalId.EXIT_GAME_CONFIRMATION);
   }
 
-  onResumeGameClick() {
+  onResumeGameClick(): void {
     if (this.noSavesPresent) { return; }
     const latestTimestamp = this.saveHeaders.map(save => save.timestamp).sort().pop();
     const saveToBeLoaded = this.saveHeaders.find(save => save.timestamp === latestTimestamp);
@@ -86,12 +86,12 @@ export class MainMenuComponent implements OnInit, OnDestroy {
     this.uiStore.setScreen(ScreenId.GAMEPLAY);
   }
 
-  onLoadGameClick() {
+  onLoadGameClick(): void {
     if (this.noSavesPresent) { return; }
     this.uiStore.openModal(ModalId.LOAD_GAME);
   }
 
-  onPlayNowClick() {
+  onPlayNowClick(): void {
     const defaultMapSizeSettings = MAP_SIZE_SETTINGS_LIST.find(mss => mss.id === MapSizeId.STANDARD);
     const mapGeneratorSetting: MapGeneratorSettings = {
       width: defaultMapSizeSettings.width,
@@ -102,19 +102,19 @@ export class MainMenuComponent implements OnInit, OnDestroy {
       worldAge: WorldAgeId.STANDARD,
       temperature: TemperatureId.STANDARD,
       rainfall: RainfallId.STANDARD
-    }
+    };
     const newMap = this.mapGeneratorService.generateNewGameMap(mapGeneratorSetting);
     this.mapStore.next(newMap);
     this.uiStore.setScreen(ScreenId.GAMEPLAY);
   }
 
-  onPlayOnEarthClick() {
+  onPlayOnEarthClick(): void {
     const earthMap = this.zipService.unzip(EARTH_MAP) as Map;
     this.mapStore.next(earthMap);
     this.uiStore.setScreen(ScreenId.GAMEPLAY);
   }
 
-  onCreateGameClick() {
+  onCreateGameClick(): void {
     // TODO
     this.showSinglePlayerMenu = false;
   }

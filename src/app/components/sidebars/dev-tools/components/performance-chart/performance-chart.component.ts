@@ -52,51 +52,51 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
     private generatorService: GeneratorService,
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.initContext();
     this.setMeterMode(PerformanceMeterModeId.FRAME);
     this.initRequestAnimationFrame();
     this.initAverageValuesCalculations();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.unsubscribeFromData();
     this.cancelAnimationFrame();
   }
 
-  initContext() {
-    this.ctx = this.canvas.nativeElement.getContext('2d')
+  initContext(): void {
+    this.ctx = this.canvas.nativeElement.getContext('2d');
   }
 
-  initRequestAnimationFrame() {
+  initRequestAnimationFrame(): void {
     this.ngZone.runOutsideAngular(() => {
       this.then = this.generatorService.nowMilliseconds();
       this.requestAnimationFrame();
     });
   }
 
-  initAverageValuesCalculations() {
+  initAverageValuesCalculations(): void {
     this.subscriptions.push(
       interval(this.AVERAGE_VALUE_INTERVAL).subscribe(() => this.updateAverageValues())
-    )
+    );
   }
 
-  unsubscribeFromData() {
+  unsubscribeFromData(): void {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
-  cancelAnimationFrame() {
+  cancelAnimationFrame(): void {
     window.cancelAnimationFrame(this.animationFrameId);
   }
 
-  setMeterMode(meterMode: PerformanceMeterModeId) {
+  setMeterMode(meterMode: PerformanceMeterModeId): void {
     if (meterMode !== this.performanceMeterMode) {
       this.performanceMeterMode = meterMode;
       this.recordedValues = [];
     }
   }
 
-  requestAnimationFrame() {
+  requestAnimationFrame(): void {
     this.animationFrameId = window.requestAnimationFrame(() => {
       this.requestAnimationFrame();
       this.now = this.generatorService.nowMilliseconds();
@@ -109,7 +109,7 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
     });
   }
 
-  addMeterData(frameTime: Millisecond) {
+  addMeterData(frameTime: Millisecond): void {
     switch (this.performanceMeterMode) {
       case PerformanceMeterModeId.FRAME:
         this.recordedValues.push(frameTime);
@@ -120,21 +120,21 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
     }
   }
 
-  trimMeterData() {
+  trimMeterData(): void {
     if (this.recordedValues.length > MAX_VALUES) { this.recordedValues.shift(); }
   }
 
-  drawChart() {
+  drawChart(): void {
     this.clearCanvas();
     this.drawLegend();
     this.drawData();
   }
 
-  clearCanvas() {
+  clearCanvas(): void {
     this.ctx.clearRect(0, 0, CANVAS.WIDTH, CANVAS.HEIGHT);
   }
 
-  drawLegend() {
+  drawLegend(): void {
     const range = PERFORMANCE_MODE_TO_RANGE_MAP[this.performanceMeterMode];
 
     this.ctx.lineWidth = 1;
@@ -158,7 +158,7 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
     this.ctx.fillText((range * 0.25).toString(), 3, CANVAS.HEIGHT * 0.75 + 12);
   }
 
-  drawData() {
+  drawData(): void {
     const dataDeficitCount = MAX_VALUES - this.recordedValues.length;
     const dataDeficitHorizontalCompensation = dataDeficitCount * CHART.WIDTH_TO_RESULTS_RATIO;
     const range = PERFORMANCE_MODE_TO_RANGE_MAP[this.performanceMeterMode];
@@ -173,7 +173,7 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateAverageValues() {
+  updateAverageValues(): void {
     const sum = this.recordedValues.reduce((a, b) => a + b, 0);
     const average = (sum / this.recordedValues.length).toFixed(2);
 

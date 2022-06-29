@@ -30,13 +30,15 @@ export class LocalStorageService {
   private getUsage(): number {
     let totalMb = 0;
     for (const x in localStorage) {
-      const amount = (localStorage[x].length);
-      if (!isNaN(amount) && localStorage.hasOwnProperty(x)) {
-        totalMb += amount;
+      if (localStorage.hasOwnProperty(x)) {
+        const amount = (localStorage[x].length);
+        if (!isNaN(amount) && localStorage.hasOwnProperty(x)) {
+          totalMb += amount;
+        }
       }
     }
     return totalMb;
-  };
+  }
 
   public getUsagePc(): number {
     return (this.getUsage() / this.MAX_USED_SPACE) * 100;

@@ -36,12 +36,12 @@ export class AppComponent implements OnInit, OnDestroy {
     private keyBindingsStore: KeyBindingsStore,
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.subscribeToData();
     this.addEventListeners();
   }
 
-  subscribeToData() {
+  subscribeToData(): void {
     this.subscriptions.push(
       this.uiStore.ui.subscribe(ui => this.ui = ui),
       this.gameplayUiStore.gameplayUi.subscribe(gameplayUi => this.gameplayUi = gameplayUi),
@@ -49,34 +49,34 @@ export class AppComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.unsubscribeFromData();
   }
 
-  addEventListeners() {
+  addEventListeners(): void {
     // Using listeners rather than @HostListener since they could be called with .stopPropagation()
     document.addEventListener('wheel', this.documentOnWheel.bind(this), {passive: false});
     document.addEventListener('contextmenu', this.documentOnContextMenu.bind(this));
     document.addEventListener('keydown', this.documentOnKeydown.bind(this));
   }
 
-  unsubscribeFromData() {
+  unsubscribeFromData(): void {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
-  documentOnWheel(event) {
+  documentOnWheel(event): void {
     if (event.ctrlKey) {
       event.preventDefault();
     }
   }
 
-  documentOnContextMenu(event: MouseEvent) {
+  documentOnContextMenu(event: MouseEvent): void {
     if (this.ui.sidebar !== SidebarId.DEV_TOOLS) {
       event.preventDefault();
     }
   }
 
-  documentOnKeydown(event: KeyboardEvent) {
+  documentOnKeydown(event: KeyboardEvent): void {
     // proceed only if outside of an input
     const isInput = (event.target as HTMLElement).tagName.toUpperCase() === 'INPUT';
     if (isInput) { return; }
@@ -86,17 +86,17 @@ export class AppComponent implements OnInit, OnDestroy {
     const keyBinding = this.keyboardService.keyBindingFromEvent(event);
     const userActionId = this.keyboardService.findMatchingActionId(this.keyBindings, keyBinding);
 
-    if (userActionId == UserActionId.ESCAPE_VIEW)        { this.uiStore.escapeView() } else
-    if (userActionId == UserActionId.TOGGLE_TECH_TREE)   { this.uiStore.toggleModal(ModalId.TECHNOLOGY_TREE) } else
-    if (userActionId == UserActionId.TOGGLE_CIVICS_TREE) { this.uiStore.toggleModal(ModalId.CIVIC_TREE) } else
-    if (userActionId == UserActionId.TOGGLE_MAP_EDITOR)  { this.uiStore.toggleSidebar(SidebarId.WORLD_BUILDER) } else
-    if (userActionId == UserActionId.TOGGLE_DEV_TOOLS)   { this.uiStore.toggleSidebar(SidebarId.DEV_TOOLS) } else
+    if (userActionId === UserActionId.ESCAPE_VIEW)        { this.uiStore.escapeView(); } else
+    if (userActionId === UserActionId.TOGGLE_TECH_TREE)   { this.uiStore.toggleModal(ModalId.TECHNOLOGY_TREE); } else
+    if (userActionId === UserActionId.TOGGLE_CIVICS_TREE) { this.uiStore.toggleModal(ModalId.CIVIC_TREE); } else
+    if (userActionId === UserActionId.TOGGLE_MAP_EDITOR)  { this.uiStore.toggleSidebar(SidebarId.WORLD_BUILDER); } else
+    if (userActionId === UserActionId.TOGGLE_DEV_TOOLS)   { this.uiStore.toggleSidebar(SidebarId.DEV_TOOLS); } else
 
-    if (userActionId == UserActionId.TOGGLE_TILE_INFO_OVERLAY_YIELD)   { this.gameplayUiStore.toggleTileInfoOverlay(TileInfoOverlayId.YIELD) } else
-    if (userActionId == UserActionId.TOGGLE_TILE_INFO_OVERLAY_TEXT)    { this.gameplayUiStore.toggleTileInfoOverlay(TileInfoOverlayId.TEXT) } else
-    if (userActionId == UserActionId.TOGGLE_TILE_RESOURCE_OVERLAY_ALL) { this.gameplayUiStore.toggleTileResourceOverlay(TileResourceOverlayId.ALL) } else
-    if (userActionId == UserActionId.TOGGLE_MINIMAP) { this.gameplayUiStore.toggleMinimap() }
-    if (userActionId == UserActionId.TOGGLE_GRID) { this.gameplayUiStore.toggleGrid() }
+    if (userActionId === UserActionId.TOGGLE_TILE_INFO_OVERLAY_YIELD)   { this.gameplayUiStore.toggleTileInfoOverlay(TileInfoOverlayId.YIELD); } else
+    if (userActionId === UserActionId.TOGGLE_TILE_INFO_OVERLAY_TEXT)    { this.gameplayUiStore.toggleTileInfoOverlay(TileInfoOverlayId.TEXT); } else
+    if (userActionId === UserActionId.TOGGLE_TILE_RESOURCE_OVERLAY_ALL) { this.gameplayUiStore.toggleTileResourceOverlay(TileResourceOverlayId.ALL); } else
+    if (userActionId === UserActionId.TOGGLE_MINIMAP) { this.gameplayUiStore.toggleMinimap(); }
+    if (userActionId === UserActionId.TOGGLE_GRID) { this.gameplayUiStore.toggleGrid(); }
   }
 
 }

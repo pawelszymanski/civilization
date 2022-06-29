@@ -40,21 +40,21 @@ export class TileYieldService {
     }
 
     const tileBaseYield = TERRAIN_BASE_SET[tile.terrain.base.id].yield;
-    Object.keys(tileBaseYield).forEach(yieldId => {result[yieldId] += tileBaseYield[yieldId]});
+    Object.keys(tileBaseYield).forEach(yieldId => { result[yieldId] += tileBaseYield[yieldId]; });
 
     if (tile.terrain.feature.id) {
       const tileFeatureYield = TERRAIN_FEATURE_SET[tile.terrain.feature.id].yield;
-      Object.keys(tileFeatureYield).forEach(yieldId => {result[yieldId] += tileFeatureYield[yieldId]});
+      Object.keys(tileFeatureYield).forEach(yieldId => { result[yieldId] += tileFeatureYield[yieldId]; });
     }
 
     if (tile.terrain.resourceId) {
       const tileResourceYield = TERRAIN_RESOURCE_SET[tile.terrain.resourceId].yield;
-      Object.keys(tileResourceYield).forEach(yieldId => {result[yieldId] += tileResourceYield[yieldId]});
+      Object.keys(tileResourceYield).forEach(yieldId => { result[yieldId] += tileResourceYield[yieldId]; });
     }
 
     if (tile.terrain.improvementId) {
       const tileImprovementYield = TERRAIN_IMPROVEMENT_SET[tile.terrain.improvementId].yield;
-      Object.keys(tileImprovementYield).forEach(yieldId => {result[yieldId] += tileImprovementYield[yieldId]});
+      Object.keys(tileImprovementYield).forEach(yieldId => { result[yieldId] += tileImprovementYield[yieldId]; });
     }
 
     return result;

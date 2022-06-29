@@ -34,7 +34,7 @@ export class SaveService {
       uuid: save.uuid,
       timestamp: save.timestamp,
       isAutosave: save.isAutosave,
-    }
+    };
   }
 
   private extractSaveData(save: Save): SaveData {
@@ -42,10 +42,10 @@ export class SaveService {
       gameplayUi: save.gameplayUi,
       camera: save.camera,
       map: save.map,
-    }
+    };
   }
 
-  private stripCalculatedData(saveData: SaveData) {
+  private stripCalculatedData(saveData: SaveData): void {
     for (const tile of saveData.map.tiles) {
       delete tile.isVisible;
       delete tile.px;
@@ -60,14 +60,14 @@ export class SaveService {
     const saveData = this.extractSaveData(save);
     this.stripCalculatedData(saveData);
 
-    const worker = new Worker('./../workers/zip.worker', {type: 'module'})
+    const worker = new Worker('./../workers/zip.worker', {type: 'module'});
     worker.postMessage(saveData);
 
     worker.onmessage = (message) => {
       const key = this.LOCAL_STORAGE_SAVE_PREFIX + save.uuid;
       const zippedSaveData = message.data;
       this.localStorageService.set(key, zippedSaveData);
-    }
+    };
   }
 
   // Used in Load Game modal and Main Menu component

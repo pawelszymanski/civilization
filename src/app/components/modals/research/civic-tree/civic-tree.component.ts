@@ -24,7 +24,7 @@ export class CivicTreeComponent {
     private uiStore: UiStore
   ) {}
 
-  onCloseButtonClick() {
+  onCloseButtonClick(): void {
     this.uiStore.closeModal();
   }
 

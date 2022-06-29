@@ -29,31 +29,30 @@ export class QuickLinksComponent implements OnInit, OnDestroy {
     private uiStore: UiStore
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.subscribeToData();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.unsubscribeFromData();
   }
 
-  subscribeToData() {
+  subscribeToData(): void {
     this.subscriptions.push(
       this.uiStore.ui.subscribe(ui => this.ui = ui)
     );
   }
 
-  unsubscribeFromData() {
+  unsubscribeFromData(): void {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
-  onScienceIconClick() {
+  onScienceIconClick(): void {
     this.uiStore.toggleModal(ModalId.TECHNOLOGY_TREE);
   }
 
-  onCultureIconClick() {
+  onCultureIconClick(): void {
     this.uiStore.toggleModal(ModalId.CIVIC_TREE);
   }
-
 
 }

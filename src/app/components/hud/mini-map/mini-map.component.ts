@@ -42,7 +42,8 @@ export class MiniMapComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
 
-  @HostBinding('style.top') public hostTop: string = 'calc(100% - ' + MINIMAP_HEIGHT + 'px)';  // Without this minimap renders not 0, but +4px to the bottom, no clue why
+  // Without this minimap renders not 0, but +4px to the bottom, no clue why
+  @HostBinding('style.top') public hostTop: string = 'calc(100% - ' + MINIMAP_HEIGHT + 'px)';
 
   constructor(
     private cameraStore: CameraStore,
@@ -50,29 +51,29 @@ export class MiniMapComponent implements OnInit, OnDestroy {
     private mapStore: MapStore,
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.createCanvasWorker();
     this.initContext();
     this.subscribeToData();
     this.requestAnimationFrame();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.unsubscribeFromData();
     this.cancelAnimationFrame();
   }
 
-  createCanvasWorker() {
+  createCanvasWorker(): void {
     // Needs to be a type: module, https://stackoverflow.com/questions/48045569/whats-the-difference-between-a-classic-and-module-web-worker
-    this.canvasWorker = new Worker('./../../../workers/minimap-canvas.worker', {type: 'module'})
-    this.canvasWorker.onmessage = (message) => { this.cachedMinimapImageData = message.data; }
+    this.canvasWorker = new Worker('./../../../workers/minimap-canvas.worker', {type: 'module'});
+    this.canvasWorker.onmessage = (message) => { this.cachedMinimapImageData = message.data; };
   }
 
-  initContext() {
-    this.ctx = this.canvas.nativeElement.getContext('2d')
+  initContext(): void {
+    this.ctx = this.canvas.nativeElement.getContext('2d');
   }
 
-  subscribeToData() {
+  subscribeToData(): void {
     this.subscriptions.push(
       this.cameraStore.camera.subscribe(camera => this.camera = camera),
       this.sizeStore.size.subscribe(size => this.size = size),
@@ -83,7 +84,7 @@ export class MiniMapComponent implements OnInit, OnDestroy {
     );
   }
 
-  requestAnimationFrame() {
+  requestAnimationFrame(): void {
     this.animationFrameId = window.requestAnimationFrame(() => {
       this.requestAnimationFrame();
       if (this.cachedMinimapImageData) {
@@ -93,30 +94,30 @@ export class MiniMapComponent implements OnInit, OnDestroy {
     });
   }
 
-  unsubscribeFromData() {
+  unsubscribeFromData(): void {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
-  cancelAnimationFrame() {
+  cancelAnimationFrame(): void {
     window.cancelAnimationFrame(this.animationFrameId);
   }
 
   // EVENTS
 
-  onMousedown(event: MouseEvent) {
+  onMousedown(event: MouseEvent): void {
     const mapCoords = this.eventToMapCoords(event);
     this.cameraStore.setTranslate(mapCoords);
     this.isDragging = true;
   }
 
-  onMousemove(event: MouseEvent) {
+  onMousemove(event: MouseEvent): void {
     if (this.isDragging) {
       const mapCoords = this.eventToMapCoords(event);
       this.cameraStore.setTranslate(mapCoords);
     }
   }
 
-  onMouseup() {
+  onMouseup(): void {
     this.isDragging = false;
   }
 
@@ -124,16 +125,16 @@ export class MiniMapComponent implements OnInit, OnDestroy {
 
   eventToMapCoords(event: MouseEvent): Coords {
     return {
-      x: Math.floor(-event.offsetX * (this.size.row.width/this.ctx.canvas.width)) + this.size.screen.halfWidth,
-      y: Math.floor(-event.offsetY * (this.size.map.height/this.ctx.canvas.height)) + this.size.screen.halfHeight
+      x: Math.floor(-event.offsetX * (this.size.row.width / this.ctx.canvas.width)) + this.size.screen.halfWidth,
+      y: Math.floor(-event.offsetY * (this.size.map.height / this.ctx.canvas.height)) + this.size.screen.halfHeight
     };
   }
 
-  pasteCachedMinimap() {
+  pasteCachedMinimap(): void {
     this.ctx.putImageData(this.cachedMinimapImageData, 0, 0);
   }
 
-  drawViewport() {
+  drawViewport(): void {
     const topRatio = (-this.camera.translate.y) / this.size.map.height;
     const bottomRatio = (-this.camera.translate.y + this.size.screen.height) / this.size.map.height;
     const leftRatio = (-this.camera.translate.x) / this.size.map.width;
@@ -161,7 +162,7 @@ export class MiniMapComponent implements OnInit, OnDestroy {
     }
   }
 
-  drawLine(x1: number, y1: number, x2: number, y2: number) {
+  drawLine(x1: number, y1: number, x2: number, y2: number): void {
     this.ctx.beginPath();
     this.ctx.moveTo(x1, y1);
     this.ctx.lineTo(x2, y2);

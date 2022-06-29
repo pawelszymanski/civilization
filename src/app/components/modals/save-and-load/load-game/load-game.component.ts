@@ -46,15 +46,15 @@ export class LoadGameComponent implements OnInit, OnDestroy {
     private uiStore: UiStore
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.subscribeToData();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.unsubscribeFromData();
   }
 
-  subscribeToData() {
+  subscribeToData(): void {
     this.subscriptions.push(
       this.saveHeadersStore.saveHeaders.subscribe(saveHeaders => {
         this.saveHeaders = saveHeaders;
@@ -64,11 +64,11 @@ export class LoadGameComponent implements OnInit, OnDestroy {
     );
   }
 
-  unsubscribeFromData() {
+  unsubscribeFromData(): void {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
-  deselectSaveHeaderIfFilteredOut() {
+  deselectSaveHeaderIfFilteredOut(): void {
     if (this.selectedSaveUuid && !this.filteredAndSortedSaveHeaders.find(sh => sh.uuid === this.selectedSaveUuid)) {
       this.selectedSaveUuid = null;
     }
@@ -80,24 +80,24 @@ export class LoadGameComponent implements OnInit, OnDestroy {
     const options = this.saveHeaderListOptionsForm.value;
 
     if (!options.showAutosaves) {
-      result = result.filter(saveHeader => !saveHeader.isAutosave)
+      result = result.filter(saveHeader => !saveHeader.isAutosave);
     }
 
-    if (options.sortOrder == SaveSortOrderId.DATE_ASCENDING) {
+    if (options.sortOrder === SaveSortOrderId.DATE_ASCENDING) {
       return result.sort((a, b) => a.timestamp > b.timestamp ? 1 : -1);
     }
-    if (options.sortOrder == SaveSortOrderId.DATE_DESCENDING) {
+    if (options.sortOrder === SaveSortOrderId.DATE_DESCENDING) {
       return result.sort((a, b) => a.timestamp < b.timestamp ? 1 : -1);
     }
-    if (options.sortOrder == SaveSortOrderId.NAME_ASCENDING) {
+    if (options.sortOrder === SaveSortOrderId.NAME_ASCENDING) {
       return result.sort((a, b) => a.name > b.name ? 1 : -1);
     }
-    if (options.sortOrder == SaveSortOrderId.NAME_DESCENDING) {
+    if (options.sortOrder === SaveSortOrderId.NAME_DESCENDING) {
       return result.sort((a, b) => a.name < b.name ? 1 : -1);
     }
   }
 
-  filterAndSortSaveHeaders() {
+  filterAndSortSaveHeaders(): void {
     this.filteredAndSortedSaveHeaders = this.getFilteredAndSortedSaveHeaders();
     this.deselectSaveHeaderIfFilteredOut();
   }
@@ -110,26 +110,26 @@ export class LoadGameComponent implements OnInit, OnDestroy {
     return this.selectedSaveHeader && saveHeader.uuid === this.selectedSaveHeader.uuid;
   }
 
-  onSaveHeaderClick(uuid: Uuid) {
+  onSaveHeaderClick(uuid: Uuid): void {
     this.selectedSaveUuid = uuid;
   }
 
-  onSaveHeaderDblClick() {
+  onSaveHeaderDblClick(): void {
     this.loadSelectedAndUpdateUi();
   }
 
-  onDeleteClick() {
+  onDeleteClick(): void {
     if (!this.selectedSaveHeader) { return; }
     this.saveService.delete(this.selectedSaveUuid);
     this.selectedSaveUuid = undefined;
   }
 
-  onLoadGameClick() {
+  onLoadGameClick(): void {
     if (!this.selectedSaveHeader) { return; }
     this.loadSelectedAndUpdateUi();
   }
 
-  loadSelectedAndUpdateUi() {
+  loadSelectedAndUpdateUi(): void {
     this.saveService.load(this.selectedSaveUuid);
     this.selectedSaveUuid = undefined;
     this.uiStore.toggleModal(ModalId.LOAD_GAME);

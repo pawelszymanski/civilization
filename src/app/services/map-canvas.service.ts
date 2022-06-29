@@ -63,7 +63,7 @@ export class MapCanvasService {
     this.mapStore.map.subscribe(map => {
       this.map = map;
       this.firstRowTiles = this.map.tiles.filter(t => t.grid.y === 0);
-      this.lastRowTiles = this.map.tiles.filter(t => t.grid.y === this.map.height-1);
+      this.lastRowTiles = this.map.tiles.filter(t => t.grid.y === this.map.height - 1);
     });
     this.gameplayUiStore.gameplayUi.subscribe(gameplayUi => this.gameplayUi = gameplayUi);
     this.worldBuilderHoveredTilesStore.wbHoveredTiles.subscribe(wbHoveredTiles => this.wbHoveredTiles = wbHoveredTiles);
@@ -101,7 +101,7 @@ export class MapCanvasService {
     }
 
     this.wbHoveredTiles.forEach(tile => {
-      if (tile.isVisible) { this.paintTileHighlight(tile, TileHighlightId.WB_TERRAIN_PLACEMENT) }
+      if (tile.isVisible) { this.paintTileHighlight(tile, TileHighlightId.WB_TERRAIN_PLACEMENT); }
     });
   }
 

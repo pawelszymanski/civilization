@@ -2,7 +2,7 @@ import {Technology, TechnologyId} from '../models/technologies';
 
 type TechnologySet = {
   [key in TechnologyId]: Technology;
-}
+};
 
 export const TECHNOLOGY_SET: TechnologySet = {
   // ANCIENT ERA
@@ -642,4 +642,4 @@ export const TECHNOLOGY_SET: TechnologySet = {
       class: 'm-nanotechnology'
     }
   }
-}
+};

@@ -8,7 +8,7 @@ interface OffMapResource {
 
 type OffMapResourceDb = {
   [key in OffMapResourceId]: OffMapResource;
-}
+};
 
 export const OFF_MAP_RESOURCE_DB: OffMapResourceDb = {
   [OffMapResourceId.CINNAMON]: {
@@ -35,4 +35,4 @@ export const OFF_MAP_RESOURCE_DB: OffMapResourceDb = {
     name: 'Toys',
     yield: {}
   }
-}
+};

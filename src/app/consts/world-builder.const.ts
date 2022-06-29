@@ -8,4 +8,4 @@ export const DEFAULT_WORLD_BUILDER_UI: WorldBuilderUi = {
   terrainFeature: TerrainFeatureId.NONE,
   terrainResource: TerrainResourceId.NONE,
   terrainImprovement: TerrainImprovementId.NONE
-}
+};

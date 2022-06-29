@@ -2,7 +2,7 @@ import {Civic, CivicId} from '../models/civics';
 
 type CivicSet = {
   [key in CivicId]: Civic;
-}
+};
 
 export const CIVIC_SET: CivicSet = {
   // ANCIENT ERA
@@ -219,8 +219,8 @@ export const CIVIC_SET: CivicSet = {
       class: 'm-humanism'
     }
   },
-  [CivicId.DIPLOMACTIC_SERVICE]: {
-    id: CivicId.DIPLOMACTIC_SERVICE,
+  [CivicId.DIPLOMATIC_SERVICE]: {
+    id: CivicId.DIPLOMATIC_SERVICE,
     cost: 540,
     prerequisites: [CivicId.GUILDS],
     ui: {
@@ -249,7 +249,7 @@ export const CIVIC_SET: CivicSet = {
   [CivicId.THE_ENLIGHTENMENT]: {
     id: CivicId.THE_ENLIGHTENMENT,
     cost: 655,
-    prerequisites: [CivicId.DIPLOMACTIC_SERVICE],
+    prerequisites: [CivicId.DIPLOMATIC_SERVICE],
     ui: {
       name: 'The enlightenment',
       class: 'm-the-enlightenment'
@@ -515,4 +515,4 @@ export const CIVIC_SET: CivicSet = {
       class: 'm-optimization-imperative'
     }
   }
-}
+};
