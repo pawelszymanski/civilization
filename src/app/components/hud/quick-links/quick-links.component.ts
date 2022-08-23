@@ -48,7 +48,7 @@ export class QuickLinksComponent implements OnInit, OnDestroy {
   }
 
   onScienceIconClick(): void {
-    this.uiStore.toggleModal(ModalId.TECHNOLOGY_TREE);
+    this.uiStore.toggleModal(ModalId.TECH_TREE);
   }
 
   onCultureIconClick(): void {

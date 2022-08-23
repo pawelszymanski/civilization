@@ -87,9 +87,9 @@ export class AppComponent implements OnInit, OnDestroy {
     const userActionId = this.keyboardService.findMatchingActionId(this.keyBindings, keyBinding);
 
     if (userActionId === UserActionId.ESCAPE_VIEW)        { this.uiStore.escapeView(); } else
-    if (userActionId === UserActionId.TOGGLE_TECH_TREE)   { this.uiStore.toggleModal(ModalId.TECHNOLOGY_TREE); } else
+    if (userActionId === UserActionId.TOGGLE_TECH_TREE)   { this.uiStore.toggleModal(ModalId.TECH_TREE); } else
     if (userActionId === UserActionId.TOGGLE_CIVICS_TREE) { this.uiStore.toggleModal(ModalId.CIVIC_TREE); } else
-    if (userActionId === UserActionId.TOGGLE_MAP_EDITOR)  { this.uiStore.toggleSidebar(SidebarId.WORLD_BUILDER); } else
+    if (userActionId === UserActionId.TOGGLE_WORLD_BUILDER)  { this.uiStore.toggleSidebar(SidebarId.WORLD_BUILDER); } else
     if (userActionId === UserActionId.TOGGLE_DEV_TOOLS)   { this.uiStore.toggleSidebar(SidebarId.DEV_TOOLS); } else
 
     if (userActionId === UserActionId.TOGGLE_TILE_INFO_OVERLAY_YIELD)   { this.gameplayUiStore.toggleTileInfoOverlay(TileInfoOverlayId.YIELD); } else
@@ -97,6 +97,7 @@ export class AppComponent implements OnInit, OnDestroy {
     if (userActionId === UserActionId.TOGGLE_TILE_RESOURCE_OVERLAY_ALL) { this.gameplayUiStore.toggleTileResourceOverlay(TileResourceOverlayId.ALL); } else
     if (userActionId === UserActionId.TOGGLE_MINIMAP) { this.gameplayUiStore.toggleMinimap(); }
     if (userActionId === UserActionId.TOGGLE_GRID) { this.gameplayUiStore.toggleGrid(); }
+
   }
 
 }

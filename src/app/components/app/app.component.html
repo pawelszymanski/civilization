@@ -21,7 +21,7 @@
 <div class="modal-overlay" [class.active]="ui.modal !== ModalId.NONE">
   <ng-container *ngIf="ui.screen === ScreenId.GAMEPLAY">
     <div class="civic-tree-component research-tree-modal" [class.active]="ui.modal === ModalId.CIVIC_TREE"></div>
-    <div class="technology-tree-component research-tree-modal" [class.active]="ui.modal === ModalId.TECHNOLOGY_TREE"></div>
+    <div class="technology-tree-component research-tree-modal" [class.active]="ui.modal === ModalId.TECH_TREE"></div>
   </ng-container>
 
   <div class="in-game-menu-component" *ngIf="ui.modal === ModalId.IN_GAME_MENU"></div>

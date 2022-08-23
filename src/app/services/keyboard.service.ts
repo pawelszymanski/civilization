@@ -23,7 +23,7 @@ export class KeyboardService {
     for (const userActionId of userActionIds) {
       const actionKeyBinding = keyBindings[userActionId];
       if (actionKeyBinding.keyCode === keyBinding.keyCode && actionKeyBinding.modifiers === keyBinding.modifiers) {
-        return userActionId;
+        return Number(userActionId);
       }
     }
   }

@@ -5,7 +5,7 @@ export enum ScreenId {
 
 export enum ModalId {
   NONE,
-  TECHNOLOGY_TREE,
+  TECH_TREE,
   CIVIC_TREE,
   IN_GAME_MENU,
   SAVE_GAME,
