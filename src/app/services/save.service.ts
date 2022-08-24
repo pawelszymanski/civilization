@@ -67,6 +67,7 @@ export class SaveService {
       const key = this.LOCAL_STORAGE_SAVE_PREFIX + save.uuid;
       const zippedSaveData = message.data;
       this.localStorageService.set(key, zippedSaveData);
+      worker.terminate();
     };
   }
 

@@ -12,8 +12,8 @@ import {CameraStore} from '../../../stores/camera.store';
 import {SizeStore} from '../../../stores/size.store';
 import {MapStore} from '../../../stores/map.store';
 
-// General flow: Subscribe to map. When map changes send it over to worker to generate new minimap.
-// On worker message combine map form worker (and cache it) with the viewport added locally.
+// General flow: Subscribe to map. When map changes send it over to worker to generate new minimap image.
+// On worker message use minimap image and add the viewport rectangle locally.
 @Component({
   selector: '.mini-map-component',
   templateUrl: './mini-map.component.html',
@@ -25,9 +25,11 @@ export class MiniMapComponent implements OnInit, OnDestroy {
   MINIMAP_WIDTH = MINIMAP_WIDTH;
   MINIMAP_HEIGHT = MINIMAP_HEIGHT;
 
-  @ViewChild('canvas', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
+  @ViewChild('minimap', { static: true }) minimapCanvas: ElementRef<HTMLCanvasElement>;
+  @ViewChild('viewport', { static: true }) viewportCanvas: ElementRef<HTMLCanvasElement>;
 
-  ctx: CanvasRenderingContext2D;
+  minimapCtx: CanvasRenderingContext2D;
+  viewportCtx: CanvasRenderingContext2D;
 
   camera: Camera;
   size: Size;
@@ -53,7 +55,7 @@ export class MiniMapComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.createCanvasWorker();
-    this.initContext();
+    this.initContexts();
     this.subscribeToData();
     this.requestAnimationFrame();
   }
@@ -61,6 +63,7 @@ export class MiniMapComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribeFromData();
     this.cancelAnimationFrame();
+    this.destroyWorker();
   }
 
   createCanvasWorker(): void {
@@ -69,8 +72,9 @@ export class MiniMapComponent implements OnInit, OnDestroy {
     this.canvasWorker.onmessage = (message) => { this.cachedMinimapImageData = message.data; };
   }
 
-  initContext(): void {
-    this.ctx = this.canvas.nativeElement.getContext('2d');
+  initContexts(): void {
+    this.minimapCtx = this.minimapCanvas.nativeElement.getContext('2d');
+    this.viewportCtx = this.viewportCanvas.nativeElement.getContext('2d');
   }
 
   subscribeToData(): void {
@@ -102,6 +106,10 @@ export class MiniMapComponent implements OnInit, OnDestroy {
     window.cancelAnimationFrame(this.animationFrameId);
   }
 
+  destroyWorker(): void {
+    this.canvasWorker.terminate();
+  }
+
   // EVENTS
 
   onMousedown(event: MouseEvent): void {
@@ -125,13 +133,13 @@ export class MiniMapComponent implements OnInit, OnDestroy {
 
   eventToMapCoords(event: MouseEvent): Coords {
     return {
-      x: Math.floor(-event.offsetX * (this.size.row.width / this.ctx.canvas.width)) + this.size.screen.halfWidth,
-      y: Math.floor(-event.offsetY * (this.size.map.height / this.ctx.canvas.height)) + this.size.screen.halfHeight
+      x: Math.floor(-event.offsetX * (this.size.row.width / this.viewportCtx.canvas.width)) + this.size.screen.halfWidth,
+      y: Math.floor(-event.offsetY * (this.size.map.height / this.viewportCtx.canvas.height)) + this.size.screen.halfHeight
     };
   }
 
   pasteCachedMinimap(): void {
-    this.ctx.putImageData(this.cachedMinimapImageData, 0, 0);
+    this.minimapCtx.putImageData(this.cachedMinimapImageData, 0, 0);
   }
 
   drawViewport(): void {
@@ -140,13 +148,14 @@ export class MiniMapComponent implements OnInit, OnDestroy {
     const leftRatio = (-this.camera.translate.x) / this.size.map.width;
     const rightRatio = ((-this.camera.translate.x + this.size.screen.width) % this.size.map.width / this.size.map.width);
 
-    const top = this.ctx.canvas.height * topRatio;
-    const bottom = this.ctx.canvas.height * bottomRatio;
-    const left = this.ctx.canvas.width * leftRatio;
-    const right = this.ctx.canvas.width * rightRatio;
+    const top = this.viewportCtx.canvas.height * topRatio;
+    const bottom = this.viewportCtx.canvas.height * bottomRatio;
+    const left = this.viewportCtx.canvas.width * leftRatio;
+    const right = this.viewportCtx.canvas.width * rightRatio;
 
-    this.ctx.strokeStyle = VIEWPORT_LINE_STYLE;
-    this.ctx.lineWidth = VIEWPORT_LINE_WIDTH;
+    this.viewportCtx.clearRect(0, 0, MINIMAP_WIDTH, MINIMAP_HEIGHT);
+    this.viewportCtx.strokeStyle = VIEWPORT_LINE_STYLE;
+    this.viewportCtx.lineWidth = VIEWPORT_LINE_WIDTH;
 
     this.drawLine(left, top, left, bottom);
     this.drawLine(right, top, right, bottom);
@@ -157,16 +166,16 @@ export class MiniMapComponent implements OnInit, OnDestroy {
     } else {
       this.drawLine(right, top, 0, top);
       this.drawLine(right, bottom, 0, bottom);
-      this.drawLine(left, top, this.ctx.canvas.width, top);
-      this.drawLine(left, bottom, this.ctx.canvas.width, bottom);
+      this.drawLine(left, top, this.viewportCtx.canvas.width, top);
+      this.drawLine(left, bottom, this.viewportCtx.canvas.width, bottom);
     }
   }
 
   drawLine(x1: number, y1: number, x2: number, y2: number): void {
-    this.ctx.beginPath();
-    this.ctx.moveTo(x1, y1);
-    this.ctx.lineTo(x2, y2);
-    this.ctx.stroke();
+    this.viewportCtx.beginPath();
+    this.viewportCtx.moveTo(x1, y1);
+    this.viewportCtx.lineTo(x2, y2);
+    this.viewportCtx.stroke();
   }
 
 }

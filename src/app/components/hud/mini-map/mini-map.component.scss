@@ -4,4 +4,8 @@
 .mini-map-component {
   @include position-block(absolute, auto, auto, 0, 0, $z-index-hud);
   box-shadow: 2px -2px 2px #0003;
+
+  canvas {
+    position: absolute;
+  }
 }
