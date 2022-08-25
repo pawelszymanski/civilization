@@ -1,1 +1,0 @@
-{"ast":null,"code":"export var TileHighlightId = /*#__PURE__*/(() => {\n  (function (TileHighlightId) {\n    TileHighlightId[TileHighlightId[\"WB_TERRAIN_PLACEMENT\"] = 0] = \"WB_TERRAIN_PLACEMENT\";\n  })(TileHighlightId || (TileHighlightId = {}));\n\n  return TileHighlightId;\n})();","map":null,"metadata":{},"sourceType":"module"}

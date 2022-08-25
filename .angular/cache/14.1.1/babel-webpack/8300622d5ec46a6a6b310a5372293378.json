@@ -1,1 +1,0 @@
-{"ast":null,"code":"import { TileInfoOverlayId, TileResourceOverlayId } from '../models/gameplay-ui';\nexport const DEFAULT_GAMEPLAY_UI = {\n  infoOverlay: TileInfoOverlayId.NONE,\n  resourceOverlay: TileResourceOverlayId.ALL,\n  showGrid: true,\n  showMinimap: true\n};","map":null,"metadata":{},"sourceType":"module"}

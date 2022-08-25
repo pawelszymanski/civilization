@@ -1,1 +1,0 @@
-{"ast":null,"code":"export const DEFAULT_MAP = {\n  tiles: [],\n  width: 0,\n  height: 0\n};","map":null,"metadata":{},"sourceType":"module"}
