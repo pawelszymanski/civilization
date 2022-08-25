@@ -60,7 +60,7 @@ export class SaveService {
     const saveData = this.extractSaveData(save);
     this.stripCalculatedData(saveData);
 
-    const worker = new Worker('./../workers/zip.worker', {type: 'module'});
+    const worker = new Worker(new URL('./../workers/zip.worker', import.meta.url), {type: 'module'});
     worker.postMessage(saveData);
 
     worker.onmessage = (message) => {

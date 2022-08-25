@@ -1,12 +1,12 @@
 <!-- Keep the ternary width and height to avoid host becoming visible too fast -->
 <!-- For some reason drawing viewport lines started to clear the minimap, hence added second canvas for viewport only -->
 <canvas #minimap
-        [width]="cachedMinimapImageData ? MINIMAP_WIDTH : 0"
-        [height]="cachedMinimapImageData ? MINIMAP_HEIGHT : 0">
+        [width]="isMinimapAvailable ? MINIMAP_WIDTH : 0"
+        [height]="isMinimapAvailable ? MINIMAP_HEIGHT : 0">
 </canvas>
 <canvas #viewport
-        [width]="cachedMinimapImageData ? MINIMAP_WIDTH : 0"
-        [height]="cachedMinimapImageData ? MINIMAP_HEIGHT : 0"
+        [width]="isMinimapAvailable ? MINIMAP_WIDTH : 0"
+        [height]="isMinimapAvailable ? MINIMAP_HEIGHT : 0"
         (mousedown)="onMousedown($event)"
         (mousemove)="onMousemove($event)"
         (mouseup)="onMouseup()">

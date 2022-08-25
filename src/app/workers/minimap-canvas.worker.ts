@@ -9,9 +9,9 @@ new class MinimapCanvasWorker {
   // True: render perfect rectangle. False: Render map with top and bottom hexes fully displayed.
   readonly CUT_TOP_AND_BOTTOM_HEXES = true;
 
-  // Workers can't access DOM and can't use types from DOM
-  canvas: any; // OffscreenCanvas
-  ctx: any;    // CanvasRenderingContext2D
+  // "@types/offscreencanvas" add typing here, but then it breaks `new OffscreenCanvas(MINIMAP_WIDTH, MINIMAP_HEIGHT);`
+  canvas: any; // OffscreenCanvas;
+  ctx: any; // OffscreenCanvasRenderingContext2D;
 
   constructor() {
     this.initCanvas();
@@ -19,6 +19,7 @@ new class MinimapCanvasWorker {
   }
 
   initCanvas(): void {
+    // @ts-ignore
     this.canvas = new OffscreenCanvas(MINIMAP_WIDTH, MINIMAP_HEIGHT);
     this.ctx = this.canvas.getContext('2d');
   }

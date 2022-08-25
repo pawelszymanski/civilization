@@ -33,12 +33,13 @@ export class MiniMapComponent implements OnInit, OnDestroy {
 
   camera: Camera;
   size: Size;
-  map: Map;
 
   isDragging = false;
 
-  canvasWorker: Worker;
-  cachedMinimapImageData: ImageData;
+  minimapCanvasWorker: Worker;
+  minimapImageData: ImageData;
+
+  isMinimapAvailable = false;
 
   animationFrameId: number;
 
@@ -54,60 +55,79 @@ export class MiniMapComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.createCanvasWorker();
-    this.initContexts();
+    this.initMinimapCanvasWorker();
+    this.initMinimapCtx();
+    this.initViewportCtx();
     this.subscribeToData();
     this.requestAnimationFrame();
   }
 
   ngOnDestroy(): void {
-    this.unsubscribeFromData();
     this.cancelAnimationFrame();
+    this.unsubscribeFromData();
     this.destroyWorker();
   }
 
-  createCanvasWorker(): void {
+  initMinimapCanvasWorker(): void {
     // Needs to be a type: module, https://stackoverflow.com/questions/48045569/whats-the-difference-between-a-classic-and-module-web-worker
-    this.canvasWorker = new Worker('./../../../workers/minimap-canvas.worker', {type: 'module'});
-    this.canvasWorker.onmessage = (message) => { this.cachedMinimapImageData = message.data; };
+    this.minimapCanvasWorker = new Worker(new URL('./../../../workers/minimap-canvas.worker', import.meta.url), {type: 'module'});
+    this.minimapCanvasWorker.onmessage = (message) => {
+      this.minimapImageData = message.data;
+      this.isMinimapAvailable = true;
+    };
   }
 
-  initContexts(): void {
+  initMinimapCtx(): void {
     this.minimapCtx = this.minimapCanvas.nativeElement.getContext('2d');
+  }
+
+  initViewportCtx(): void {
     this.viewportCtx = this.viewportCanvas.nativeElement.getContext('2d');
   }
 
   subscribeToData(): void {
     this.subscriptions.push(
-      this.cameraStore.camera.subscribe(camera => this.camera = camera),
-      this.sizeStore.size.subscribe(size => this.size = size),
-      this.mapStore.map.subscribe(map => {
-        this.map = map;
-        if (this.map) { this.canvasWorker.postMessage(map); }
-      })
+      this.cameraStore.camera.subscribe(camera => this.onCameraUpdate(camera)),
+      this.sizeStore.size.subscribe(size => this.onSizeUpdate(size)),
+      this.mapStore.map.subscribe(map => this.onMapUpdate(map))
     );
+  }
+
+  onCameraUpdate(camera: Camera): void {
+    this.camera = camera;
+    if (this.size && this.camera) { this.drawViewport() }
+  }
+
+  onSizeUpdate(size: Size): void {
+    this.size = size;
+    if (this.size && this.camera) { this.drawViewport() }
+  }
+
+  onMapUpdate(map: Map): void {
+    this.minimapCanvasWorker.postMessage(map);
   }
 
   requestAnimationFrame(): void {
     this.animationFrameId = window.requestAnimationFrame(() => {
       this.requestAnimationFrame();
-      if (this.cachedMinimapImageData) {
-        this.pasteCachedMinimap();
+      if (this.minimapImageData) {
+        this.minimapCtx.putImageData(this.minimapImageData, 0, 0);
+        this.minimapImageData = null;
         this.drawViewport();
       }
     });
-  }
-
-  unsubscribeFromData(): void {
-    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   cancelAnimationFrame(): void {
     window.cancelAnimationFrame(this.animationFrameId);
   }
 
+  unsubscribeFromData(): void {
+    this.subscriptions.forEach(s => s.unsubscribe());
+  }
+
   destroyWorker(): void {
-    this.canvasWorker.terminate();
+    this.minimapCanvasWorker.terminate();
   }
 
   // EVENTS
@@ -136,10 +156,6 @@ export class MiniMapComponent implements OnInit, OnDestroy {
       x: Math.floor(-event.offsetX * (this.size.row.width / this.viewportCtx.canvas.width)) + this.size.screen.halfWidth,
       y: Math.floor(-event.offsetY * (this.size.map.height / this.viewportCtx.canvas.height)) + this.size.screen.halfHeight
     };
-  }
-
-  pasteCachedMinimap(): void {
-    this.minimapCtx.putImageData(this.cachedMinimapImageData, 0, 0);
   }
 
   drawViewport(): void {

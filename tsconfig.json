@@ -13,5 +13,8 @@
     {
       "path": "./tsconfig.spec.json"
     }
-]
+  ],
+  "include": [
+    "./src/app/workers/*.worker.ts"
+  ]
 }

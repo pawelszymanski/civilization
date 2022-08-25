@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { ModalId, ScreenId, SidebarId } from '../models/ui';\nexport const DEFAULT_UI = {\n  screen: ScreenId.MAIN_MENU,\n  modal: ModalId.NONE,\n  sidebar: SidebarId.NONE\n};","map":null,"metadata":{},"sourceType":"module"}
