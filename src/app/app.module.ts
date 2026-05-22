@@ -37,6 +37,8 @@ import {PerformanceChartComponent} from './components/sidebars/dev-tools/compone
 import {CameraFormComponent} from './components/sidebars/dev-tools/components/camera-form/camera-form.component';
 import {GenerateMapFormComponent} from './components/sidebars/dev-tools/components/generate-map-form/generate-map-form.component';
 
+import {WidgetComponent} from './components/test/widget/widget.component';
+
 // DIRECTIVES
 
 // SERVICES
@@ -108,6 +110,7 @@ const COMPONENTS = [
   PerformanceChartComponent,
   CameraFormComponent,
   GenerateMapFormComponent,
+  WidgetComponent,
 ];
 
 const DIRECTIVES = [
