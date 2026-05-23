@@ -289,7 +289,7 @@ export const CIVIC_SET: CivicSet = {
     cost: 725,
     prerequisites: [CivicId.THE_ENLIGHTENMENT],
     ui: {
-      name: 'Opera nd ballet',
+      name: 'Opera and ballet',
       class: 'm-opera-and-ballet'
     }
   },

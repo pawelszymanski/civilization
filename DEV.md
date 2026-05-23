@@ -22,7 +22,7 @@
 - bug: tile background pattern breaks on tiles x -1/0
 
 ## BUGS THAT WILL NOT BE FIXED
-- bug: opening wold builder does not select tile before mousemove
+- bug: opening world builder does not select tile before mousemove
 
 ## DONE
 - make research trees display icons, populate the research data
@@ -55,7 +55,7 @@
 - use html overlay for events, remove cameraService.htmlSpecific
 - extract map zoom service
 - extract size service
-- extract pain map on canvas service
+- extract paint map on canvas service
 - canvas: draw full canvas on the OnInit
 - create sample map and put it in main menu
 - right click to remove selected world builder tool
@@ -111,7 +111,7 @@
              }
            }
 ` => &.m-odd => 17.5ms => 16.0ms style calc
-- `.map-compponent {.map {.tile {}}}` => `.tile {}` +1.2FPS on full screen 60px!
+- `.map-component {.map {.tile {}}}` => `.tile {}` +1.2FPS on full screen 60px!
 - `this.ngZone.runOutsideAngular(() => {
      this.document.addEventListener('mousemove', this.dragHandlerRef as any);
    });` to avoid detect changes on mouse move
@@ -172,7 +172,7 @@ var offscreen = canvas.transferControlToOffscreen();
 var context = offscreen.getContext('2d');
 1. Isolate animation to a worker
 1. Use transform and opacity rather any other style (STYLE > LAYOUT > PAIN > COMPOSITE)
-1. Don't check .innerWidth ets as this would force full repaint
+1. Don't check .innerWidth etc as this would force full repaint
 1. Web Assembly for huge operations
 1. Use pure pipes when possible to avoid recalculations
 1.  

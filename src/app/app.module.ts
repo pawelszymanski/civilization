@@ -72,7 +72,7 @@ import {TerrainFeatureNamePipe} from './pipes/terrain-feature-name.pipe';
 import {TerrainImprovementNamePipe} from './pipes/terrain-improvement-name.pipe';
 import {TerrainResourceNamePipe} from './pipes/terrain-resource-name.pipe';
 import {EraNamePipe} from './pipes/era-name.pipe';
-import {CivicNamePipe} from './pipes/ciciv-name.pipe';
+import {CivicNamePipe} from './pipes/civic-name.pipe';
 import {TechnologyNamePipe} from './pipes/technology-name.pipe';
 import {TileCssClassesPipe} from './pipes/tile-css-classes.pipe';
 import {TechnologyTreeEraElemClassPipe} from './pipes/technology-tree-era-elem-class.pipe';
