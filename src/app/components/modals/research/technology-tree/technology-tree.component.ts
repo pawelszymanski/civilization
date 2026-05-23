@@ -8,6 +8,7 @@ import {TECHNOLOGY_SET} from '../../../../consts/technologies.const';
 import {UiStore} from '../../../../stores/ui.store';
 
 @Component({
+  standalone: false,
   selector: '.technology-tree-component',
   templateUrl: './technology-tree.component.html',
   styleUrls: ['./technology-tree.component.scss', '../research-tree-modal.scss'],

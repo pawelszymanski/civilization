@@ -2,7 +2,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 import {TechnologyTreeEra} from '../models/research-tree';
 
-@Pipe({name: 'technologyTreeEraElemClass'})
+@Pipe({standalone: false, name: 'technologyTreeEraElemClass'})
 export class TechnologyTreeEraElemClassPipe implements PipeTransform {
 
   transform(technologyTreeEra: TechnologyTreeEra): string {

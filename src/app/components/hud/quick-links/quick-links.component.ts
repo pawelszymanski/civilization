@@ -9,6 +9,7 @@ import {YIELD_ID_TO_ICON_CLASS_MAP} from '../../../consts/yield.const';
 import {UiStore} from '../../../stores/ui.store';
 
 @Component({
+  standalone: false,
   selector: '.quick-links-component',
   templateUrl: './quick-links.component.html',
   styleUrls: ['./quick-links.component.scss'],

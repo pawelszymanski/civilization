@@ -18,6 +18,7 @@ import {CANVAS, CHART, MAX_VALUES, PERFORMANCE_MODE_TO_RANGE_MAP} from '../../..
 import {GeneratorService} from '../../../../../services/generator.service';
 
 @Component({
+  standalone: false,
   selector: '.performance-chart-component',
   templateUrl: './performance-chart.component.html',
   styleUrls: ['./performance-chart.component.scss'],

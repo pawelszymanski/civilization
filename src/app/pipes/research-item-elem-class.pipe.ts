@@ -2,7 +2,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 import {CivicIdWithEraCoords, TechnologyIdWithEraCoords} from '../models/research-tree';
 
-@Pipe({name: 'researchItemElemClass'})
+@Pipe({standalone: false, name: 'researchItemElemClass'})
 export class ResearchItemElemClassPipe implements PipeTransform {
 
   transform(research: TechnologyIdWithEraCoords | CivicIdWithEraCoords): string {

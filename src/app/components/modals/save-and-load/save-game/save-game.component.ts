@@ -16,6 +16,7 @@ import {GameplayUiStore} from '../../../../stores/gameplay-ui.store';
 import {UiStore} from '../../../../stores/ui.store';
 
 @Component({
+  standalone: false,
   selector: '.save-game-component',
   templateUrl: './save-game.component.html',
   styleUrls: ['./save-game.component.scss'],

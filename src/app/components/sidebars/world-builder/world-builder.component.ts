@@ -16,6 +16,7 @@ import {WorldBuilderUiStore} from '../../../stores/world-builder-ui.store';
 import {WorldBuilderHoveredTilesStore} from '../../../stores/world-builder-hovered-tiles.store';
 
 @Component({
+  standalone: false,
   selector: '.world-builder-component',
   templateUrl: './world-builder.component.html',
   styleUrls: ['./world-builder.component.scss'],

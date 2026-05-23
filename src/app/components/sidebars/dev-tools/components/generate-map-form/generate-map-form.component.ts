@@ -16,6 +16,7 @@ import {MapGeneratorService} from '../../../../../services/map-generator.service
 import {MapStore} from '../../../../../stores/map.store';
 
 @Component({
+  standalone: false,
   selector: '.generate-map-form-component',
   templateUrl: './generate-map-form.component.html',
   styleUrls: ['../dev-tools-form.scss']

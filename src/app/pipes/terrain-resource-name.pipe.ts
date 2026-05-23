@@ -2,7 +2,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 import {TerrainResourceId} from '../models/terrain';
 
-@Pipe({name: 'terrainResourceName'})
+@Pipe({standalone: false, name: 'terrainResourceName'})
 export class TerrainResourceNamePipe implements PipeTransform {
 
   transform(terrainResourceId: TerrainResourceId): string {

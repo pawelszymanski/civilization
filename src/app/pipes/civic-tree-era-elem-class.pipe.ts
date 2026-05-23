@@ -2,7 +2,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 import {CivicTreeEra} from '../models/research-tree';
 
-@Pipe({name: 'civicTreeEraElemClass'})
+@Pipe({standalone: false, name: 'civicTreeEraElemClass'})
 export class CivicTreeEraElemClassPipe implements PipeTransform {
 
   transform(civicTreeEra: CivicTreeEra): string {

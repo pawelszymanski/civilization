@@ -15,7 +15,8 @@ import {KeyBindingsStore} from '../../stores/key-bindings.store';
   selector: '.app-component',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class AppComponent implements OnInit, OnDestroy {
 

@@ -2,7 +2,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 import {TechnologyId} from '../models/technologies';
 
-@Pipe({name: 'technologyName'})
+@Pipe({standalone: false, name: 'technologyName'})
 export class TechnologyNamePipe implements PipeTransform {
 
   transform(technologyId: TechnologyId): string {

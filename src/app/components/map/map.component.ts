@@ -34,6 +34,7 @@ import {WorldBuilderHoveredTilesStore} from '../../stores/world-builder-hovered-
 import {WorldBuilderUiStore} from '../../stores/world-builder-ui.store';
 
 @Component({
+  standalone: false,
   selector: '.map-component',
   templateUrl: './map.component.html',
   styleUrls: ['map.component.scss'],

@@ -3,6 +3,7 @@ import {Component, ViewEncapsulation} from '@angular/core';
 import {UiStore} from '../../../../stores/ui.store';
 
 @Component({
+  standalone: false,
   selector: '.exit-game-confirmation-component',
   templateUrl: './exit-game-confirmation.component.html',
   styleUrls: ['./exit-game-confirmation.component.scss'],

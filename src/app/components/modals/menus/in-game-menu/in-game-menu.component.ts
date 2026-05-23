@@ -12,6 +12,7 @@ import {CameraStore} from '../../../../stores/camera.store';
 import {GameplayUiStore} from '../../../../stores/gameplay-ui.store';
 
 @Component({
+  standalone: false,
   selector: '.in-game-menu-component',
   templateUrl: './in-game-menu.component.html',
   styleUrls: ['./in-game-menu.component.scss'],

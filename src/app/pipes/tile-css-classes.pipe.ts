@@ -10,7 +10,7 @@ import {
   TERRAIN_RESOURCE_SET
 } from '../consts/terrain.const';
 
-@Pipe({name: 'tileCssClasses'})
+@Pipe({standalone: false, name: 'tileCssClasses'})
 export class TileCssClassesPipe implements PipeTransform {
 
   transform(tile: Tile, tileSize: number): string[] {

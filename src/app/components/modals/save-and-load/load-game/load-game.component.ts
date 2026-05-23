@@ -16,6 +16,7 @@ import {SaveHeadersStore} from '../../../../stores/save-headers.store';
 import {UiStore} from '../../../../stores/ui.store';
 
 @Component({
+  standalone: false,
   selector: '.load-game-component',
   templateUrl: './load-game.component.html',
   styleUrls: ['./load-game.component.scss'],

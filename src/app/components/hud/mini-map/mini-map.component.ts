@@ -15,6 +15,7 @@ import {MapStore} from '../../../stores/map.store';
 // General flow: Subscribe to map. When map changes send it over to worker to generate new minimap image.
 // On worker message use minimap image and add the viewport rectangle locally.
 @Component({
+  standalone: false,
   selector: '.mini-map-component',
   templateUrl: './mini-map.component.html',
   styleUrls: ['./mini-map.component.scss'],

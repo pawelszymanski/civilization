@@ -8,6 +8,7 @@ import {CIVIC_SET} from '../../../../consts/civics.const';
 import {UiStore} from '../../../../stores/ui.store';
 
 @Component({
+  standalone: false,
   selector: '.civic-tree-component',
   templateUrl: './civic-tree.component.html',
   styleUrls: ['./civic-tree.component.scss', '../research-tree-modal.scss'],

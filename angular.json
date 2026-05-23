@@ -48,7 +48,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -71,18 +70,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "civ-app:build"
+            "buildTarget": "civ-app:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "civ-app:build:production"
+              "buildTarget": "civ-app:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "civ-app:build"
+            "buildTarget": "civ-app:build"
           }
         },
         "test": {
@@ -132,7 +131,6 @@
       }
     }
   },
-  "defaultProject": "civ-app",
   "cli": {
     "analytics": false
   }

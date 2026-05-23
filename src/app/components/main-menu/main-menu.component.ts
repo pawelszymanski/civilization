@@ -19,6 +19,7 @@ import {MapStore} from '../../stores/map.store';
 import {SaveHeadersStore} from '../../stores/save-headers.store';
 
 @Component({
+  standalone: false,
   selector: '.main-menu-component',
   templateUrl: './main-menu.component.html',
   styleUrls: ['./main-menu.component.scss'],

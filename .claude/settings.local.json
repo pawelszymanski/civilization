@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(ls \"C:\\\\Users\\\\pawel\\\\AppData\\\\Roaming\\\\Claude\\\\local-agent-mode-sessions\\\\skills-plugin\\\\a9d4d309-1a32-4cb5-9072-3c294c2fb58b\\\\f2c94bbd-15ce-4ebb-9a4a-463123de8358\\\\skills\\\\\")",
-      "Bash(git mv *)"
+      "Bash(git mv *)",
+      "WebSearch",
+      "Bash(Get-ChildItem -Path \"src\" -Recurse -Include \"*.component.ts\", \"*.pipe.ts\", \"*.directive.ts\")",
+      "Bash(Select-Object -ExpandProperty FullName)"
     ]
   }
 }
