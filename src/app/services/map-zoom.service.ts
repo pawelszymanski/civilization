@@ -4,8 +4,6 @@ import {Coords, Step} from '../models/utils';
 import {Camera} from '../models/camera';
 import {Size} from '../models/size';
 
-import {CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP} from '../consts/camera.const';
-
 import {TileYieldService} from './tile-yield.service';
 import {CameraService} from './camera.service';
 
@@ -17,6 +15,12 @@ export class MapZoomService {
 
   camera: Camera;
   size: Size;
+
+  // Fractional part of the translation discarded by Math.round on the previous zoom step.
+  // Carried forward and re-applied to restore sub-pixel canvas precision next step.
+  // Reset to zero when the translation is moved externally (e.g. by dragging).
+  private compensation: Coords = {x: 0, y: 0};
+  private lastRoundedTranslate: Coords | null = null;
 
   constructor(
     private cameraService: CameraService,
@@ -46,25 +50,49 @@ export class MapZoomService {
 
     // calculate new translate
     const currentTranslate = this.camera.translate;
-    const canvasCoordsAtScreenCenter = {
-      x: Math.floor((this.size.screen.width / 2) - currentTranslate.x),
-      y: Math.floor((this.size.screen.height / 2) - currentTranslate.y)
+    const screenCenterX = this.size.screen.width / 2;
+    const screenCenterY = this.size.screen.height / 2;
+
+    // Re-apply the compensation saved from the previous zoom step to recover the sub-pixel
+    // canvas position that was discarded by rounding. Skip it if the translation has changed
+    // since then (e.g. the user dragged), because the saved value belongs to the old position.
+    const last = this.lastRoundedTranslate;
+    const translateChangedSinceLastZoom = !last || currentTranslate.x !== last.x || currentTranslate.y !== last.y;
+    const prevCompensation: Coords = translateChangedSinceLastZoom ? { x: 0, y: 0 } : this.compensation;
+
+    // Canvas coordinate = pixel offset from the map's top-left corner.
+    // Adding prevCompensation recovers the true sub-pixel offset before we scale it.
+    const canvasCoordsAtScreenCenter: Coords = {
+      x: screenCenterX - (currentTranslate.x + prevCompensation.x),
+      y: screenCenterY - (currentTranslate.y + prevCompensation.y),
     };
 
-    const scale = CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP[newZoomLevel] / CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP[currentZoomLevel];
+    // Capture per-axis dimensions before setZoomLevel updates this.size.
+    // X scales by tileWidth (= tileSize * 0.9, exact for all zoom-level tile sizes).
+    // Y must use rowHeight (= tileSize * 0.75 − 1), not tileSize directly — the −1 offset
+    // breaks the proportionality: rowHeight_new / rowHeight_old ≠ tileSize_new / tileSize_old.
+    const oldTileWidth = this.size.tile.width;
+    const oldRowHeight = this.size.row.height;
 
-    // set zoom level first so it can be used in normalization of the translation
+    // Calling setZoomLevel synchronously propagates through SizeService → SizeStore,
+    // so this.size already reflects the new tile dimensions by the time we read it below.
     this.cameraStore.setZoomLevel(newZoomLevel);
 
-    // calculate new translate, normalize then set it
-    const newTranslate: Coords = {
-      x: -Math.round((canvasCoordsAtScreenCenter.x * scale) - (this.size.screen.width / 2)),
-      y: -Math.round((canvasCoordsAtScreenCenter.y * scale) - (this.size.screen.height / 2))
+    // Scale the canvas center point by the exact per-axis ratio to find where it lands
+    // after zoom, then solve for the translation that puts it back at the screen center.
+    const exactTranslate: Coords = {
+      x: -(canvasCoordsAtScreenCenter.x * (this.size.tile.width / oldTileWidth) - screenCenterX),
+      y: -(canvasCoordsAtScreenCenter.y * (this.size.row.height / oldRowHeight) - screenCenterY),
     };
-    this.cameraStore.setTranslate(newTranslate);
+
+    // Round to integer pixels for CSS positioning.
+    // Save the discarded remainder so the next zoom step can restore precision before scaling —
+    // error diffusion: the rounding error is fed back in rather than allowed to accumulate.
+    const roundedTranslate: Coords = { x: Math.round(exactTranslate.x), y: Math.round(exactTranslate.y) };
+    this.compensation = { x: exactTranslate.x - roundedTranslate.x, y: exactTranslate.y - roundedTranslate.y };
+    this.lastRoundedTranslate = {...roundedTranslate};
+
+    this.cameraStore.setTranslate(roundedTranslate);
   }
 
 }
-
-
-
