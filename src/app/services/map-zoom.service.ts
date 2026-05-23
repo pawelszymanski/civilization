@@ -53,7 +53,7 @@ export class MapZoomService {
 
     const scale = CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP[newZoomLevel] / CAMERA_ZOOM_LEVEL_TO_TILE_SIZE_MAP[currentZoomLevel];
 
-    // set zoom level first so it can used in normalization of the translation
+    // set zoom level first so it can be used in normalization of the translation
     this.cameraStore.setZoomLevel(newZoomLevel);
 
     // calculate new translate, normalize then set it

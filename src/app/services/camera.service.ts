@@ -35,7 +35,7 @@ export class CameraService {
     // normalize X
     translate.x = (translate.x - this.size.row.width) % this.size.row.width;
 
-    // center the map vertically if its zoomed out very much
+    // center the map vertically if it's zoomed out very much
     if (this.size.screen.height > this.size.map.height) {
       translate.y = Math.floor((this.size.screen.height - this.size.map.height) / 2);
       return translate;
