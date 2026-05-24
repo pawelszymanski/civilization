@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { KeyBindings, UserActionId } from '../../models/key-bindings';
@@ -38,7 +38,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscribeToData();
-    this.addEventListeners();
   }
 
   subscribeToData(): void {
@@ -53,31 +52,27 @@ export class AppComponent implements OnInit, OnDestroy {
     this.unsubscribeFromData();
   }
 
-  addEventListeners(): void {
-    // Using listeners rather than @HostListener since they could be called with .stopPropagation()
-    document.addEventListener('wheel', this.documentOnWheel.bind(this), { passive: false });
-    document.addEventListener('contextmenu', this.documentOnContextMenu.bind(this));
-    document.addEventListener('keydown', this.documentOnKeydown.bind(this));
-  }
-
   unsubscribeFromData(): void {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
-  documentOnWheel(event): void {
+  @HostListener('document:wheel', ['$event'])
+  documentOnWheel(event: MouseEvent): void {
     if (event.ctrlKey) {
       event.preventDefault();
     }
   }
 
+  @HostListener('document:contextmenu', ['$event'])
   documentOnContextMenu(event: MouseEvent): void {
     if (this.ui.sidebar !== SidebarId.DEV_TOOLS) {
       event.preventDefault();
     }
   }
 
+  @HostListener('document:keydown', ['$event'])
   documentOnKeydown(event: KeyboardEvent): void {
-    // proceed only if outside of an input
+    // proceed only if outside an input
     const isInput = (event.target as HTMLElement).tagName.toUpperCase() === 'INPUT';
     if (isInput) {
       return;
