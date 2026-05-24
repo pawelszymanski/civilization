@@ -64,7 +64,6 @@ export class MiniMapComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.cancelAnimationFrame();
-    this.unsubscribeFromData();
     this.destroyWorker();
   }
 
@@ -87,11 +86,9 @@ export class MiniMapComponent implements OnInit, OnDestroy {
   }
 
   subscribeToData(): void {
-    this.subscriptions.push(
-      this.cameraStore.camera.subscribe(camera => this.onCameraUpdate(camera)),
-      this.sizeStore.size.subscribe(size => this.onSizeUpdate(size)),
-      this.mapStore.map.subscribe(map => this.onMapUpdate(map))
-    );
+    this.cameraStore.camera.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(camera => this.onCameraUpdate(camera));
+    this.sizeStore.size.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(size => this.onSizeUpdate(size));
+    this.mapStore.map.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(map => this.onMapUpdate(map));
   }
 
   onCameraUpdate(camera: Camera): void {
@@ -125,10 +122,6 @@ export class MiniMapComponent implements OnInit, OnDestroy {
 
   cancelAnimationFrame(): void {
     window.cancelAnimationFrame(this.animationFrameId);
-  }
-
-  unsubscribeFromData(): void {
-    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   destroyWorker(): void {

@@ -92,7 +92,6 @@ export class MapComponent {
   }
 
   ngOnDestroy(): void {
-    this.unsubscribeFromData();
     this.cancelAnimationFrame();
   }
 
@@ -102,14 +101,12 @@ export class MapComponent {
   }
 
   subscribeToData(): void {
-    this.subscriptions.push(
-      this.uiStore.ui.subscribe(ui => (this.ui = ui)),
-      this.mapStore.map.subscribe(map => (this.map = map)),
-      this.gameplayUiStore.gameplayUi.subscribe(gameplayUi => (this.gameplayUi = gameplayUi)),
-      this.cameraStore.camera.subscribe(camera => (this.camera = camera)),
-      this.sizeStore.size.subscribe(size => (this.size = size)),
-      this.worldBuilderUiStore.worldBuilderUi.subscribe(worldBuilderUi => (this.worldBuilderUi = worldBuilderUi))
-    );
+    this.uiStore.ui.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(ui => (this.ui = ui));
+    this.mapStore.map.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(map => (this.map = map));
+    this.gameplayUiStore.gameplayUi.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(gameplayUi => (this.gameplayUi = gameplayUi));
+    this.cameraStore.camera.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(camera => (this.camera = camera));
+    this.sizeStore.size.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(size => (this.size = size));
+    this.worldBuilderUiStore.worldBuilderUi.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(worldBuilderUi => (this.worldBuilderUi = worldBuilderUi));
   }
 
   requestAnimationFrame(): void {
@@ -125,10 +122,6 @@ export class MapComponent {
         }
       });
     });
-  }
-
-  unsubscribeFromData(): void {
-    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   cancelAnimationFrame(): void {

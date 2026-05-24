@@ -62,7 +62,6 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.unsubscribeFromData();
     this.cancelAnimationFrame();
   }
 
@@ -78,11 +77,7 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
   }
 
   initAverageValuesCalculations(): void {
-    this.subscriptions.push(interval(this.AVERAGE_VALUE_INTERVAL).subscribe(() => this.updateAverageValues()));
-  }
-
-  unsubscribeFromData(): void {
-    this.subscriptions.forEach(s => s.unsubscribe());
+    interval(this.AVERAGE_VALUE_INTERVAL).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.updateAverageValues());
   }
 
   cancelAnimationFrame(): void {
