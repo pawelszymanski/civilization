@@ -56,7 +56,7 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initContext();
-    this.setMeterMode(PerformanceMeterModeId.FRAME);
+    this.setMeterMode(PerformanceMeterModeId.FPS);
     this.initRequestAnimationFrame();
     this.initAverageValuesCalculations();
   }

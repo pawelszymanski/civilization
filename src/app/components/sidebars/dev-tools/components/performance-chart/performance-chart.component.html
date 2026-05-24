@@ -11,7 +11,7 @@
 
   <button [class.active]="performanceMeterMode === PerformanceMeterModeId.FPS"
           (click)="setMeterMode(PerformanceMeterModeId.FPS)">
-    Single FPS
+    FPS
     @if (performanceMeterMode === PerformanceMeterModeId.FPS) {
       ({{ averageFps }})
     }
