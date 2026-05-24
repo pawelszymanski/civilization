@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { Camera } from '../../../models/camera';
@@ -49,6 +49,7 @@ export class MiniMapComponent implements OnInit, OnDestroy {
   @HostBinding('style.top') public hostTop: string = 'calc(100% - ' + MINIMAP_HEIGHT + 'px)';
 
   constructor(
+    private cdr: ChangeDetectorRef,
     private cameraStore: CameraStore,
     private sizeStore: SizeStore,
     private mapStore: MapStore
@@ -74,6 +75,7 @@ export class MiniMapComponent implements OnInit, OnDestroy {
     this.minimapCanvasWorker.onmessage = message => {
       this.minimapImageData = message.data;
       this.isMinimapAvailable = true;
+      this.cdr.detectChanges();
     };
   }
 

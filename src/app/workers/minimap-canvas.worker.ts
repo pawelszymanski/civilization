@@ -4,7 +4,8 @@ import { Coords } from '../models/utils';
 import { MINIMAP_HEIGHT, MINIMAP_WIDTH, MINIMAP_BACKGROUND_STYLE, TERRAIN_BASE_TO_COLOR_MAP } from '../consts/minimap.const';
 
 // tslint:disable-next-line:new-parens no-unused-expression
-new (class MinimapCanvasWorker {
+// prettier-ignore
+new class MinimapCanvasWorker {
   // True: render perfect rectangle. False: Render map with top and bottom hexes fully displayed.
   readonly CUT_TOP_AND_BOTTOM_HEXES = true;
 
@@ -96,4 +97,4 @@ new (class MinimapCanvasWorker {
     this.ctx.fillStyle = color;
     this.ctx.fill();
   }
-})();
+};
