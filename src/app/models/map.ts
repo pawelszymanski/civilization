@@ -12,6 +12,7 @@ export interface Tile {
   yield: Yield;                 // calculated
   isVisible?: boolean;          // is in the viewport?
   px?: Coords;                  // coords on the viewport
+  transformStr?: string;        // pre-computed transform style string, updated each RAF frame
 }
 
 export interface Map {
