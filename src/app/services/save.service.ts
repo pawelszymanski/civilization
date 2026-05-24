@@ -45,11 +45,13 @@ export class SaveService {
     };
   }
 
+  // Delete all calculated properties
   private stripCalculatedData(saveData: SaveData): void {
     for (const tile of saveData.map.tiles) {
       delete tile.isVisible;
       delete tile.px;
       delete tile.yield;
+      delete tile.transformStr;
     }
   }
 
