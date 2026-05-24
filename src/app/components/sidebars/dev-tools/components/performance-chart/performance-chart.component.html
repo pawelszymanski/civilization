@@ -4,13 +4,17 @@
   <button [class.active]="performanceMeterMode === PerformanceMeterModeId.FRAME"
           (click)="setMeterMode(PerformanceMeterModeId.FRAME)">
     Single frame
-    <ng-container *ngIf="performanceMeterMode === PerformanceMeterModeId.FRAME">({{ averageFrame }}ms)</ng-container>
+    @if (performanceMeterMode === PerformanceMeterModeId.FRAME) {
+      ({{ averageFrame }}ms)
+    }
   </button>
 
   <button [class.active]="performanceMeterMode === PerformanceMeterModeId.FPS"
           (click)="setMeterMode(PerformanceMeterModeId.FPS)">
     Single FPS
-    <ng-container *ngIf="performanceMeterMode === PerformanceMeterModeId.FPS">({{ averageFps }})</ng-container>
+    @if (performanceMeterMode === PerformanceMeterModeId.FPS) {
+      ({{ averageFps }})
+    }
   </button>
 
 </form>

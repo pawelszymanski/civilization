@@ -2,11 +2,15 @@
 <i class="close-button fa fa-close" (click)="onCloseButtonClick()"></i>
 <div class="tree-viewport">
   <ul class="eras">
-    <li class="era" *ngFor="let era of TECHNOLOGY_TREE" [ngClass]="era | technologyTreeEraElemClass">
-      <div class="research-item" *ngFor="let technology of era.technologies" [ngClass]="technology | researchItemElemClass">
-        <div class="research-item-icon" [ngClass]="TECHNOLOGY_SET[technology.id].ui.class"></div>
-        <p class="research-item-name">{{ TECHNOLOGY_SET[technology.id].ui.name }}</p>
-      </div>
-    </li>
+    @for (era of TECHNOLOGY_TREE; track $index) {
+      <li class="era" [ngClass]="era | technologyTreeEraElemClass">
+        @for (technology of era.technologies; track technology.id) {
+          <div class="research-item" [ngClass]="technology | researchItemElemClass">
+            <div class="research-item-icon" [ngClass]="TECHNOLOGY_SET[technology.id].ui.class"></div>
+            <p class="research-item-name">{{ TECHNOLOGY_SET[technology.id].ui.name }}</p>
+          </div>
+        }
+      </li>
+    }
   </ul>
 </div>

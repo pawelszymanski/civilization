@@ -12,13 +12,14 @@
         [height]="size.screen.height">
 </canvas>
 
-<ul class="map" *ngIf="map">
-
-  <li class="tile"
-      *ngFor="let tile of map.tiles"
-      [style.display]="tile.isVisible ? 'block' : 'none'"
-      [style.transform]="tile.isVisible ? tile.transformStr : null"
-      [ngClass]="tile.isVisible ? (tile | tileCssClasses:camera.tileSize) : ''">
-  </li>
-
-</ul>
+@if (map) {
+  <ul class="map">
+    @for (tile of map.tiles; track $index) {
+      <li class="tile"
+          [style.display]="tile.isVisible ? 'block' : 'none'"
+          [style.transform]="tile.isVisible ? tile.transformStr : null"
+          [ngClass]="tile.isVisible ? (tile | tileCssClasses:camera.tileSize) : ''">
+      </li>
+    }
+  </ul>
+}
