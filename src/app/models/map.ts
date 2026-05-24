@@ -10,8 +10,9 @@ export interface Tile {
   grid: Coords;                 // provided, 0-indexed location on the map
   terrain: Terrain;             // provided
   yield: Yield;                 // calculated
-  isVisible?: boolean;          // is in the viewport?
-  px?: Coords;                  // coords on the viewport
+  isVisible?: boolean;          // calculated, is in the viewport?
+  px?: Coords;                  // calculated, coords on the viewport
+  transformStr?: string;        // calculated, pre-computed transform style string, updated each RAF frame
 }
 
 export interface Map {

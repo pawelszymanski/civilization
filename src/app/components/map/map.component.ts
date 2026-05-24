@@ -114,12 +114,14 @@ export class MapComponent {
 
   requestAnimationFrame(): void {
     this.animationFrameId = this.window.requestAnimationFrame(() => {
-      this.requestAnimationFrame();
-      if (!!this.camera && !!this.size && !!this.map && !!this.gameplayUi) {
-        this.updateTilesUiData();
-        this.isCanvasInUse() ? this.mapCanvasService.paintCanvas() : this.mapCanvasService.clearCanvas();
-        this.cdr.detectChanges();
-      }
+      this.ngZone.runOutsideAngular(() => {
+        this.requestAnimationFrame();
+        if (!!this.camera && !!this.size && !!this.map && !!this.gameplayUi) {
+          const changed = this.updateTilesUiData();
+          this.isCanvasInUse() ? this.mapCanvasService.paintCanvas() : this.mapCanvasService.clearCanvas();
+          if (changed) { this.cdr.detectChanges(); }
+        }
+      });
     });
   }
 
@@ -185,12 +187,23 @@ export class MapComponent {
     return Math.sqrt( (vector1.x - vector2.x) ** 2 + (vector1.y - vector2.y) ** 2 );
   }
 
-  updateTilesUiData(): void {
+  updateTilesUiData(): boolean {
+    let changed = false;
     for (const tile of this.map.tiles) {
-      const tileCoordsOnScreenPx = this.tileUiService.tileCoordsOnScreenPx(tile);
-      if (tileCoordsOnScreenPx) { tile.px = tileCoordsOnScreenPx; }
-      tile.isVisible = !!tileCoordsOnScreenPx;
+      const coords = this.tileUiService.tileCoordsOnScreenPx(tile);
+      const nowVisible = !!coords;
+      if (nowVisible !== tile.isVisible) { changed = true; }
+      tile.isVisible = nowVisible;
+      if (coords) {
+        const newTransform = `translate(${coords.x}px,${coords.y}px)`;
+        if (tile.transformStr !== newTransform) {
+          tile.transformStr = newTransform;
+          changed = true;
+        }
+        tile.px = coords;
+      }
     }
+    return changed;
   }
 
   startDrag(event: MouseEvent): void {
