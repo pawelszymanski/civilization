@@ -17,7 +17,7 @@
   <li class="tile"
       *ngFor="let tile of map.tiles"
       [style.display]="tile.isVisible ? 'block' : 'none'"
-      [style.transform]="tile.isVisible ? 'translate(' + tile.px.x + 'px, ' + tile.px.y + 'px)' : ''"
+      [style.transform]="tile.isVisible ? tile.transformStr : null"
       [ngClass]="tile.isVisible ? (tile | tileCssClasses:camera.tileSize) : ''">
   </li>
 
