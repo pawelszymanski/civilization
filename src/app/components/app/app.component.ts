@@ -1,5 +1,5 @@
-import { Component, HostListener, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, DestroyRef, HostListener, OnInit, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { KeyBindings, UserActionId } from '../../models/key-bindings';
 import { ModalId, ScreenId, SidebarId, Ui } from '../../models/ui';
@@ -18,7 +18,7 @@ import { KeyBindingsStore } from '../../stores/key-bindings.store';
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
   ModalId = ModalId;
   ScreenId = ScreenId;
   SidebarId = SidebarId;
@@ -27,9 +27,8 @@ export class AppComponent implements OnInit, OnDestroy {
   gameplayUi: GameplayUi;
   keyBindings: KeyBindings;
 
-  subscriptions: Subscription[] = [];
-
   constructor(
+    private destroyRef: DestroyRef,
     private keyboardService: KeyboardService,
     private uiStore: UiStore,
     private gameplayUiStore: GameplayUiStore,
@@ -41,19 +40,9 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   subscribeToData(): void {
-    this.subscriptions.push(
-      this.uiStore.ui.subscribe(ui => (this.ui = ui)),
-      this.gameplayUiStore.gameplayUi.subscribe(gameplayUi => (this.gameplayUi = gameplayUi)),
-      this.keyBindingsStore.keyBindings.subscribe(keyBindings => (this.keyBindings = keyBindings))
-    );
-  }
-
-  ngOnDestroy(): void {
-    this.unsubscribeFromData();
-  }
-
-  unsubscribeFromData(): void {
-    this.subscriptions.forEach(s => s.unsubscribe());
+    this.uiStore.ui.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(ui => (this.ui = ui));
+    this.gameplayUiStore.gameplayUi.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(gameplayUi => (this.gameplayUi = gameplayUi));
+    this.keyBindingsStore.keyBindings.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(keyBindings => (this.keyBindings = keyBindings));
   }
 
   @HostListener('document:wheel', ['$event'])

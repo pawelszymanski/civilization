@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, DestroyRef, OnInit, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { YieldId } from '../../../models/yield';
 import { ModalId, Ui } from '../../../models/ui';
@@ -15,7 +15,7 @@ import { UiStore } from '../../../stores/ui.store';
   styleUrls: ['./quick-links.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class QuickLinksComponent implements OnInit, OnDestroy {
+export class QuickLinksComponent implements OnInit {
   YIELD_ICONS = YIELD_ID_TO_ICON_CLASS_MAP;
 
   ModalId = ModalId;
@@ -23,24 +23,17 @@ export class QuickLinksComponent implements OnInit, OnDestroy {
 
   ui: Ui;
 
-  subscriptions: Subscription[] = [];
-
-  constructor(private uiStore: UiStore) {}
+  constructor(
+    private destroyRef: DestroyRef,
+    private uiStore: UiStore
+  ) {}
 
   ngOnInit(): void {
     this.subscribeToData();
   }
 
-  ngOnDestroy(): void {
-    this.unsubscribeFromData();
-  }
-
   subscribeToData(): void {
-    this.subscriptions.push(this.uiStore.ui.subscribe(ui => (this.ui = ui)));
-  }
-
-  unsubscribeFromData(): void {
-    this.subscriptions.forEach(s => s.unsubscribe());
+    this.uiStore.ui.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(ui => (this.ui = ui));
   }
 
   onScienceIconClick(): void {

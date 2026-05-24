@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, DestroyRef, OnInit, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { Map } from '../../models/map';
 import { SaveHeader } from '../../models/saves';
@@ -25,15 +25,14 @@ import { SaveHeadersStore } from '../../stores/save-headers.store';
   styleUrls: ['./main-menu.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class MainMenuComponent implements OnInit, OnDestroy {
+export class MainMenuComponent implements OnInit {
   ui: Ui;
   saveHeaders: SaveHeader[];
 
   showSinglePlayerMenu = false;
 
-  subscriptions: Subscription[] = [];
-
   constructor(
+    private destroyRef: DestroyRef,
     private mapGeneratorService: MapGeneratorService,
     private saveService: SaveService,
     private zipService: ZipService,
@@ -46,19 +45,9 @@ export class MainMenuComponent implements OnInit, OnDestroy {
     this.subscribeToData();
   }
 
-  ngOnDestroy(): void {
-    this.unsubscribeFromData();
-  }
-
   subscribeToData(): void {
-    this.subscriptions.push(
-      this.uiStore.ui.subscribe(ui => (this.ui = ui)),
-      this.saveHeadersStore.saveHeaders.subscribe(saveHeaders => (this.saveHeaders = saveHeaders))
-    );
-  }
-
-  unsubscribeFromData(): void {
-    this.subscriptions.forEach(s => s.unsubscribe());
+    this.uiStore.ui.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(ui => (this.ui = ui));
+    this.saveHeadersStore.saveHeaders.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(saveHeaders => (this.saveHeaders = saveHeaders));
   }
 
   get noSavesPresent(): boolean {

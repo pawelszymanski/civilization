@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   ElementRef,
   NgZone,
   OnDestroy,
@@ -9,7 +10,8 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { interval, Subscription } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { interval } from 'rxjs';
 
 import { PerformanceMeterModeId } from '../../../../../models/performance-meter';
 import { Millisecond } from '../../../../../models/utils';
@@ -45,9 +47,8 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
 
   animationFrameId: number;
 
-  subscriptions: Subscription[] = [];
-
   constructor(
+    private destroyRef: DestroyRef,
     private ngZone: NgZone,
     private cdr: ChangeDetectorRef,
     private generatorService: GeneratorService

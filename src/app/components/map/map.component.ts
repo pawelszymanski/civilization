@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   ElementRef,
   Inject,
   NgZone,
@@ -9,7 +10,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { Subscription } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { Map } from '../../models/map';
 import { Camera } from '../../models/camera';
@@ -61,10 +62,9 @@ export class MapComponent {
 
   animationFrameId: number;
 
-  subscriptions: Subscription[] = [];
-
   constructor(
     @Inject(DOCUMENT) private document: Document,
+    private destroyRef: DestroyRef,
     private window: Window,
     private ngZone: NgZone,
     private cdr: ChangeDetectorRef,
