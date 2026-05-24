@@ -1,8 +1,10 @@
-<div class="fps-number-component" *ngIf="true"></div>
+<div class="fps-number-component"></div>
 
 <ul>
-  <li *ngFor="let yieldId of YIELD_IDS_IN_ORDER">
-    <i class="fa" [ngClass]="YIELD_ICONS[yieldId]"></i>
-    <span>12.3</span>
-  </li>
+  @for (yieldId of YIELD_IDS_IN_ORDER; track yieldId) {
+    <li>
+      <i class="fa" [ngClass]="YIELD_ICONS[yieldId]"></i>
+      <span>12.3</span>
+    </li>
+  }
 </ul>

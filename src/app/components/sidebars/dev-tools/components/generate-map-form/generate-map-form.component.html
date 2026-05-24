@@ -2,7 +2,9 @@
   <h3>Generate map</h3>
   <label>Map size</label>
   <select name="mapConfigurationId" [ngModel]="mapSizeId" (change)="onMapSizeIdChange($event.target.value)">
-    <option *ngFor="let mapSizeSettings of MAP_SIZE_SETTINGS_LIST" [value]="mapSizeSettings.id">{{ mapSizeSettings.name }}</option>
+    @for (mapSizeSettings of MAP_SIZE_SETTINGS_LIST; track mapSizeSettings.id) {
+      <option [value]="mapSizeSettings.id">{{ mapSizeSettings.name }}</option>
+    }
   </select>
   <label>Width: <span>{{ mapGeneratorSettings.width }}</span></label>
   <input type="range" name="width" min="20" max="200" step="1" [(ngModel)]="mapGeneratorSettings.width" disabled>

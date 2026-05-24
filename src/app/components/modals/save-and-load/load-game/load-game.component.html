@@ -11,10 +11,12 @@
 </form>
 
 <ul class="save-list">
-  <li class="save-item" *ngFor="let save of filteredAndSortedSaveHeaders"
-      [class.active]="isSaveGameHeaderSelected(save)"
-      (click)="onSaveHeaderClick(save.uuid)"
-      (dblclick)="onSaveHeaderDblClick()">{{ save.name }}</li>
+  @for (save of filteredAndSortedSaveHeaders; track save.uuid) {
+    <li class="save-item"
+        [class.active]="isSaveGameHeaderSelected(save)"
+        (click)="onSaveHeaderClick(save.uuid)"
+        (dblclick)="onSaveHeaderDblClick()">{{ save.name }}</li>
+  }
 </ul>
 
 <div class="delete-button" [class.disabled]="!selectedSaveHeader" (click)="onDeleteClick()">Delete</div>

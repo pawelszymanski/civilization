@@ -1,32 +1,49 @@
 <!-- MAIN MENU -->
-<ng-container *ngIf="ui.screen === ScreenId.MAIN_MENU">
+@if (ui.screen === ScreenId.MAIN_MENU) {
   <div class="main-menu-component"></div>
-</ng-container>
+}
 
 <!-- GAMEPLAY -->
-<ng-container *ngIf="ui.screen === ScreenId.GAMEPLAY">
+@if (ui.screen === ScreenId.GAMEPLAY) {
   <div class="map-component"></div>
 
-  <div class="status-bar-component" *ngIf="ui.sidebar !== SidebarId.WORLD_BUILDER"></div>
-  <div class="quick-links-component" *ngIf="ui.sidebar !== SidebarId.WORLD_BUILDER"></div>
-  <div class="mini-map-component" *ngIf="gameplayUi.showMinimap"></div>
+  @if (ui.sidebar !== SidebarId.WORLD_BUILDER) {
+    <div class="status-bar-component"></div>
+    <div class="quick-links-component"></div>
+  }
+  @if (gameplayUi.showMinimap) {
+    <div class="mini-map-component"></div>
+  }
 
-  <div class="dev-tools-component" *ngIf="ui.sidebar === SidebarId.DEV_TOOLS"></div>
-  <div class="world-builder-component" *ngIf="ui.sidebar === SidebarId.WORLD_BUILDER"></div>
-
-  <div class="screen-center-marker-component" *ngIf="ui.sidebar === SidebarId.DEV_TOOLS"></div>
-</ng-container>
+  @if (ui.sidebar === SidebarId.DEV_TOOLS) {
+    <div class="dev-tools-component"></div>
+    <div class="screen-center-marker-component"></div>
+  }
+  @if (ui.sidebar === SidebarId.WORLD_BUILDER) {
+    <div class="world-builder-component"></div>
+  }
+}
 
 <!-- MODALS -->
 <div class="modal-overlay" [class.active]="ui.modal !== ModalId.NONE">
-  <ng-container *ngIf="ui.screen === ScreenId.GAMEPLAY">
+  @if (ui.screen === ScreenId.GAMEPLAY) {
     <div class="civic-tree-component research-tree-modal" [class.active]="ui.modal === ModalId.CIVIC_TREE"></div>
     <div class="technology-tree-component research-tree-modal" [class.active]="ui.modal === ModalId.TECH_TREE"></div>
-  </ng-container>
+  }
 
-  <div class="in-game-menu-component" *ngIf="ui.modal === ModalId.IN_GAME_MENU"></div>
-  <div class="save-game-component" *ngIf="ui.modal === ModalId.SAVE_GAME"></div>
-  <div class="load-game-component" *ngIf="ui.modal === ModalId.LOAD_GAME"></div>
-  <div class="game-options-menu-component" *ngIf="ui.modal === ModalId.GAMEPLAY_OPTIONS_MENU"></div>
-  <div class="exit-game-confirmation-component" *ngIf="ui.modal === ModalId.EXIT_GAME_CONFIRMATION"></div>
+  @if (ui.modal === ModalId.IN_GAME_MENU) {
+    <div class="in-game-menu-component"></div>
+  }
+  @if (ui.modal === ModalId.SAVE_GAME) {
+    <div class="save-game-component"></div>
+  }
+  @if (ui.modal === ModalId.LOAD_GAME) {
+    <div class="load-game-component"></div>
+  }
+  @if (ui.modal === ModalId.GAMEPLAY_OPTIONS_MENU) {
+    <div class="game-options-menu-component"></div>
+  }
+  @if (ui.modal === ModalId.EXIT_GAME_CONFIRMATION) {
+    <div class="exit-game-confirmation-component"></div>
+  }
 </div>
