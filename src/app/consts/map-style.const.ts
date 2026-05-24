@@ -1,4 +1,4 @@
-import {TileHighlightId} from '../models/map';
+import { TileHighlightId } from '../models/map';
 
 export const GRID_LINE_WIDTH = 2;
 export const GRID_LINE_STYLE = 'rgba(0, 0, 0, 0.10)';

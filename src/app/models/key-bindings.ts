@@ -109,7 +109,7 @@ export enum KeyCodeId {
   Numpad9 = 'Numpad9',
   NumpadEnter = 'NumpadEnter',
   Numpad0 = 'Numpad0',
-  NumpadDecimal = 'NumpadDecimal'
+  NumpadDecimal = 'NumpadDecimal',
 }
 
 export enum UserActionId {
@@ -126,8 +126,8 @@ export enum UserActionId {
 }
 
 export interface KeyBinding {
-  keyCode: KeyCodeId;  // This is event.code, do not confuse with event.keyCode
-  modifiers: number;   // Sum of shift, ctrl, alt flags
+  keyCode: KeyCodeId; // This is event.code, do not confuse with event.keyCode
+  modifiers: number; // Sum of shift, ctrl, alt flags
 }
 
 export type KeyBindings = {

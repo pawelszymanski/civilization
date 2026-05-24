@@ -1,19 +1,16 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 
-import {UiStore} from '../../../../stores/ui.store';
+import { UiStore } from '../../../../stores/ui.store';
 
 @Component({
   standalone: false,
   selector: '.exit-game-confirmation-component',
   templateUrl: './exit-game-confirmation.component.html',
   styleUrls: ['./exit-game-confirmation.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class ExitGameConfirmationComponent {
-
-  constructor(
-    private uiStore: UiStore
-  ) {}
+  constructor(private uiStore: UiStore) {}
 
   onNoClick(): void {
     this.uiStore.closeModal();
@@ -22,5 +19,4 @@ export class ExitGameConfirmationComponent {
   onYesClick(): void {
     window.location.href = 'https://google.com';
   }
-
 }

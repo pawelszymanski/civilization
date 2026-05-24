@@ -6,7 +6,7 @@ export enum YieldId {
   CULTURE = 'CULTURE',
   FAITH = 'FAITH',
   POWER = 'POWER',
-  TOURISM = 'TOURISM'
+  TOURISM = 'TOURISM',
 }
 
 export type Yield = {

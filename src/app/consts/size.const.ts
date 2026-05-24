@@ -1,4 +1,4 @@
-import {Size} from '../models/size';
+import { Size } from '../models/size';
 
 export const DEFAULT_SIZE: Size = {
   tile: {
@@ -26,11 +26,11 @@ export const DEFAULT_SIZE: Size = {
     halfHeight: 0,
   },
   vertices: [
-    {x: 0, y: 0},
-    {x: 0, y: 0},
-    {x: 0, y: 0},
-    {x: 0, y: 0},
-    {x: 0, y: 0},
-    {x: 0, y: 0}
-  ]
+    { x: 0, y: 0 },
+    { x: 0, y: 0 },
+    { x: 0, y: 0 },
+    { x: 0, y: 0 },
+    { x: 0, y: 0 },
+    { x: 0, y: 0 },
+  ],
 };

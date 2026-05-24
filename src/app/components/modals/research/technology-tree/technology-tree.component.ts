@@ -1,32 +1,28 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 
-import {Ui} from '../../../../models/ui';
+import { Ui } from '../../../../models/ui';
 
-import {TECHNOLOGY_TREE} from '../../../../consts/technology-tree.const';
-import {TECHNOLOGY_SET} from '../../../../consts/technologies.const';
+import { TECHNOLOGY_TREE } from '../../../../consts/technology-tree.const';
+import { TECHNOLOGY_SET } from '../../../../consts/technologies.const';
 
-import {UiStore} from '../../../../stores/ui.store';
+import { UiStore } from '../../../../stores/ui.store';
 
 @Component({
   standalone: false,
   selector: '.technology-tree-component',
   templateUrl: './technology-tree.component.html',
   styleUrls: ['./technology-tree.component.scss', '../research-tree-modal.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class TechnologyTreeComponent {
-
   TECHNOLOGY_TREE = TECHNOLOGY_TREE;
   TECHNOLOGY_SET = TECHNOLOGY_SET;
 
   ui: Ui;
 
-  constructor(
-    private uiStore: UiStore
-  ) {}
+  constructor(private uiStore: UiStore) {}
 
   onCloseButtonClick(): void {
     this.uiStore.closeModal();
   }
-
 }

@@ -1,16 +1,16 @@
-import {Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import {Subscription} from 'rxjs';
+import { Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Subscription } from 'rxjs';
 
-import {Camera} from '../../../models/camera';
-import {Map} from '../../../models/map';
-import {Size} from '../../../models/size';
-import {Coords} from '../../../models/utils';
+import { Camera } from '../../../models/camera';
+import { Map } from '../../../models/map';
+import { Size } from '../../../models/size';
+import { Coords } from '../../../models/utils';
 
-import {VIEWPORT_LINE_STYLE, VIEWPORT_LINE_WIDTH, MINIMAP_WIDTH, MINIMAP_HEIGHT} from '../../../consts/minimap.const';
+import { VIEWPORT_LINE_STYLE, VIEWPORT_LINE_WIDTH, MINIMAP_WIDTH, MINIMAP_HEIGHT } from '../../../consts/minimap.const';
 
-import {CameraStore} from '../../../stores/camera.store';
-import {SizeStore} from '../../../stores/size.store';
-import {MapStore} from '../../../stores/map.store';
+import { CameraStore } from '../../../stores/camera.store';
+import { SizeStore } from '../../../stores/size.store';
+import { MapStore } from '../../../stores/map.store';
 
 // General flow: Subscribe to map. When map changes send it over to worker to generate new minimap image.
 // On worker message use minimap image and add the viewport rectangle locally.
@@ -19,10 +19,9 @@ import {MapStore} from '../../../stores/map.store';
   selector: '.mini-map-component',
   templateUrl: './mini-map.component.html',
   styleUrls: ['./mini-map.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class MiniMapComponent implements OnInit, OnDestroy {
-
   MINIMAP_WIDTH = MINIMAP_WIDTH;
   MINIMAP_HEIGHT = MINIMAP_HEIGHT;
 
@@ -52,7 +51,7 @@ export class MiniMapComponent implements OnInit, OnDestroy {
   constructor(
     private cameraStore: CameraStore,
     private sizeStore: SizeStore,
-    private mapStore: MapStore,
+    private mapStore: MapStore
   ) {}
 
   ngOnInit(): void {
@@ -71,8 +70,8 @@ export class MiniMapComponent implements OnInit, OnDestroy {
 
   initMinimapCanvasWorker(): void {
     // Needs to be a type: module, https://stackoverflow.com/questions/48045569/whats-the-difference-between-a-classic-and-module-web-worker
-    this.minimapCanvasWorker = new Worker(new URL('./../../../workers/minimap-canvas.worker', import.meta.url), {type: 'module'});
-    this.minimapCanvasWorker.onmessage = (message) => {
+    this.minimapCanvasWorker = new Worker(new URL('./../../../workers/minimap-canvas.worker', import.meta.url), { type: 'module' });
+    this.minimapCanvasWorker.onmessage = message => {
       this.minimapImageData = message.data;
       this.isMinimapAvailable = true;
     };
@@ -96,12 +95,16 @@ export class MiniMapComponent implements OnInit, OnDestroy {
 
   onCameraUpdate(camera: Camera): void {
     this.camera = camera;
-    if (this.size && this.camera) { this.drawViewport() }
+    if (this.size && this.camera) {
+      this.drawViewport();
+    }
   }
 
   onSizeUpdate(size: Size): void {
     this.size = size;
-    if (this.size && this.camera) { this.drawViewport() }
+    if (this.size && this.camera) {
+      this.drawViewport();
+    }
   }
 
   onMapUpdate(map: Map): void {
@@ -155,15 +158,15 @@ export class MiniMapComponent implements OnInit, OnDestroy {
   eventToMapCoords(event: MouseEvent): Coords {
     return {
       x: Math.floor(-event.offsetX * (this.size.row.width / this.viewportCtx.canvas.width)) + this.size.screen.halfWidth,
-      y: Math.floor(-event.offsetY * (this.size.map.height / this.viewportCtx.canvas.height)) + this.size.screen.halfHeight
+      y: Math.floor(-event.offsetY * (this.size.map.height / this.viewportCtx.canvas.height)) + this.size.screen.halfHeight,
     };
   }
 
   drawViewport(): void {
-    const topRatio = (-this.camera.translate.y) / this.size.map.height;
+    const topRatio = -this.camera.translate.y / this.size.map.height;
     const bottomRatio = (-this.camera.translate.y + this.size.screen.height) / this.size.map.height;
-    const leftRatio = (-this.camera.translate.x) / this.size.map.width;
-    const rightRatio = ((-this.camera.translate.x + this.size.screen.width) % this.size.map.width / this.size.map.width);
+    const leftRatio = -this.camera.translate.x / this.size.map.width;
+    const rightRatio = ((-this.camera.translate.x + this.size.screen.width) % this.size.map.width) / this.size.map.width;
 
     const top = this.viewportCtx.canvas.height * topRatio;
     const bottom = this.viewportCtx.canvas.height * bottomRatio;
@@ -194,5 +197,4 @@ export class MiniMapComponent implements OnInit, OnDestroy {
     this.viewportCtx.lineTo(x2, y2);
     this.viewportCtx.stroke();
   }
-
 }

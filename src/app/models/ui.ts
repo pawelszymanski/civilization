@@ -11,13 +11,13 @@ export enum ModalId {
   SAVE_GAME,
   LOAD_GAME,
   GAMEPLAY_OPTIONS_MENU,
-  EXIT_GAME_CONFIRMATION
+  EXIT_GAME_CONFIRMATION,
 }
 
 export enum SidebarId {
   NONE,
   WORLD_BUILDER,
-  DEV_TOOLS
+  DEV_TOOLS,
 }
 
 export interface Ui {

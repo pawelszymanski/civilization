@@ -1,20 +1,19 @@
-import {Injectable, NgZone} from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 
-import {Save, SaveData, SaveHeader} from '../models/saves';
-import {Uuid} from '../models/utils';
+import { Save, SaveData, SaveHeader } from '../models/saves';
+import { Uuid } from '../models/utils';
 
-import {LocalStorageService} from './local-storage.service';
-import {TileYieldService} from './tile-yield.service';
-import {ZipService} from './zip.service';
+import { LocalStorageService } from './local-storage.service';
+import { TileYieldService } from './tile-yield.service';
+import { ZipService } from './zip.service';
 
-import {GameplayUiStore} from '../stores/gameplay-ui.store';
-import {CameraStore} from '../stores/camera.store';
-import {MapStore} from '../stores/map.store';
-import {SaveHeadersStore} from '../stores/save-headers.store';
+import { GameplayUiStore } from '../stores/gameplay-ui.store';
+import { CameraStore } from '../stores/camera.store';
+import { MapStore } from '../stores/map.store';
+import { SaveHeadersStore } from '../stores/save-headers.store';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class SaveService {
-
   private readonly LOCAL_STORAGE_SAVE_PREFIX = 'Save-';
 
   constructor(
@@ -25,7 +24,7 @@ export class SaveService {
     private cameraStore: CameraStore,
     private mapStore: MapStore,
     private saveHeadersStore: SaveHeadersStore,
-    private ngZone: NgZone,
+    private ngZone: NgZone
   ) {}
 
   private extractSaveHeader(save: Save): SaveHeader {
@@ -62,10 +61,10 @@ export class SaveService {
     const saveData = this.extractSaveData(save);
     this.stripCalculatedData(saveData);
 
-    const worker = new Worker(new URL('./../workers/zip.worker', import.meta.url), {type: 'module'});
+    const worker = new Worker(new URL('./../workers/zip.worker', import.meta.url), { type: 'module' });
     worker.postMessage(saveData);
 
-    worker.onmessage = (message) => {
+    worker.onmessage = message => {
       const key = this.LOCAL_STORAGE_SAVE_PREFIX + save.uuid;
       const zippedSaveData = message.data;
       this.localStorageService.set(key, zippedSaveData);
@@ -88,5 +87,4 @@ export class SaveService {
     const key = this.LOCAL_STORAGE_SAVE_PREFIX + saveUuid;
     this.localStorageService.remove(key);
   }
-
 }

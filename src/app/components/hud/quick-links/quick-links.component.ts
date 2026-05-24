@@ -1,22 +1,21 @@
-import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {Subscription} from 'rxjs';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Subscription } from 'rxjs';
 
-import {YieldId} from '../../../models/yield';
-import {ModalId, Ui} from '../../../models/ui';
+import { YieldId } from '../../../models/yield';
+import { ModalId, Ui } from '../../../models/ui';
 
-import {YIELD_ID_TO_ICON_CLASS_MAP} from '../../../consts/yield.const';
+import { YIELD_ID_TO_ICON_CLASS_MAP } from '../../../consts/yield.const';
 
-import {UiStore} from '../../../stores/ui.store';
+import { UiStore } from '../../../stores/ui.store';
 
 @Component({
   standalone: false,
   selector: '.quick-links-component',
   templateUrl: './quick-links.component.html',
   styleUrls: ['./quick-links.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class QuickLinksComponent implements OnInit, OnDestroy {
-
   YIELD_ICONS = YIELD_ID_TO_ICON_CLASS_MAP;
 
   ModalId = ModalId;
@@ -26,9 +25,7 @@ export class QuickLinksComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
 
-  constructor(
-    private uiStore: UiStore
-  ) {}
+  constructor(private uiStore: UiStore) {}
 
   ngOnInit(): void {
     this.subscribeToData();
@@ -39,9 +36,7 @@ export class QuickLinksComponent implements OnInit, OnDestroy {
   }
 
   subscribeToData(): void {
-    this.subscriptions.push(
-      this.uiStore.ui.subscribe(ui => this.ui = ui)
-    );
+    this.subscriptions.push(this.uiStore.ui.subscribe(ui => (this.ui = ui)));
   }
 
   unsubscribeFromData(): void {
@@ -55,5 +50,4 @@ export class QuickLinksComponent implements OnInit, OnDestroy {
   onCultureIconClick(): void {
     this.uiStore.toggleModal(ModalId.CIVIC_TREE);
   }
-
 }

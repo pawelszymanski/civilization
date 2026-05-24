@@ -1,16 +1,14 @@
-import {Component, Input, ViewEncapsulation} from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 
-import {Tile} from '../../app/models/map';
+import { Tile } from '../../app/models/map';
 
 @Component({
   selector: '.tile-text-component',
   templateUrl: './tile-text.component.html',
   styleUrls: ['./tile-text.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class TileTextComponent {
-
   @Input() tile: Tile;
   @Input() showFullInfo: boolean;
-
 }

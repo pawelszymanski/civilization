@@ -7,5 +7,5 @@ export enum EraId {
   MODERN,
   ATOMIC,
   INFORMATION,
-  FUTURE
+  FUTURE,
 }

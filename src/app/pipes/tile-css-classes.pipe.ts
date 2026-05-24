@@ -1,25 +1,14 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
-import {Tile} from '../models/map';
-import {TerrainBaseId} from '../models/terrain';
+import { Tile } from '../models/map';
+import { TerrainBaseId } from '../models/terrain';
 
-import {
-  TERRAIN_BASE_SET,
-  TERRAIN_FEATURE_SET,
-  TERRAIN_IMPROVEMENT_SET,
-  TERRAIN_RESOURCE_SET
-} from '../consts/terrain.const';
+import { TERRAIN_BASE_SET, TERRAIN_FEATURE_SET, TERRAIN_IMPROVEMENT_SET, TERRAIN_RESOURCE_SET } from '../consts/terrain.const';
 
-@Pipe({standalone: false, name: 'tileCssClasses'})
+@Pipe({ standalone: false, name: 'tileCssClasses' })
 export class TileCssClassesPipe implements PipeTransform {
-
   transform(tile: Tile, tileSize: number): string[] {
-
-    const result = [
-      `m-x-${tile.grid.x}`,
-      `m-y-${tile.grid.y}`,
-      `m-size-${tileSize}`,
-    ];
+    const result = [`m-x-${tile.grid.x}`, `m-y-${tile.grid.y}`, `m-size-${tileSize}`];
 
     if (tile.grid.y % 2 === 1) {
       result.push('m-odd');
@@ -61,5 +50,4 @@ export class TileCssClassesPipe implements PipeTransform {
 
     return result;
   }
-
 }

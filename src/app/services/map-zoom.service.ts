@@ -1,39 +1,38 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import {Coords, Step} from '../models/utils';
-import {Camera} from '../models/camera';
-import {Size} from '../models/size';
+import { Coords, Step } from '../models/utils';
+import { Camera } from '../models/camera';
+import { Size } from '../models/size';
 
-import {TileYieldService} from './tile-yield.service';
-import {CameraService} from './camera.service';
+import { TileYieldService } from './tile-yield.service';
+import { CameraService } from './camera.service';
 
-import {CameraStore} from '../stores/camera.store';
-import {SizeStore} from '../stores/size.store';
+import { CameraStore } from '../stores/camera.store';
+import { SizeStore } from '../stores/size.store';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class MapZoomService {
-
   camera: Camera;
   size: Size;
 
   // Fractional part of the translation discarded by Math.round on the previous zoom step.
   // Carried forward and re-applied to restore sub-pixel canvas precision next step.
   // Reset to zero when the translation is moved externally (e.g. by dragging).
-  private compensation: Coords = {x: 0, y: 0};
+  private compensation: Coords = { x: 0, y: 0 };
   private lastRoundedTranslate: Coords | null = null;
 
   constructor(
     private cameraService: CameraService,
     private tileYieldService: TileYieldService,
     private cameraStore: CameraStore,
-    private sizeStore: SizeStore,
+    private sizeStore: SizeStore
   ) {
     this.subscribeToData();
   }
 
   private subscribeToData(): void {
-    this.cameraStore.camera.subscribe(camera => this.camera = camera);
-    this.sizeStore.size.subscribe(size => this.size = size);
+    this.cameraStore.camera.subscribe(camera => (this.camera = camera));
+    this.sizeStore.size.subscribe(size => (this.size = size));
   }
 
   // +1 for zooming in (roll forward), -1 for zooming out (roll backward)
@@ -46,7 +45,9 @@ export class MapZoomService {
     const step = this.wheelEventToStep(event);
     const currentZoomLevel = this.camera.zoomLevel;
     const newZoomLevel = this.cameraService.normalizeZoomLevel(currentZoomLevel + step);
-    if (newZoomLevel === currentZoomLevel) { return; }
+    if (newZoomLevel === currentZoomLevel) {
+      return;
+    }
 
     // calculate new translate
     const currentTranslate = this.camera.translate;
@@ -90,9 +91,8 @@ export class MapZoomService {
     // error diffusion: the rounding error is fed back in rather than allowed to accumulate.
     const roundedTranslate: Coords = { x: Math.round(exactTranslate.x), y: Math.round(exactTranslate.y) };
     this.compensation = { x: exactTranslate.x - roundedTranslate.x, y: exactTranslate.y - roundedTranslate.y };
-    this.lastRoundedTranslate = {...roundedTranslate};
+    this.lastRoundedTranslate = { ...roundedTranslate };
 
     this.cameraStore.setTranslate(roundedTranslate);
   }
-
 }

@@ -1,16 +1,15 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
-import {TechnologyTreeEra} from '../models/research-tree';
+import { TechnologyTreeEra } from '../models/research-tree';
 
-@Pipe({standalone: false, name: 'technologyTreeEraElemClass'})
+@Pipe({ standalone: false, name: 'technologyTreeEraElemClass' })
 export class TechnologyTreeEraElemClassPipe implements PipeTransform {
-
   transform(technologyTreeEra: TechnologyTreeEra): string {
-    const columns = technologyTreeEra.technologies
-      .map(tech => tech.eraCoords.x)
-      .sort()
-      .pop() + 1;
+    const columns =
+      technologyTreeEra.technologies
+        .map(tech => tech.eraCoords.x)
+        .sort()
+        .pop() + 1;
     return `m-columns-${columns}`;
   }
-
 }

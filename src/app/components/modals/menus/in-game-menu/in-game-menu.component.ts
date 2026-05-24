@@ -1,30 +1,29 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 
-import {ModalId, ScreenId} from '../../../../models/ui';
+import { ModalId, ScreenId } from '../../../../models/ui';
 
-import {DEFAULT_GAMEPLAY_UI} from '../../../../consts/gameplay-ui.const';
-import {DEFAULT_CAMERA} from '../../../../consts/camera.const';
-import {DEFAULT_MAP} from '../../../../consts/map.const';
+import { DEFAULT_GAMEPLAY_UI } from '../../../../consts/gameplay-ui.const';
+import { DEFAULT_CAMERA } from '../../../../consts/camera.const';
+import { DEFAULT_MAP } from '../../../../consts/map.const';
 
-import {UiStore} from '../../../../stores/ui.store';
-import {MapStore} from '../../../../stores/map.store';
-import {CameraStore} from '../../../../stores/camera.store';
-import {GameplayUiStore} from '../../../../stores/gameplay-ui.store';
+import { UiStore } from '../../../../stores/ui.store';
+import { MapStore } from '../../../../stores/map.store';
+import { CameraStore } from '../../../../stores/camera.store';
+import { GameplayUiStore } from '../../../../stores/gameplay-ui.store';
 
 @Component({
   standalone: false,
   selector: '.in-game-menu-component',
   templateUrl: './in-game-menu.component.html',
   styleUrls: ['./in-game-menu.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class InGameMenuComponent {
-
   constructor(
     private uiStore: UiStore,
     private gameplayUiStore: GameplayUiStore,
     private cameraStore: CameraStore,
-    private mapStore: MapStore,
+    private mapStore: MapStore
   ) {}
 
   onReturnToGameClick(): void {
@@ -54,5 +53,4 @@ export class InGameMenuComponent {
   onExitToGoogleClick(): void {
     this.uiStore.openModal(ModalId.EXIT_GAME_CONFIRMATION);
   }
-
 }

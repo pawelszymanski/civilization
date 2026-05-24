@@ -1,12 +1,10 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
-import {CivicIdWithEraCoords, TechnologyIdWithEraCoords} from '../models/research-tree';
+import { CivicIdWithEraCoords, TechnologyIdWithEraCoords } from '../models/research-tree';
 
-@Pipe({standalone: false, name: 'researchItemElemClass'})
+@Pipe({ standalone: false, name: 'researchItemElemClass' })
 export class ResearchItemElemClassPipe implements PipeTransform {
-
   transform(research: TechnologyIdWithEraCoords | CivicIdWithEraCoords): string {
     return `m-offset-${research.eraCoords.x}-${research.eraCoords.y}`;
   }
-
 }

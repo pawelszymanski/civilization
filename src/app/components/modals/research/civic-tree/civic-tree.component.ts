@@ -1,32 +1,28 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 
-import {Ui} from '../../../../models/ui';
+import { Ui } from '../../../../models/ui';
 
-import {CIVIC_TREE} from '../../../../consts/civic-tree.const';
-import {CIVIC_SET} from '../../../../consts/civics.const';
+import { CIVIC_TREE } from '../../../../consts/civic-tree.const';
+import { CIVIC_SET } from '../../../../consts/civics.const';
 
-import {UiStore} from '../../../../stores/ui.store';
+import { UiStore } from '../../../../stores/ui.store';
 
 @Component({
   standalone: false,
   selector: '.civic-tree-component',
   templateUrl: './civic-tree.component.html',
   styleUrls: ['./civic-tree.component.scss', '../research-tree-modal.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class CivicTreeComponent {
-
   CIVIC_TREE = CIVIC_TREE;
   CIVIC_SET = CIVIC_SET;
 
   ui: Ui;
 
-  constructor(
-    private uiStore: UiStore
-  ) {}
+  constructor(private uiStore: UiStore) {}
 
   onCloseButtonClick(): void {
     this.uiStore.closeModal();
   }
-
 }

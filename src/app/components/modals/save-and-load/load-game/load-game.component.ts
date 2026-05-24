@@ -1,29 +1,28 @@
-import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
-import {Subscription} from 'rxjs';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
-import {SaveHeader, SaveSortOrderId} from '../../../../models/saves';
-import {Uuid} from '../../../../models/utils';
-import {ModalId, ScreenId} from '../../../../models/ui';
+import { SaveHeader, SaveSortOrderId } from '../../../../models/saves';
+import { Uuid } from '../../../../models/utils';
+import { ModalId, ScreenId } from '../../../../models/ui';
 
-import {GeneratorService} from '../../../../services/generator.service';
-import {SaveService} from '../../../../services/save.service';
+import { GeneratorService } from '../../../../services/generator.service';
+import { SaveService } from '../../../../services/save.service';
 
-import {CameraStore} from '../../../../stores/camera.store';
-import {MapStore} from '../../../../stores/map.store';
-import {GameplayUiStore} from '../../../../stores/gameplay-ui.store';
-import {SaveHeadersStore} from '../../../../stores/save-headers.store';
-import {UiStore} from '../../../../stores/ui.store';
+import { CameraStore } from '../../../../stores/camera.store';
+import { MapStore } from '../../../../stores/map.store';
+import { GameplayUiStore } from '../../../../stores/gameplay-ui.store';
+import { SaveHeadersStore } from '../../../../stores/save-headers.store';
+import { UiStore } from '../../../../stores/ui.store';
 
 @Component({
   standalone: false,
   selector: '.load-game-component',
   templateUrl: './load-game.component.html',
   styleUrls: ['./load-game.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class LoadGameComponent implements OnInit, OnDestroy {
-
   SaveSortOrderId = SaveSortOrderId;
 
   saveHeaders: SaveHeader[] = [];
@@ -32,7 +31,7 @@ export class LoadGameComponent implements OnInit, OnDestroy {
 
   saveHeaderListOptionsForm = new FormGroup({
     showAutosaves: new FormControl(false),
-    sortOrder: new FormControl(SaveSortOrderId.NAME_ASCENDING)
+    sortOrder: new FormControl(SaveSortOrderId.NAME_ASCENDING),
   });
 
   subscriptions: Subscription[] = [];
@@ -85,16 +84,16 @@ export class LoadGameComponent implements OnInit, OnDestroy {
     }
 
     if (options.sortOrder === SaveSortOrderId.DATE_ASCENDING) {
-      return result.sort((a, b) => a.timestamp > b.timestamp ? 1 : -1);
+      return result.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1));
     }
     if (options.sortOrder === SaveSortOrderId.DATE_DESCENDING) {
-      return result.sort((a, b) => a.timestamp < b.timestamp ? 1 : -1);
+      return result.sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1));
     }
     if (options.sortOrder === SaveSortOrderId.NAME_ASCENDING) {
-      return result.sort((a, b) => a.name > b.name ? 1 : -1);
+      return result.sort((a, b) => (a.name > b.name ? 1 : -1));
     }
     if (options.sortOrder === SaveSortOrderId.NAME_DESCENDING) {
-      return result.sort((a, b) => a.name < b.name ? 1 : -1);
+      return result.sort((a, b) => (a.name < b.name ? 1 : -1));
     }
   }
 
@@ -120,13 +119,17 @@ export class LoadGameComponent implements OnInit, OnDestroy {
   }
 
   onDeleteClick(): void {
-    if (!this.selectedSaveHeader) { return; }
+    if (!this.selectedSaveHeader) {
+      return;
+    }
     this.saveService.delete(this.selectedSaveUuid);
     this.selectedSaveUuid = undefined;
   }
 
   onLoadGameClick(): void {
-    if (!this.selectedSaveHeader) { return; }
+    if (!this.selectedSaveHeader) {
+      return;
+    }
     this.loadSelectedAndUpdateUi();
   }
 
@@ -136,7 +139,6 @@ export class LoadGameComponent implements OnInit, OnDestroy {
     this.uiStore.toggleModal(ModalId.LOAD_GAME);
     this.uiStore.setScreen(ScreenId.GAMEPLAY);
   }
-
 }
 
 // ngOnInit() {

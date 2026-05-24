@@ -67,7 +67,7 @@ export enum TechnologyId {
   STEALTH_TECHNOLOGY,
   ROBOTICS,
   NUCLEAR_FUSION,
-  NANOTECHNOLOGY
+  NANOTECHNOLOGY,
 }
 
 export interface Technology {

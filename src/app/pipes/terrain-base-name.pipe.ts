@@ -1,10 +1,9 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
-import {TerrainBaseId} from '../models/terrain';
+import { TerrainBaseId } from '../models/terrain';
 
-@Pipe({standalone: false, name: 'terrainBaseName'})
+@Pipe({ standalone: false, name: 'terrainBaseName' })
 export class TerrainBaseNamePipe implements PipeTransform {
-
   transform(terrainBaseId: TerrainBaseId): string {
     return TerrainBaseId[terrainBaseId]
       .toLowerCase()
@@ -12,5 +11,4 @@ export class TerrainBaseNamePipe implements PipeTransform {
       .replace('_hills', ' (hills)')
       .replace('_mountain', ' (mountain)');
   }
-
 }

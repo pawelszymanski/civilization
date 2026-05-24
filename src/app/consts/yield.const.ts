@@ -1,4 +1,4 @@
-import {YieldId} from '../models/yield';
+import { YieldId } from '../models/yield';
 
 export const YIELD_IDS_IN_ORDER = [
   YieldId.FOOD,
@@ -8,7 +8,7 @@ export const YIELD_IDS_IN_ORDER = [
   YieldId.CULTURE,
   YieldId.FAITH,
   YieldId.POWER,
-  YieldId.TOURISM
+  YieldId.TOURISM,
 ];
 
 export const YIELD_ID_TO_ICON_CLASS_MAP = {
@@ -19,5 +19,5 @@ export const YIELD_ID_TO_ICON_CLASS_MAP = {
   [YieldId.CULTURE]: 'fa-music',
   [YieldId.FAITH]: 'fa-fire',
   [YieldId.POWER]: 'fa-bolt',
-  [YieldId.TOURISM]: 'fa-suitcase'
+  [YieldId.TOURISM]: 'fa-suitcase',
 };

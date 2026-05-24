@@ -4,18 +4,19 @@ import {
   Component,
   ElementRef,
   NgZone,
-  OnDestroy, OnInit,
+  OnDestroy,
+  OnInit,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
-import {interval, Subscription} from 'rxjs';
+import { interval, Subscription } from 'rxjs';
 
-import {PerformanceMeterModeId} from '../../../../../models/performance-meter';
-import {Millisecond} from '../../../../../models/utils';
+import { PerformanceMeterModeId } from '../../../../../models/performance-meter';
+import { Millisecond } from '../../../../../models/utils';
 
-import {CANVAS, CHART, MAX_VALUES, PERFORMANCE_MODE_TO_RANGE_MAP} from '../../../../../consts/performance-meter.const';
+import { CANVAS, CHART, MAX_VALUES, PERFORMANCE_MODE_TO_RANGE_MAP } from '../../../../../consts/performance-meter.const';
 
-import {GeneratorService} from '../../../../../services/generator.service';
+import { GeneratorService } from '../../../../../services/generator.service';
 
 @Component({
   standalone: false,
@@ -23,10 +24,9 @@ import {GeneratorService} from '../../../../../services/generator.service';
   templateUrl: './performance-chart.component.html',
   styleUrls: ['./performance-chart.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PerformanceChartComponent implements OnInit, OnDestroy {
-
   readonly AVERAGE_VALUE_INTERVAL = 500;
 
   @ViewChild('canvas', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
@@ -50,7 +50,7 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
   constructor(
     private ngZone: NgZone,
     private cdr: ChangeDetectorRef,
-    private generatorService: GeneratorService,
+    private generatorService: GeneratorService
   ) {}
 
   ngOnInit(): void {
@@ -77,9 +77,7 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
   }
 
   initAverageValuesCalculations(): void {
-    this.subscriptions.push(
-      interval(this.AVERAGE_VALUE_INTERVAL).subscribe(() => this.updateAverageValues())
-    );
+    this.subscriptions.push(interval(this.AVERAGE_VALUE_INTERVAL).subscribe(() => this.updateAverageValues()));
   }
 
   unsubscribeFromData(): void {
@@ -122,7 +120,9 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
   }
 
   trimMeterData(): void {
-    if (this.recordedValues.length > MAX_VALUES) { this.recordedValues.shift(); }
+    if (this.recordedValues.length > MAX_VALUES) {
+      this.recordedValues.shift();
+    }
   }
 
   drawChart(): void {
@@ -142,12 +142,12 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
     this.ctx.strokeStyle = CANVAS.LEGEND_STROKE_STYLE;
 
     this.ctx.beginPath();
-    this.ctx.moveTo(0, CANVAS.HEIGHT * 0.25 + .5);
-    this.ctx.lineTo(CANVAS.WIDTH, CANVAS.HEIGHT * 0.25 + .5);
-    this.ctx.moveTo(0, CANVAS.HEIGHT * 0.50 + .5);
-    this.ctx.lineTo(CANVAS.WIDTH, CANVAS.HEIGHT * 0.50 + .5);
-    this.ctx.moveTo(0, CANVAS.HEIGHT * 0.75 + .5);
-    this.ctx.lineTo(CANVAS.WIDTH, CANVAS.HEIGHT * 0.75 + .5);
+    this.ctx.moveTo(0, CANVAS.HEIGHT * 0.25 + 0.5);
+    this.ctx.lineTo(CANVAS.WIDTH, CANVAS.HEIGHT * 0.25 + 0.5);
+    this.ctx.moveTo(0, CANVAS.HEIGHT * 0.5 + 0.5);
+    this.ctx.lineTo(CANVAS.WIDTH, CANVAS.HEIGHT * 0.5 + 0.5);
+    this.ctx.moveTo(0, CANVAS.HEIGHT * 0.75 + 0.5);
+    this.ctx.lineTo(CANVAS.WIDTH, CANVAS.HEIGHT * 0.75 + 0.5);
     this.ctx.stroke();
 
     this.ctx.font = CANVAS.LEGEND_FONT;
@@ -155,7 +155,7 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
 
     this.ctx.fillText(range.toString(), 3, 12);
     this.ctx.fillText((range * 0.75).toString(), 3, CANVAS.HEIGHT * 0.25 + 12);
-    this.ctx.fillText((range * 0.50).toString(), 3, CANVAS.HEIGHT * 0.50 + 12);
+    this.ctx.fillText((range * 0.5).toString(), 3, CANVAS.HEIGHT * 0.5 + 12);
     this.ctx.fillText((range * 0.25).toString(), 3, CANVAS.HEIGHT * 0.75 + 12);
   }
 
@@ -167,7 +167,7 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
     this.ctx.fillStyle = CANVAS.DATA_FILL_STYLE;
 
     this.recordedValues.forEach((value, i) => {
-      const barHeight = value / range * CANVAS.HEIGHT;
+      const barHeight = (value / range) * CANVAS.HEIGHT;
       const x1 = i * CHART.WIDTH_TO_RESULTS_RATIO + dataDeficitHorizontalCompensation;
       const y1 = CANVAS.HEIGHT - barHeight;
       this.ctx.fillRect(x1, y1, CHART.WIDTH_TO_RESULTS_RATIO - 1, barHeight);
@@ -189,5 +189,4 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
         break;
     }
   }
-
 }

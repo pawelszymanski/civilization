@@ -1,31 +1,32 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import {Coords} from '../models/utils';
-import {Size} from '../models/size';
+import { Coords } from '../models/utils';
+import { Size } from '../models/size';
 
-import {CAMERA_MAX_EMPTY_WINDOW_SPACE_PC, CAMERA_MAX_ZOOM_LEVEL, CAMERA_MIN_ZOOM_LEVEL} from '../consts/camera.const';
+import { CAMERA_MAX_EMPTY_WINDOW_SPACE_PC, CAMERA_MAX_ZOOM_LEVEL, CAMERA_MIN_ZOOM_LEVEL } from '../consts/camera.const';
 
-import {SizeStore} from '../stores/size.store';
+import { SizeStore } from '../stores/size.store';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class CameraService {
-
   size: Size;
 
-  constructor(
-    private sizeStore: SizeStore,
-  ) {
+  constructor(private sizeStore: SizeStore) {
     this.subscribeToData();
   }
 
   private subscribeToData(): void {
-    this.sizeStore.size.subscribe(size => this.size = size);
+    this.sizeStore.size.subscribe(size => (this.size = size));
   }
 
   // Keep zoomLevel in between min and max
   public normalizeZoomLevel(zoomLevel: number): number {
-    if (zoomLevel > CAMERA_MAX_ZOOM_LEVEL) { zoomLevel = CAMERA_MAX_ZOOM_LEVEL; }
-    if (zoomLevel < CAMERA_MIN_ZOOM_LEVEL) { zoomLevel = CAMERA_MIN_ZOOM_LEVEL; }
+    if (zoomLevel > CAMERA_MAX_ZOOM_LEVEL) {
+      zoomLevel = CAMERA_MAX_ZOOM_LEVEL;
+    }
+    if (zoomLevel < CAMERA_MIN_ZOOM_LEVEL) {
+      zoomLevel = CAMERA_MIN_ZOOM_LEVEL;
+    }
     return zoomLevel;
   }
 
@@ -41,15 +42,18 @@ export class CameraService {
       return translate;
     } else {
       // move map up if there is too much space above the map
-      const maxEmptySpace = Math.floor(this.size.screen.height * CAMERA_MAX_EMPTY_WINDOW_SPACE_PC / 100);
-      if (translate.y > maxEmptySpace) { translate.y = maxEmptySpace; }
+      const maxEmptySpace = Math.floor((this.size.screen.height * CAMERA_MAX_EMPTY_WINDOW_SPACE_PC) / 100);
+      if (translate.y > maxEmptySpace) {
+        translate.y = maxEmptySpace;
+      }
 
       // move map down if there is too much space under the map
       const minTranslate = -(this.size.map.height - this.size.screen.height + maxEmptySpace);
-      if (minTranslate > translate.y) { translate.y = minTranslate; }
+      if (minTranslate > translate.y) {
+        translate.y = minTranslate;
+      }
 
       return translate;
     }
   }
-
 }

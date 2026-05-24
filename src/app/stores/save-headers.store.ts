@@ -1,15 +1,14 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 
-import {SaveHeader} from '../models/saves';
+import { SaveHeader } from '../models/saves';
 
-import {LocalStorageService} from '../services/local-storage.service';
-import {TileYieldService} from '../services/tile-yield.service';
-import {ZipService} from '../services/zip.service';
+import { LocalStorageService } from '../services/local-storage.service';
+import { TileYieldService } from '../services/tile-yield.service';
+import { ZipService } from '../services/zip.service';
 
 @Injectable()
 export class SaveHeadersStore {
-
   private readonly LOCAL_STORAGE_SAVE_HEADERS_KEY = 'Saves';
 
   // tslint:disable-next-line:variable-name
@@ -20,7 +19,7 @@ export class SaveHeadersStore {
   constructor(
     private localStorageService: LocalStorageService,
     private tileYieldService: TileYieldService,
-    private zipService: ZipService,
+    private zipService: ZipService
   ) {
     this.getLocalSaveHeaders();
   }
@@ -51,5 +50,4 @@ export class SaveHeadersStore {
     this._saveHeaders.next(this._saveHeaders.value.filter(save => save.uuid !== saveUuid));
     this.persistSaveHeaders();
   }
-
 }

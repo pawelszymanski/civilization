@@ -1,5 +1,5 @@
-import {Yield} from '../models/yield';
-import {OffMapResourceId} from '../models/terrain';
+import { Yield } from '../models/yield';
+import { OffMapResourceId } from '../models/terrain';
 
 interface OffMapResource {
   name: string;
@@ -13,26 +13,26 @@ type OffMapResourceDb = {
 export const OFF_MAP_RESOURCE_DB: OffMapResourceDb = {
   [OffMapResourceId.CINNAMON]: {
     name: 'Cinnamon',
-    yield: {}
+    yield: {},
   },
   [OffMapResourceId.CLOVES]: {
     name: 'Cloves',
-    yield: {}
+    yield: {},
   },
   [OffMapResourceId.COSMETICS]: {
     name: 'Cosmetics',
-    yield: {}
+    yield: {},
   },
   [OffMapResourceId.JEANS]: {
     name: 'Jeans',
-    yield: {}
+    yield: {},
   },
   [OffMapResourceId.PERFUME]: {
     name: 'Perfume',
-    yield: {}
+    yield: {},
   },
   [OffMapResourceId.TOYS]: {
     name: 'Toys',
-    yield: {}
-  }
+    yield: {},
+  },
 };

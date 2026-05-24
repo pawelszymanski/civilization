@@ -1,4 +1,4 @@
-import {Technology, TechnologyId} from '../models/technologies';
+import { Technology, TechnologyId } from '../models/technologies';
 
 type TechnologySet = {
   [key in TechnologyId]: Technology;
@@ -12,8 +12,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [],
     ui: {
       name: 'Pottery',
-      class: 'm-pottery'
-    }
+      class: 'm-pottery',
+    },
   },
   [TechnologyId.ANIMAL_HUSBANDRY]: {
     id: TechnologyId.ANIMAL_HUSBANDRY,
@@ -21,8 +21,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [],
     ui: {
       name: 'Animal husbandry',
-      class: 'm-animal-husbandry'
-    }
+      class: 'm-animal-husbandry',
+    },
   },
   [TechnologyId.MINING]: {
     id: TechnologyId.MINING,
@@ -30,9 +30,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [],
     ui: {
       name: 'Mining',
-      class: 'm-mining'
-    }
-
+      class: 'm-mining',
+    },
   },
   [TechnologyId.SAILING]: {
     id: TechnologyId.SAILING,
@@ -40,8 +39,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [],
     ui: {
       name: 'Sailing',
-      class: 'm-sailing'
-    }
+      class: 'm-sailing',
+    },
   },
   [TechnologyId.ASTROLOGY]: {
     id: TechnologyId.ASTROLOGY,
@@ -49,8 +48,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [],
     ui: {
       name: 'Astrology',
-      class: 'm-astrology'
-    }
+      class: 'm-astrology',
+    },
   },
   [TechnologyId.IRRIGATION]: {
     id: TechnologyId.IRRIGATION,
@@ -58,8 +57,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.POTTERY],
     ui: {
       name: 'Irrigation',
-      class: 'm-irrigation'
-    }
+      class: 'm-irrigation',
+    },
   },
   [TechnologyId.WRITING]: {
     id: TechnologyId.WRITING,
@@ -67,8 +66,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.POTTERY],
     ui: {
       name: 'Writing',
-      class: 'm-writing'
-    }
+      class: 'm-writing',
+    },
   },
   [TechnologyId.ARCHERY]: {
     id: TechnologyId.ARCHERY,
@@ -76,8 +75,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.ANIMAL_HUSBANDRY],
     ui: {
       name: 'Archery',
-      class: 'm-archery'
-    }
+      class: 'm-archery',
+    },
   },
   [TechnologyId.MASONRY]: {
     id: TechnologyId.MASONRY,
@@ -85,8 +84,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.MINING],
     ui: {
       name: 'Masonry',
-      class: 'm-masonry'
-    }
+      class: 'm-masonry',
+    },
   },
   [TechnologyId.BRONZE_WORKING]: {
     id: TechnologyId.BRONZE_WORKING,
@@ -94,8 +93,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.MINING],
     ui: {
       name: 'Bronze working',
-      class: 'm-bronze-working'
-    }
+      class: 'm-bronze-working',
+    },
   },
   [TechnologyId.WHEEL]: {
     id: TechnologyId.WHEEL,
@@ -103,8 +102,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.MINING],
     ui: {
       name: 'Wheel',
-      class: 'm-wheel'
-    }
+      class: 'm-wheel',
+    },
   },
 
   // CLASSICAL ERA
@@ -114,8 +113,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.SAILING, TechnologyId.ASTROLOGY],
     ui: {
       name: 'Celestial navigation',
-      class: 'm-celestial-navigation'
-    }
+      class: 'm-celestial-navigation',
+    },
   },
   [TechnologyId.CURRENCY]: {
     id: TechnologyId.CURRENCY,
@@ -123,8 +122,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.WRITING],
     ui: {
       name: 'Currency',
-      class: 'm-currency'
-    }
+      class: 'm-currency',
+    },
   },
   [TechnologyId.HORSEBACK_RIDING]: {
     id: TechnologyId.HORSEBACK_RIDING,
@@ -132,8 +131,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.ARCHERY],
     ui: {
       name: 'Horseback riding',
-      class: 'm-horseback-riding'
-    }
+      class: 'm-horseback-riding',
+    },
   },
   [TechnologyId.IRON_WORKING]: {
     id: TechnologyId.IRON_WORKING,
@@ -141,8 +140,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.BRONZE_WORKING],
     ui: {
       name: 'Iron working',
-      class: 'm-iron-working'
-    }
+      class: 'm-iron-working',
+    },
   },
   [TechnologyId.SHIPBUILDING]: {
     id: TechnologyId.SHIPBUILDING,
@@ -150,8 +149,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.SAILING],
     ui: {
       name: 'Shipbuilding',
-      class: 'm-shipbuilding'
-    }
+      class: 'm-shipbuilding',
+    },
   },
   [TechnologyId.MATHEMATICS]: {
     id: TechnologyId.MATHEMATICS,
@@ -159,8 +158,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.CURRENCY],
     ui: {
       name: 'Mathematics',
-      class: 'm-mathematics'
-    }
+      class: 'm-mathematics',
+    },
   },
   [TechnologyId.CONSTRUCTION]: {
     id: TechnologyId.CONSTRUCTION,
@@ -168,8 +167,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.MASONRY, TechnologyId.HORSEBACK_RIDING],
     ui: {
       name: 'Construction',
-      class: 'm-construction'
-    }
+      class: 'm-construction',
+    },
   },
   [TechnologyId.ENGINEERING]: {
     id: TechnologyId.ENGINEERING,
@@ -177,8 +176,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.WHEEL],
     ui: {
       name: 'Engineering',
-      class: 'm-engineering'
-    }
+      class: 'm-engineering',
+    },
   },
 
   // MEDIEVAL ERA
@@ -188,8 +187,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.SHIPBUILDING, TechnologyId.MATHEMATICS],
     ui: {
       name: 'Buttress',
-      class: 'm-buttress'
-    }
+      class: 'm-buttress',
+    },
   },
   [TechnologyId.MILITARY_TACTICS]: {
     id: TechnologyId.MILITARY_TACTICS,
@@ -197,8 +196,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.MATHEMATICS],
     ui: {
       name: 'Military tactics',
-      class: 'm-military-tactics'
-    }
+      class: 'm-military-tactics',
+    },
   },
   [TechnologyId.APPRENTICESHIP]: {
     id: TechnologyId.APPRENTICESHIP,
@@ -206,8 +205,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.CURRENCY, TechnologyId.HORSEBACK_RIDING],
     ui: {
       name: 'Apprenticeship',
-      class: 'm-apprenticeship'
-    }
+      class: 'm-apprenticeship',
+    },
   },
   [TechnologyId.MACHINERY]: {
     id: TechnologyId.MACHINERY,
@@ -215,8 +214,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.IRON_WORKING, TechnologyId.ENGINEERING],
     ui: {
       name: 'Machinery',
-      class: 'm-machinery'
-    }
+      class: 'm-machinery',
+    },
   },
   [TechnologyId.EDUCATION]: {
     id: TechnologyId.EDUCATION,
@@ -224,8 +223,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.MATHEMATICS, TechnologyId.APPRENTICESHIP],
     ui: {
       name: 'Education',
-      class: 'm-education'
-    }
+      class: 'm-education',
+    },
   },
   [TechnologyId.STIRRUPS]: {
     id: TechnologyId.STIRRUPS,
@@ -233,8 +232,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.HORSEBACK_RIDING],
     ui: {
       name: 'Stirrups',
-      class: 'm-stirrups'
-    }
+      class: 'm-stirrups',
+    },
   },
   [TechnologyId.MILITARY_ENGINEERING]: {
     id: TechnologyId.MILITARY_ENGINEERING,
@@ -242,8 +241,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.CONSTRUCTION],
     ui: {
       name: 'Military engineering',
-      class: 'm-military-engineering'
-    }
+      class: 'm-military-engineering',
+    },
   },
   [TechnologyId.CASTLES]: {
     id: TechnologyId.CASTLES,
@@ -251,8 +250,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.CONSTRUCTION],
     ui: {
       name: 'Castles',
-      class: 'm-castles'
-    }
+      class: 'm-castles',
+    },
   },
 
   // RENAISSANCE ERA
@@ -262,8 +261,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.SHIPBUILDING],
     ui: {
       name: 'Cartography',
-      class: 'm-cartography'
-    }
+      class: 'm-cartography',
+    },
   },
   [TechnologyId.MASS_PRODUCTION]: {
     id: TechnologyId.MASS_PRODUCTION,
@@ -271,8 +270,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.SHIPBUILDING, TechnologyId.EDUCATION],
     ui: {
       name: 'Mass production',
-      class: 'm-mass-production'
-    }
+      class: 'm-mass-production',
+    },
   },
   [TechnologyId.BANKING]: {
     id: TechnologyId.BANKING,
@@ -280,8 +279,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.APPRENTICESHIP, TechnologyId.EDUCATION, TechnologyId.STIRRUPS],
     ui: {
       name: 'Banking',
-      class: 'm-banking'
-    }
+      class: 'm-banking',
+    },
   },
   [TechnologyId.GUNPOWDER]: {
     id: TechnologyId.GUNPOWDER,
@@ -289,8 +288,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.APPRENTICESHIP, TechnologyId.STIRRUPS, TechnologyId.MILITARY_ENGINEERING],
     ui: {
       name: 'Gunpowder',
-      class: 'm-gunpowder'
-    }
+      class: 'm-gunpowder',
+    },
   },
   [TechnologyId.PRINTING]: {
     id: TechnologyId.PRINTING,
@@ -298,8 +297,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.MACHINERY],
     ui: {
       name: 'Printing',
-      class: 'm-printing'
-    }
+      class: 'm-printing',
+    },
   },
   [TechnologyId.SQUARE_RIGGING]: {
     id: TechnologyId.SQUARE_RIGGING,
@@ -307,8 +306,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.CARTOGRAPHY],
     ui: {
       name: 'Square rigging',
-      class: 'm-square-rigging'
-    }
+      class: 'm-square-rigging',
+    },
   },
   [TechnologyId.ASTRONOMY]: {
     id: TechnologyId.ASTRONOMY,
@@ -316,8 +315,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.EDUCATION],
     ui: {
       name: 'Astronomy',
-      class: 'm-astronomy'
-    }
+      class: 'm-astronomy',
+    },
   },
   [TechnologyId.METAL_CASTING]: {
     id: TechnologyId.METAL_CASTING,
@@ -325,8 +324,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.GUNPOWDER],
     ui: {
       name: 'Metal casting',
-      class: 'm-metal-casting'
-    }
+      class: 'm-metal-casting',
+    },
   },
   [TechnologyId.SIEGE_TACTICS]: {
     id: TechnologyId.SIEGE_TACTICS,
@@ -334,8 +333,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.CASTLES],
     ui: {
       name: 'Siege tactics',
-      class: 'm-siege-tactics'
-    }
+      class: 'm-siege-tactics',
+    },
   },
 
   // INDUSTRIAL ERA
@@ -345,8 +344,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.MASS_PRODUCTION, TechnologyId.SQUARE_RIGGING],
     ui: {
       name: 'Industrialization',
-      class: 'm-industrialization'
-    }
+      class: 'm-industrialization',
+    },
   },
   [TechnologyId.SCIENTIFIC_THEORY]: {
     id: TechnologyId.SCIENTIFIC_THEORY,
@@ -354,8 +353,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.ASTRONOMY, TechnologyId.BANKING],
     ui: {
       name: 'Scientific theory',
-      class: 'm-scientific-theory'
-    }
+      class: 'm-scientific-theory',
+    },
   },
   [TechnologyId.BALLISTICS]: {
     id: TechnologyId.BALLISTICS,
@@ -363,8 +362,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.METAL_CASTING],
     ui: {
       name: 'Ballistics',
-      class: 'm-ballistics'
-    }
+      class: 'm-ballistics',
+    },
   },
   [TechnologyId.MILITARY_SCIENCE]: {
     id: TechnologyId.MILITARY_SCIENCE,
@@ -372,8 +371,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.PRINTING, TechnologyId.SIEGE_TACTICS],
     ui: {
       name: 'Military science',
-      class: 'm-military-science'
-    }
+      class: 'm-military-science',
+    },
   },
   [TechnologyId.STEAM_POWER]: {
     id: TechnologyId.STEAM_POWER,
@@ -381,8 +380,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.SQUARE_RIGGING, TechnologyId.INDUSTRIALIZATION],
     ui: {
       name: 'Steam power',
-      class: 'm-steam-power'
-    }
+      class: 'm-steam-power',
+    },
   },
   [TechnologyId.SANITATION]: {
     id: TechnologyId.SANITATION,
@@ -390,8 +389,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.SCIENTIFIC_THEORY],
     ui: {
       name: 'Sanitation',
-      class: 'm-sanitation'
-    }
+      class: 'm-sanitation',
+    },
   },
   [TechnologyId.ECONOMICS]: {
     id: TechnologyId.ECONOMICS,
@@ -399,8 +398,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.METAL_CASTING, TechnologyId.SCIENTIFIC_THEORY],
     ui: {
       name: 'Economics',
-      class: 'm-economics'
-    }
+      class: 'm-economics',
+    },
   },
   [TechnologyId.RIFLING]: {
     id: TechnologyId.RIFLING,
@@ -408,8 +407,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.BALLISTICS, TechnologyId.MILITARY_SCIENCE],
     ui: {
       name: 'Rifling',
-      class: 'm-rifling'
-    }
+      class: 'm-rifling',
+    },
   },
 
   // MODERN ERA
@@ -419,8 +418,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.INDUSTRIALIZATION, TechnologyId.SCIENTIFIC_THEORY],
     ui: {
       name: 'Flight',
-      class: 'm-flight'
-    }
+      class: 'm-flight',
+    },
   },
   [TechnologyId.REPLACEABLE_PARTS]: {
     id: TechnologyId.REPLACEABLE_PARTS,
@@ -428,8 +427,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.ECONOMICS],
     ui: {
       name: 'Replaceable parts',
-      class: 'm-replaceable-parts'
-    }
+      class: 'm-replaceable-parts',
+    },
   },
   [TechnologyId.STEEL]: {
     id: TechnologyId.STEEL,
@@ -437,8 +436,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.RIFLING],
     ui: {
       name: 'Steel',
-      class: 'm-steel'
-    }
+      class: 'm-steel',
+    },
   },
   [TechnologyId.REFINING]: {
     id: TechnologyId.REFINING,
@@ -446,8 +445,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.RIFLING],
     ui: {
       name: 'Refining',
-      class: 'm-refining'
-    }
+      class: 'm-refining',
+    },
   },
   [TechnologyId.ELECTRICITY]: {
     id: TechnologyId.ELECTRICITY,
@@ -455,8 +454,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.STEAM_POWER],
     ui: {
       name: 'Electricity',
-      class: 'm-electricity'
-    }
+      class: 'm-electricity',
+    },
   },
   [TechnologyId.RADIO]: {
     id: TechnologyId.RADIO,
@@ -464,8 +463,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.STEAM_POWER, TechnologyId.FLIGHT],
     ui: {
       name: 'Radio',
-      class: 'm-radio'
-    }
+      class: 'm-radio',
+    },
   },
   [TechnologyId.CHEMISTRY]: {
     id: TechnologyId.CHEMISTRY,
@@ -473,8 +472,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.SANITATION],
     ui: {
       name: 'Chemistry',
-      class: 'm-chemistry'
-    }
+      class: 'm-chemistry',
+    },
   },
   [TechnologyId.COMBUSTION]: {
     id: TechnologyId.COMBUSTION,
@@ -482,8 +481,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.STEEL, TechnologyId.REFINING],
     ui: {
       name: 'Combustion',
-      class: 'm-combustion'
-    }
+      class: 'm-combustion',
+    },
   },
 
   // ATOMIC ERA
@@ -493,8 +492,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.RADIO],
     ui: {
       name: 'Advanced flight',
-      class: 'm-advanced-flight'
-    }
+      class: 'm-advanced-flight',
+    },
   },
   [TechnologyId.ROCKETRY]: {
     id: TechnologyId.ROCKETRY,
@@ -502,8 +501,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.RADIO, TechnologyId.CHEMISTRY],
     ui: {
       name: 'Rocketry',
-      class: 'm-rocketry'
-    }
+      class: 'm-rocketry',
+    },
   },
   [TechnologyId.ADVANCED_BALLISTICS]: {
     id: TechnologyId.ADVANCED_BALLISTICS,
@@ -511,8 +510,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.REPLACEABLE_PARTS, TechnologyId.STEEL],
     ui: {
       name: 'Advanced ballistics',
-      class: 'm-advanced-ballistics'
-    }
+      class: 'm-advanced-ballistics',
+    },
   },
   [TechnologyId.COMBINED_ARMS]: {
     id: TechnologyId.COMBINED_ARMS,
@@ -520,8 +519,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.STEEL],
     ui: {
       name: 'Combined arms',
-      class: 'm-combined-arms'
-    }
+      class: 'm-combined-arms',
+    },
   },
   [TechnologyId.PLASTICS]: {
     id: TechnologyId.PLASTICS,
@@ -529,8 +528,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.COMBUSTION],
     ui: {
       name: 'Plastics',
-      class: 'm-plastics'
-    }
+      class: 'm-plastics',
+    },
   },
   [TechnologyId.COMPUTERS]: {
     id: TechnologyId.COMPUTERS,
@@ -538,8 +537,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.ELECTRICITY, TechnologyId.RADIO],
     ui: {
       name: 'Computers',
-      class: 'm-computers'
-    }
+      class: 'm-computers',
+    },
   },
   [TechnologyId.NUCLEAR_FISSION]: {
     id: TechnologyId.NUCLEAR_FISSION,
@@ -547,8 +546,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.ADVANCED_BALLISTICS, TechnologyId.COMBINED_ARMS],
     ui: {
       name: 'Nuclear fission',
-      class: 'm-nuclear-fission'
-    }
+      class: 'm-nuclear-fission',
+    },
   },
   [TechnologyId.SYNTHETIC_MATERIALS]: {
     id: TechnologyId.SYNTHETIC_MATERIALS,
@@ -556,8 +555,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.PLASTICS],
     ui: {
       name: 'Synthetic materials',
-      class: 'm-synthetic-materials'
-    }
+      class: 'm-synthetic-materials',
+    },
   },
 
   // INFORMATION ERA
@@ -567,8 +566,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.COMPUTERS],
     ui: {
       name: 'Telecommunications',
-      class: 'm-telecommunications'
-    }
+      class: 'm-telecommunications',
+    },
   },
   [TechnologyId.SATELLITES]: {
     id: TechnologyId.SATELLITES,
@@ -576,8 +575,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.ADVANCED_FLIGHT, TechnologyId.ROCKETRY],
     ui: {
       name: 'Satellites',
-      class: 'm-satellites'
-    }
+      class: 'm-satellites',
+    },
   },
   [TechnologyId.GUIDANCE_SYSTEMS]: {
     id: TechnologyId.GUIDANCE_SYSTEMS,
@@ -585,8 +584,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.ROCKETRY, TechnologyId.ADVANCED_BALLISTICS],
     ui: {
       name: 'Guidance systems',
-      class: 'm-guidance-systems'
-    }
+      class: 'm-guidance-systems',
+    },
   },
   [TechnologyId.LASERS]: {
     id: TechnologyId.LASERS,
@@ -594,8 +593,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.NUCLEAR_FISSION],
     ui: {
       name: 'Lasers',
-      class: 'm-lasers'
-    }
+      class: 'm-lasers',
+    },
   },
   [TechnologyId.COMPOSITES]: {
     id: TechnologyId.COMPOSITES,
@@ -603,8 +602,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.SYNTHETIC_MATERIALS],
     ui: {
       name: 'Composites',
-      class: 'm-composites'
-    }
+      class: 'm-composites',
+    },
   },
   [TechnologyId.STEALTH_TECHNOLOGY]: {
     id: TechnologyId.STEALTH_TECHNOLOGY,
@@ -612,8 +611,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.SYNTHETIC_MATERIALS],
     ui: {
       name: 'Stealth technology',
-      class: 'm-stealth-technology'
-    }
+      class: 'm-stealth-technology',
+    },
   },
   [TechnologyId.ROBOTICS]: {
     id: TechnologyId.ROBOTICS,
@@ -621,8 +620,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.COMPUTERS],
     ui: {
       name: 'Robotics',
-      class: 'm-robotics'
-    }
+      class: 'm-robotics',
+    },
   },
   [TechnologyId.NUCLEAR_FUSION]: {
     id: TechnologyId.NUCLEAR_FUSION,
@@ -630,8 +629,8 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.LASERS],
     ui: {
       name: 'Nuclear fusion',
-      class: 'm-nuclear-fusion'
-    }
+      class: 'm-nuclear-fusion',
+    },
   },
   [TechnologyId.NANOTECHNOLOGY]: {
     id: TechnologyId.NANOTECHNOLOGY,
@@ -639,7 +638,7 @@ export const TECHNOLOGY_SET: TechnologySet = {
     prerequisites: [TechnologyId.COMPOSITES],
     ui: {
       name: 'Nanotechnology',
-      class: 'm-nanotechnology'
-    }
-  }
+      class: 'm-nanotechnology',
+    },
+  },
 };

@@ -1,11 +1,10 @@
-import {Map, Tile} from '../models/map';
-import {Coords} from '../models/utils';
+import { Map, Tile } from '../models/map';
+import { Coords } from '../models/utils';
 
-import {MINIMAP_HEIGHT, MINIMAP_WIDTH, MINIMAP_BACKGROUND_STYLE, TERRAIN_BASE_TO_COLOR_MAP} from '../consts/minimap.const';
+import { MINIMAP_HEIGHT, MINIMAP_WIDTH, MINIMAP_BACKGROUND_STYLE, TERRAIN_BASE_TO_COLOR_MAP } from '../consts/minimap.const';
 
 // tslint:disable-next-line:new-parens no-unused-expression
-new class MinimapCanvasWorker {
-
+new (class MinimapCanvasWorker {
   // True: render perfect rectangle. False: Render map with top and bottom hexes fully displayed.
   readonly CUT_TOP_AND_BOTTOM_HEXES = true;
 
@@ -46,7 +45,7 @@ new class MinimapCanvasWorker {
 
     // * 3: rows overlap, so every tile takes 3/4 of it is height on the map
     // -1: is to not count very top and very bottom triangles (to keep output a rectangle). To include them use +1.
-    const heightFourths = (map.height * 3) + (this.CUT_TOP_AND_BOTTOM_HEXES ? -1 : 1);
+    const heightFourths = map.height * 3 + (this.CUT_TOP_AND_BOTTOM_HEXES ? -1 : 1);
     const oneFourth = this.ctx.canvas.height / heightFourths;
     const tileHeight = oneFourth * 4;
 
@@ -55,11 +54,11 @@ new class MinimapCanvasWorker {
 
   calcTileCoords(tile: Tile, tileSize: Coords): Coords {
     // Y need to address overlapping of the rows and cutting top and bottom triangles out
-    const oddRowFix = this.isOddRow(tile) ? (tileSize.x / 2) : 0;
-    const topAndBottomHexesFix = this.CUT_TOP_AND_BOTTOM_HEXES ? (-tileSize.y * 0.25) : 0;
+    const oddRowFix = this.isOddRow(tile) ? tileSize.x / 2 : 0;
+    const topAndBottomHexesFix = this.CUT_TOP_AND_BOTTOM_HEXES ? -tileSize.y * 0.25 : 0;
     return {
       x: tile.grid.x * tileSize.x + oddRowFix,
-      y: (tile.grid.y * tileSize.y * 0.75) + topAndBottomHexesFix
+      y: tile.grid.y * tileSize.y * 0.75 + topAndBottomHexesFix,
     };
   }
 
@@ -87,15 +86,14 @@ new class MinimapCanvasWorker {
 
   paintTile(coordsPx: Coords, tileSize: Coords, color: string): void {
     this.ctx.beginPath();
-    this.ctx.moveTo( coordsPx.x + (tileSize.x * 0.50), coordsPx.y );
-    this.ctx.lineTo( coordsPx.x + tileSize.x, coordsPx.y + (tileSize.y * 0.25) );
-    this.ctx.lineTo( coordsPx.x + tileSize.x, coordsPx.y + (tileSize.y * 0.75) );
-    this.ctx.lineTo( coordsPx.x + (tileSize.x * 0.50), coordsPx.y + tileSize.y );
-    this.ctx.lineTo( coordsPx.x, coordsPx.y + (tileSize.y * 0.75) );
-    this.ctx.lineTo( coordsPx.x, coordsPx.y + (tileSize.y * 0.25) );
+    this.ctx.moveTo(coordsPx.x + tileSize.x * 0.5, coordsPx.y);
+    this.ctx.lineTo(coordsPx.x + tileSize.x, coordsPx.y + tileSize.y * 0.25);
+    this.ctx.lineTo(coordsPx.x + tileSize.x, coordsPx.y + tileSize.y * 0.75);
+    this.ctx.lineTo(coordsPx.x + tileSize.x * 0.5, coordsPx.y + tileSize.y);
+    this.ctx.lineTo(coordsPx.x, coordsPx.y + tileSize.y * 0.75);
+    this.ctx.lineTo(coordsPx.x, coordsPx.y + tileSize.y * 0.25);
     this.ctx.closePath();
     this.ctx.fillStyle = color;
     this.ctx.fill();
   }
-
-};
+})();

@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import {Tile, Map, TileHighlightId} from '../models/map';
-import {GameplayUi, TileInfoOverlayId} from '../models/gameplay-ui';
-import {Camera} from '../models/camera';
-import {Size} from '../models/size';
+import { Tile, Map, TileHighlightId } from '../models/map';
+import { GameplayUi, TileInfoOverlayId } from '../models/gameplay-ui';
+import { Camera } from '../models/camera';
+import { Size } from '../models/size';
 
 import {
   GRID_LINE_STYLE,
@@ -12,25 +12,24 @@ import {
   TILE_INFO_TEXT_SIZE,
   TILE_INFO_TEXT_STYLE,
   TILE_HIGHLIGHT_ID_TO_COLOR_MAP,
-  TILE_INFO_TEXT_MIN_TILE_WIDTH
+  TILE_INFO_TEXT_MIN_TILE_WIDTH,
 } from '../consts/map-style.const';
 
-import {TileUiService} from './tile-ui.service';
+import { TileUiService } from './tile-ui.service';
 
-import {MapStore} from '../stores/map.store';
-import {CameraStore} from '../stores/camera.store';
-import {SizeStore} from '../stores/size.store';
-import {GameplayUiStore} from '../stores/gameplay-ui.store';
-import {WorldBuilderHoveredTilesStore} from '../stores/world-builder-hovered-tiles.store';
+import { MapStore } from '../stores/map.store';
+import { CameraStore } from '../stores/camera.store';
+import { SizeStore } from '../stores/size.store';
+import { GameplayUiStore } from '../stores/gameplay-ui.store';
+import { WorldBuilderHoveredTilesStore } from '../stores/world-builder-hovered-tiles.store';
 
-import {TerrainBaseNamePipe} from '../pipes/terrain-base-name.pipe';
-import {TerrainFeatureNamePipe} from '../pipes/terrain-feature-name.pipe';
-import {TerrainImprovementNamePipe} from '../pipes/terrain-improvement-name.pipe';
-import {TerrainResourceNamePipe} from '../pipes/terrain-resource-name.pipe';
+import { TerrainBaseNamePipe } from '../pipes/terrain-base-name.pipe';
+import { TerrainFeatureNamePipe } from '../pipes/terrain-feature-name.pipe';
+import { TerrainImprovementNamePipe } from '../pipes/terrain-improvement-name.pipe';
+import { TerrainResourceNamePipe } from '../pipes/terrain-resource-name.pipe';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class MapCanvasService {
-
   camera: Camera;
   size: Size;
   map: Map;
@@ -52,21 +51,21 @@ export class MapCanvasService {
     private terrainBaseNamePipe: TerrainBaseNamePipe,
     private terrainFeatureNamePipe: TerrainFeatureNamePipe,
     private terrainImprovementNamePipe: TerrainImprovementNamePipe,
-    private terrainResourceNamePipe: TerrainResourceNamePipe,
+    private terrainResourceNamePipe: TerrainResourceNamePipe
   ) {
     this.subscribeToData();
   }
 
   private subscribeToData(): void {
-    this.cameraStore.camera.subscribe(camera => this.camera = camera);
-    this.sizeStore.size.subscribe(size => this.size = size);
+    this.cameraStore.camera.subscribe(camera => (this.camera = camera));
+    this.sizeStore.size.subscribe(size => (this.size = size));
     this.mapStore.map.subscribe(map => {
       this.map = map;
       this.firstRowTiles = this.map.tiles.filter(t => t.grid.y === 0);
       this.lastRowTiles = this.map.tiles.filter(t => t.grid.y === this.map.height - 1);
     });
-    this.gameplayUiStore.gameplayUi.subscribe(gameplayUi => this.gameplayUi = gameplayUi);
-    this.worldBuilderHoveredTilesStore.wbHoveredTiles.subscribe(wbHoveredTiles => this.wbHoveredTiles = wbHoveredTiles);
+    this.gameplayUiStore.gameplayUi.subscribe(gameplayUi => (this.gameplayUi = gameplayUi));
+    this.worldBuilderHoveredTilesStore.wbHoveredTiles.subscribe(wbHoveredTiles => (this.wbHoveredTiles = wbHoveredTiles));
   }
 
   private setCommonStyles(): void {
@@ -89,19 +88,35 @@ export class MapCanvasService {
 
     for (const tile of this.map.tiles) {
       if (tile.isVisible) {
-        if (this.gameplayUi.infoOverlay === TileInfoOverlayId.TEXT) { this.paintTileInfoText(tile); }
-        if (this.gameplayUi.infoOverlay === TileInfoOverlayId.YIELD) { this.paintTileInfoYield(tile); }
-        if (this.gameplayUi.showGrid) { this.paintRightSideEdges(tile); }
+        if (this.gameplayUi.infoOverlay === TileInfoOverlayId.TEXT) {
+          this.paintTileInfoText(tile);
+        }
+        if (this.gameplayUi.infoOverlay === TileInfoOverlayId.YIELD) {
+          this.paintTileInfoYield(tile);
+        }
+        if (this.gameplayUi.showGrid) {
+          this.paintRightSideEdges(tile);
+        }
       }
     }
 
     if (this.gameplayUi.showGrid) {
-      for (const tile of this.firstRowTiles) { if (tile.isVisible) { this.paintTopLeftEdge(tile); } }
-      for (const tile of this.lastRowTiles) { if (tile.isVisible) { this.paintBottomLeftEdge(tile); } }
+      for (const tile of this.firstRowTiles) {
+        if (tile.isVisible) {
+          this.paintTopLeftEdge(tile);
+        }
+      }
+      for (const tile of this.lastRowTiles) {
+        if (tile.isVisible) {
+          this.paintBottomLeftEdge(tile);
+        }
+      }
     }
 
     this.wbHoveredTiles.forEach(tile => {
-      if (tile.isVisible) { this.paintTileHighlight(tile, TileHighlightId.WB_TERRAIN_PLACEMENT); }
+      if (tile.isVisible) {
+        this.paintTileHighlight(tile, TileHighlightId.WB_TERRAIN_PLACEMENT);
+      }
     });
   }
 
@@ -130,10 +145,10 @@ export class MapCanvasService {
       const terrainFeatureName = this.terrainFeatureNamePipe.transform(tile.terrain.feature.id).toUpperCase();
       const terrainResourceName = this.terrainResourceNamePipe.transform(tile.terrain.resourceId).toUpperCase();
       const terrainImprovementName = this.terrainImprovementNamePipe.transform(tile.terrain.improvementId).toUpperCase();
-      this.ctx.fillText(terrainImprovementName, tileHorizontalCenter, tileBottom - ((2 * TILE_INFO_TEXT_SIZE) + 2));
-      this.ctx.fillText(terrainResourceName, tileHorizontalCenter, tileBottom - ((3 * TILE_INFO_TEXT_SIZE) + 4));
-      this.ctx.fillText(terrainFeatureName, tileHorizontalCenter, tileBottom - ((4 * TILE_INFO_TEXT_SIZE) + 6));
-      this.ctx.fillText(terrainBaseName, tileHorizontalCenter, tileBottom - ((5 * TILE_INFO_TEXT_SIZE) + 8));
+      this.ctx.fillText(terrainImprovementName, tileHorizontalCenter, tileBottom - (2 * TILE_INFO_TEXT_SIZE + 2));
+      this.ctx.fillText(terrainResourceName, tileHorizontalCenter, tileBottom - (3 * TILE_INFO_TEXT_SIZE + 4));
+      this.ctx.fillText(terrainFeatureName, tileHorizontalCenter, tileBottom - (4 * TILE_INFO_TEXT_SIZE + 6));
+      this.ctx.fillText(terrainBaseName, tileHorizontalCenter, tileBottom - (5 * TILE_INFO_TEXT_SIZE + 8));
     }
   }
 
@@ -171,7 +186,6 @@ export class MapCanvasService {
     this.ctx.lineTo(tile.px.x + this.size.vertices[4].x, tile.px.y + this.size.vertices[4].y);
     this.ctx.stroke();
   }
-
 }
 
 // private paintMapDecoration(): void {

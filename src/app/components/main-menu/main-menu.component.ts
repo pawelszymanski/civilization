@@ -1,32 +1,31 @@
-import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {Subscription} from 'rxjs';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Subscription } from 'rxjs';
 
-import {Map} from '../../models/map';
-import {SaveHeader} from '../../models/saves';
-import {MapSizeId} from '../../models/map-size';
-import {ModalId, ScreenId, Ui} from '../../models/ui';
-import {LandmassValueId, MapGeneratorSettings, RainfallId, TemperatureId, WorldAgeId} from '../../models/map-generator';
+import { Map } from '../../models/map';
+import { SaveHeader } from '../../models/saves';
+import { MapSizeId } from '../../models/map-size';
+import { ModalId, ScreenId, Ui } from '../../models/ui';
+import { LandmassValueId, MapGeneratorSettings, RainfallId, TemperatureId, WorldAgeId } from '../../models/map-generator';
 
-import {MAP_SIZE_SETTINGS_LIST} from '../../consts/map-size-settings.const';
-import {EARTH_MAP} from '../../consts/earth-map';
+import { MAP_SIZE_SETTINGS_LIST } from '../../consts/map-size-settings.const';
+import { EARTH_MAP } from '../../consts/earth-map';
 
-import {MapGeneratorService} from '../../services/map-generator.service';
-import {SaveService} from '../../services/save.service';
-import {ZipService} from '../../services/zip.service';
+import { MapGeneratorService } from '../../services/map-generator.service';
+import { SaveService } from '../../services/save.service';
+import { ZipService } from '../../services/zip.service';
 
-import {UiStore} from '../../stores/ui.store';
-import {MapStore} from '../../stores/map.store';
-import {SaveHeadersStore} from '../../stores/save-headers.store';
+import { UiStore } from '../../stores/ui.store';
+import { MapStore } from '../../stores/map.store';
+import { SaveHeadersStore } from '../../stores/save-headers.store';
 
 @Component({
   standalone: false,
   selector: '.main-menu-component',
   templateUrl: './main-menu.component.html',
   styleUrls: ['./main-menu.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class MainMenuComponent implements OnInit, OnDestroy {
-
   ui: Ui;
   saveHeaders: SaveHeader[];
 
@@ -53,8 +52,8 @@ export class MainMenuComponent implements OnInit, OnDestroy {
 
   subscribeToData(): void {
     this.subscriptions.push(
-      this.uiStore.ui.subscribe(ui => this.ui = ui),
-      this.saveHeadersStore.saveHeaders.subscribe(saveHeaders => this.saveHeaders = saveHeaders)
+      this.uiStore.ui.subscribe(ui => (this.ui = ui)),
+      this.saveHeadersStore.saveHeaders.subscribe(saveHeaders => (this.saveHeaders = saveHeaders))
     );
   }
 
@@ -80,15 +79,22 @@ export class MainMenuComponent implements OnInit, OnDestroy {
   }
 
   onResumeGameClick(): void {
-    if (this.noSavesPresent) { return; }
-    const latestTimestamp = this.saveHeaders.map(save => save.timestamp).sort().pop();
+    if (this.noSavesPresent) {
+      return;
+    }
+    const latestTimestamp = this.saveHeaders
+      .map(save => save.timestamp)
+      .sort()
+      .pop();
     const saveToBeLoaded = this.saveHeaders.find(save => save.timestamp === latestTimestamp);
     this.saveService.load(saveToBeLoaded.uuid);
     this.uiStore.setScreen(ScreenId.GAMEPLAY);
   }
 
   onLoadGameClick(): void {
-    if (this.noSavesPresent) { return; }
+    if (this.noSavesPresent) {
+      return;
+    }
     this.uiStore.openModal(ModalId.LOAD_GAME);
   }
 
@@ -102,7 +108,7 @@ export class MainMenuComponent implements OnInit, OnDestroy {
       islands: defaultMapSizeSettings.islands,
       worldAge: WorldAgeId.STANDARD,
       temperature: TemperatureId.STANDARD,
-      rainfall: RainfallId.STANDARD
+      rainfall: RainfallId.STANDARD,
     };
     const newMap = this.mapGeneratorService.generateNewGameMap(mapGeneratorSetting);
     this.mapStore.next(newMap);
@@ -119,5 +125,4 @@ export class MainMenuComponent implements OnInit, OnDestroy {
     // TODO
     this.showSinglePlayerMenu = false;
   }
-
 }

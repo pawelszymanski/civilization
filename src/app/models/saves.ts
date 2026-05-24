@@ -1,13 +1,13 @@
-import {Camera} from './camera';
-import {Map} from './map';
-import {GameplayUi} from './gameplay-ui';
-import {Timestamp, Uuid} from './utils';
+import { Camera } from './camera';
+import { Map } from './map';
+import { GameplayUi } from './gameplay-ui';
+import { Timestamp, Uuid } from './utils';
 
 export enum SaveSortOrderId {
   DATE_ASCENDING,
   DATE_DESCENDING,
   NAME_ASCENDING,
-  NAME_DESCENDING
+  NAME_DESCENDING,
 }
 
 export interface SaveListOptions {

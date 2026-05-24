@@ -1,10 +1,9 @@
 import * as JSLZString from 'lz-string';
 
-import {SaveData} from '../models/saves';
+import { SaveData } from '../models/saves';
 
 // tslint:disable-next-line:new-parens no-unused-expression
-new class ZipUnzipWorker {
-
+new (class ZipUnzipWorker {
   constructor() {
     this.addEventListener();
   }
@@ -23,5 +22,4 @@ new class ZipUnzipWorker {
   zip(data: any): string {
     return JSLZString.compressToUTF16(JSON.stringify(data));
   }
-
-};
+})();

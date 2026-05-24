@@ -1,4 +1,4 @@
-import {Coords} from './utils';
+import { Coords } from './utils';
 
 export interface FullSize {
   width: number;
@@ -18,9 +18,9 @@ export interface QuarterSize {
 }
 
 export interface Size {
-  tile: FullSize & HalfSize & QuarterSize;  // Tile height is equal to tile size CSS variable, rest is calculated from height
-  row: FullSize;                            // Calculated
-  map: FullSize;                            // Calculated
-  vertices: Coords[];                       // Calculated
-  screen: FullSize & HalfSize;              // Calculated
+  tile: FullSize & HalfSize & QuarterSize; // Tile height is equal to tile size CSS variable, rest is calculated from height
+  row: FullSize; // Calculated
+  map: FullSize; // Calculated
+  vertices: Coords[]; // Calculated
+  screen: FullSize & HalfSize; // Calculated
 }

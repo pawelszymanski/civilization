@@ -2,36 +2,37 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef, Inject,
+  ElementRef,
+  Inject,
   NgZone,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/common';
-import {Subscription} from 'rxjs';
+import { DOCUMENT } from '@angular/common';
+import { Subscription } from 'rxjs';
 
-import {Map} from '../../models/map';
-import {Camera} from '../../models/camera';
-import {Coords} from '../../models/utils';
-import {SidebarId, Ui} from '../../models/ui';
-import {GameplayUi, TileInfoOverlayId} from '../../models/gameplay-ui';
-import {Size} from '../../models/size';
-import {WorldBuilderUi} from '../../models/world-builder';
+import { Map } from '../../models/map';
+import { Camera } from '../../models/camera';
+import { Coords } from '../../models/utils';
+import { SidebarId, Ui } from '../../models/ui';
+import { GameplayUi, TileInfoOverlayId } from '../../models/gameplay-ui';
+import { Size } from '../../models/size';
+import { WorldBuilderUi } from '../../models/world-builder';
 
-import {TileTerrainService} from '../../services/tile-terrain.service';
-import {TileUiService} from '../../services/tile-ui.service';
-import {MapZoomService} from '../../services/map-zoom.service';
-import {WorldBuilderService} from '../../services/world-builder.service';
-import {MapCanvasService} from '../../services/map-canvas.service';
-import {SizeService} from '../../services/size.service';
+import { TileTerrainService } from '../../services/tile-terrain.service';
+import { TileUiService } from '../../services/tile-ui.service';
+import { MapZoomService } from '../../services/map-zoom.service';
+import { WorldBuilderService } from '../../services/world-builder.service';
+import { MapCanvasService } from '../../services/map-canvas.service';
+import { SizeService } from '../../services/size.service';
 
-import {UiStore} from '../../stores/ui.store';
-import {MapStore} from '../../stores/map.store';
-import {GameplayUiStore} from '../../stores/gameplay-ui.store';
-import {CameraStore} from '../../stores/camera.store';
-import {SizeStore} from '../../stores/size.store';
-import {WorldBuilderHoveredTilesStore} from '../../stores/world-builder-hovered-tiles.store';
-import {WorldBuilderUiStore} from '../../stores/world-builder-ui.store';
+import { UiStore } from '../../stores/ui.store';
+import { MapStore } from '../../stores/map.store';
+import { GameplayUiStore } from '../../stores/gameplay-ui.store';
+import { CameraStore } from '../../stores/camera.store';
+import { SizeStore } from '../../stores/size.store';
+import { WorldBuilderHoveredTilesStore } from '../../stores/world-builder-hovered-tiles.store';
+import { WorldBuilderUiStore } from '../../stores/world-builder-ui.store';
 
 @Component({
   standalone: false,
@@ -39,10 +40,9 @@ import {WorldBuilderUiStore} from '../../stores/world-builder-ui.store';
   templateUrl: './map.component.html',
   styleUrls: ['map.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapComponent {
-
   @ViewChild('canvas', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
 
   ctx: CanvasRenderingContext2D;
@@ -54,8 +54,8 @@ export class MapComponent {
   size: Size;
   worldBuilderUi: WorldBuilderUi;
 
-  dragStartCoords: Coords;  // Page x, y when mouse was pressed down
-  dragStartTranslate: Coords;  // Map element x, y when mouse was pressed down
+  dragStartCoords: Coords; // Page x, y when mouse was pressed down
+  dragStartTranslate: Coords; // Map element x, y when mouse was pressed down
   isDragging = false;
   dragHandlerRef: () => void;
 
@@ -80,7 +80,7 @@ export class MapComponent {
     private cameraStore: CameraStore,
     private sizeStore: SizeStore,
     private worldBuilderHoveredTilesStore: WorldBuilderHoveredTilesStore,
-    private worldBuilderUiStore: WorldBuilderUiStore,
+    private worldBuilderUiStore: WorldBuilderUiStore
   ) {}
 
   // INIT
@@ -103,12 +103,12 @@ export class MapComponent {
 
   subscribeToData(): void {
     this.subscriptions.push(
-      this.uiStore.ui.subscribe(ui => this.ui = ui),
-      this.mapStore.map.subscribe(map => this.map = map),
-      this.gameplayUiStore.gameplayUi.subscribe(gameplayUi => this.gameplayUi = gameplayUi),
-      this.cameraStore.camera.subscribe(camera => this.camera = camera),
-      this.sizeStore.size.subscribe(size => this.size = size),
-      this.worldBuilderUiStore.worldBuilderUi.subscribe(worldBuilderUi => this.worldBuilderUi = worldBuilderUi),
+      this.uiStore.ui.subscribe(ui => (this.ui = ui)),
+      this.mapStore.map.subscribe(map => (this.map = map)),
+      this.gameplayUiStore.gameplayUi.subscribe(gameplayUi => (this.gameplayUi = gameplayUi)),
+      this.cameraStore.camera.subscribe(camera => (this.camera = camera)),
+      this.sizeStore.size.subscribe(size => (this.size = size)),
+      this.worldBuilderUiStore.worldBuilderUi.subscribe(worldBuilderUi => (this.worldBuilderUi = worldBuilderUi))
     );
   }
 
@@ -119,7 +119,9 @@ export class MapComponent {
         if (!!this.camera && !!this.size && !!this.map && !!this.gameplayUi) {
           const changed = this.updateTilesUiData();
           this.isCanvasInUse() ? this.mapCanvasService.paintCanvas() : this.mapCanvasService.clearCanvas();
-          if (changed) { this.cdr.detectChanges(); }
+          if (changed) {
+            this.cdr.detectChanges();
+          }
         }
       });
     });
@@ -136,11 +138,14 @@ export class MapComponent {
   // EVENTS
   onMousedown(event: MouseEvent): void {
     // TODO: BUG: Unfortunately sometimes dragging is not disabled properly, ie try dragging out of the window, release button and come back
-    if (this.isDragging) { this.stopDrag(); }
+    if (this.isDragging) {
+      this.stopDrag();
+    }
     this.startDrag(event);
   }
 
-  onMousemove(event: MouseEvent): void {  // Intended for the hover effects
+  onMousemove(event: MouseEvent): void {
+    // Intended for the hover effects
     if (this.ui.sidebar === SidebarId.WORLD_BUILDER && !this.isDragging) {
       const hoveredTile = this.tileUiService.mouseEventToTile(event);
       if (hoveredTile) {
@@ -155,13 +160,18 @@ export class MapComponent {
   onMouseup(event: MouseEvent): void {
     this.stopDrag();
 
-    const dragDistance = this.vectorLength({x: event.pageX, y: event.pageY}, this.dragStartCoords);
-    if (dragDistance < 3)  { this.onClick(event); }  // With no excessive dragging count as a click
+    const dragDistance = this.vectorLength({ x: event.pageX, y: event.pageY }, this.dragStartCoords);
+    if (dragDistance < 3) {
+      this.onClick(event);
+    } // With no excessive dragging count as a click
   }
 
-  onClick(event: MouseEvent): void {  // artificial, comes after decision-making in onMouseup
+  onClick(event: MouseEvent): void {
+    // artificial, comes after decision-making in onMouseup
     const tile = this.tileUiService.mouseEventToTile(event);
-    if (!tile) { return; }
+    if (!tile) {
+      return;
+    }
 
     if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
       this.worldBuilderService.handleTileClick();
@@ -170,7 +180,9 @@ export class MapComponent {
 
   onContextmenu(event: MouseEvent): void {
     const tile = this.tileUiService.mouseEventToTile(event);
-    if (!tile) { return; }
+    if (!tile) {
+      return;
+    }
 
     if (this.ui.sidebar === SidebarId.WORLD_BUILDER) {
       this.worldBuilderService.handleTileContextmenu();
@@ -184,7 +196,7 @@ export class MapComponent {
   // OTHER
 
   vectorLength(vector1: Coords, vector2: Coords): number {
-    return Math.sqrt( (vector1.x - vector2.x) ** 2 + (vector1.y - vector2.y) ** 2 );
+    return Math.sqrt((vector1.x - vector2.x) ** 2 + (vector1.y - vector2.y) ** 2);
   }
 
   updateTilesUiData(): boolean {
@@ -192,7 +204,9 @@ export class MapComponent {
     for (const tile of this.map.tiles) {
       const coords = this.tileUiService.tileCoordsOnScreenPx(tile);
       const nowVisible = !!coords;
-      if (nowVisible !== tile.isVisible) { changed = true; }
+      if (nowVisible !== tile.isVisible) {
+        changed = true;
+      }
       tile.isVisible = nowVisible;
       if (coords) {
         const newTransform = `translate(${coords.x}px,${coords.y}px)`;
@@ -207,8 +221,8 @@ export class MapComponent {
   }
 
   startDrag(event: MouseEvent): void {
-    this.dragStartCoords = {x: event.pageX, y: event.pageY};
-    this.dragStartTranslate = {x: this.camera.translate.x, y: this.camera.translate.y};
+    this.dragStartCoords = { x: event.pageX, y: event.pageY };
+    this.dragStartTranslate = { x: this.camera.translate.x, y: this.camera.translate.y };
 
     // Need to store drag handler since .bind(this) changes the reference
     // ngZone.runOutsideAngular is to avoid change detection ov every mousemove event
@@ -222,7 +236,7 @@ export class MapComponent {
   dragHandler(event: MouseEvent): void {
     const translate = {
       x: this.dragStartTranslate.x + event.pageX - this.dragStartCoords.x,
-      y: this.dragStartTranslate.y + event.pageY - this.dragStartCoords.y
+      y: this.dragStartTranslate.y + event.pageY - this.dragStartCoords.y,
     };
     this.cameraStore.setTranslate(translate);
   }
@@ -233,11 +247,12 @@ export class MapComponent {
   }
 
   isCanvasInUse(): boolean {
-    return this.ui.sidebar === SidebarId.WORLD_BUILDER ||             // drawing hovered tiles
-           this.gameplayUi.showGrid ||                                // grid
-           this.gameplayUi.infoOverlay !== TileInfoOverlayId.NONE;    // tile overlay of any kind
+    return (
+      this.ui.sidebar === SidebarId.WORLD_BUILDER || // drawing hovered tiles
+      this.gameplayUi.showGrid || // grid
+      this.gameplayUi.infoOverlay !== TileInfoOverlayId.NONE
+    ); // tile overlay of any kind
   }
-
 }
 
 // onDblclick(event: MouseEvent) {

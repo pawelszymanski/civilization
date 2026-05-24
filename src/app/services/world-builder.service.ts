@@ -1,30 +1,29 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import {Tile} from '../models/map';
-import {WorldBuilderToolId, WorldBuilderUi} from '../models/world-builder';
-import {TerrainBaseId, TerrainFeatureId, TerrainImprovementId, TerrainResourceId} from '../models/terrain';
+import { Tile } from '../models/map';
+import { WorldBuilderToolId, WorldBuilderUi } from '../models/world-builder';
+import { TerrainBaseId, TerrainFeatureId, TerrainImprovementId, TerrainResourceId } from '../models/terrain';
 
-import {MapStore} from '../stores/map.store';
-import {WorldBuilderUiStore} from '../stores/world-builder-ui.store';
-import {WorldBuilderHoveredTilesStore} from '../stores/world-builder-hovered-tiles.store';
+import { MapStore } from '../stores/map.store';
+import { WorldBuilderUiStore } from '../stores/world-builder-ui.store';
+import { WorldBuilderHoveredTilesStore } from '../stores/world-builder-hovered-tiles.store';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class WorldBuilderService {
-
   worldBuilderUi: WorldBuilderUi;
   wbHoveredTiles: Tile[] = [];
 
   constructor(
     private mapStore: MapStore,
     private worldBuilderUiStore: WorldBuilderUiStore,
-    private worldBuilderHoveredTilesStore: WorldBuilderHoveredTilesStore,
+    private worldBuilderHoveredTilesStore: WorldBuilderHoveredTilesStore
   ) {
     this.subscribeToData();
   }
 
   private subscribeToData(): void {
-    this.worldBuilderUiStore.worldBuilderUi.subscribe(worldBuilderUi => this.worldBuilderUi = worldBuilderUi);
-    this.worldBuilderHoveredTilesStore.wbHoveredTiles.subscribe(wbHoveredTiles => this.wbHoveredTiles = wbHoveredTiles);
+    this.worldBuilderUiStore.worldBuilderUi.subscribe(worldBuilderUi => (this.worldBuilderUi = worldBuilderUi));
+    this.worldBuilderHoveredTilesStore.wbHoveredTiles.subscribe(wbHoveredTiles => (this.wbHoveredTiles = wbHoveredTiles));
   }
 
   public handleTileClick(): void {
@@ -63,7 +62,5 @@ export class WorldBuilderService {
         this.mapStore.setTilesTerrainImprovement(this.wbHoveredTiles, TerrainImprovementId.NONE);
         break;
     }
-
   }
-
 }

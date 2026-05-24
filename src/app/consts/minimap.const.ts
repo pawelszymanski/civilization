@@ -1,4 +1,4 @@
-import {TerrainBaseId} from '../models/terrain';
+import { TerrainBaseId } from '../models/terrain';
 
 export const MINIMAP_WIDTH = 240;
 export const MINIMAP_HEIGHT = 160;

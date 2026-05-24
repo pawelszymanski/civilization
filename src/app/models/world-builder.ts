@@ -1,4 +1,4 @@
-import {TerrainBaseId, TerrainFeatureId, TerrainResourceId, TerrainImprovementId} from './terrain';
+import { TerrainBaseId, TerrainFeatureId, TerrainResourceId, TerrainImprovementId } from './terrain';
 
 export enum WorldBuilderToolId {
   TERRAIN_BASE,
@@ -10,7 +10,7 @@ export enum WorldBuilderToolId {
 export enum WorldBuilderBrushSizeId {
   SMALL,
   MEDIUM,
-  LARGE
+  LARGE,
 }
 
 export interface WorldBuilderUi {

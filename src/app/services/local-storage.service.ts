@@ -1,8 +1,7 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class LocalStorageService {
-
   readonly MAX_USED_SPACE = 1024 * 1024;
 
   localStorage: Storage;
@@ -31,7 +30,7 @@ export class LocalStorageService {
     let totalMb = 0;
     for (const x in localStorage) {
       if (localStorage.hasOwnProperty(x)) {
-        const amount = (localStorage[x].length);
+        const amount = localStorage[x].length;
         if (!isNaN(amount) && localStorage.hasOwnProperty(x)) {
           totalMb += amount;
         }
@@ -43,5 +42,4 @@ export class LocalStorageService {
   public getUsagePc(): number {
     return (this.getUsage() / this.MAX_USED_SPACE) * 100;
   }
-
 }

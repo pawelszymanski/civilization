@@ -1,7 +1,7 @@
-import {Coords} from './utils';
-import {TechnologyId} from './technologies';
-import {CivicId} from './civics';
-import {EraId} from './era';
+import { Coords } from './utils';
+import { TechnologyId } from './technologies';
+import { CivicId } from './civics';
+import { EraId } from './era';
 
 export interface TechnologyIdWithEraCoords {
   id: TechnologyId;
@@ -14,8 +14,6 @@ export interface TechnologyTreeEra {
 }
 
 export type TechnologyTree = TechnologyTreeEra[];
-
-
 
 export interface CivicIdWithEraCoords {
   id: CivicId;

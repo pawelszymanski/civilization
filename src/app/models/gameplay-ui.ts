@@ -1,7 +1,7 @@
 export enum TileInfoOverlayId {
   NONE,
   YIELD,
-  TEXT
+  TEXT,
 }
 
 export enum TileResourceOverlayId {
@@ -9,7 +9,7 @@ export enum TileResourceOverlayId {
   ALL,
   BONUS,
   STRATEGIC,
-  LUXURY
+  LUXURY,
 }
 
 export interface GameplayUi {

@@ -1,13 +1,12 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 
-import {GameplayUi, TileInfoOverlayId, TileResourceOverlayId} from '../models/gameplay-ui';
+import { GameplayUi, TileInfoOverlayId, TileResourceOverlayId } from '../models/gameplay-ui';
 
-import {DEFAULT_GAMEPLAY_UI} from '../consts/gameplay-ui.const';
+import { DEFAULT_GAMEPLAY_UI } from '../consts/gameplay-ui.const';
 
 @Injectable()
 export class GameplayUiStore {
-
   // tslint:disable-next-line:variable-name
   private _gameplayUi: BehaviorSubject<GameplayUi> = new BehaviorSubject(DEFAULT_GAMEPLAY_UI);
 
@@ -18,21 +17,21 @@ export class GameplayUiStore {
   }
 
   public toggleGrid(): void {
-    this._gameplayUi.next({...this._gameplayUi.value, showGrid: !this._gameplayUi.value.showGrid});
+    this._gameplayUi.next({ ...this._gameplayUi.value, showGrid: !this._gameplayUi.value.showGrid });
   }
 
   public toggleMinimap(): void {
-    this._gameplayUi.next({...this._gameplayUi.value, showMinimap: !this._gameplayUi.value.showMinimap});
+    this._gameplayUi.next({ ...this._gameplayUi.value, showMinimap: !this._gameplayUi.value.showMinimap });
   }
 
   public toggleTileInfoOverlay(tileInfoOverlayId: TileInfoOverlayId): void {
     const newTileInfoOverlayId = this._gameplayUi.value.infoOverlay === tileInfoOverlayId ? TileInfoOverlayId.NONE : tileInfoOverlayId;
-    this._gameplayUi.next({...this._gameplayUi.value, infoOverlay: newTileInfoOverlayId});
+    this._gameplayUi.next({ ...this._gameplayUi.value, infoOverlay: newTileInfoOverlayId });
   }
 
   public toggleTileResourceOverlay(tileResourceOverlayId: TileResourceOverlayId): void {
-    const newTileResourceOverlayId = this._gameplayUi.value.resourceOverlay === tileResourceOverlayId ? TileResourceOverlayId.NONE : tileResourceOverlayId;
-    this._gameplayUi.next({...this._gameplayUi.value, resourceOverlay: newTileResourceOverlayId});
+    const newTileResourceOverlayId =
+      this._gameplayUi.value.resourceOverlay === tileResourceOverlayId ? TileResourceOverlayId.NONE : tileResourceOverlayId;
+    this._gameplayUi.next({ ...this._gameplayUi.value, resourceOverlay: newTileResourceOverlayId });
   }
-
 }

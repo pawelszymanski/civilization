@@ -1,23 +1,22 @@
-import {Component, Input, OnChanges, ViewEncapsulation} from '@angular/core';
+import { Component, Input, OnChanges, ViewEncapsulation } from '@angular/core';
 
-import {Yield, YieldId, YieldOfType} from '../../app/models/yield';
+import { Yield, YieldId, YieldOfType } from '../../app/models/yield';
 
-import {YIELD_ID_TO_ICON_CLASS_MAP, YIELD_IDS_IN_ORDER} from '../../app/consts/yield.const';
+import { YIELD_ID_TO_ICON_CLASS_MAP, YIELD_IDS_IN_ORDER } from '../../app/consts/yield.const';
 
 @Component({
   selector: '.tile-yield-component',
   templateUrl: './tile-yield.component.html',
   styleUrls: ['./tile-yield.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class TileYieldComponent implements OnChanges {
-
   @Input() yield: Yield;
 
   iconCssClasses: string[][];
 
   private extractYieldOfType(yieldId: YieldId): YieldOfType {
-    return {type: yieldId, count: this.yield[yieldId]};
+    return { type: yieldId, count: this.yield[yieldId] };
   }
 
   private static filterOutZeroYields(yieldOfType: YieldOfType): boolean {
@@ -36,10 +35,8 @@ export class TileYieldComponent implements OnChanges {
   }
 
   ngOnChanges() {
-    this.iconCssClasses = YIELD_IDS_IN_ORDER
-      .map( yieldId => this.extractYieldOfType(yieldId) )
-      .filter( yieldOfType => TileYieldComponent.filterOutZeroYields(yieldOfType) )
-      .map( yieldOfType => TileYieldComponent.yieldToIconCssClasses(yieldOfType) )
+    this.iconCssClasses = YIELD_IDS_IN_ORDER.map(yieldId => this.extractYieldOfType(yieldId))
+      .filter(yieldOfType => TileYieldComponent.filterOutZeroYields(yieldOfType))
+      .map(yieldOfType => TileYieldComponent.yieldToIconCssClasses(yieldOfType));
   }
-
 }

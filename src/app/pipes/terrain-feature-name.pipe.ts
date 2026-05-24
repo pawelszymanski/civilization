@@ -1,13 +1,13 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
-import {TerrainFeatureId} from '../models/terrain';
+import { TerrainFeatureId } from '../models/terrain';
 
-@Pipe({standalone: false, name: 'terrainFeatureName'})
+@Pipe({ standalone: false, name: 'terrainFeatureName' })
 export class TerrainFeatureNamePipe implements PipeTransform {
-
   transform(terrainFeatureId: TerrainFeatureId): string {
-    if (terrainFeatureId === TerrainFeatureId.NONE) { return ''; }
+    if (terrainFeatureId === TerrainFeatureId.NONE) {
+      return '';
+    }
     return TerrainFeatureId[terrainFeatureId].toLowerCase();
   }
-
 }

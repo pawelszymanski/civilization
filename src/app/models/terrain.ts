@@ -16,7 +16,7 @@ export enum TerrainBaseId {
   SNOW_MOUNTAIN,
   LAKE,
   COAST,
-  OCEAN
+  OCEAN,
 }
 
 export enum TerrainFeatureId {
@@ -27,7 +27,7 @@ export enum TerrainFeatureId {
   OASIS,
   RAINFOREST,
   REEF,
-  WOODS
+  WOODS,
 }
 
 export enum TerrainResourceId {
@@ -77,7 +77,7 @@ export enum TerrainResourceId {
   TOBACCO,
   TRUFFLES,
   WHALES,
-  WINE
+  WINE,
 }
 
 export enum OffMapResourceId {
@@ -86,7 +86,7 @@ export enum OffMapResourceId {
   COSMETICS,
   JEANS,
   PERFUME,
-  TOYS
+  TOYS,
 }
 
 export enum TerrainImprovementId {
@@ -110,13 +110,13 @@ export enum TerrainImprovementId {
   SEASTEAD,
   SKI_RESORT,
   SOLAR_FARM,
-  WIND_FARM
+  WIND_FARM,
 }
 
 export enum TerrainResourceTypeId {
   BONUS,
   STRATEGIC,
-  LUXURY
+  LUXURY,
 }
 
 export interface TerrainUiCommon {

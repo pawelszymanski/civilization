@@ -1,26 +1,25 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subscription} from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 
-import {Camera} from '../../../../../models/camera';
+import { Camera } from '../../../../../models/camera';
 
 import {
   CAMERA_MIN_ZOOM_LEVEL,
   CAMERA_MAX_ZOOM_LEVEL,
   CAMERA_MIN_TILE_SIZE,
   CAMERA_MAX_TILE_SIZE,
-  CAMERA_TILE_SIZE_STEP
+  CAMERA_TILE_SIZE_STEP,
 } from '../../../../../consts/camera.const';
 
-import {CameraStore} from '../../../../../stores/camera.store';
+import { CameraStore } from '../../../../../stores/camera.store';
 
 @Component({
   standalone: false,
   selector: '.camera-form-component',
   templateUrl: './camera-form.component.html',
-  styleUrls: ['../dev-tools-form.scss']
+  styleUrls: ['../dev-tools-form.scss'],
 })
 export class CameraFormComponent implements OnInit, OnDestroy {
-
   camera: Camera;
 
   CAMERA_MIN_ZOOM_LEVEL = CAMERA_MIN_ZOOM_LEVEL;
@@ -33,9 +32,7 @@ export class CameraFormComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
 
-  constructor(
-    private cameraStore: CameraStore
-  ) {}
+  constructor(private cameraStore: CameraStore) {}
 
   ngOnInit(): void {
     this.subscribeToData();
@@ -46,9 +43,7 @@ export class CameraFormComponent implements OnInit, OnDestroy {
   }
 
   subscribeToData(): void {
-    this.subscriptions.push(
-      this.cameraStore.camera.subscribe(camera => this.camera = camera)
-    );
+    this.subscriptions.push(this.cameraStore.camera.subscribe(camera => (this.camera = camera)));
   }
 
   unsubscribeFromData(): void {
@@ -74,5 +69,4 @@ export class CameraFormComponent implements OnInit, OnDestroy {
   onResetCameraClick(): void {
     this.cameraStore.resetAll();
   }
-
 }

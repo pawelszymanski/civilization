@@ -6,10 +6,9 @@ import {
   TerrainResourceId,
   TerrainResourceTypeId,
   TerrainUiCommon,
-  TerrainUiVariantCount
+  TerrainUiVariantCount,
 } from '../models/terrain';
-import {Yield, YieldId} from '../models/yield';
-
+import { Yield, YieldId } from '../models/yield';
 
 interface TerrainBase {
   id: TerrainBaseId;
@@ -21,8 +20,6 @@ type TerrainBaseSet = {
   [key in TerrainBaseId]: TerrainBase;
 };
 
-
-
 interface TerrainFeature {
   id: TerrainFeatureId;
   suitableTerrain: SuitableTerrain[];
@@ -31,9 +28,7 @@ interface TerrainFeature {
 }
 
 // All but TerrainFeatureId.NONE
-type TerrainFeatureSet = Omit<{[key in TerrainFeatureId]: TerrainFeature; }, TerrainFeatureId.NONE>;
-
-
+type TerrainFeatureSet = Omit<{ [key in TerrainFeatureId]: TerrainFeature }, TerrainFeatureId.NONE>;
 
 interface TerrainResource {
   id: TerrainResourceId;
@@ -44,9 +39,7 @@ interface TerrainResource {
 }
 
 // All but TerrainResourceId.NONE
-type TerrainResourceSet = Omit<{[key in TerrainResourceId]: TerrainResource; }, TerrainResourceId.NONE>;
-
-
+type TerrainResourceSet = Omit<{ [key in TerrainResourceId]: TerrainResource }, TerrainResourceId.NONE>;
 
 interface TerrainImprovement {
   id: TerrainImprovementId;
@@ -56,9 +49,7 @@ interface TerrainImprovement {
 }
 
 // All but TerrainImprovementId.NONE
-type TerrainImprovementSet = Omit<{[key in TerrainImprovementId]: TerrainImprovement; }, TerrainImprovementId.NONE>;
-
-
+type TerrainImprovementSet = Omit<{ [key in TerrainImprovementId]: TerrainImprovement }, TerrainImprovementId.NONE>;
 
 export const TERRAIN_BASE_SET: TerrainBaseSet = {
   [TerrainBaseId.GRASSLAND_FLAT]: {
@@ -222,11 +213,9 @@ export const TERRAIN_BASE_SET: TerrainBaseSet = {
       class: 'm-base-ocean',
       variantCount: 1,
     },
-  }
+  },
 };
 export const TERRAIN_BASE_LIST: TerrainBase[] = Object.keys(TERRAIN_BASE_SET).map(key => TERRAIN_BASE_SET[key]);
-
-
 
 // For features suitableTerrain might differ from the original game
 export const TERRAIN_FEATURE_SET: TerrainFeatureSet = {
@@ -246,10 +235,7 @@ export const TERRAIN_FEATURE_SET: TerrainFeatureSet = {
   },
   [TerrainFeatureId.ICE]: {
     id: TerrainFeatureId.ICE,
-    suitableTerrain: [
-      { baseId: TerrainBaseId.COAST },
-      { baseId: TerrainBaseId.OCEAN },
-    ],
+    suitableTerrain: [{ baseId: TerrainBaseId.COAST }, { baseId: TerrainBaseId.OCEAN }],
     yield: {},
     ui: {
       name: 'Ice',
@@ -259,9 +245,7 @@ export const TERRAIN_FEATURE_SET: TerrainFeatureSet = {
   },
   [TerrainFeatureId.MARSH]: {
     id: TerrainFeatureId.MARSH,
-    suitableTerrain: [
-      { baseId: TerrainBaseId.GRASSLAND_FLAT },
-    ],
+    suitableTerrain: [{ baseId: TerrainBaseId.GRASSLAND_FLAT }],
     yield: { [YieldId.FOOD]: 1 },
     ui: {
       name: 'Marsh',
@@ -271,9 +255,7 @@ export const TERRAIN_FEATURE_SET: TerrainFeatureSet = {
   },
   [TerrainFeatureId.OASIS]: {
     id: TerrainFeatureId.OASIS,
-    suitableTerrain: [
-      { baseId: TerrainBaseId.DESERT_FLAT },
-    ],
+    suitableTerrain: [{ baseId: TerrainBaseId.DESERT_FLAT }],
     yield: { [YieldId.FOOD]: 3, [YieldId.GOLD]: 1 },
     ui: {
       name: 'Oasis',
@@ -283,10 +265,7 @@ export const TERRAIN_FEATURE_SET: TerrainFeatureSet = {
   },
   [TerrainFeatureId.RAINFOREST]: {
     id: TerrainFeatureId.RAINFOREST,
-    suitableTerrain: [
-      { baseId: TerrainBaseId.PLAINS_FLAT },
-      { baseId: TerrainBaseId.PLAINS_HILLS },
-    ],
+    suitableTerrain: [{ baseId: TerrainBaseId.PLAINS_FLAT }, { baseId: TerrainBaseId.PLAINS_HILLS }],
     yield: { [YieldId.FOOD]: 1 },
     ui: {
       name: 'Rainforest',
@@ -296,9 +275,7 @@ export const TERRAIN_FEATURE_SET: TerrainFeatureSet = {
   },
   [TerrainFeatureId.REEF]: {
     id: TerrainFeatureId.REEF,
-    suitableTerrain: [
-      { baseId: TerrainBaseId.OCEAN },
-    ],
+    suitableTerrain: [{ baseId: TerrainBaseId.OCEAN }],
     yield: { [YieldId.FOOD]: 1, [YieldId.PRODUCTION]: 1 },
     ui: {
       name: 'Reef',
@@ -322,20 +299,16 @@ export const TERRAIN_FEATURE_SET: TerrainFeatureSet = {
       class: 'm-feature-woods',
       variantCount: 1,
     },
-  }
+  },
 };
 export const TERRAIN_FEATURE_LIST: TerrainFeature[] = Object.keys(TERRAIN_FEATURE_SET).map(key => TERRAIN_FEATURE_SET[key]);
-
-
 
 export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
   [TerrainResourceId.BANANAS]: {
     id: TerrainResourceId.BANANAS,
     type: TerrainResourceTypeId.BONUS,
-    suitableTerrain: [
-      { featureId: TerrainFeatureId.RAINFOREST },
-    ],
-    yield: {  [YieldId.FOOD]: 1 },
+    suitableTerrain: [{ featureId: TerrainFeatureId.RAINFOREST }],
+    yield: { [YieldId.FOOD]: 1 },
     ui: {
       name: 'Bananas',
       class: 'm-resource-bananas',
@@ -344,9 +317,7 @@ export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
   [TerrainResourceId.CATTLE]: {
     id: TerrainResourceId.CATTLE,
     type: TerrainResourceTypeId.BONUS,
-    suitableTerrain: [
-      { baseId: TerrainBaseId.GRASSLAND_FLAT, featureId: TerrainFeatureId.NONE },
-    ],
+    suitableTerrain: [{ baseId: TerrainBaseId.GRASSLAND_FLAT, featureId: TerrainFeatureId.NONE }],
     yield: { [YieldId.FOOD]: 1 },
     ui: {
       name: 'Cattle',
@@ -385,10 +356,7 @@ export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
   [TerrainResourceId.DEER]: {
     id: TerrainResourceId.DEER,
     type: TerrainResourceTypeId.BONUS,
-    suitableTerrain: [
-      { baseId: TerrainBaseId.TUNDRA_FLAT, featureId: TerrainFeatureId.NONE },
-      { featureId: TerrainFeatureId.WOODS },
-    ],
+    suitableTerrain: [{ baseId: TerrainBaseId.TUNDRA_FLAT, featureId: TerrainFeatureId.NONE }, { featureId: TerrainFeatureId.WOODS }],
     yield: { [YieldId.PRODUCTION]: 1 },
     ui: {
       name: 'Deer',
@@ -398,11 +366,8 @@ export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
   [TerrainResourceId.FISH]: {
     id: TerrainResourceId.FISH,
     type: TerrainResourceTypeId.BONUS,
-    suitableTerrain: [
-      { baseId: TerrainBaseId.LAKE },
-      { baseId: TerrainBaseId.COAST },
-    ],
-    yield: {  [YieldId.FOOD]: 1 },
+    suitableTerrain: [{ baseId: TerrainBaseId.LAKE }, { baseId: TerrainBaseId.COAST }],
+    yield: { [YieldId.FOOD]: 1 },
     ui: {
       name: 'Fish',
       class: 'm-resource-fish',
@@ -416,7 +381,7 @@ export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
       { featureId: TerrainFeatureId.FLOODPLAINS },
       { featureId: TerrainFeatureId.MARSH },
     ],
-    yield: {  [YieldId.FOOD]: 1 },
+    yield: { [YieldId.FOOD]: 1 },
     ui: {
       name: 'Rice',
       class: 'm-resource-rice',
@@ -431,7 +396,7 @@ export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
       { baseId: TerrainBaseId.DESERT_HILLS, featureId: TerrainFeatureId.NONE },
       { baseId: TerrainBaseId.TUNDRA_HILLS, featureId: TerrainFeatureId.NONE },
     ],
-    yield: {  [YieldId.FOOD]: 1 },
+    yield: { [YieldId.FOOD]: 1 },
     ui: {
       name: 'Sheep',
       class: 'm-resource-sheep',
@@ -467,10 +432,7 @@ export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
   [TerrainResourceId.ALUMINUM]: {
     id: TerrainResourceId.ALUMINUM,
     type: TerrainResourceTypeId.STRATEGIC,
-    suitableTerrain: [
-      { baseId: TerrainBaseId.PLAINS_HILLS },
-      { baseId: TerrainBaseId.DESERT_HILLS },
-    ],
+    suitableTerrain: [{ baseId: TerrainBaseId.PLAINS_HILLS }, { baseId: TerrainBaseId.DESERT_HILLS }],
     yield: { [YieldId.SCIENCE]: 1 },
     ui: {
       name: 'Aluminum',
@@ -480,10 +442,7 @@ export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
   [TerrainResourceId.COAL]: {
     id: TerrainResourceId.COAL,
     type: TerrainResourceTypeId.STRATEGIC,
-    suitableTerrain: [
-      { baseId: TerrainBaseId.GRASSLAND_HILLS },
-      { baseId: TerrainBaseId.PLAINS_HILLS },
-    ],
+    suitableTerrain: [{ baseId: TerrainBaseId.GRASSLAND_HILLS }, { baseId: TerrainBaseId.PLAINS_HILLS }],
     yield: { [YieldId.PRODUCTION]: 2 },
     ui: {
       name: 'Coal',
@@ -607,9 +566,7 @@ export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
   [TerrainResourceId.COCOA]: {
     id: TerrainResourceId.COCOA,
     type: TerrainResourceTypeId.LUXURY,
-    suitableTerrain: [
-      { featureId: TerrainFeatureId.RAINFOREST },
-    ],
+    suitableTerrain: [{ featureId: TerrainFeatureId.RAINFOREST }],
     yield: { [YieldId.GOLD]: 3 },
     ui: {
       name: 'Cocoa',
@@ -662,10 +619,7 @@ export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
   [TerrainResourceId.DYES]: {
     id: TerrainResourceId.DYES,
     type: TerrainResourceTypeId.LUXURY,
-    suitableTerrain: [
-      { featureId: TerrainFeatureId.RAINFOREST },
-      { featureId: TerrainFeatureId.WOODS },
-    ],
+    suitableTerrain: [{ featureId: TerrainFeatureId.RAINFOREST }, { featureId: TerrainFeatureId.WOODS }],
     yield: { [YieldId.FAITH]: 1 },
     ui: {
       name: 'Dyes',
@@ -675,11 +629,7 @@ export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
   [TerrainResourceId.FURS]: {
     id: TerrainResourceId.FURS,
     type: TerrainResourceTypeId.LUXURY,
-    suitableTerrain: [
-      { baseId: TerrainBaseId.TUNDRA_FLAT },
-      { baseId: TerrainBaseId.TUNDRA_HILLS },
-      { featureId: TerrainFeatureId.WOODS },
-    ],
+    suitableTerrain: [{ baseId: TerrainBaseId.TUNDRA_FLAT }, { baseId: TerrainBaseId.TUNDRA_HILLS }, { featureId: TerrainFeatureId.WOODS }],
     yield: { [YieldId.FOOD]: 1, [YieldId.GOLD]: 1 },
     ui: {
       name: 'Furs',
@@ -704,10 +654,7 @@ export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
   [TerrainResourceId.INCENSE]: {
     id: TerrainResourceId.INCENSE,
     type: TerrainResourceTypeId.LUXURY,
-    suitableTerrain: [
-      { baseId: TerrainBaseId.PLAINS_FLAT },
-      { baseId: TerrainBaseId.DESERT_FLAT, featureId: TerrainFeatureId.NONE },
-    ],
+    suitableTerrain: [{ baseId: TerrainBaseId.PLAINS_FLAT }, { baseId: TerrainBaseId.DESERT_FLAT, featureId: TerrainFeatureId.NONE }],
     yield: { [YieldId.FAITH]: 1 },
     ui: {
       name: 'Incense',
@@ -761,9 +708,7 @@ export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
   [TerrainResourceId.MERCURY]: {
     id: TerrainResourceId.MERCURY,
     type: TerrainResourceTypeId.LUXURY,
-    suitableTerrain: [
-      { baseId: TerrainBaseId.PLAINS_FLAT, featureId: TerrainFeatureId.NONE },
-    ],
+    suitableTerrain: [{ baseId: TerrainBaseId.PLAINS_FLAT, featureId: TerrainFeatureId.NONE }],
     yield: { [YieldId.SCIENCE]: 1 },
     ui: {
       name: 'Mercury',
@@ -773,9 +718,7 @@ export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
   [TerrainResourceId.OLIVES]: {
     id: TerrainResourceId.OLIVES,
     type: TerrainResourceTypeId.LUXURY,
-    suitableTerrain: [
-      { baseId: TerrainBaseId.GRASSLAND_FLAT, featureId: TerrainFeatureId.NONE },
-    ],
+    suitableTerrain: [{ baseId: TerrainBaseId.GRASSLAND_FLAT, featureId: TerrainFeatureId.NONE }],
     yield: { [YieldId.PRODUCTION]: 1, [YieldId.GOLD]: 1 },
     ui: {
       name: 'Olives',
@@ -785,10 +728,7 @@ export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
   [TerrainResourceId.PEARLS]: {
     id: TerrainResourceId.PEARLS,
     type: TerrainResourceTypeId.LUXURY,
-    suitableTerrain: [
-      { baseId: TerrainBaseId.LAKE },
-      { baseId: TerrainBaseId.COAST },
-    ],
+    suitableTerrain: [{ baseId: TerrainBaseId.LAKE }, { baseId: TerrainBaseId.COAST }],
     yield: { [YieldId.FAITH]: 1 },
     ui: {
       name: 'Pearls',
@@ -844,10 +784,7 @@ export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
   [TerrainResourceId.SPICES]: {
     id: TerrainResourceId.SPICES,
     type: TerrainResourceTypeId.LUXURY,
-    suitableTerrain: [
-      { featureId: TerrainFeatureId.RAINFOREST },
-      { featureId: TerrainFeatureId.WOODS },
-    ],
+    suitableTerrain: [{ featureId: TerrainFeatureId.RAINFOREST }, { featureId: TerrainFeatureId.WOODS }],
     yield: { [YieldId.FOOD]: 2 },
     ui: {
       name: 'Spices',
@@ -857,10 +794,7 @@ export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
   [TerrainResourceId.SUGAR]: {
     id: TerrainResourceId.SUGAR,
     type: TerrainResourceTypeId.LUXURY,
-    suitableTerrain: [
-      { featureId: TerrainFeatureId.FLOODPLAINS },
-      { featureId: TerrainFeatureId.MARSH },
-    ],
+    suitableTerrain: [{ featureId: TerrainFeatureId.FLOODPLAINS }, { featureId: TerrainFeatureId.MARSH }],
     yield: { [YieldId.FOOD]: 2 },
     ui: {
       name: 'Sugar',
@@ -885,9 +819,7 @@ export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
   [TerrainResourceId.TOBACCO]: {
     id: TerrainResourceId.TOBACCO,
     type: TerrainResourceTypeId.LUXURY,
-    suitableTerrain: [
-      { baseId: TerrainBaseId.GRASSLAND_FLAT, featureId: TerrainFeatureId.NONE },
-    ],
+    suitableTerrain: [{ baseId: TerrainBaseId.GRASSLAND_FLAT, featureId: TerrainFeatureId.NONE }],
     yield: { [YieldId.FAITH]: 1 },
     ui: {
       name: 'Tobacco',
@@ -911,10 +843,7 @@ export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
   [TerrainResourceId.WHALES]: {
     id: TerrainResourceId.WHALES,
     type: TerrainResourceTypeId.LUXURY,
-    suitableTerrain: [
-      { baseId: TerrainBaseId.COAST },
-      { baseId: TerrainBaseId.OCEAN },
-    ],
+    suitableTerrain: [{ baseId: TerrainBaseId.COAST }, { baseId: TerrainBaseId.OCEAN }],
     yield: { [YieldId.FOOD]: 1, [YieldId.GOLD]: 1 },
     ui: {
       name: 'Whales',
@@ -935,11 +864,9 @@ export const TERRAIN_RESOURCE_SET: TerrainResourceSet = {
       name: 'Wine',
       class: 'm-resource-wine',
     },
-  }
+  },
 };
 export const TERRAIN_RESOURCE_LIST: TerrainResource[] = Object.keys(TERRAIN_RESOURCE_SET).map(key => TERRAIN_RESOURCE_SET[key]);
-
-
 
 export const TERRAIN_IMPROVEMENT_SET: TerrainImprovementSet = {
   // -1 Appeal
@@ -1136,6 +1063,6 @@ export const TERRAIN_IMPROVEMENT_SET: TerrainImprovementSet = {
       name: 'Wind Farm',
       class: 'm-improvement-wind-farm',
     },
-  }
+  },
 };
 export const TERRAIN_IMPROVEMENT_LIST: TerrainImprovement[] = Object.keys(TERRAIN_IMPROVEMENT_SET).map(key => TERRAIN_IMPROVEMENT_SET[key]);

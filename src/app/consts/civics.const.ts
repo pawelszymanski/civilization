@@ -1,4 +1,4 @@
-import {Civic, CivicId} from '../models/civics';
+import { Civic, CivicId } from '../models/civics';
 
 type CivicSet = {
   [key in CivicId]: Civic;
@@ -12,8 +12,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [],
     ui: {
       name: 'Code of laws',
-      class: 'm-code-of-laws'
-    }
+      class: 'm-code-of-laws',
+    },
   },
   [CivicId.CRAFTSMANSHIP]: {
     id: CivicId.CRAFTSMANSHIP,
@@ -21,8 +21,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.CODE_OF_LAWS],
     ui: {
       name: 'Craftsmanship',
-      class: 'm-craftsmanship'
-    }
+      class: 'm-craftsmanship',
+    },
   },
   [CivicId.FOREIGN_TRADE]: {
     id: CivicId.FOREIGN_TRADE,
@@ -30,8 +30,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.CODE_OF_LAWS],
     ui: {
       name: 'Foreign trade',
-      class: 'm-foreign-trade'
-    }
+      class: 'm-foreign-trade',
+    },
   },
   [CivicId.MILITARY_TRADITION]: {
     id: CivicId.MILITARY_TRADITION,
@@ -39,8 +39,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.CRAFTSMANSHIP],
     ui: {
       name: 'Military tradition',
-      class: 'm-military-tradition'
-    }
+      class: 'm-military-tradition',
+    },
   },
   [CivicId.STATE_WORKFORCE]: {
     id: CivicId.STATE_WORKFORCE,
@@ -48,8 +48,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.CRAFTSMANSHIP],
     ui: {
       name: 'State workforce',
-      class: 'm-state-workforce'
-    }
+      class: 'm-state-workforce',
+    },
   },
   [CivicId.EARLY_EMPIRE]: {
     id: CivicId.EARLY_EMPIRE,
@@ -57,8 +57,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.FOREIGN_TRADE],
     ui: {
       name: 'Early empire',
-      class: 'm-early-empire'
-    }
+      class: 'm-early-empire',
+    },
   },
   [CivicId.MYSTICISM]: {
     id: CivicId.MYSTICISM,
@@ -66,8 +66,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.FOREIGN_TRADE],
     ui: {
       name: 'Mysticism',
-      class: 'm-mysticism'
-    }
+      class: 'm-mysticism',
+    },
   },
 
   // CLASSICAL ERA
@@ -77,8 +77,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.STATE_WORKFORCE],
     ui: {
       name: 'Games and recreation',
-      class: 'm-games-and-recreation'
-    }
+      class: 'm-games-and-recreation',
+    },
   },
   [CivicId.POLITICAL_PHILOSOPHY]: {
     id: CivicId.POLITICAL_PHILOSOPHY,
@@ -86,8 +86,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.STATE_WORKFORCE, CivicId.EARLY_EMPIRE],
     ui: {
       name: 'Political philosophy',
-      class: 'm-political-philosophy'
-    }
+      class: 'm-political-philosophy',
+    },
   },
   [CivicId.DRAMA_AND_POETRY]: {
     id: CivicId.DRAMA_AND_POETRY,
@@ -95,8 +95,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.EARLY_EMPIRE],
     ui: {
       name: 'Drama and poetry',
-      class: 'm-drama-and-poetry'
-    }
+      class: 'm-drama-and-poetry',
+    },
   },
   [CivicId.MILITARY_TRAINING]: {
     id: CivicId.MILITARY_TRAINING,
@@ -104,8 +104,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.GAMES_AND_RECREATION, CivicId.MILITARY_TRADITION],
     ui: {
       name: 'Military training',
-      class: 'm-military-training'
-    }
+      class: 'm-military-training',
+    },
   },
   [CivicId.DEFENSIVE_TACTICS]: {
     id: CivicId.DEFENSIVE_TACTICS,
@@ -113,8 +113,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.GAMES_AND_RECREATION, CivicId.POLITICAL_PHILOSOPHY],
     ui: {
       name: 'Defensive tactics',
-      class: 'm-defensive-tactics'
-    }
+      class: 'm-defensive-tactics',
+    },
   },
   [CivicId.RECORDED_HISTORY]: {
     id: CivicId.RECORDED_HISTORY,
@@ -122,8 +122,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.POLITICAL_PHILOSOPHY, CivicId.DRAMA_AND_POETRY],
     ui: {
       name: 'Recorded history',
-      class: 'm-recorded-history'
-    }
+      class: 'm-recorded-history',
+    },
   },
   [CivicId.THEOLOGY]: {
     id: CivicId.THEOLOGY,
@@ -131,8 +131,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.MYSTICISM, CivicId.DRAMA_AND_POETRY],
     ui: {
       name: 'Theology',
-      class: 'm-theology'
-    }
+      class: 'm-theology',
+    },
   },
 
   // MEDIEVAL ERA
@@ -142,8 +142,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.DEFENSIVE_TACTICS],
     ui: {
       name: 'Naval tradition',
-      class: 'm-naval-tradition'
-    }
+      class: 'm-naval-tradition',
+    },
   },
   [CivicId.FEUDALISM]: {
     id: CivicId.FEUDALISM,
@@ -151,8 +151,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.DEFENSIVE_TACTICS],
     ui: {
       name: 'Feudalism',
-      class: 'm-feudalism'
-    }
+      class: 'm-feudalism',
+    },
   },
   [CivicId.CIVIL_SERVICE]: {
     id: CivicId.CIVIL_SERVICE,
@@ -160,8 +160,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.DEFENSIVE_TACTICS, CivicId.RECORDED_HISTORY],
     ui: {
       name: 'Civil service',
-      class: 'm-civil-service'
-    }
+      class: 'm-civil-service',
+    },
   },
   [CivicId.MERCENARIES]: {
     id: CivicId.MERCENARIES,
@@ -169,8 +169,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.MILITARY_TRAINING, CivicId.FEUDALISM],
     ui: {
       name: 'Mercenaries',
-      class: 'm-mercenaries'
-    }
+      class: 'm-mercenaries',
+    },
   },
   [CivicId.MEDIEVAL_FAIRES]: {
     id: CivicId.MEDIEVAL_FAIRES,
@@ -178,8 +178,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.FEUDALISM],
     ui: {
       name: 'Medieval faires',
-      class: 'm-medieval-faires'
-    }
+      class: 'm-medieval-faires',
+    },
   },
   [CivicId.GUILDS]: {
     id: CivicId.GUILDS,
@@ -187,8 +187,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.FEUDALISM, CivicId.CIVIL_SERVICE],
     ui: {
       name: 'Guilds',
-      class: 'm-guilds'
-    }
+      class: 'm-guilds',
+    },
   },
   [CivicId.DIVINE_RIGHT]: {
     id: CivicId.DIVINE_RIGHT,
@@ -196,8 +196,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.THEOLOGY, CivicId.CIVIL_SERVICE],
     ui: {
       name: 'Divine right',
-      class: 'm-divine-right'
-    }
+      class: 'm-divine-right',
+    },
   },
 
   // RENAISSANCE ERA
@@ -207,8 +207,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.MERCENARIES, CivicId.MEDIEVAL_FAIRES],
     ui: {
       name: 'Exploration',
-      class: 'm-exploration'
-    }
+      class: 'm-exploration',
+    },
   },
   [CivicId.HUMANISM]: {
     id: CivicId.HUMANISM,
@@ -216,8 +216,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.MEDIEVAL_FAIRES, CivicId.GUILDS],
     ui: {
       name: 'Humanism',
-      class: 'm-humanism'
-    }
+      class: 'm-humanism',
+    },
   },
   [CivicId.DIPLOMATIC_SERVICE]: {
     id: CivicId.DIPLOMATIC_SERVICE,
@@ -225,8 +225,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.GUILDS],
     ui: {
       name: 'Diplomatic service',
-      class: 'm-diplomatic-service'
-    }
+      class: 'm-diplomatic-service',
+    },
   },
   [CivicId.REFORMED_CHURCH]: {
     id: CivicId.REFORMED_CHURCH,
@@ -234,8 +234,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.DIVINE_RIGHT],
     ui: {
       name: 'Reformed church',
-      class: 'm-reformed-church'
-    }
+      class: 'm-reformed-church',
+    },
   },
   [CivicId.MERCANTILISM]: {
     id: CivicId.MERCANTILISM,
@@ -243,8 +243,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.HUMANISM],
     ui: {
       name: 'Mercantilism',
-      class: 'm-mercantilism'
-    }
+      class: 'm-mercantilism',
+    },
   },
   [CivicId.THE_ENLIGHTENMENT]: {
     id: CivicId.THE_ENLIGHTENMENT,
@@ -252,8 +252,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.DIPLOMATIC_SERVICE],
     ui: {
       name: 'The enlightenment',
-      class: 'm-the-enlightenment'
-    }
+      class: 'm-the-enlightenment',
+    },
   },
 
   // INDUSTRIAL ERA
@@ -263,8 +263,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.MERCANTILISM],
     ui: {
       name: 'Colonialism',
-      class: 'm-colonialism'
-    }
+      class: 'm-colonialism',
+    },
   },
   [CivicId.CIVIL_ENGINEERING]: {
     id: CivicId.CIVIL_ENGINEERING,
@@ -272,8 +272,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.MERCANTILISM],
     ui: {
       name: 'Civil engineering',
-      class: 'm-civil-engineering'
-    }
+      class: 'm-civil-engineering',
+    },
   },
   [CivicId.NATIONALISM]: {
     id: CivicId.NATIONALISM,
@@ -281,8 +281,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.THE_ENLIGHTENMENT],
     ui: {
       name: 'Nationalism',
-      class: 'm-nationalism'
-    }
+      class: 'm-nationalism',
+    },
   },
   [CivicId.OPERA_AND_BALLET]: {
     id: CivicId.OPERA_AND_BALLET,
@@ -290,8 +290,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.THE_ENLIGHTENMENT],
     ui: {
       name: 'Opera and ballet',
-      class: 'm-opera-and-ballet'
-    }
+      class: 'm-opera-and-ballet',
+    },
   },
   [CivicId.NATURAL_HISTORY]: {
     id: CivicId.NATURAL_HISTORY,
@@ -299,8 +299,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.COLONIALISM],
     ui: {
       name: 'Natural history',
-      class: 'm-natural-history'
-    }
+      class: 'm-natural-history',
+    },
   },
   [CivicId.URBANIZATION]: {
     id: CivicId.URBANIZATION,
@@ -308,8 +308,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.CIVIL_ENGINEERING, CivicId.NATIONALISM],
     ui: {
       name: 'Urbanization',
-      class: 'm-urbanization'
-    }
+      class: 'm-urbanization',
+    },
   },
   [CivicId.SCORCHED_EARTH]: {
     id: CivicId.SCORCHED_EARTH,
@@ -317,8 +317,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.NATIONALISM],
     ui: {
       name: 'Scorched earth',
-      class: 'm-scorched-earth'
-    }
+      class: 'm-scorched-earth',
+    },
   },
 
   // MODERN ERA
@@ -328,8 +328,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.NATURAL_HISTORY, CivicId.URBANIZATION],
     ui: {
       name: 'Conservation',
-      class: 'm-conservation'
-    }
+      class: 'm-conservation',
+    },
   },
   [CivicId.MASS_MEDIA]: {
     id: CivicId.MASS_MEDIA,
@@ -337,8 +337,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.URBANIZATION],
     ui: {
       name: 'Mass media',
-      class: 'm-mass-media'
-    }
+      class: 'm-mass-media',
+    },
   },
   [CivicId.MOBILIZATION]: {
     id: CivicId.MOBILIZATION,
@@ -346,8 +346,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.URBANIZATION],
     ui: {
       name: 'Mobilization',
-      class: 'm-mobilization'
-    }
+      class: 'm-mobilization',
+    },
   },
   [CivicId.CAPITALISM]: {
     id: CivicId.CAPITALISM,
@@ -355,8 +355,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.MASS_MEDIA],
     ui: {
       name: 'Capitalism',
-      class: 'm-capitalism'
-    }
+      class: 'm-capitalism',
+    },
   },
   [CivicId.IDEOLOGY]: {
     id: CivicId.IDEOLOGY,
@@ -364,8 +364,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.MASS_MEDIA, CivicId.MOBILIZATION],
     ui: {
       name: 'Ideology',
-      class: 'm-ideology'
-    }
+      class: 'm-ideology',
+    },
   },
   [CivicId.NUCLEAR_PROGRAM]: {
     id: CivicId.NUCLEAR_PROGRAM,
@@ -373,8 +373,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.IDEOLOGY],
     ui: {
       name: 'Nuclear program',
-      class: 'm-nuclear-program'
-    }
+      class: 'm-nuclear-program',
+    },
   },
   [CivicId.SUFFRAGE]: {
     id: CivicId.SUFFRAGE,
@@ -382,8 +382,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.IDEOLOGY],
     ui: {
       name: 'Suffrage',
-      class: 'm-suffrage'
-    }
+      class: 'm-suffrage',
+    },
   },
   [CivicId.TOTALITARIANISM]: {
     id: CivicId.TOTALITARIANISM,
@@ -391,8 +391,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.IDEOLOGY],
     ui: {
       name: 'Totalitarianism',
-      class: 'm-totalitarianism'
-    }
+      class: 'm-totalitarianism',
+    },
   },
   [CivicId.CLASS_STRUGGLE]: {
     id: CivicId.CLASS_STRUGGLE,
@@ -400,8 +400,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.IDEOLOGY],
     ui: {
       name: 'Class struggle',
-      class: 'm-class-struggle'
-    }
+      class: 'm-class-struggle',
+    },
   },
 
   // ATOMIC ERA
@@ -411,8 +411,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.CONSERVATION],
     ui: {
       name: 'Cultural heritage',
-      class: 'm-cultural-heritage'
-    }
+      class: 'm-cultural-heritage',
+    },
   },
   [CivicId.COLD_WAR]: {
     id: CivicId.COLD_WAR,
@@ -420,8 +420,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.IDEOLOGY],
     ui: {
       name: 'Cold war',
-      class: 'm-cold-war'
-    }
+      class: 'm-cold-war',
+    },
   },
   [CivicId.PROFESSIONAL_SPORTS]: {
     id: CivicId.PROFESSIONAL_SPORTS,
@@ -429,8 +429,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.IDEOLOGY],
     ui: {
       name: 'Professional sports',
-      class: 'm-professional-sports'
-    }
+      class: 'm-professional-sports',
+    },
   },
   [CivicId.RAPID_DEPLOYMENT]: {
     id: CivicId.RAPID_DEPLOYMENT,
@@ -438,8 +438,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.COLD_WAR],
     ui: {
       name: 'Rapid deployment',
-      class: 'm-rapid-deployment'
-    }
+      class: 'm-rapid-deployment',
+    },
   },
   [CivicId.SPACE_RACE]: {
     id: CivicId.SPACE_RACE,
@@ -447,8 +447,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.COLD_WAR],
     ui: {
       name: 'Space race',
-      class: 'm-space-race'
-    }
+      class: 'm-space-race',
+    },
   },
 
   // INFORMATION ERA
@@ -458,8 +458,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.CULTURAL_HERITAGE, CivicId.RAPID_DEPLOYMENT],
     ui: {
       name: 'Environmentalism',
-      class: 'm-environmentalism'
-    }
+      class: 'm-environmentalism',
+    },
   },
   [CivicId.GLOBALIZATION]: {
     id: CivicId.GLOBALIZATION,
@@ -467,8 +467,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.RAPID_DEPLOYMENT, CivicId.SPACE_RACE],
     ui: {
       name: 'Globalization',
-      class: 'm-globalization'
-    }
+      class: 'm-globalization',
+    },
   },
   [CivicId.SOCIAL_MEDIA]: {
     id: CivicId.SOCIAL_MEDIA,
@@ -476,8 +476,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.PROFESSIONAL_SPORTS, CivicId.SPACE_RACE],
     ui: {
       name: 'Social media',
-      class: 'm-social-media'
-    }
+      class: 'm-social-media',
+    },
   },
   [CivicId.NEAR_FUTURE_GOVERNANCE]: {
     id: CivicId.NEAR_FUTURE_GOVERNANCE,
@@ -485,8 +485,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.ENVIRONMENTALISM, CivicId.GLOBALIZATION],
     ui: {
       name: 'Near future governance',
-      class: 'm-near-future-governance'
-    }
+      class: 'm-near-future-governance',
+    },
   },
   [CivicId.VENTURE_POLITICS]: {
     id: CivicId.VENTURE_POLITICS,
@@ -494,8 +494,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.GLOBALIZATION, CivicId.SOCIAL_MEDIA],
     ui: {
       name: 'Venture politics',
-      class: 'm-venture-politics'
-    }
+      class: 'm-venture-politics',
+    },
   },
   [CivicId.DISTRIBUTED_SOVEREIGNTY]: {
     id: CivicId.DISTRIBUTED_SOVEREIGNTY,
@@ -503,8 +503,8 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.GLOBALIZATION, CivicId.SOCIAL_MEDIA],
     ui: {
       name: 'Distributed sovereignty',
-      class: 'm-distributed-sovereignty'
-    }
+      class: 'm-distributed-sovereignty',
+    },
   },
   [CivicId.OPTIMIZATION_IMPERATIVE]: {
     id: CivicId.OPTIMIZATION_IMPERATIVE,
@@ -512,7 +512,7 @@ export const CIVIC_SET: CivicSet = {
     prerequisites: [CivicId.GLOBALIZATION, CivicId.SOCIAL_MEDIA],
     ui: {
       name: 'Optimization imperative',
-      class: 'm-optimization-imperative'
-    }
-  }
+      class: 'm-optimization-imperative',
+    },
+  },
 };

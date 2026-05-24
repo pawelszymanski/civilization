@@ -1,13 +1,13 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
-import {TerrainImprovementId} from '../models/terrain';
+import { TerrainImprovementId } from '../models/terrain';
 
-@Pipe({standalone: false, name: 'terrainImprovementName'})
+@Pipe({ standalone: false, name: 'terrainImprovementName' })
 export class TerrainImprovementNamePipe implements PipeTransform {
-
   transform(terrainImprovementId: TerrainImprovementId): string {
-    if (terrainImprovementId === TerrainImprovementId.NONE) { return ''; }
-    return  TerrainImprovementId[terrainImprovementId].toLowerCase().replace('_', ' ');
+    if (terrainImprovementId === TerrainImprovementId.NONE) {
+      return '';
+    }
+    return TerrainImprovementId[terrainImprovementId].toLowerCase().replace('_', ' ');
   }
-
 }

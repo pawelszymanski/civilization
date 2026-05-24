@@ -3,30 +3,30 @@ export enum LandmassValueId {
   LESS,
   STANDARD,
   MORE,
-  MOST
+  MOST,
 }
 
 export enum WorldAgeId {
   NEW,
   STANDARD,
-  OLD
+  OLD,
 }
 
 export enum TemperatureId {
   HOT,
   STANDARD,
-  COLD
+  COLD,
 }
 
 export enum RainfallId {
   HOT,
   STANDARD,
-  COLD
+  COLD,
 }
 
 export interface MapGeneratorSettings {
-  width: number;   // 1-indexed
-  height: number;  // 1-indexed
+  width: number; // 1-indexed
+  height: number; // 1-indexed
   landmass: LandmassValueId;
   continents: number;
   islands: number;
