@@ -1,11 +1,15 @@
-@import './../../../styles/variables';
+@use 'sass:math';
+@use '../generic/disable-selection' as *;
+@use '../generic/font' as *;
+@use '../generic/size' as *;
+@use '../../variables' as *;
 
 @mixin in-game-menu-button {
   @include size($in-game-menu-button-width, $in-game-menu-button-height);
   @include font($font-family-primary, white, 24px, 38px, center);
   background: cornflowerblue;
   border: 1px solid white;
-  margin-bottom: $in-game-menu-button-height / 2;
+  margin-bottom: math.div($in-game-menu-button-height, 2);
   cursor: pointer;
   @include disable-selection;
 

@@ -1,3 +1,5 @@
+@use 'sass:meta';
+
 $prop-name-white-space: 'white-space';
 $prop-name-style: 'style';
 $prop-name-align: 'align';
@@ -12,11 +14,11 @@ $prop-name-transform: 'transform';
 
   @each $arg in $arg-1, $arg-2, $arg-3, $arg-4, $arg-5, $arg-6, $arg-7, $arg-8, $arg-9, $arg-10, $arg-11, $arg-12, $arg-13, $arg-14, $arg-15 {
 
-    @if type-of($arg) == color {
+    @if meta.type-of($arg) == color {
       color: $arg;
     }
 
-    @if type-of($arg) == number {
+    @if meta.type-of($arg) == number {
       @if $numbers-in-mixin == 0 {
         font-size: $arg;
       }
@@ -29,7 +31,7 @@ $prop-name-transform: 'transform';
       $numbers-in-mixin: $numbers-in-mixin + 1;
     }
 
-    @if type-of($arg) == string {
+    @if meta.type-of($arg) == string {
       $property: '';
       @if $arg != '' {
 

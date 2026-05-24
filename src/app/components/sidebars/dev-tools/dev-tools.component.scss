@@ -1,5 +1,5 @@
-@import '../../../../styles/mixins';
-@import '../../../../styles/variables';
+@use '../../../../styles/mixins' as *;
+@use '../../../../styles/variables' as *;
 
 .dev-tools-component {
   @include position-block(absolute, 0, 0, 0, auto, $z-index-sidebar);

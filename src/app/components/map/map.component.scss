@@ -1,5 +1,5 @@
-@import '../../../styles/mixins';
-@import '../../../styles/variables';
+@use '../../../styles/mixins' as *;
+@use '../../../styles/variables' as *;
 
 .map-component {
   @include position-block(absolute, 0, 0, 0, 0, $z-index-game-map);

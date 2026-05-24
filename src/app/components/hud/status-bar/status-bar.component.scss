@@ -1,5 +1,5 @@
-@import '../../../../styles/mixins';
-@import '../../../../styles/variables';
+@use '../../../../styles/mixins' as *;
+@use '../../../../styles/variables' as *;
 
 .status-bar-component {
   @include position-block(absolute, 0, 0, auto, 0, $z-index-hud);

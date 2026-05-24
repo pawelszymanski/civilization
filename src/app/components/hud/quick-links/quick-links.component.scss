@@ -1,5 +1,5 @@
-@import '../../../../styles/mixins';
-@import '../../../../styles/variables';
+@use '../../../../styles/mixins' as *;
+@use '../../../../styles/variables' as *;
 
 .quick-links-component {
   @include position-block(absolute, 28px, auto, auto, 0, $z-index-hud);

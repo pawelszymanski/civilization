@@ -1,8 +1,8 @@
-@import 'mixins/generic/clearfix';
-@import 'mixins/generic/disable-selection';
-@import 'mixins/generic/font';
-@import 'mixins/generic/position';
-@import 'mixins/generic/position-block';
-@import 'mixins/generic/size';
+@forward 'mixins/generic/clearfix';
+@forward 'mixins/generic/disable-selection';
+@forward 'mixins/generic/font';
+@forward 'mixins/generic/position';
+@forward 'mixins/generic/position-block';
+@forward 'mixins/generic/size';
 
-@import 'mixins/specific/in-game-menu-button';
+@forward 'mixins/specific/in-game-menu-button';

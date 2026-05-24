@@ -1,5 +1,5 @@
-@import '../../../../../styles/mixins';
-@import '../../../../../styles/variables';
+@use '../../../../../styles/mixins' as *;
+@use '../../../../../styles/variables' as *;
 
 .exit-game-confirmation-component {
   @include position-top-left(absolute, 40%, calc(50% - 220px), $z-index-modal);

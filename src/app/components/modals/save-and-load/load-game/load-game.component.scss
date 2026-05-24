@@ -1,5 +1,5 @@
-@import '../../../../../styles/mixins';
-@import '../../../../../styles/variables';
+@use '../../../../../styles/mixins' as *;
+@use '../../../../../styles/variables' as *;
 
 $button-width: $in-game-menu-button-width;
 $button-height: $in-game-menu-button-height;

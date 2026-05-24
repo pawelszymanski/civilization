@@ -1,11 +1,12 @@
-@import '../../../../../styles/mixins';
-@import '../../../../../styles/variables';
+@use 'sass:math';
+@use '../../../../../styles/mixins' as *;
+@use '../../../../../styles/variables' as *;
 
-$padding: $in-game-menu-button-height / 2;
+$padding: math.div($in-game-menu-button-height, 2);
 $popup-width: $in-game-menu-button-width + $padding + $padding;
 
 .in-game-menu-component {
-  @include position-block(absolute, 300px, auto, auto, calc(50% - #{$popup-width / 2}), $z-index-modal);
+  @include position-block(absolute, 300px, auto, auto, calc(50% - #{math.div($popup-width, 2)}), $z-index-modal);
   @include size($popup-width, auto);
   padding: $padding;
   background: gray;

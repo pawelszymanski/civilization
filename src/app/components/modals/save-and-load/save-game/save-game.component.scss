@@ -1,11 +1,12 @@
-@import '../../../../../styles/mixins';
-@import '../../../../../styles/variables';
+@use 'sass:math';
+@use '../../../../../styles/mixins' as *;
+@use '../../../../../styles/variables' as *;
 
 $button-width: $in-game-menu-button-width;
 $button-height: $in-game-menu-button-height;
 
 .save-game-component {
-  @include position-top-left(absolute, 10%, calc(50% - #{$button-width / 2}), $z-index-modal);
+  @include position-top-left(absolute, 10%, calc(50% - #{math.div($button-width, 2)}), $z-index-modal);
   @include size($button-width, 70%);
   background: #9f9787;
   display: flex;

@@ -1,6 +1,6 @@
-@import '../../../../styles/functions';
-@import '../../../../styles/mixins';
-@import '../../../../styles/variables';
+@use '../../../../styles/functions' as *;
+@use '../../../../styles/mixins' as *;
+@use '../../../../styles/variables' as *;
 
 .world-builder-component {
 

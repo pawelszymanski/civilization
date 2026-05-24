@@ -1,5 +1,6 @@
-@import '../../../styles/mixins';
-@import '../../../styles/variables';
+@use 'sass:math';
+@use '../../../styles/mixins' as *;
+@use '../../../styles/variables' as *;
 
 .main-menu-component {
   @include position-block(absolute, 0, 0, 0, 0, $z-index-main-menu);
@@ -31,17 +32,17 @@
   }
 
   .primary-menu {
-    left: calc(50% - #{$in-game-menu-button-width / 2});
+    left: calc(50% - #{math.div($in-game-menu-button-width, 2)});
     &.active {
-      left: calc(50% - #{$in-game-menu-button-width} - #{$in-game-menu-button-height / 2});
+      left: calc(50% - #{$in-game-menu-button-width} - #{math.div($in-game-menu-button-height, 2)});
     }
   }
 
   .secondary-menu {
-    left: calc(50% + #{$in-game-menu-button-width / 2} + #{$in-game-menu-button-height / 2});
+    left: calc(50% + #{math.div($in-game-menu-button-width, 2)} + #{math.div($in-game-menu-button-height, 2)});
     opacity: 0;
     &.active{
-      left: calc(50% + #{$in-game-menu-button-height / 2});
+      left: calc(50% + #{math.div($in-game-menu-button-height, 2)});
       opacity: 1;
     }
   }
