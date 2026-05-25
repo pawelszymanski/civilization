@@ -5,7 +5,7 @@ import { Map } from '../../models/map';
 import { SaveHeader } from '../../models/saves';
 import { MapSizeId } from '../../models/map-size';
 import { ModalId, ScreenId, Ui } from '../../models/ui';
-import { LandmassValueId, MapGeneratorSettings, RainfallId, TemperatureId, WorldAgeId } from '../../models/map-generator';
+import { LandmassAmountId, MapGeneratorSettings, RainfallId, TemperatureId, WorldAgeId } from '../../models/map-generator';
 
 import { MAP_SIZE_SETTINGS_LIST } from '../../consts/map-size-settings.const';
 import { EARTH_MAP } from '../../consts/earth-map';
@@ -17,6 +17,8 @@ import { ZipService } from '../../services/zip.service';
 import { UiStore } from '../../stores/ui.store';
 import { MapStore } from '../../stores/map.store';
 import { SaveHeadersStore } from '../../stores/save-headers.store';
+import { GeneratorService } from '../../services/generator.service';
+import { MAP_SEED_RANGE } from '../../consts/map-size-range.const';
 
 @Component({
   standalone: false,
@@ -38,7 +40,8 @@ export class MainMenuComponent implements OnInit {
     private zipService: ZipService,
     private uiStore: UiStore,
     private mapStore: MapStore,
-    private saveHeadersStore: SaveHeadersStore
+    private saveHeadersStore: SaveHeadersStore,
+    private generatorService: GeneratorService,
   ) {}
 
   ngOnInit(): void {
@@ -92,12 +95,14 @@ export class MainMenuComponent implements OnInit {
     const mapGeneratorSetting: MapGeneratorSettings = {
       width: defaultMapSizeSettings.width,
       height: defaultMapSizeSettings.height,
-      landmass: LandmassValueId.STANDARD,
+      landmass: LandmassAmountId.STANDARD,
       continents: defaultMapSizeSettings.continents,
       islands: defaultMapSizeSettings.islands,
+      archipelagos: defaultMapSizeSettings.archipelagos,
       worldAge: WorldAgeId.STANDARD,
       temperature: TemperatureId.STANDARD,
       rainfall: RainfallId.STANDARD,
+      seed: this.generatorService.randomInteger(MAP_SEED_RANGE),
     };
     const newMap = this.mapGeneratorService.generateNewGameMap(mapGeneratorSetting);
     this.mapStore.next(newMap);

@@ -14,6 +14,7 @@ export const MAP_SIZE_SETTINGS_LIST: MapSizeSettings[] = [
     naturalWonders: 2,
     continents: 1,
     islands: 1,
+    archipelagos: 1,
   },
   {
     id: MapSizeId.TINY,
@@ -28,6 +29,7 @@ export const MAP_SIZE_SETTINGS_LIST: MapSizeSettings[] = [
     naturalWonders: 3,
     continents: 2,
     islands: 2,
+    archipelagos: 2,
   },
   {
     id: MapSizeId.SMALL,
@@ -42,6 +44,7 @@ export const MAP_SIZE_SETTINGS_LIST: MapSizeSettings[] = [
     naturalWonders: 4,
     continents: 3,
     islands: 3,
+    archipelagos: 1,
   },
   {
     id: MapSizeId.STANDARD,
@@ -56,6 +59,7 @@ export const MAP_SIZE_SETTINGS_LIST: MapSizeSettings[] = [
     naturalWonders: 5,
     continents: 4,
     islands: 4,
+    archipelagos: 1,
   },
   {
     id: MapSizeId.LARGE,
@@ -70,6 +74,7 @@ export const MAP_SIZE_SETTINGS_LIST: MapSizeSettings[] = [
     naturalWonders: 6,
     continents: 5,
     islands: 5,
+    archipelagos: 2,
   },
   {
     id: MapSizeId.HUGE,
@@ -84,5 +89,6 @@ export const MAP_SIZE_SETTINGS_LIST: MapSizeSettings[] = [
     naturalWonders: 7,
     continents: 6,
     islands: 6,
+    archipelagos: 3,
   },
 ];

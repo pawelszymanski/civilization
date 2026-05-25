@@ -21,6 +21,10 @@ export class GeneratorService {
     return new Date().toISOString() as Timestamp;
   }
 
+  public randomInteger(range: number): number {
+    return Math.floor(Math.random() * range);
+  }
+
   public randomPositiveInteger(range: number): number {
     return Math.ceil(Math.random() * range);
   }

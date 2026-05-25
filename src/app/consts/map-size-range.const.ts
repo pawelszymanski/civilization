@@ -1,0 +1,1 @@
+export const MAP_SEED_RANGE = 2147483647;

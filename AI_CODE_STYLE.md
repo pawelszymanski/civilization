@@ -32,6 +32,12 @@
 - **Null checks:** Defensive double-bang: `!!this.camera && !!this.map`; optional properties use `?`; no optional chaining (`?.`) or nullish coalescing (`??`)
 - **Spread for immutability:** `{ ...this._store.value, field: newValue }` — always used in store mutations
 - **`const` in for-of:** `for (const tile of map.tiles)` — always `const`, never `let`
+- **Constructors:** Always written across multiple lines — each parameter on its own line — even when there is only one parameter. Example:
+  ```typescript
+  constructor(
+    private tileYieldService: TileYieldService,
+  ) {}
+  ```
 
 ### Import Ordering
 Imports are grouped in this strict order, with one blank line between groups:
@@ -205,7 +211,10 @@ export class ExampleComponent implements OnInit, OnDestroy {
   // 4. Subscriptions array
   subscriptions: Subscription[] = [];
 
-  constructor(private store: SomeStore, private service: SomeService) {}
+  constructor(
+    private store: SomeStore,
+    private service: SomeService,
+  ) {}
 
   // INIT
 

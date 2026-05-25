@@ -20,4 +20,5 @@ export interface MapSizeSettings {
   naturalWonders: number;
   continents: number;
   islands: number;
+  archipelagos: number;
 }

@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 
 import { MapSizeId } from '../../../../../models/map-size';
-import { LandmassValueId, MapGeneratorSettings, RainfallId, TemperatureId, WorldAgeId } from '../../../../../models/map-generator';
+import { LandmassAmountId, MapGeneratorSettings, RainfallId, TemperatureId, WorldAgeId } from '../../../../../models/map-generator';
 
 import { MAP_SIZE_SETTINGS_LIST } from '../../../../../consts/map-size-settings.const';
+import { MAP_SEED_RANGE } from '../../../../../consts/map-size-range.const';
 
 import { MapGeneratorService } from '../../../../../services/map-generator.service';
 
@@ -16,16 +17,19 @@ import { MapStore } from '../../../../../stores/map.store';
   styleUrls: ['../dev-tools-form.scss'],
 })
 export class GenerateMapFormComponent {
+  readonly MAP_SEED_RANGE = MAP_SEED_RANGE;
   readonly MAP_SIZE_SETTINGS_LIST = MAP_SIZE_SETTINGS_LIST;
-  readonly DEFAULT_MAP_SIZE_SETTINGS = MAP_SIZE_SETTINGS_LIST[MapSizeId.DUEL];
+  readonly DEFAULT_MAP_SIZE_SETTINGS = MAP_SIZE_SETTINGS_LIST[MapSizeId.HUGE];
 
   mapSizeId: MapSizeId = this.DEFAULT_MAP_SIZE_SETTINGS.id;
   mapGeneratorSettings: MapGeneratorSettings = {
+    seed: 1234567, // TODO
     width: this.DEFAULT_MAP_SIZE_SETTINGS.width,
     height: this.DEFAULT_MAP_SIZE_SETTINGS.height,
+    landmass: LandmassAmountId.STANDARD,
     continents: this.DEFAULT_MAP_SIZE_SETTINGS.continents,
     islands: this.DEFAULT_MAP_SIZE_SETTINGS.islands,
-    landmass: LandmassValueId.STANDARD,
+    archipelagos: this.DEFAULT_MAP_SIZE_SETTINGS.archipelagos,
     worldAge: WorldAgeId.STANDARD,
     temperature: TemperatureId.STANDARD,
     rainfall: RainfallId.STANDARD,
