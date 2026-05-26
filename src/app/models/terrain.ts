@@ -32,7 +32,7 @@ export enum TerrainFeatureId {
 
 export enum TerrainResourceId {
   NONE,
-  // ---
+  // FOOD
   BANANAS,
   CATTLE,
   COPPER,
@@ -43,7 +43,7 @@ export enum TerrainResourceId {
   SHEEP,
   STONE,
   WHEAT,
-  // ---
+  // INDUSTRY
   ALUMINUM,
   COAL,
   HORSES,
@@ -51,7 +51,7 @@ export enum TerrainResourceId {
   NITER,
   OIL,
   URANIUM,
-  // ---
+  // LUXURY
   AMBER,
   CITRUS,
   COCOA,

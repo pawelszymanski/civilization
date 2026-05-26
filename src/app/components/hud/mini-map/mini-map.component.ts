@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { ChangeDetectorRef, Component, DestroyRef, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { Camera } from '../../../models/camera';
 import { Map } from '../../../models/map';
@@ -43,12 +43,11 @@ export class MiniMapComponent implements OnInit, OnDestroy {
 
   animationFrameId: number;
 
-  subscriptions: Subscription[] = [];
-
   // Without this minimap renders not 0, but +4px to the bottom, no clue why
   @HostBinding('style.top') public hostTop: string = 'calc(100% - ' + MINIMAP_HEIGHT + 'px)';
 
   constructor(
+    private destroyRef: DestroyRef,
     private cdr: ChangeDetectorRef,
     private cameraStore: CameraStore,
     private sizeStore: SizeStore,
@@ -65,7 +64,6 @@ export class MiniMapComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.cancelAnimationFrame();
-    this.unsubscribeFromData();
     this.destroyWorker();
   }
 
@@ -88,11 +86,9 @@ export class MiniMapComponent implements OnInit, OnDestroy {
   }
 
   subscribeToData(): void {
-    this.subscriptions.push(
-      this.cameraStore.camera.subscribe(camera => this.onCameraUpdate(camera)),
-      this.sizeStore.size.subscribe(size => this.onSizeUpdate(size)),
-      this.mapStore.map.subscribe(map => this.onMapUpdate(map))
-    );
+    this.cameraStore.camera.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(camera => this.onCameraUpdate(camera));
+    this.sizeStore.size.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(size => this.onSizeUpdate(size));
+    this.mapStore.map.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(map => this.onMapUpdate(map));
   }
 
   onCameraUpdate(camera: Camera): void {
@@ -126,10 +122,6 @@ export class MiniMapComponent implements OnInit, OnDestroy {
 
   cancelAnimationFrame(): void {
     window.cancelAnimationFrame(this.animationFrameId);
-  }
-
-  unsubscribeFromData(): void {
-    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   destroyWorker(): void {

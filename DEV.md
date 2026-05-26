@@ -11,7 +11,7 @@
 - use APP_INITIALIZATION injection token for size service init
 
 ## BUGS
-- bug: zooming in/out is slightly off vertically
+- 
 
 ## QUESTIONS
 - 

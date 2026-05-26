@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, DestroyRef, OnInit, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs';
 
 import { SaveHeader, SaveSortOrderId } from '../../../../models/saves';
 import { Uuid } from '../../../../models/utils';
@@ -22,7 +22,7 @@ import { UiStore } from '../../../../stores/ui.store';
   styleUrls: ['./load-game.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class LoadGameComponent implements OnInit, OnDestroy {
+export class LoadGameComponent implements OnInit {
   SaveSortOrderId = SaveSortOrderId;
 
   saveHeaders: SaveHeader[] = [];
@@ -34,9 +34,8 @@ export class LoadGameComponent implements OnInit, OnDestroy {
     sortOrder: new FormControl(SaveSortOrderId.NAME_ASCENDING),
   });
 
-  subscriptions: Subscription[] = [];
-
   constructor(
+    private destroyRef: DestroyRef,
     private generatorService: GeneratorService,
     private saveService: SaveService,
     private cameraStore: CameraStore,
@@ -50,22 +49,14 @@ export class LoadGameComponent implements OnInit, OnDestroy {
     this.subscribeToData();
   }
 
-  ngOnDestroy(): void {
-    this.unsubscribeFromData();
-  }
-
   subscribeToData(): void {
-    this.subscriptions.push(
-      this.saveHeadersStore.saveHeaders.subscribe(saveHeaders => {
-        this.saveHeaders = saveHeaders;
-        this.filterAndSortSaveHeaders();
-      }),
-      this.saveHeaderListOptionsForm.valueChanges.subscribe(() => this.filterAndSortSaveHeaders())
-    );
-  }
-
-  unsubscribeFromData(): void {
-    this.subscriptions.forEach(s => s.unsubscribe());
+    this.saveHeadersStore.saveHeaders.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(saveHeaders => {
+      this.saveHeaders = saveHeaders;
+      this.filterAndSortSaveHeaders();
+    });
+    this.saveHeaderListOptionsForm.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.filterAndSortSaveHeaders());
   }
 
   deselectSaveHeaderIfFilteredOut(): void {
@@ -140,27 +131,3 @@ export class LoadGameComponent implements OnInit, OnDestroy {
     this.uiStore.setScreen(ScreenId.GAMEPLAY);
   }
 }
-
-// ngOnInit() {
-//   const saves$ = this.saveHeadersStore.saves;
-//   const form$ = this.loadGameOptionsForm.valueChanges.pipe(
-//     startWith(null)
-//   );
-//
-//   const filteredSaves$ = combineLatest(saves$, form$).subscribe( ([saves, form]) =>
-//     console.info(saves, form)
-//   );
-//
-//
-//   this.saveHeadersStore.saves.subscribe(saves => {
-//     this.saves = saves;
-//     this.filterAndSortSaves();
-//   });
-//
-//   this.loadGameOptionsForm.valueChanges.pipe(
-//     startWith(null)
-//   )
-//     .subscribe(() => {
-//       this.filterAndSortSaves();
-//     });
-// }

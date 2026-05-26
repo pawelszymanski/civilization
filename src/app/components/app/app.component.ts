@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, DestroyRef, HostListener, OnInit, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { KeyBindings, UserActionId } from '../../models/key-bindings';
 import { ModalId, ScreenId, SidebarId, Ui } from '../../models/ui';
@@ -18,7 +18,7 @@ import { KeyBindingsStore } from '../../stores/key-bindings.store';
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
   ModalId = ModalId;
   ScreenId = ScreenId;
   SidebarId = SidebarId;
@@ -27,9 +27,8 @@ export class AppComponent implements OnInit, OnDestroy {
   gameplayUi: GameplayUi;
   keyBindings: KeyBindings;
 
-  subscriptions: Subscription[] = [];
-
   constructor(
+    private destroyRef: DestroyRef,
     private keyboardService: KeyboardService,
     private uiStore: UiStore,
     private gameplayUiStore: GameplayUiStore,
@@ -38,46 +37,31 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscribeToData();
-    this.addEventListeners();
   }
 
   subscribeToData(): void {
-    this.subscriptions.push(
-      this.uiStore.ui.subscribe(ui => (this.ui = ui)),
-      this.gameplayUiStore.gameplayUi.subscribe(gameplayUi => (this.gameplayUi = gameplayUi)),
-      this.keyBindingsStore.keyBindings.subscribe(keyBindings => (this.keyBindings = keyBindings))
-    );
+    this.uiStore.ui.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(ui => (this.ui = ui));
+    this.gameplayUiStore.gameplayUi.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(gameplayUi => (this.gameplayUi = gameplayUi));
+    this.keyBindingsStore.keyBindings.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(keyBindings => (this.keyBindings = keyBindings));
   }
 
-  ngOnDestroy(): void {
-    this.unsubscribeFromData();
-  }
-
-  addEventListeners(): void {
-    // Using listeners rather than @HostListener since they could be called with .stopPropagation()
-    document.addEventListener('wheel', this.documentOnWheel.bind(this), { passive: false });
-    document.addEventListener('contextmenu', this.documentOnContextMenu.bind(this));
-    document.addEventListener('keydown', this.documentOnKeydown.bind(this));
-  }
-
-  unsubscribeFromData(): void {
-    this.subscriptions.forEach(s => s.unsubscribe());
-  }
-
-  documentOnWheel(event): void {
+  @HostListener('document:wheel', ['$event'])
+  documentOnWheel(event: MouseEvent): void {
     if (event.ctrlKey) {
       event.preventDefault();
     }
   }
 
+  @HostListener('document:contextmenu', ['$event'])
   documentOnContextMenu(event: MouseEvent): void {
     if (this.ui.sidebar !== SidebarId.DEV_TOOLS) {
       event.preventDefault();
     }
   }
 
+  @HostListener('document:keydown', ['$event'])
   documentOnKeydown(event: KeyboardEvent): void {
-    // proceed only if outside of an input
+    // proceed only if outside an input
     const isInput = (event.target as HTMLElement).tagName.toUpperCase() === 'INPUT';
     if (isInput) {
       return;

@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, DestroyRef, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { TerrainBaseId, TerrainFeatureId, TerrainResourceId, TerrainImprovementId } from '../../../models/terrain';
 import { WorldBuilderBrushSizeId, WorldBuilderToolId } from '../../../models/world-builder';
@@ -32,9 +32,8 @@ export class WorldBuilderComponent implements OnInit, OnDestroy {
 
   worldBuilderUi: WorldBuilderUi;
 
-  subscriptions: Subscription[] = [];
-
   constructor(
+    private destroyRef: DestroyRef,
     private worldBuilderUiStore: WorldBuilderUiStore,
     private worldBuilderHoveredTilesStore: WorldBuilderHoveredTilesStore
   ) {}
@@ -44,16 +43,13 @@ export class WorldBuilderComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.unsubscribeFromData();
     this.clearSelectedTiles();
   }
 
   subscribeToData(): void {
-    this.subscriptions.push(this.worldBuilderUiStore.worldBuilderUi.subscribe(worldBuilderUi => (this.worldBuilderUi = worldBuilderUi)));
-  }
-
-  unsubscribeFromData(): void {
-    this.subscriptions.forEach(s => s.unsubscribe());
+    this.worldBuilderUiStore.worldBuilderUi
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(worldBuilderUi => (this.worldBuilderUi = worldBuilderUi));
   }
 
   clearSelectedTiles(): void {

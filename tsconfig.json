@@ -16,5 +16,5 @@
   ],
   "include": [
     "./src/app/workers/*.worker.ts"
-  ]
+  ],
 }

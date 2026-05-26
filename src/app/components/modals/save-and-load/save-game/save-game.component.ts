@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, DestroyRef, OnInit, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { Camera } from '../../../../models/camera';
 import { Map } from '../../../../models/map';
@@ -22,7 +22,7 @@ import { UiStore } from '../../../../stores/ui.store';
   styleUrls: ['./save-game.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class SaveGameComponent implements OnInit, OnDestroy {
+export class SaveGameComponent implements OnInit {
   saveName = '';
 
   map: Map;
@@ -31,9 +31,8 @@ export class SaveGameComponent implements OnInit, OnDestroy {
 
   usedStoragePc: number;
 
-  subscriptions: Subscription[] = [];
-
   constructor(
+    private destroyRef: DestroyRef,
     private generatorService: GeneratorService,
     private saveService: SaveService,
     private localStorageService: LocalStorageService,
@@ -48,24 +47,14 @@ export class SaveGameComponent implements OnInit, OnDestroy {
     this.getUsedLocalStorageSpace();
   }
 
-  ngOnDestroy(): void {
-    this.unsubscribeFromData();
-  }
-
   subscribeToData(): void {
-    this.subscriptions.push(
-      this.mapStore.map.subscribe(map => (this.map = map)),
-      this.gameplayUiStore.gameplayUi.subscribe(gameplayUi => (this.gameplayUi = gameplayUi)),
-      this.cameraStore.camera.subscribe(camera => (this.camera = camera))
-    );
+    this.mapStore.map.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(map => (this.map = map));
+    this.gameplayUiStore.gameplayUi.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(gameplayUi => (this.gameplayUi = gameplayUi));
+    this.cameraStore.camera.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(camera => (this.camera = camera));
   }
 
   getUsedLocalStorageSpace(): void {
     this.usedStoragePc = this.localStorageService.getUsagePc();
-  }
-
-  unsubscribeFromData(): void {
-    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   canGameBeSaved(): boolean {

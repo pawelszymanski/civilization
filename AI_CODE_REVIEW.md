@@ -5,23 +5,6 @@
 
 ---
 
-## CRITICAL — Security Vulnerabilities (2)
-
-### SEC-1 · Open redirect / hardcoded external navigation
-`src/app/components/modals/menus/exit-game-confirmation/exit-game-confirmation.component.ts:22`
-
-```ts
-window.location.href = 'https://google.com';
-```
-
-Hardcoded unconditional navigation to an external domain, bypassing Angular's router and DomSanitizer. If this URL is ever made dynamic or injectable, it becomes a direct open-redirect or XSS vector. Use Angular Router.navigate() or a constants file + allowlist check.
-
-### SEC-2 · Unguarded JSON.parse on untrusted storage data
-- `src/app/services/local-storage.service.ts:19` — JSON.parse(this.localStorage.getItem(key)) — getItem returns null for missing keys; a user can also tamper with LocalStorage. No try/catch. Any malformed value throws an uncaught SyntaxError, crashing the app.
-- `src/app/services/zip.service.ts:14` — JSON.parse(JSLZString.decompressFromUTF16(archive)) — decompressFromUTF16 returns null on corrupt data; JSON.parse(null) yields null cast to SaveData, crashing immediately at the first property access. Both methods also return any, bypassing TypeScript protection at the storage boundary.
-
----
-
 ## HIGH — Bugs (13)
 
 ### BUG-1 · TOGGLE_GRID runs independently on every keydown (broken else-if chain)

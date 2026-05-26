@@ -1,4 +1,4 @@
-export enum LandmassValueId {
+export enum LandmassAmountId {
   LEAST,
   LESS,
   STANDARD,
@@ -19,17 +19,19 @@ export enum TemperatureId {
 }
 
 export enum RainfallId {
-  HOT,
+  DRY,
   STANDARD,
-  COLD,
+  WET,
 }
 
 export interface MapGeneratorSettings {
+  seed: number;
   width: number; // 1-indexed
   height: number; // 1-indexed
-  landmass: LandmassValueId;
+  landmass: LandmassAmountId;
   continents: number;
   islands: number;
+  archipelagos: number;
   worldAge: WorldAgeId;
   temperature: TemperatureId;
   rainfall: RainfallId;

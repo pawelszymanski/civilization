@@ -5,6 +5,8 @@ export enum MapSizeId {
   STANDARD,
   LARGE,
   HUGE,
+  GIANT,
+  MAX,
 }
 
 export interface MapSizeSettings {
@@ -20,4 +22,5 @@ export interface MapSizeSettings {
   naturalWonders: number;
   continents: number;
   islands: number;
+  archipelagos: number;
 }

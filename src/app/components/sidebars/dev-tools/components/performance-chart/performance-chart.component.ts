@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   ElementRef,
   NgZone,
   OnDestroy,
@@ -9,7 +10,8 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { interval, Subscription } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { interval } from 'rxjs';
 
 import { PerformanceMeterModeId } from '../../../../../models/performance-meter';
 import { Millisecond } from '../../../../../models/utils';
@@ -45,9 +47,8 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
 
   animationFrameId: number;
 
-  subscriptions: Subscription[] = [];
-
   constructor(
+    private destroyRef: DestroyRef,
     private ngZone: NgZone,
     private cdr: ChangeDetectorRef,
     private generatorService: GeneratorService
@@ -55,13 +56,12 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initContext();
-    this.setMeterMode(PerformanceMeterModeId.FRAME);
+    this.setMeterMode(PerformanceMeterModeId.FPS);
     this.initRequestAnimationFrame();
     this.initAverageValuesCalculations();
   }
 
   ngOnDestroy(): void {
-    this.unsubscribeFromData();
     this.cancelAnimationFrame();
   }
 
@@ -77,11 +77,7 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
   }
 
   initAverageValuesCalculations(): void {
-    this.subscriptions.push(interval(this.AVERAGE_VALUE_INTERVAL).subscribe(() => this.updateAverageValues()));
-  }
-
-  unsubscribeFromData(): void {
-    this.subscriptions.forEach(s => s.unsubscribe());
+    interval(this.AVERAGE_VALUE_INTERVAL).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.updateAverageValues());
   }
 
   cancelAnimationFrame(): void {
