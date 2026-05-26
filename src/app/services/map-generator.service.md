@@ -55,14 +55,14 @@ Every step is a private method called from `generateNewGameMap`. Steps share sta
 | **Lakes** | | |
 | 4 | `detectInlandLakes` | every connected OCEAN component ≤ 6 tiles → LAKE + FISH. Polar zone (rows < `polarRowCount` and mirrors) is excluded — BFS neither starts in nor crosses through it. |
 | **Ice caps** | | |
-| 5 | `placeIcecapSnow` | tier 1 row 0/h-1 = 75% SNOW + 25% OCEAN-with-ICE; tier 2 row 1/h-2 = 50% per cell (only if `polarRowCount ≥ 2`); tier 3 row 2/h-3 = 5–10% fringe with neighbor check (only if `polarRowCount ≥ 3`) |
+| 5 | `placeIcecapSnow` | tier 1 row 0/h-1 = 75% SNOW + 25% OCEAN-with-ICE; tier 2 row 1/h-2 = 50% per cell (only if `polarRowCount ≥ 2`); tier 3 row 2/h-3 = 5–10% fringe with neighbor check (only if `polarRowCount ≥ 3`). Final step: BFS from row 0/h-1 SNOW_FLAT through SNOW_FLAT neighbors; any SNOW_FLAT not reached (isolated from the polar edge) is converted to OCEAN + ICE feature. |
 | 6 | `placeIcecapIceBelt` | ICE feature on ocean tiles in rows 1..`polarRowCount-1` (and mirrors) at 30/20/10/5%, gated by SNOW/ICE neighbor for connectivity |
 | **Climate + initial biomes** | | |
 | 7 | `computeElevation` | per-land cell elevation from ridge + rolling-hills noise + plate-boundary bonus, with one smoothing pass |
 | 8 | `computeTemperature` | latitude − elevation + jitter |
 | 9 | `computeMoisture` | latitude curve + westerly rain shadow |
 | 10 | `paintInitialBiomes` | flat biome from (temperature × moisture). Skips SNOW_FLAT (icecaps survive). |
-| 11 | `applyCoastBand` | every OCEAN tile adjacent to land → COAST. Polar zone (rows < `polarRowCount` and mirrors) is skipped — no COAST inside the ice cap. Ice cap continent neighbours (SNOW_FLAT within `polarMargin`, i.e. tiles materialized as landmass 300/301) are also skipped — so the icecap doesn't grow a coast band into adjacent open ocean. |
+| 11 | `applyCoastBand` | pre-step: any LAND tile sitting on the innermost cap row (`polarRowCount - 1` or `height - polarRowCount`) is converted to OCEAN with no feature (no ICE) — creates a clean ocean buffer at the cap/world boundary. Main step: every OCEAN tile adjacent to land → COAST. Polar zone (rows < `polarRowCount` and mirrors) is skipped — no COAST inside the ice cap. Ice cap continent neighbours (SNOW_FLAT within `polarMargin`, i.e. tiles materialized as landmass 300/301) are also skipped — so the icecap doesn't grow a coast band into adjacent open ocean. |
 | **Islands** | | |
 | 12 | `seedIslands` | two BFSes: distance-to-land (sources = all non-OCEAN) and nearest-continent-id (sources = continent cells only). Seeds picked from ocean tiles 2–6 hex from land. |
 | 13 | `growIslandPlates` | grow with chaos 7.0; islands carry their nearest continent's id via `parentPlateId` |

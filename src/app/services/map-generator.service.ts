@@ -505,6 +505,41 @@ export class MapGeneratorService {
         }
       }
     }
+
+    const reachesEdge = new Array<boolean>(cells.length).fill(false);
+    const stack: number[] = [];
+    for (let x = 0; x < width; x++) {
+      const iTop = idx(x, 0);
+      if (baseAssignment[iTop] === TerrainBaseId.SNOW_FLAT && !reachesEdge[iTop]) {
+        reachesEdge[iTop] = true;
+        stack.push(iTop);
+      }
+      const iBot = idx(x, height - 1);
+      if (baseAssignment[iBot] === TerrainBaseId.SNOW_FLAT && !reachesEdge[iBot]) {
+        reachesEdge[iBot] = true;
+        stack.push(iBot);
+      }
+    }
+    while (stack.length > 0) {
+      const cur = stack.pop()!;
+      const c = cells[cur];
+      for (const n of neighbors(c.x, c.y)) {
+        const ni = idx(n.x, n.y);
+        if (reachesEdge[ni]) continue;
+        if (baseAssignment[ni] !== TerrainBaseId.SNOW_FLAT) continue;
+        reachesEdge[ni] = true;
+        stack.push(ni);
+      }
+    }
+    for (let i = 0; i < cells.length; i++) {
+      if (baseAssignment[i] !== TerrainBaseId.SNOW_FLAT) continue;
+      if (reachesEdge[i]) continue;
+      baseAssignment[i] = TerrainBaseId.OCEAN;
+      featureAssignment[i] = TerrainFeatureId.ICE;
+      cells[i].isLand = false;
+      cells[i].plateId = -1;
+      resourceAssignment[i] = TerrainResourceId.NONE;
+    }
   }
 
   private placeIcecapIceBelt(ctx: MapGenContext): void {
@@ -642,9 +677,22 @@ export class MapGeneratorService {
   }
 
   private applyCoastBand(ctx: MapGenContext): void {
-    const { idx, cells, neighbors, baseAssignment, height, polarRowCount, polarMargin } = ctx;
+    const { width, idx, cells, neighbors, baseAssignment, featureAssignment, resourceAssignment, height, polarRowCount, polarMargin } = ctx;
     const isIcecapContinent = (y: number, base: TerrainBaseId): boolean =>
       base === TerrainBaseId.SNOW_FLAT && (y < polarMargin || y >= height - polarMargin);
+    const innermostTopY = polarRowCount - 1;
+    const innermostBottomY = height - polarRowCount;
+    for (let x = 0; x < width; x++) {
+      for (const y of [innermostTopY, innermostBottomY]) {
+        const i = idx(x, y);
+        if (!cells[i].isLand) continue;
+        baseAssignment[i] = TerrainBaseId.OCEAN;
+        featureAssignment[i] = TerrainFeatureId.NONE;
+        cells[i].isLand = false;
+        cells[i].plateId = -1;
+        resourceAssignment[i] = TerrainResourceId.NONE;
+      }
+    }
     for (const cell of cells) {
       if (cell.y < polarRowCount || cell.y >= height - polarRowCount) continue;
       const i = idx(cell.x, cell.y);
