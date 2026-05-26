@@ -1,2 +1,6 @@
 - always use major.minor.patch version of npm packages, never allow ~ or ^
+- do not add inline comments
+- use human-readable and describing syntax and naming
+- prefer no to wrapping lines, including array method chaining, lambdas, objects 
+- do not run TSC, I will recompile / transpile myself
 - 

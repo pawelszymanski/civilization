@@ -78,6 +78,10 @@ import { TileCssClassesPipe } from './pipes/tile-css-classes.pipe';
 import { TechnologyTreeEraElemClassPipe } from './pipes/technology-tree-era-elem-class.pipe';
 import { CivicTreeEraElemClassPipe } from './pipes/civic-tree-era-elem-class.pipe';
 import { ResearchItemElemClassPipe } from './pipes/research-item-elem-class.pipe';
+import { LandmassAmountNamePipe } from './pipes/landmass-amount-name.pipe';
+import { WorldAgeNamePipe } from './pipes/world-age-name.pipe';
+import { TemperatureNamePipe } from './pipes/temperature-name.pipe';
+import { RainfallNamePipe } from './pipes/rainfall-name.pipe';
 
 const COMPONENTS = [
   // general
@@ -152,6 +156,10 @@ const PIPES = [
   TechnologyTreeEraElemClassPipe,
   CivicTreeEraElemClassPipe,
   ResearchItemElemClassPipe,
+  LandmassAmountNamePipe,
+  WorldAgeNamePipe,
+  TemperatureNamePipe,
+  RainfallNamePipe,
 ];
 
 @NgModule({

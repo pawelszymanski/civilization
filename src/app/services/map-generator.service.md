@@ -15,7 +15,7 @@ This doc is the **only** documentation for the generator — the service file it
 | **Continent** | A large plate. `isContinent = true`. |
 | **Island** | A small plate placed near continents. `isContinent = false`, `isArchipelago = false`. `parentPlateId` = nearest continent. |
 | **Archipelago** | A small **cluster** of 2–5 tiny sub-island plates in deep ocean. `isArchipelago = true`. All sub-islands of one cluster share `parentPlateId`. |
-| **Ice cap** | The top and bottom polar rows. SNOW_FLAT land plus an ICE feature belt on adjacent ocean. |
+| **Ice cap** | The top and bottom polar rows. SNOW_FLAT land plus an ICE feature belt on adjacent ocean. Total polar row count scales linearly with `height`: 3 rows on the smallest map (Duel, h=26) up to 5 rows on the largest (Max, h=160). Stored as `polarRowCount` in `MapGenContext`. |
 | **Lake** | An inland water body ≤ 6 tiles, with FISH resource. |
 | **Biome** | A flat/hills/mountain variant of GRASSLAND / PLAINS / DESERT / TUNDRA / SNOW. |
 | **Equator** | The center latitude band (normalized latitude ~0.5). DESERT and PLAINS biomes are concentrated here. |
@@ -34,9 +34,9 @@ interface MapGeneratorSettings {
   continents: number;               // exact continent count (≥1)
   islands: number;                  // exact island count
   archipelagos: number;             // exact archipelago cluster count
-  worldAge: WorldAgeId;             // mountain multiplier 1.4 / 1.0 / 0.5
-  temperature: TemperatureId;       // shifts latitude bands ±0.1
-  rainfall: RainfallId;             // shifts moisture ±0.15
+  worldAge: WorldAgeId;             // initial-paint mountain mult 1.4/1.0/0.5; hills+mountains ±10% (NEW/OLD); forests/jungles ∓10% (NEW/OLD)
+  temperature: TemperatureId;       // shifts latitude bands ±0.1; desert weight ×1.1 / ×1.0 / ×0.8 (HOT/STD/COLD)
+  rainfall: RainfallId;             // shifts moisture ±0.15; desert weight ×1.1 / ×1.0 / ×0.9 (DRY/STD/WET)
 }
 ```
 
@@ -53,16 +53,16 @@ Every step is a private method called from `generateNewGameMap`. Steps share sta
 | 2 | `growContinentPlates` | flood-fills continent plates into `cells[].isLand` and `baseAssignment` (GRASSLAND_FLAT) |
 | 3 | `carveContinentBays` | random-walk erodes 4–8 bays per continent (cuts ~15–25% of land away) |
 | **Lakes** | | |
-| 4 | `detectInlandLakes` | every connected OCEAN component ≤ 6 tiles → LAKE + FISH |
+| 4 | `detectInlandLakes` | every connected OCEAN component ≤ 6 tiles → LAKE + FISH. Polar zone (rows < `polarRowCount` and mirrors) is excluded — BFS neither starts in nor crosses through it. |
 | **Ice caps** | | |
-| 5 | `placeIcecapSnow` | tier 1 row 0/h-1 = 75% SNOW + 25% OCEAN-with-ICE; tier 2 row 1/h-2 = 50% per cell; tier 3 row 2/h-3 = 5–10% fringe with neighbor check |
-| 6 | `placeIcecapIceBelt` | ICE feature on ocean tiles in rows 1/2/3 (and mirrors) at 30/20/10%, gated by SNOW/ICE neighbor for connectivity |
+| 5 | `placeIcecapSnow` | tier 1 row 0/h-1 = 75% SNOW + 25% OCEAN-with-ICE; tier 2 row 1/h-2 = 50% per cell (only if `polarRowCount ≥ 2`); tier 3 row 2/h-3 = 5–10% fringe with neighbor check (only if `polarRowCount ≥ 3`) |
+| 6 | `placeIcecapIceBelt` | ICE feature on ocean tiles in rows 1..`polarRowCount-1` (and mirrors) at 30/20/10/5%, gated by SNOW/ICE neighbor for connectivity |
 | **Climate + initial biomes** | | |
 | 7 | `computeElevation` | per-land cell elevation from ridge + rolling-hills noise + plate-boundary bonus, with one smoothing pass |
 | 8 | `computeTemperature` | latitude − elevation + jitter |
 | 9 | `computeMoisture` | latitude curve + westerly rain shadow |
 | 10 | `paintInitialBiomes` | flat biome from (temperature × moisture). Skips SNOW_FLAT (icecaps survive). |
-| 11 | `applyCoastBand` | every OCEAN tile adjacent to non-snow land → COAST. (Polar belt stays OCEAN+ICE since SNOW_FLAT is excluded.) |
+| 11 | `applyCoastBand` | every OCEAN tile adjacent to land → COAST. Polar zone (rows < `polarRowCount` and mirrors) is skipped — no COAST inside the ice cap. Ice cap continent neighbours (SNOW_FLAT within `polarMargin`, i.e. tiles materialized as landmass 300/301) are also skipped — so the icecap doesn't grow a coast band into adjacent open ocean. |
 | **Islands** | | |
 | 12 | `seedIslands` | two BFSes: distance-to-land (sources = all non-OCEAN) and nearest-continent-id (sources = continent cells only). Seeds picked from ocean tiles 2–6 hex from land. |
 | 13 | `growIslandPlates` | grow with chaos 7.0; islands carry their nearest continent's id via `parentPlateId` |
@@ -91,11 +91,12 @@ Every step is a private method called from `generateNewGameMap`. Steps share sta
 | **Final markers + resources** | | |
 | 32 | `markContinentsWithDebugFood` | each non-mountain land tile in a continent/island plate gets `debugFood[plate.parentPlateId % 6]` (wheat/rice/cattle/sheep/bananas/fish). Archipelagos stay blank. |
 | 33 | `clearAllResources` | wipes resource layer (kills the iron/mercury/uranium markers AND the debug-food markers). Clean slate. |
-| 34 | `addTerrainFeatures` | one feature per cell: sub-polar ICE, REEF (ocean), RAINFOREST (hot+wet plains, noise-clustered), MARSH, OASIS, WOODS (noise-clustered). |
-| 35 | `addMainResources` | BONUS / STRATEGIC / LUXURY placement with Poisson-disk-style gates: min hex distance 4 between same-type, 2 between any-two. Targets 4% / 3% / 3% of land. |
-| 36 | `addExtraFood` | doubles BONUS coverage with random placement (no even-spread), only constraint is no two BONUS adjacent. |
+| 34 | `addTerrainFeatures` | one feature per cell: sub-polar ICE (only within `polarRowCount` of an edge, with probability `1 - distFromPole/polarRowCount`; row 0/h-1 always), REEF (ocean adjacent to COAST, equatorial band), RAINFOREST (hot+wet plains, noise-clustered, scaled by `forestMult`), MARSH, OASIS, WOODS (noise-clustered, scaled by `forestMult`). After the per-cell pass, each archipelago cluster gets 0–3 extra REEFs (distribution 15/35/35/15%) on its surrounding coastal ocean. |
+| 35 | `sanityLandCleanup` | (a) any RAINFOREST adjacent to SNOW/TUNDRA family or ICE feature: if rainforest cell's `latNorm < 0.5` (warm zone), the cold neighbor is warmified (SNOW/TUNDRA → PLAINS, ICE feature cleared); otherwise the rainforest feature itself is stripped. (b) any polar-cap SNOW_FLAT (in `polarMargin`) touching a continent SNOW (any variant outside `polarMargin`) is converted to OCEAN + ICE feature (matching `placeSnowOrIce`'s ice branch). |
+| 36 | `addMainResources` | BONUS / STRATEGIC / LUXURY placement with Poisson-disk-style gates: min hex distance 4 between same-type, 2 between any-two. Targets 4% / 3% / 3% of land. |
+| 37 | `addExtraFood` | extra FISH on ocean/coast near land, targeting 9% of land tile count, no two FISH adjacent. |
 | **Materialize** | | |
-| 37 | `materializeMap` | builds `Tile[]`, computes per-cell `landmass` id (see scheme below), computes yield via `TileYieldService`. |
+| 38 | `materializeMap` | builds `Tile[]`, computes per-cell `landmass` id (see scheme below), computes yield via `TileYieldService`. |
 
 ---
 
@@ -161,7 +162,8 @@ Two random sources, both deterministic for a given `settings.seed`:
 | Continents too round, no bays | `numBays`, `maxSteps` in `carveContinentBays` | per-continent constants 4–8, 5–12 |
 | Too many tiny lakes | size cap in `detectInlandLakes` | currently `≤ 6` |
 | Icecaps too / not enough snow | tier probabilities in `placeIcecapSnow` (75/50/5-10) and the 25% snow→ice swap | `placeSnowOrIce` helper |
-| Sub-polar ice belt density | row probabilities 30/20/10 in `placeIcecapIceBelt` | |
+| Sub-polar ice belt density | row probabilities `beltProbs` (30/20/10/5) in `placeIcecapIceBelt` | |
+| Polar belt too thick / too thin overall | `polarRowCount` formula in `createContext` (3..5 lerped on `height`, range 26..160) | |
 | Latitude bands too sharp | smoothing noise jitter in `paintLatitudeBiomes` | |
 | Hills/mountains too dense | ridge thresholds in `promoteFlatToHills` (0.17) and `promoteRidgeHillsToMountain` (0.06 / 0.18) | |
 | Mountains scattered | adjust `removeIsolatedMountains` (currently snaps singletons to hills) | |

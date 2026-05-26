@@ -17,7 +17,7 @@
   <label>Height: <span>{{ mapGeneratorSettings.height }}</span></label>
   <input type="range" name="height" min="20" max="120" step="1" [(ngModel)]="mapGeneratorSettings.height">
 
-  <label>Landmass: <span>{{ mapGeneratorSettings.landmass }}</span></label>
+  <label>Landmass: <span>{{ mapGeneratorSettings.landmass | landmassAmountName }}</span></label>
   <input type="range" name="landmass" min="0" max="4" step="1" [(ngModel)]="mapGeneratorSettings.landmass">
 
   <label>Continents: <span>{{ mapGeneratorSettings.continents }}</span></label>
@@ -29,13 +29,13 @@
   <label>Archipelagos: <span>{{ mapGeneratorSettings.archipelagos }}</span></label>
   <input type="range" name="archipelagos" min="0" max="10" step="1" [(ngModel)]="mapGeneratorSettings.archipelagos">
 
-  <label>World age: <span>{{ mapGeneratorSettings.archipelagos }}</span></label>
+  <label>World age: <span>{{ mapGeneratorSettings.worldAge | worldAgeName }}</span></label>
   <input type="range" name="worldAge" min="0" max="2" step="1" [(ngModel)]="mapGeneratorSettings.worldAge">
 
-  <label>Temperature: <span>{{ mapGeneratorSettings.temperature }}</span></label>
+  <label>Temperature: <span>{{ mapGeneratorSettings.temperature | temperatureName }}</span></label>
   <input type="range" name="temperature" min="0" max="2" step="1" [(ngModel)]="mapGeneratorSettings.temperature">
 
-  <label>Rainfall: <span>{{ mapGeneratorSettings.rainfall }}</span></label>
+  <label>Rainfall: <span>{{ mapGeneratorSettings.rainfall | rainfallName }}</span></label>
   <input type="range" name="rainfall" min="0" max="2" step="1" [(ngModel)]="mapGeneratorSettings.rainfall">
 
   <button type="button" class="float-right" (click)="onGenerateGameMapClick()">Generate map</button>

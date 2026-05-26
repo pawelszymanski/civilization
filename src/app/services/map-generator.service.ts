@@ -50,10 +50,14 @@ interface MapGenContext {
   mountainMult: number;
   tempOffset: number;
   rainfallOffset: number;
+  desertMult: number;
+  hillsMountainMult: number;
+  forestMult: number;
   continentCount: number;
   islandCount: number;
   archipelagoCount: number;
   polarMargin: number;
+  polarRowCount: number;
   continentLand: number;
   islandLandTotal: number;
   equatorY: number;
@@ -80,6 +84,26 @@ const RAINFALL_OFFSET_BY_ID: { [k in RainfallId]: number } = {
   [RainfallId.DRY]: -0.15,
   [RainfallId.STANDARD]: 0.0,
   [RainfallId.WET]: 0.15,
+};
+const DESERT_MULT_BY_RAINFALL: { [k in RainfallId]: number } = {
+  [RainfallId.DRY]: 1.1,
+  [RainfallId.STANDARD]: 1.0,
+  [RainfallId.WET]: 0.9,
+};
+const DESERT_MULT_BY_TEMPERATURE: { [k in TemperatureId]: number } = {
+  [TemperatureId.HOT]: 1.1,
+  [TemperatureId.STANDARD]: 1.0,
+  [TemperatureId.COLD]: 0.8,
+};
+const HILLS_MOUNTAIN_MULT_BY_AGE: { [k in WorldAgeId]: number } = {
+  [WorldAgeId.NEW]: 1.2,
+  [WorldAgeId.STANDARD]: 1.0,
+  [WorldAgeId.OLD]: 0.8,
+};
+const FOREST_MULT_BY_AGE: { [k in WorldAgeId]: number } = {
+  [WorldAgeId.NEW]: 0.8,
+  [WorldAgeId.STANDARD]: 1.0,
+  [WorldAgeId.OLD]: 1.2,
 };
 
 const DEBUG_FOOD_BY_INDEX: TerrainResourceId[] = [
@@ -195,7 +219,7 @@ export class MapGeneratorService {
     this.detectInlandLakes(ctx);
     this.applyCoastBand(ctx);
 
-    this.resetLandToGrassland(ctx);
+    this.resetLandAndClearFeatures(ctx);
 
     this.paintLatitudeBiomes(ctx);
     this.smoothBiomes(ctx);
@@ -213,9 +237,9 @@ export class MapGeneratorService {
     this.linkNearbyMountains(ctx);
     this.extendSmallMountainClusters(ctx);
 
-    this.markContinentsWithDebugFood(ctx);
     this.clearAllResources(ctx);
     this.addTerrainFeatures(ctx);
+    this.sanityLandCleanup(ctx);
     this.addMainResources(ctx);
     this.addExtraFood(ctx);
 
@@ -291,10 +315,14 @@ export class MapGeneratorService {
       mountainMult: MOUNTAIN_MULT_BY_AGE[settings.worldAge],
       tempOffset: TEMP_OFFSET_BY_ID[settings.temperature],
       rainfallOffset: RAINFALL_OFFSET_BY_ID[settings.rainfall],
+      desertMult: DESERT_MULT_BY_RAINFALL[settings.rainfall] * DESERT_MULT_BY_TEMPERATURE[settings.temperature],
+      hillsMountainMult: HILLS_MOUNTAIN_MULT_BY_AGE[settings.worldAge],
+      forestMult: FOREST_MULT_BY_AGE[settings.worldAge],
       continentCount: Math.max(1, settings.continents),
       islandCount: Math.max(0, settings.islands),
       archipelagoCount: Math.max(0, settings.archipelagos),
       polarMargin: Math.max(1, Math.floor(height * 0.08)),
+      polarRowCount: Math.max(3, Math.min(5, 3 + Math.round(((height - 26) * 2) / (160 - 26)))),
       continentLand,
       islandLandTotal,
       equatorY: (height - 1) / 2,
@@ -399,11 +427,13 @@ export class MapGeneratorService {
   // ============================================================================
 
   private detectInlandLakes(ctx: MapGenContext): void {
-    const { idx, cells, neighbors, baseAssignment, featureAssignment, resourceAssignment } = ctx;
+    const { idx, cells, neighbors, baseAssignment, featureAssignment, resourceAssignment, height, polarRowCount } = ctx;
     const visited = new Array<boolean>(cells.length).fill(false);
+    const isPolar = (y: number): boolean => y < polarRowCount || y >= height - polarRowCount;
 
     for (let i = 0; i < cells.length; i++) {
       if (baseAssignment[i] !== TerrainBaseId.OCEAN || visited[i]) continue;
+      if (isPolar(cells[i].y)) continue;
       const comp: number[] = [];
       const stack = [i];
       visited[i] = true;
@@ -412,6 +442,7 @@ export class MapGeneratorService {
         comp.push(cur);
         const cc = cells[cur];
         for (const n of neighbors(cc.x, cc.y)) {
+          if (isPolar(n.y)) continue;
           const ni = idx(n.x, n.y);
           if (baseAssignment[ni] === TerrainBaseId.OCEAN && !visited[ni]) {
             visited[ni] = true;
@@ -433,7 +464,7 @@ export class MapGeneratorService {
   // ============================================================================
 
   private placeIcecapSnow(ctx: MapGenContext): void {
-    const { width, height, rnd, idx, neighbors, cells, baseAssignment, featureAssignment, resourceAssignment } = ctx;
+    const { width, height, rnd, idx, neighbors, cells, baseAssignment, featureAssignment, resourceAssignment, polarRowCount } = ctx;
 
     const placeSnowOrIce = (i: number): void => {
       if (rnd() < 0.25) {
@@ -451,37 +482,40 @@ export class MapGeneratorService {
       placeSnowOrIce(idx(x, 0));
       placeSnowOrIce(idx(x, height - 1));
     }
-    for (let x = 0; x < width; x++) {
-      if (rnd() < 0.5) placeSnowOrIce(idx(x, 1));
-      if (rnd() < 0.5) placeSnowOrIce(idx(x, height - 2));
+    if (polarRowCount >= 2) {
+      for (let x = 0; x < width; x++) {
+        if (rnd() < 0.5) placeSnowOrIce(idx(x, 1));
+        if (rnd() < 0.5) placeSnowOrIce(idx(x, height - 2));
+      }
     }
-    const fringeProb = 0.05 + rnd() * 0.05;
-    for (let x = 0; x < width; x++) {
-      for (const y of [2, height - 3]) {
-        const i = idx(x, y);
-        let connected = false;
-        for (const n of neighbors(x, y)) {
-          const ni = idx(n.x, n.y);
-          if (baseAssignment[ni] === TerrainBaseId.SNOW_FLAT || featureAssignment[ni] === TerrainFeatureId.ICE) {
-            connected = true;
-            break;
+    if (polarRowCount >= 3) {
+      const fringeProb = 0.05 + rnd() * 0.05;
+      for (let x = 0; x < width; x++) {
+        for (const y of [2, height - 3]) {
+          const i = idx(x, y);
+          let connected = false;
+          for (const n of neighbors(x, y)) {
+            const ni = idx(n.x, n.y);
+            if (baseAssignment[ni] === TerrainBaseId.SNOW_FLAT || featureAssignment[ni] === TerrainFeatureId.ICE) {
+              connected = true;
+              break;
+            }
           }
+          if (connected && rnd() < fringeProb) placeSnowOrIce(i);
         }
-        if (connected && rnd() < fringeProb) placeSnowOrIce(i);
       }
     }
   }
 
   private placeIcecapIceBelt(ctx: MapGenContext): void {
-    const { width, height, noise, idx, neighbors, baseAssignment, featureAssignment } = ctx;
-    const bands: { y: number; prob: number }[] = [
-      { y: 1, prob: 0.3 },
-      { y: 2, prob: 0.2 },
-      { y: 3, prob: 0.1 },
-      { y: height - 2, prob: 0.3 },
-      { y: height - 3, prob: 0.2 },
-      { y: height - 4, prob: 0.1 },
-    ];
+    const { width, height, noise, idx, neighbors, baseAssignment, featureAssignment, polarRowCount } = ctx;
+    const beltProbs = [0.3, 0.2, 0.1, 0.05];
+    const bands: { y: number; prob: number }[] = [];
+    for (let r = 1; r < polarRowCount; r++) {
+      const prob = beltProbs[r - 1] ?? 0.05;
+      bands.push({ y: r, prob });
+      bands.push({ y: height - 1 - r, prob });
+    }
     for (const band of bands) {
       if (band.y < 0 || band.y >= height) continue;
       for (let x = 0; x < width; x++) {
@@ -608,13 +642,17 @@ export class MapGeneratorService {
   }
 
   private applyCoastBand(ctx: MapGenContext): void {
-    const { idx, cells, neighbors, baseAssignment } = ctx;
+    const { idx, cells, neighbors, baseAssignment, height, polarRowCount, polarMargin } = ctx;
+    const isIcecapContinent = (y: number, base: TerrainBaseId): boolean =>
+      base === TerrainBaseId.SNOW_FLAT && (y < polarMargin || y >= height - polarMargin);
     for (const cell of cells) {
+      if (cell.y < polarRowCount || cell.y >= height - polarRowCount) continue;
       const i = idx(cell.x, cell.y);
       if (baseAssignment[i] !== TerrainBaseId.OCEAN) continue;
       for (const n of neighbors(cell.x, cell.y)) {
         const nb = baseAssignment[idx(n.x, n.y)];
-        if (nb !== TerrainBaseId.OCEAN && nb !== TerrainBaseId.COAST && nb !== TerrainBaseId.LAKE && nb !== TerrainBaseId.SNOW_FLAT) {
+        if (isIcecapContinent(n.y, nb)) continue;
+        if (nb !== TerrainBaseId.OCEAN && nb !== TerrainBaseId.COAST && nb !== TerrainBaseId.LAKE) {
           baseAssignment[i] = TerrainBaseId.COAST;
           break;
         }
@@ -949,7 +987,7 @@ export class MapGeneratorService {
   // Land reset + latitude biomes
   // ============================================================================
 
-  private resetLandToGrassland(ctx: MapGenContext): void {
+  private resetLandAndClearFeatures(ctx: MapGenContext): void {
     const { cells, idx, baseAssignment, featureAssignment, resourceAssignment } = ctx;
     for (const cell of cells) {
       const i = idx(cell.x, cell.y);
@@ -963,14 +1001,14 @@ export class MapGeneratorService {
   }
 
   private paintLatitudeBiomes(ctx: MapGenContext): void {
-    const { idx, cells, noise, baseAssignment, equatorY } = ctx;
+    const { idx, cells, noise, baseAssignment, equatorY, desertMult } = ctx;
     const isPaintable = (i: number): boolean => {
       const b = baseAssignment[i];
       return b !== TerrainBaseId.OCEAN && b !== TerrainBaseId.COAST && b !== TerrainBaseId.LAKE && b !== TerrainBaseId.SNOW_FLAT;
     };
     const bell = (x: number, center: number, sigma: number): number => Math.exp(-((x - center) ** 2) / (2 * sigma * sigma));
     const pick = (lat: number, x: number, y: number): TerrainBaseId => {
-      const wDesert = bell(lat, 0.0, 0.12);
+      const wDesert = bell(lat, 0.0, 0.12) * desertMult;
       const wPlains = bell(lat, 0.13, 0.10);
       const wGrassland = bell(lat, 0.28, 0.12);
       const wTundra = lat < 0.35 ? 0 : ((lat - 0.35) / 0.65) * 0.64;
@@ -1143,7 +1181,9 @@ export class MapGeneratorService {
   // ============================================================================
 
   private promoteFlatToHills(ctx: MapGenContext): void {
-    const { idx, cells, noise, baseAssignment, polarMargin, height } = ctx;
+    const { idx, cells, noise, baseAssignment, polarMargin, height, hillsMountainMult } = ctx;
+    const ridgeThreshold = 0.17 * hillsMountainMult;
+    const rollingThreshold = 1 - (1 - 0.89) * hillsMountainMult;
     for (const cell of cells) {
       const i = idx(cell.x, cell.y);
       if (!isFlatLand(baseAssignment[i])) continue;
@@ -1153,21 +1193,24 @@ export class MapGeneratorService {
       const ridgeScore = Math.min(rMain, rCross);
       const jitter = (noise(cell.x * 0.22 + 888, cell.y * 0.22 + 999) - 0.5) * 0.18;
       const rolling = noise(cell.x * 0.1 + 666, cell.y * 0.1 + 777);
-      if (ridgeScore + jitter < 0.17 || rolling > 0.89) baseAssignment[i] = toHills(baseAssignment[i]);
+      if (ridgeScore + jitter < ridgeThreshold || rolling > rollingThreshold) baseAssignment[i] = toHills(baseAssignment[i]);
     }
   }
 
   private promoteRidgeHillsToMountain(ctx: MapGenContext): void {
-    const { idx, cells, noise, baseAssignment } = ctx;
+    const { idx, cells, noise, baseAssignment, hillsMountainMult } = ctx;
+    const mainThreshold = 0.06 * hillsMountainMult;
+    const wideThreshold = 0.18 * hillsMountainMult;
+    const speckThreshold = 1 - (1 - 0.92) * hillsMountainMult;
     for (const cell of cells) {
       const i = idx(cell.x, cell.y);
       if (!isHillsLand(baseAssignment[i])) continue;
       const rMain = ridge(noise, cell.x, cell.y, 0.07, 111, 222);
-      if (rMain < 0.06) {
+      if (rMain < mainThreshold) {
         baseAssignment[i] = toMountain(baseAssignment[i]);
-      } else if (rMain < 0.18) {
+      } else if (rMain < wideThreshold) {
         const speck = noise(cell.x * 0.35 + 1111, cell.y * 0.35 + 2222);
-        if (speck > 0.92) baseAssignment[i] = toMountain(baseAssignment[i]);
+        if (speck > speckThreshold) baseAssignment[i] = toMountain(baseAssignment[i]);
       }
     }
   }
@@ -1298,33 +1341,25 @@ export class MapGeneratorService {
   }
 
   // ============================================================================
-  // Final markers + resources
+  // Final resources
   // ============================================================================
-
-  private markContinentsWithDebugFood(ctx: MapGenContext): void {
-    const { cells, idx, plates, baseAssignment, resourceAssignment } = ctx;
-    const plateById = new Map<number, Plate>();
-    for (const p of plates) plateById.set(p.id, p);
-    for (const cell of cells) {
-      if (cell.plateId < 0) continue;
-      const plate = plateById.get(cell.plateId);
-      if (!plate || plate.isArchipelago) continue;
-      const i = idx(cell.x, cell.y);
-      if (isMountainLand(baseAssignment[i])) continue;
-      resourceAssignment[i] = DEBUG_FOOD_BY_INDEX[plate.parentPlateId % DEBUG_FOOD_BY_INDEX.length];
-    }
-  }
 
   private clearAllResources(ctx: MapGenContext): void {
     ctx.resourceAssignment.fill(TerrainResourceId.NONE);
   }
 
   private addTerrainFeatures(ctx: MapGenContext): void {
-    const { rnd, noise, idx, cells, baseAssignment, featureAssignment, equatorY } = ctx;
+    const { height, rnd, noise, idx, neighbors, cells, plates, baseAssignment, featureAssignment, equatorY, polarRowCount, forestMult } = ctx;
     const featureSupports = (featureId: TerrainFeatureId, baseId: TerrainBaseId): boolean => {
       const meta = TERRAIN_FEATURE_SET[featureId];
       if (!meta) return false;
       for (const st of meta.suitableTerrain) if (st.baseId !== undefined && st.baseId === baseId) return true;
+      return false;
+    };
+    const hasCoastNeighbor = (x: number, y: number): boolean => {
+      for (const n of neighbors(x, y)) {
+        if (baseAssignment[idx(n.x, n.y)] === TerrainBaseId.COAST) return true;
+      }
       return false;
     };
     for (const cell of cells) {
@@ -1332,23 +1367,138 @@ export class MapGeneratorService {
       if (featureAssignment[i] !== TerrainFeatureId.NONE) continue;
       const base = baseAssignment[i];
       const latNorm = Math.abs(cell.y - equatorY) / equatorY;
-      if ((base === TerrainBaseId.COAST || base === TerrainBaseId.OCEAN) && featureSupports(TerrainFeatureId.ICE, base)) {
-        if (latNorm > 0.92 || (latNorm > 0.85 && rnd() < (latNorm - 0.85) * 12)) featureAssignment[i] = TerrainFeatureId.ICE;
-      } else if (base === TerrainBaseId.OCEAN && featureSupports(TerrainFeatureId.REEF, base) && latNorm < 0.3 && rnd() < 0.015) {
+      const distFromPole = Math.min(cell.y, height - 1 - cell.y);
+      if ((base === TerrainBaseId.COAST || base === TerrainBaseId.OCEAN) && featureSupports(TerrainFeatureId.ICE, base) && distFromPole < polarRowCount) {
+        if (distFromPole === 0 || rnd() < 1 - distFromPole / polarRowCount) featureAssignment[i] = TerrainFeatureId.ICE;
+      } else if (base === TerrainBaseId.OCEAN && featureSupports(TerrainFeatureId.REEF, base) && latNorm < 0.3 && hasCoastNeighbor(cell.x, cell.y) && rnd() < 0.015) {
         featureAssignment[i] = TerrainFeatureId.REEF;
       } else if (
         featureSupports(TerrainFeatureId.RAINFOREST, base) &&
         cell.temperature >= 0.7 &&
         cell.moisture >= 0.55 &&
-        noise(cell.x * 0.15 + 333, cell.y * 0.15 + 222) < 0.715
+        noise(cell.x * 0.15 + 333, cell.y * 0.15 + 222) < 0.715 * forestMult
       ) {
         featureAssignment[i] = TerrainFeatureId.RAINFOREST;
       } else if (featureSupports(TerrainFeatureId.MARSH, base) && cell.moisture > 0.7 && rnd() < 0.1) {
         featureAssignment[i] = TerrainFeatureId.MARSH;
       } else if (featureSupports(TerrainFeatureId.OASIS, base) && rnd() < 0.03) {
         featureAssignment[i] = TerrainFeatureId.OASIS;
-      } else if (featureSupports(TerrainFeatureId.WOODS, base) && noise(cell.x * 0.12 + 555, cell.y * 0.12 + 777) < 0.234 + cell.moisture * 0.39) {
+      } else if (featureSupports(TerrainFeatureId.WOODS, base) && noise(cell.x * 0.12 + 555, cell.y * 0.12 + 777) < (0.234 + cell.moisture * 0.39) * forestMult) {
         featureAssignment[i] = TerrainFeatureId.WOODS;
+      }
+    }
+
+    const archipelagoClusters = new Map<number, number[]>();
+    for (let i = 0; i < cells.length; i++) {
+      const cell = cells[i];
+      if (!cell.isLand || cell.plateId < 0) continue;
+      const plate = plates[cell.plateId];
+      if (!plate || !plate.isArchipelago) continue;
+      const key = plate.parentPlateId;
+      let list = archipelagoClusters.get(key);
+      if (!list) {
+        list = [];
+        archipelagoClusters.set(key, list);
+      }
+      list.push(i);
+    }
+    for (const landCells of archipelagoClusters.values()) {
+      const candidateSet = new Set<number>();
+      for (const landIdx of landCells) {
+        const land = cells[landIdx];
+        for (const n of neighbors(land.x, land.y)) {
+          const coastIdx = idx(n.x, n.y);
+          if (baseAssignment[coastIdx] !== TerrainBaseId.COAST) continue;
+          for (const n2 of neighbors(n.x, n.y)) {
+            const oceanIdx = idx(n2.x, n2.y);
+            if (baseAssignment[oceanIdx] !== TerrainBaseId.OCEAN) continue;
+            if (featureAssignment[oceanIdx] !== TerrainFeatureId.NONE) continue;
+            if (!featureSupports(TerrainFeatureId.REEF, TerrainBaseId.OCEAN)) continue;
+            candidateSet.add(oceanIdx);
+          }
+        }
+      }
+      const candidates = Array.from(candidateSet);
+      if (candidates.length === 0) continue;
+      for (let k = candidates.length - 1; k > 0; k--) {
+        const j = Math.floor(rnd() * (k + 1));
+        const tmp = candidates[k];
+        candidates[k] = candidates[j];
+        candidates[j] = tmp;
+      }
+      const r = rnd();
+      const target = r < 0.15 ? 0 : r < 0.5 ? 1 : r < 0.85 ? 2 : 3;
+      const place = Math.min(target, candidates.length);
+      for (let k = 0; k < place; k++) {
+        featureAssignment[candidates[k]] = TerrainFeatureId.REEF;
+      }
+    }
+  }
+
+  private sanityLandCleanup(ctx: MapGenContext): void {
+    const { idx, cells, neighbors, baseAssignment, featureAssignment, resourceAssignment, equatorY, polarMargin, height } = ctx;
+
+    const isSnow = (b: TerrainBaseId): boolean =>
+      b === TerrainBaseId.SNOW_FLAT || b === TerrainBaseId.SNOW_HILLS || b === TerrainBaseId.SNOW_MOUNTAIN;
+    const isTundra = (b: TerrainBaseId): boolean =>
+      b === TerrainBaseId.TUNDRA_FLAT || b === TerrainBaseId.TUNDRA_HILLS || b === TerrainBaseId.TUNDRA_MOUNTAIN;
+    const warmify = (b: TerrainBaseId): TerrainBaseId => {
+      switch (b) {
+        case TerrainBaseId.SNOW_FLAT:
+        case TerrainBaseId.TUNDRA_FLAT:
+          return TerrainBaseId.PLAINS_FLAT;
+        case TerrainBaseId.SNOW_HILLS:
+        case TerrainBaseId.TUNDRA_HILLS:
+          return TerrainBaseId.PLAINS_HILLS;
+        case TerrainBaseId.SNOW_MOUNTAIN:
+        case TerrainBaseId.TUNDRA_MOUNTAIN:
+          return TerrainBaseId.PLAINS_MOUNTAIN;
+        default:
+          return b;
+      }
+    };
+    const isPolarMargin = (y: number): boolean => y < polarMargin || y >= height - polarMargin;
+
+    for (const cell of cells) {
+      const i = idx(cell.x, cell.y);
+      if (featureAssignment[i] !== TerrainFeatureId.RAINFOREST) continue;
+      const latNorm = Math.abs(cell.y - equatorY) / equatorY;
+      const rainforestBelongs = latNorm < 0.5;
+      for (const n of neighbors(cell.x, cell.y)) {
+        const ni = idx(n.x, n.y);
+        const nbBase = baseAssignment[ni];
+        const nbFeature = featureAssignment[ni];
+        const coldBase = isSnow(nbBase) || isTundra(nbBase);
+        const hasIce = nbFeature === TerrainFeatureId.ICE;
+        if (!coldBase && !hasIce) continue;
+        if (rainforestBelongs) {
+          if (coldBase) baseAssignment[ni] = warmify(nbBase);
+          if (hasIce) featureAssignment[ni] = TerrainFeatureId.NONE;
+        } else {
+          featureAssignment[i] = TerrainFeatureId.NONE;
+          break;
+        }
+      }
+    }
+
+    for (const cell of cells) {
+      if (!isPolarMargin(cell.y)) continue;
+      const i = idx(cell.x, cell.y);
+      if (baseAssignment[i] !== TerrainBaseId.SNOW_FLAT) continue;
+      let touchesContinentSnow = false;
+      for (const n of neighbors(cell.x, cell.y)) {
+        if (isPolarMargin(n.y)) continue;
+        if (isSnow(baseAssignment[idx(n.x, n.y)])) {
+          touchesContinentSnow = true;
+          break;
+        }
+      }
+      if (touchesContinentSnow) {
+        baseAssignment[i] = TerrainBaseId.OCEAN;
+        featureAssignment[i] = TerrainFeatureId.ICE;
+        cells[i].isLand = false;
+        cells[i].plateId = -1;
+        resourceAssignment[i] = TerrainResourceId.NONE;
       }
     }
   }
@@ -1502,7 +1652,7 @@ export class MapGeneratorService {
     };
     const fishResource = TERRAIN_RESOURCE_LIST.find(r => r.id === TerrainResourceId.FISH);
     const totalLand = cells.filter(c => c.isLand).length;
-    const target = Math.floor(totalLand * 0.12);
+    const target = Math.floor(totalLand * 0.09);
     if (!fishResource || target === 0) return;
 
     const candidates: number[] = [];
