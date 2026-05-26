@@ -5,6 +5,8 @@ export enum MapSizeId {
   STANDARD,
   LARGE,
   HUGE,
+  GIANT,
+  MAX,
 }
 
 export interface MapSizeSettings {

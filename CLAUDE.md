@@ -1,0 +1,2 @@
+- always use major.minor.patch version of npm packages, never allow ~ or ^
+- 

@@ -16,5 +16,8 @@
   ],
   "include": [
     "./src/app/workers/*.worker.ts"
-  ]
+  ],
+  "compilerOptions": {
+    "target": "es2020"
+  }
 }
