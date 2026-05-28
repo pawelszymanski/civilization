@@ -77,7 +77,11 @@ export class PerformanceChartComponent implements OnInit, OnDestroy {
   }
 
   initAverageValuesCalculations(): void {
-    interval(this.AVERAGE_VALUE_INTERVAL).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.updateAverageValues());
+    this.ngZone.runOutsideAngular(() => {
+      interval(this.AVERAGE_VALUE_INTERVAL)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(() => this.updateAverageValues());
+    });
   }
 
   cancelAnimationFrame(): void {

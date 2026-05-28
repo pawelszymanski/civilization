@@ -187,15 +187,3 @@ export class MapCanvasService {
     this.ctx.stroke();
   }
 }
-
-// private paintMapDecoration(): void {
-//   this.ctx.fillStyle = 'gray';
-//   this.ctx.fillRect(0, this.camera.translate.y - 10, this.ctx.canvas.width, this.size.map.height + 20);
-// }
-
-// private setCtxShadow(color: string, blur: number, offsetX: number, offsetY: number): void {
-//   this.ctx.shadowColor = color;
-//   this.ctx.shadowBlur = blur;
-//   this.ctx.shadowOffsetX = offsetX;
-//   this.ctx.shadowOffsetY = offsetY;
-// }
