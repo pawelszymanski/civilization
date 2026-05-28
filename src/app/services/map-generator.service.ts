@@ -117,6 +117,7 @@ const FOREST_MULT_BY_AGE: { [k in WorldAgeId]: number } = {
 };
 
 
+
 const FLAT_TO_HILLS: { [k: number]: TerrainBaseId } = {
   [TerrainBaseId.GRASSLAND_FLAT]: TerrainBaseId.GRASSLAND_HILLS,
   [TerrainBaseId.PLAINS_FLAT]: TerrainBaseId.PLAINS_HILLS,
@@ -510,40 +511,6 @@ export class MapGeneratorService {
   }
 
   // ============================================================================
-  // Lakes
-  // ============================================================================
-
-  private detectInlandLakes(ctx: MapGenContext): void {
-    const { idx, cells, neighbors, baseAssignment, featureAssignment } = ctx;
-    const isOuterOcean = this.markOuterOcean(ctx);
-    const visited = new Array<boolean>(cells.length).fill(false);
-
-    for (let i = 0; i < cells.length; i++) {
-      if (baseAssignment[i] !== TerrainBaseId.OCEAN || isOuterOcean[i] || visited[i]) continue;
-      const comp: number[] = [];
-      const stack = [i];
-      visited[i] = true;
-      while (stack.length > 0) {
-        const cur = stack.pop();
-        comp.push(cur);
-        const cc = cells[cur];
-        for (const n of neighbors(cc.x, cc.y)) {
-          const ni = idx(n.x, n.y);
-          if (baseAssignment[ni] === TerrainBaseId.OCEAN && !isOuterOcean[ni] && !visited[ni]) {
-            visited[ni] = true;
-            stack.push(ni);
-          }
-        }
-      }
-      if (comp.length > 6) continue;
-      for (const cIdx of comp) {
-        baseAssignment[cIdx] = TerrainBaseId.LAKE;
-        if (featureAssignment[cIdx] === TerrainFeatureId.ICE) featureAssignment[cIdx] = TerrainFeatureId.NONE;
-      }
-    }
-  }
-
-  // ============================================================================
   // Ice caps
   // ============================================================================
 
@@ -650,7 +617,7 @@ export class MapGeneratorService {
   }
 
   // ============================================================================
-  // Climate + initial biomes
+  // Biomes — elevation / temperature / moisture / biome assignment
   // ============================================================================
 
   private computeElevation(ctx: MapGenContext): void {
@@ -811,28 +778,7 @@ export class MapGeneratorService {
     for (const p of plates) if (p.isContinent) continentGrownById.set(p.id, p.grown);
     if (continentGrownById.size === 0) return;
 
-    const distToLand: number[] = new Array(cells.length).fill(99);
-    const dq: number[] = [];
-    for (let i = 0; i < cells.length; i++) {
-      if (baseAssignment[i] !== TerrainBaseId.OCEAN) {
-        distToLand[i] = 0;
-        dq.push(i);
-      }
-    }
-    let head = 0;
-    while (head < dq.length) {
-      const cur = dq[head++];
-      const next = distToLand[cur] + 1;
-      if (next > 30) continue;
-      const cc = cells[cur];
-      for (const nb of neighbors(cc.x, cc.y)) {
-        const ni = idx(nb.x, nb.y);
-        if (distToLand[ni] > next) {
-          distToLand[ni] = next;
-          dq.push(ni);
-        }
-      }
-    }
+    const distToLand = this.bfsDistance(ctx, i => baseAssignment[i] !== TerrainBaseId.OCEAN, 99, 30);
 
     const nearestContinent: number[] = new Array(cells.length).fill(-1);
     const ncDist = new Array(cells.length).fill(99);
@@ -1016,6 +962,36 @@ export class MapGeneratorService {
     this.reshapeIslands(ctx);
   }
 
+  private detectInlandLakes(ctx: MapGenContext): void {
+    const { idx, cells, neighbors, baseAssignment, featureAssignment } = ctx;
+    const isOuterOcean = this.markOuterOcean(ctx);
+    const visited = new Array<boolean>(cells.length).fill(false);
+
+    for (let i = 0; i < cells.length; i++) {
+      if (baseAssignment[i] !== TerrainBaseId.OCEAN || isOuterOcean[i] || visited[i]) continue;
+      const comp: number[] = [];
+      const stack = [i];
+      visited[i] = true;
+      while (stack.length > 0) {
+        const cur = stack.pop();
+        comp.push(cur);
+        const cc = cells[cur];
+        for (const n of neighbors(cc.x, cc.y)) {
+          const ni = idx(n.x, n.y);
+          if (baseAssignment[ni] === TerrainBaseId.OCEAN && !isOuterOcean[ni] && !visited[ni]) {
+            visited[ni] = true;
+            stack.push(ni);
+          }
+        }
+      }
+      if (comp.length > 6) continue;
+      for (const cIdx of comp) {
+        baseAssignment[cIdx] = TerrainBaseId.LAKE;
+        if (featureAssignment[cIdx] === TerrainFeatureId.ICE) featureAssignment[cIdx] = TerrainFeatureId.NONE;
+      }
+    }
+  }
+
   private clearNoiseRelatedIslands(ctx: MapGenContext): void {
     const { idx, cells, neighbors, plates, baseAssignment, featureAssignment, resourceAssignment } = ctx;
 
@@ -1050,6 +1026,8 @@ export class MapGeneratorService {
         cells[ci].isLand = false;
         cells[ci].plateId = -1;
         baseAssignment[ci] = TerrainBaseId.OCEAN;
+        featureAssignment[ci] = TerrainFeatureId.ICE;
+        resourceAssignment[ci] = TerrainResourceId.NONE;
       }
     }
   }
@@ -1487,28 +1465,15 @@ export class MapGeneratorService {
   }
 
   // ============================================================================
-  // Land reset + latitude biomes
+  // Biome latitude painting and smoothing
   // ============================================================================
 
-  private resetLandAndClearFeatures(ctx: MapGenContext): void {
-    const { cells, idx, baseAssignment, featureAssignment, resourceAssignment } = ctx;
-    for (const cell of cells) {
-      const i = idx(cell.x, cell.y);
-      const base = baseAssignment[i];
-      const isWater = base === TerrainBaseId.OCEAN || base === TerrainBaseId.COAST || base === TerrainBaseId.LAKE;
-      const isSnowCap = base === TerrainBaseId.SNOW_FLAT;
-      if (!isWater && !isSnowCap) baseAssignment[i] = TerrainBaseId.GRASSLAND_FLAT;
-      if (featureAssignment[i] !== TerrainFeatureId.ICE) featureAssignment[i] = TerrainFeatureId.NONE;
-      resourceAssignment[i] = TerrainResourceId.NONE;
-    }
+  private isBiomePaintable(baseId: TerrainBaseId): boolean {
+    return baseId !== TerrainBaseId.OCEAN && baseId !== TerrainBaseId.COAST && baseId !== TerrainBaseId.LAKE && baseId !== TerrainBaseId.SNOW_FLAT;
   }
 
   private paintLatitudeBiomes(ctx: MapGenContext): void {
     const { idx, cells, noise, baseAssignment, equatorY, desertMult } = ctx;
-    const isPaintable = (i: number): boolean => {
-      const b = baseAssignment[i];
-      return b !== TerrainBaseId.OCEAN && b !== TerrainBaseId.COAST && b !== TerrainBaseId.LAKE && b !== TerrainBaseId.SNOW_FLAT;
-    };
     const bell = (x: number, center: number, sigma: number): number => Math.exp(-((x - center) ** 2) / (2 * sigma * sigma));
     const pick = (lat: number, x: number, y: number): TerrainBaseId => {
       const wDesert = bell(lat, 0.0, 0.12) * desertMult;
@@ -1524,7 +1489,7 @@ export class MapGeneratorService {
     };
     for (const cell of cells) {
       const i = idx(cell.x, cell.y);
-      if (!isPaintable(i)) continue;
+      if (!this.isBiomePaintable(baseAssignment[i])) continue;
       const latNorm = Math.abs(cell.y - equatorY) / equatorY;
       const jitter = (noise(cell.x * 0.08 + 71, cell.y * 0.08 + 137) - 0.5) * 0.15;
       baseAssignment[i] = pick(Math.max(0, Math.min(1, latNorm + jitter)), cell.x, cell.y);
@@ -1533,21 +1498,17 @@ export class MapGeneratorService {
 
   private smoothBiomes(ctx: MapGenContext): void {
     const { idx, cells, neighbors, baseAssignment } = ctx;
-    const isPaintable = (i: number): boolean => {
-      const b = baseAssignment[i];
-      return b !== TerrainBaseId.OCEAN && b !== TerrainBaseId.COAST && b !== TerrainBaseId.LAKE && b !== TerrainBaseId.SNOW_FLAT;
-    };
     for (let iter = 0; iter < 3; iter++) {
       const snapshot = baseAssignment.slice();
       for (const cell of cells) {
         const i = idx(cell.x, cell.y);
-        if (!isPaintable(i)) continue;
+        if (!this.isBiomePaintable(baseAssignment[i])) continue;
         const counts = new Map<TerrainBaseId, number>();
         const myBiome = snapshot[i];
         counts.set(myBiome, 1);
         for (const n of neighbors(cell.x, cell.y)) {
           const ni = idx(n.x, n.y);
-          if (!isPaintable(ni)) continue;
+          if (!this.isBiomePaintable(snapshot[ni])) continue;
           const nb = snapshot[ni];
           counts.set(nb, (counts.get(nb) || 0) + 1);
         }
@@ -1563,6 +1524,10 @@ export class MapGeneratorService {
       }
     }
   }
+
+  // ============================================================================
+  // Biome fine-tuning
+  // ============================================================================
 
   private promoteHighLatitudeTundraToSnow(ctx: MapGenContext): void {
     const { noise, idx, cells, baseAssignment, equatorY } = ctx;
@@ -1624,53 +1589,6 @@ export class MapGeneratorService {
       if (base !== TerrainBaseId.PLAINS_FLAT && base !== TerrainBaseId.GRASSLAND_FLAT) continue;
       if (noise(cell.x * 0.25 + 999, cell.y * 0.25 + 222) > 0.9) {
         baseAssignment[i] = base === TerrainBaseId.PLAINS_FLAT ? TerrainBaseId.GRASSLAND_FLAT : TerrainBaseId.PLAINS_FLAT;
-      }
-    }
-  }
-
-  private lockArchipelagoTemperatureFamily(ctx: MapGenContext): void {
-    const { idx, cells, plates } = ctx;
-    const archipelagoPlatesById = new Map<number, Plate>();
-    for (const p of plates) if (p.isArchipelago) archipelagoPlatesById.set(p.id, p);
-    if (archipelagoPlatesById.size === 0) return;
-
-    const clusterCells = new Map<number, number[]>();
-    for (const cell of cells) {
-      const p = archipelagoPlatesById.get(cell.plateId);
-      if (!p) continue;
-      let list = clusterCells.get(p.parentPlateId);
-      if (!list) { list = []; clusterCells.set(p.parentPlateId, list); }
-      list.push(idx(cell.x, cell.y));
-    }
-    this.lockTemperatureFamilyForGroups(clusterCells, ctx);
-  }
-
-  private lockIslandTemperatureFamily(ctx: MapGenContext): void {
-    const { idx, cells, plates } = ctx;
-    const islandPlateIds = new Set<number>();
-    for (const p of plates) if (!p.isContinent && !p.isArchipelago) islandPlateIds.add(p.id);
-    if (islandPlateIds.size === 0) return;
-
-    const islandCells = new Map<number, number[]>();
-    for (const cell of cells) {
-      if (!islandPlateIds.has(cell.plateId)) continue;
-      let list = islandCells.get(cell.plateId);
-      if (!list) { list = []; islandCells.set(cell.plateId, list); }
-      list.push(idx(cell.x, cell.y));
-    }
-    this.lockTemperatureFamilyForGroups(islandCells, ctx);
-  }
-
-  private removeIceNextToTundra(ctx: MapGenContext): void {
-    const { idx, cells, neighbors, baseAssignment, featureAssignment } = ctx;
-    for (const cell of cells) {
-      const i = idx(cell.x, cell.y);
-      if (featureAssignment[i] !== TerrainFeatureId.ICE) continue;
-      for (const n of neighbors(cell.x, cell.y)) {
-        if (baseAssignment[idx(n.x, n.y)] === TerrainBaseId.TUNDRA_FLAT) {
-          featureAssignment[i] = TerrainFeatureId.NONE;
-          break;
-        }
       }
     }
   }
@@ -2334,28 +2252,6 @@ export class MapGeneratorService {
       if ((st.baseId === undefined || st.baseId === base) && (st.featureId === undefined || st.featureId === feat)) return true;
     }
     return false;
-  }
-
-  private lockTemperatureFamilyForGroups(cellGroups: globalThis.Map<number, number[]>, ctx: MapGenContext): void {
-    const { cells, baseAssignment, equatorY } = ctx;
-    for (const cellIdxs of cellGroups.values()) {
-      let hasDesert = false;
-      let hasCold = false;
-      let latSum = 0;
-      for (const cIdx of cellIdxs) {
-        const b = baseAssignment[cIdx];
-        if (b === TerrainBaseId.DESERT_FLAT) hasDesert = true;
-        if (b === TerrainBaseId.TUNDRA_FLAT || b === TerrainBaseId.SNOW_FLAT) hasCold = true;
-        latSum += Math.abs(cells[cIdx].y - equatorY) / equatorY;
-      }
-      if (!hasDesert || !hasCold) continue;
-      const keepCold = latSum / cellIdxs.length >= 0.5;
-      for (const cIdx of cellIdxs) {
-        const b = baseAssignment[cIdx];
-        if (keepCold && b === TerrainBaseId.DESERT_FLAT) baseAssignment[cIdx] = TerrainBaseId.TUNDRA_FLAT;
-        else if (!keepCold && (b === TerrainBaseId.TUNDRA_FLAT || b === TerrainBaseId.SNOW_FLAT)) baseAssignment[cIdx] = TerrainBaseId.DESERT_FLAT;
-      }
-    }
   }
 
   private placeResourceCandidates(
