@@ -1,0 +1,1220 @@
+  console.log
+
+
+      at src/app/services/map-generator.report.spec.ts:254:13
+
+  console.log
+    ========================================================================
+
+      at src/app/services/map-generator.report.spec.ts:255:13
+
+  console.log
+      Map Generator distribution report
+
+      at src/app/services/map-generator.report.spec.ts:256:13
+
+  console.log
+      8 sizes × 5 landmass × 3 age × 3 temp × 3 rain = 1080 combos × 10 runs
+
+      at src/app/services/map-generator.report.spec.ts:257:13
+
+  console.log
+      Columns: TILES | LND SEA | biome (Grass/Plain/Desert/Tundra/Snow) | elev (Flat/Hills/Mtn) | features (Woods/Rainforest/Ice/Reef/Marsh/Oasis/Floodplains) | resources (Bonus/Strategic/Luxury) | landmass (Cont/Isl/Arch/Polar/Ocean)
+
+      at src/app/services/map-generator.report.spec.ts:258:13
+
+  console.log
+    ========================================================================
+
+      at src/app/services/map-generator.report.spec.ts:259:13
+
+  console.log
+
+
+      at src/app/services/map-generator.report.spec.ts:263:15
+
+  console.log
+    ==================== MapSize: DUEL  (44×26, 1144 tiles) ====================
+
+      at src/app/services/map-generator.report.spec.ts:264:15
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By LandmassAmount  (27 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        LANDMASS       |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        LEAST          |   1144 |   177   967 |    23    24     8    22   101 |   145    31     1 |    29    10   108     2     1     -     - |     9    13     2 |    56    16     6    95   971
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        LESS           |   1144 |   249   895 |    56    42    17    36    96 |   189    55     5 |    53    14   112     2     1     1     - |    19    13     4 |   121    28     5    92   898
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |   1144 |   336   808 |    87    65    24    60   101 |   242    85     9 |    81    18   109     3     1     -     - |    30    13     7 |   194    39     5    96   810
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        MORE           |   1144 |   407   737 |   108    82    28    86   104 |   286   108    13 |   108    24   106     2     1     1     - |    40    13     9 |   252    50     7    97   740
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        MOST           |   1144 |   485   659 |   135   104    36   106   104 |   332   139    14 |   135    27   104     2     2     1     - |    49    13    11 |   316    63     5    97   662
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By WorldAge  (45 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        AGE            |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        NEW            |   1144 |   331   813 |    82    63    23    62   101 |   223    97    11 |    66    15   107     2     1     -     - |    29    13     7 |   188    39     6    95   816
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |   1144 |   331   813 |    82    63    23    62   101 |   238    85     9 |    82    19   108     2     1     -     - |    29    13     7 |   188    39     6    95   816
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        OLD            |   1144 |   331   813 |    82    63    23    62   101 |   256    69     6 |    96    23   108     2     1     1     - |    29    13     7 |   188    39     6    95   816
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By Temperature  (45 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        TEMP           |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        HOT            |   1144 |   331   813 |    81    62    26    65    98 |   239    84     9 |    80    22   108     2     1     -     - |    29    13     7 |   188    39     6    95   816
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |   1144 |   331   813 |    82    63    23    63   100 |   239    84     9 |    81    19   108     2     1     -     - |    29    13     7 |   188    39     6    95   816
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        COLD           |   1144 |   331   813 |    83    66    19    58   105 |   239    84     9 |    84    15   108     2     1     -     - |    29    13     7 |   188    39     6    95   816
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By Rainfall  (45 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        RAIN           |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        DRY            |   1144 |   331   813 |    81    62    25    62   101 |   239    84     9 |    76    13   108     2     1     -     - |    29    13     7 |   188    39     6    95   816
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |   1144 |   331   813 |    82    64    22    62   101 |   239    84     9 |    81    19   108     2     1     -     - |    29    13     7 |   188    39     6    95   816
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        WET            |   1144 |   331   813 |    82    65    21    62   101 |   239    84     9 |    87    24   108     2     2     -     - |    29    13     7 |   188    39     6    95   816
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at src/app/services/map-generator.report.spec.ts:263:15
+
+  console.log
+    ==================== MapSize: TINY  (60×38, 2280 tiles) ====================
+
+      at src/app/services/map-generator.report.spec.ts:264:15
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By LandmassAmount  (27 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        LANDMASS       |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        LEAST          |   2280 |   317  1963 |    60    48    24    46   140 |   245    69     4 |    65    16   151     5     1     -     - |    23    20     5 |   136    16    31   134  1963
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        LESS           |   2280 |   448  1832 |    94    74    31   103   146 |   326   111    11 |   110    23   146     5     2     -     - |    40    20     9 |   244    33    34   137  1832
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |   2280 |   629  1651 |   164   124    55   138   149 |   433   181    15 |   169    35   149     4     2     1     - |    63    20    14 |   398    24    73   135  1651
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        MORE           |   2280 |   786  1494 |   203   166    75   184   158 |   529   234    23 |   210    46   141     4     2     1     - |    83    20    19 |   527    51    70   139  1494
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        MOST           |   2280 |   961  1319 |   258   194    90   256   163 |   634   298    30 |   278    49   142     4     3     2     - |   106    20    24 |   677    67    80   138  1319
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By WorldAge  (45 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        AGE            |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        NEW            |   2280 |   628  1652 |   156   121    55   145   151 |   400   204    24 |   134    27   146     5     2     1     - |    63    20    14 |   396    38    58   137  1652
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |   2280 |   628  1652 |   156   121    55   146   151 |   432   181    15 |   166    34   146     4     2     1     - |    63    20    14 |   396    38    58   137  1652
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        OLD            |   2280 |   628  1652 |   156   121    55   145   151 |   468   151    10 |   199    40   146     5     2     1     - |    63    20    14 |   396    39    57   137  1652
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By Temperature  (45 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        TEMP           |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        HOT            |   2280 |   628  1652 |   155   115    62   152   144 |   433   179    17 |   163    40   146     4     2     1     - |    63    20    14 |   396    38    58   137  1652
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |   2280 |   628  1652 |   156   120    57   147   150 |   433   179    17 |   165    35   146     5     2     1     - |    63    20    14 |   396    38    58   137  1652
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        COLD           |   2280 |   628  1652 |   158   128    47   137   159 |   433   179    17 |   171    26   146     4     2     1     - |    63    20    14 |   396    38    58   136  1652
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By Rainfall  (45 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        RAIN           |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        DRY            |   2280 |   628  1652 |   155   117    60   145   151 |   433   179    17 |   153    21   146     4     1     1     - |    63    20    14 |   396    38    58   137  1652
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |   2280 |   628  1652 |   156   121    55   145   151 |   433   179    17 |   167    34   146     5     2     1     - |    63    20    14 |   396    38    58   137  1652
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        WET            |   2280 |   628  1652 |   157   125    50   145   151 |   433   179    17 |   179    46   146     4     3     1     - |    63    20    14 |   396    38    58   137  1652
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at src/app/services/map-generator.report.spec.ts:263:15
+
+  console.log
+    ==================== MapSize: SMALL  (74×46, 3404 tiles) ====================
+
+      at src/app/services/map-generator.report.spec.ts:264:15
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By LandmassAmount  (27 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        LANDMASS       |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        LEAST          |   3404 |   429  2975 |    81    74    32    60   180 |   327    97     5 |    94    30   178     3     2     1     - |    32    27     7 |   200    36    19   173  2975
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        LESS           |   3404 |   636  2768 |   150   135    55   111   186 |   451   172    13 |   160    45   180     4     3     1     - |    59    27    13 |   375    58    32   172  2768
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |   3404 |   896  2508 |   226   205    81   191   194 |   610   263    24 |   249    58   176     4     3     2     - |    93    27    21 |   595    78    51   172  2508
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        MORE           |   3404 |  1125  2279 |   298   263   109   249   207 |   745   345    36 |   317    74   177     3     3     2     - |   123    27    28 |   790   104    60   170  2279
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        MOST           |   3404 |  1387  2017 |   368   329   139   337   214 |   900   440    47 |   408    83   178     3     3     2     - |   158    27    36 |  1014   129    74   170  2017
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By WorldAge  (45 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        AGE            |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        NEW            |   3404 |   894  2510 |   227   202    84   186   195 |   555   303    36 |   198    47   178     3     3     1     - |    93    27    21 |   595    81    47   171  2510
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |   3404 |   895  2509 |   225   201    84   189   197 |   605   266    24 |   247    57   178     3     3     1     - |    93    27    21 |   595    84    45   171  2509
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        OLD            |   3404 |   895  2509 |   222   200    82   194   197 |   659   222    15 |   292    70   178     4     3     2     - |    93    27    21 |   595    78    51   171  2509
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By Temperature  (45 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        TEMP           |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        HOT            |   3404 |   895  2509 |   222   193    94   198   188 |   606   263    25 |   239    68   178     3     3     2     - |    93    27    21 |   595    81    47   171  2509
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |   3404 |   895  2509 |   224   198    87   192   194 |   606   263    25 |   244    61   178     4     3     2     - |    93    27    21 |   595    81    47   171  2509
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        COLD           |   3404 |   895  2509 |   228   213    68   179   207 |   606   263    25 |   254    46   178     4     3     1     - |    93    27    21 |   595    81    47   171  2509
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By Rainfall  (45 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        RAIN           |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        DRY            |   3404 |   895  2509 |   223   194    91   189   196 |   606   263    25 |   228    38   178     4     1     2     - |    93    27    21 |   595    81    47   171  2509
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |   3404 |   895  2509 |   225   201    83   190   196 |   606   263    25 |   246    59   178     4     3     1     - |    93    27    21 |   595    81    47   171  2509
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        WET            |   3404 |   895  2509 |   226   208    74   190   196 |   606   263    25 |   263    78   178     3     5     1     - |    93    27    21 |   595    81    47   171  2509
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at src/app/services/map-generator.report.spec.ts:263:15
+
+  console.log
+    ==================== MapSize: STANDARD  (84×54, 4536 tiles) ====================
+
+      at src/app/services/map-generator.report.spec.ts:264:15
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By LandmassAmount  (27 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        LANDMASS       |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        LEAST          |   4536 |   519  4017 |   113    85    33    93   196 |   385   122    12 |   123    29   211     3     2     1     - |    42    41    10 |   266    38    27   188  4017
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        LESS           |   4536 |   804  3732 |   206   153    67   169   210 |   565   217    23 |   214    47   206     4     4     1     - |    79    41    18 |   501    63    47   193  3732
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |   4536 |  1137  3399 |   311   237    89   285   215 |   757   346    33 |   333    69   214     4     4     2     - |   123    41    28 |   791   101    59   187  3399
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        MORE           |   4536 |  1451  3085 |   407   310   142   360   232 |   951   451    50 |   421    82   208     4     4     2     - |   162    41    37 |  1049   116    90   196  3085
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        MOST           |   4536 |  1785  2751 |   512   398   164   471   241 |  1149   572    64 |   528    97   210     4     4     3     - |   206    41    47 |  1337   144   109   195  2751
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By WorldAge  (45 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        AGE            |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        NEW            |   4536 |  1139  3397 |   309   234    97   281   220 |   700   389    51 |   262    50   210     4     3     2     - |   122    41    28 |   789    99    60   192  3397
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |   4536 |  1139  3398 |   310   239    97   275   219 |   759   345    35 |   325    66   210     4     4     2     - |   122    41    28 |   789    92    66   192  3398
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        OLD            |   4536 |  1140  3396 |   311   237   103   271   218 |   825   292    23 |   384    78   210     4     4     2     - |   122    41    28 |   789    86    74   192  3396
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By Temperature  (45 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        TEMP           |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        HOT            |   4536 |  1139  3397 |   307   226   112   289   206 |   761   342    36 |   318    76   210     4     4     2     - |   122    41    28 |   789    92    66   192  3397
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |   4536 |  1139  3397 |   309   233   103   279   215 |   761   342    36 |   322    67   210     4     4     2     - |   122    41    28 |   789    92    66   192  3397
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        COLD           |   4536 |  1139  3397 |   313   250    82   259   236 |   761   342    36 |   331    51   210     4     4     2     - |   122    41    28 |   789    92    66   192  3397
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By Rainfall  (45 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        RAIN           |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        DRY            |   4536 |  1139  3397 |   308   229   108   275   219 |   761   342    36 |   296    44   210     4     2     2     - |   122    41    28 |   789    92    66   192  3397
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |   4536 |  1139  3397 |   310   236    99   275   219 |   761   342    36 |   325    65   210     4     3     2     - |   122    41    28 |   789    92    66   192  3397
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        WET            |   4536 |  1139  3397 |   311   244    90   275   219 |   761   342    36 |   350    85   210     4     6     2     - |   122    41    28 |   789    92    66   192  3397
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at src/app/services/map-generator.report.spec.ts:263:15
+
+  console.log
+    ==================== MapSize: LARGE  (96×60, 5760 tiles) ====================
+
+      at src/app/services/map-generator.report.spec.ts:264:15
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By LandmassAmount  (27 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        LANDMASS       |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        LEAST          |   5760 |   643  5117 |   154   123    51    88   228 |   472   157    15 |   150    44   320     6     3     1     - |    54    55    12 |   333    51    42   217  5117
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        LESS           |   5760 |  1012  4748 |   278   225    75   190   244 |   691   291    30 |   279    68   315     6     4     1     - |   102    55    23 |   647    86    56   223  4748
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |   5760 |  1433  4327 |   425   334   129   287   258 |   945   442    46 |   418    93   316     5     5     2     - |   157    55    36 |  1000   112    96   224  4327
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        MORE           |   5760 |  1801  3959 |   524   420   185   403   270 |  1158   574    70 |   523   107   322     5     6     3     - |   205    55    47 |  1324   149   108   220  3959
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        MOST           |   5760 |  2263  3497 |   669   514   228   566   287 |  1439   734    90 |   679   115   323     5     6     4     - |   265    55    61 |  1729   176   139   219  3497
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By WorldAge  (45 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        AGE            |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        NEW            |   5760 |  1428  4332 |   413   324   133   301   257 |   857   499    71 |   329    68   320     6     4     2     - |   157    55    36 |  1007   116    84   221  4332
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |   5760 |  1433  4327 |   411   324   135   307   257 |   939   444    50 |   411    86   319     5     5     2     - |   157    55    36 |  1007   112    94   221  4327
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        OLD            |   5760 |  1431  4329 |   406   321   133   312   258 |  1026   375    30 |   490   103   320     6     5     2     - |   156    55    36 |  1007   116    87   221  4329
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By Temperature  (45 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        TEMP           |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        HOT            |   5760 |  1431  4329 |   406   310   151   319   245 |   941   440    50 |   399   101   319     6     5     2     - |   157    55    36 |  1007   115    88   221  4329
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |   5760 |  1431  4329 |   409   318   140   310   254 |   941   440    50 |   407    89   320     6     5     2     - |   157    55    36 |  1007   115    88   221  4329
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        COLD           |   5760 |  1431  4329 |   414   342   110   291   274 |   941   440    50 |   424    66   319     5     5     2     - |   157    55    36 |  1007   115    88   221  4329
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By Rainfall  (45 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        RAIN           |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        DRY            |   5760 |  1431  4329 |   407   314   146   307   257 |   941   440    50 |   376    58   319     6     2     2     - |   157    55    36 |  1007   115    88   221  4329
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |   5760 |  1431  4329 |   410   323   134   307   257 |   941   440    50 |   411    86   319     6     5     2     - |   157    55    36 |  1007   115    88   221  4329
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        WET            |   5760 |  1431  4329 |   412   333   121   307   257 |   941   440    50 |   443   113   319     6     8     2     - |   157    55    36 |  1007   115    88   221  4329
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at src/app/services/map-generator.report.spec.ts:263:15
+
+  console.log
+    ==================== MapSize: HUGE  (106×66, 6996 tiles) ====================
+
+      at src/app/services/map-generator.report.spec.ts:264:15
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By LandmassAmount  (27 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        LANDMASS       |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        LEAST          |   6996 |   744  6252 |   179   127    47   137   255 |   546   185    13 |   190    44   351     7     4     1     - |    64    69    14 |   397    51    53   244  6252
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        LESS           |   6996 |  1198  5798 |   342   244   102   251   260 |   810   356    32 |   343    78   357     7     5     2     - |   124    69    28 |   771    95    91   241  5798
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |   6996 |  1704  5292 |   518   356   146   408   275 |  1119   530    55 |   522    97   358     7     7     2     - |   189    69    43 |  1216   127   118   242  5292
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        MORE           |   6996 |  2202  4794 |   668   478   203   563   291 |  1414   711    77 |   666   120   358     6     7     4     - |   253    69    58 |  1641   153   164   245  4794
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        MOST           |   6996 |  2725  4271 |   829   598   259   732   307 |  1734   893    98 |   841   142   358     6     7     5     - |   322    69    74 |  2089   210   179   247  4271
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By WorldAge  (45 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        AGE            |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        NEW            |   6996 |  1714  5282 |   507   358   150   421   278 |  1025   612    78 |   411    74   357     7     5     2     - |   190    69    43 |  1223   132   116   244  5282
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |   6996 |  1719  5277 |   512   363   148   420   278 |  1127   541    52 |   518    97   356     6     6     3     - |   191    69    44 |  1223   131   122   244  5277
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        OLD            |   6996 |  1711  5285 |   502   361   156   414   278 |  1223   452    36 |   608   117   356     7     7     3     - |   190    69    43 |  1223   119   125   244  5285
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By Temperature  (45 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        TEMP           |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        HOT            |   6996 |  1715  5281 |   503   345   172   437   259 |  1125   535    55 |   502   113   356     6     6     3     - |   190    69    43 |  1223   127   121   244  5281
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |   6996 |  1715  5281 |   506   356   157   424   272 |  1125   535    55 |   511   100   356     7     6     3     - |   190    69    43 |  1223   127   121   244  5281
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        COLD           |   6996 |  1715  5281 |   512   381   125   394   303 |  1125   535    55 |   524    75   356     7     6     2     - |   190    69    43 |  1223   127   121   244  5281
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By Rainfall  (45 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        RAIN           |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        DRY            |   6996 |  1715  5281 |   504   349   166   418   278 |  1125   535    55 |   467    65   356     7     2     3     - |   190    69    43 |  1223   127   121   244  5281
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |   6996 |  1715  5281 |   507   360   152   418   278 |  1125   535    55 |   512    99   357     6     6     3     - |   190    69    43 |  1223   127   121   244  5281
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        WET            |   6996 |  1715  5281 |   510   373   136   418   278 |  1125   535    55 |   558   124   356     6    10     3     - |   190    69    43 |  1223   127   121   244  5281
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at src/app/services/map-generator.report.spec.ts:263:15
+
+  console.log
+    ==================== MapSize: GIANT  (150×100, 15000 tiles) ====================
+
+      at src/app/services/map-generator.report.spec.ts:264:15
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By LandmassAmount  (27 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        LANDMASS       |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        LEAST          |  15000 |  1531 13469 |   403   320   157   294   357 |  1061   428    42 |   420   108   493    10     7     3     - |   153    83    35 |   966   109   110   346 13469
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        LESS           |  15000 |  2535 12465 |   756   598   286   519   376 |  1664   786    85 |   734   183   498    11    10     5     - |   283    83    65 |  1818   184   187   346 12465
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |  15000 |  3692 11308 |  1147   856   396   897   397 |  2361  1193   137 |  1131   226   498    10    12     7     - |   434    83   100 |  2838   254   249   351 11308
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        MORE           |  15000 |  4694 10306 |  1475  1153   516  1136   415 |  2958  1561   175 |  1435   298   502    10    12     9     - |   564    83   130 |  3686   292   363   354 10306
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        MOST           |  15000 |  5886  9114 |  1849  1436   635  1533   433 |  3663  1974   249 |  1830   325   508     9    11    11     - |   719    83   166 |  4711   402   417   356  9114
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By WorldAge  (45 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        AGE            |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        NEW            |  15000 |  3671 11329 |  1119   876   403   878   395 |  2118  1362   192 |   891   182   500    10     9     6     - |   431    83    99 |  2804   245   272   350 11329
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |  15000 |  3659 11341 |  1134   873   394   863   395 |  2331  1195   133 |  1111   228   500    10    10     7     - |   429    83    99 |  2804   255   250   350 11341
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        OLD            |  15000 |  3673 11328 |  1124   869   397   886   397 |  2576  1009    88 |  1328   275   500    10    12     8     - |   431    83    99 |  2804   245   273   351 11328
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By Temperature  (45 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        TEMP           |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        HOT            |  15000 |  3668 11332 |  1118   827   453   905   366 |  2342  1188   138 |  1080   261   500    10    10     8     - |   431    83    99 |  2804   248   265   351 11332
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |  15000 |  3668 11333 |  1124   858   415   886   385 |  2341  1188   138 |  1101   238   500    10    10     7     - |   431    83    99 |  2804   248   265   350 11333
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        COLD           |  15000 |  3667 11333 |  1136   933   325   836   437 |  2341  1188   138 |  1148   185   500    10    11     6     - |   431    83    99 |  2804   248   265   350 11333
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By Rainfall  (45 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        RAIN           |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        DRY            |  15000 |  3668 11332 |  1120   839   439   875   396 |  2341  1188   138 |  1013   144   500    10     4     8     - |   431    83    99 |  2804   248   265   350 11332
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |  15000 |  3668 11332 |  1126   870   401   875   396 |  2341  1188   138 |  1110   230   500    10     9     7     - |   431    83    99 |  2804   248   265   350 11332
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        WET            |  15000 |  3668 11332 |  1132   908   355   877   396 |  2341  1188   138 |  1207   310   500    10    18     6     - |   431    83    99 |  2804   248   265   350 11332
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at src/app/services/map-generator.report.spec.ts:263:15
+
+  console.log
+    ==================== MapSize: MAX  (200×160, 32000 tiles) ====================
+
+      at src/app/services/map-generator.report.spec.ts:264:15
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By LandmassAmount  (27 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        LANDMASS       |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        LEAST          |  32000 |  3214 28786 |  1033   739   290   672   481 |  2105  1007   101 |   972   211   838    13    13     5     - |   357   111    82 |  2284   231   233   465 28786
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        LESS           |  32000 |  5348 26652 |  1836  1320   520  1184   489 |  3369  1770   210 |  1672   333   840    14    17    10     - |   635   111   146 |  4126   365   400   458 26652
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |  32000 |  7830 24170 |  2768  1978   758  1804   523 |  4847  2655   329 |  2460   453   844    15    18    14     - |   958   111   221 |  6314   523   535   459 24170
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        MORE           |  32000 | 10013 21987 |  3480  2569  1068  2350   545 |  6163  3416   433 |  3098   581   846    15    18    19     - |  1241   111   286 |  8213   645   702   453 21987
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        MOST           |  32000 | 12501 19499 |  4182  3173  1325  3209   613 |  7656  4289   556 |  3867   674   847    13    19    24     - |  1509   111   361 | 10385   815   832   468 19499
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By WorldAge  (45 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        AGE            |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        NEW            |  32000 |  7810 24190 |  2661  1977   816  1826   531 |  4340  3017   453 |  1926   366   842    14    15    13     - |   943   111   220 |  6265   537   547   461 24190
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |  32000 |  7768 24232 |  2645  1947   804  1843   529 |  4812  2637   319 |  2404   448   843    14    17    15     - |   938   111   219 |  6265   521   523   461 24232
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        OLD            |  32000 |  7766 24234 |  2674  1942   757  1862   531 |  5332  2228   206 |  2910   536   844    14    19    15     - |   938   111   219 |  6265   489   551   461 24234
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By Temperature  (45 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        TEMP           |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        HOT            |  32000 |  7781 24219 |  2642  1858   909  1884   489 |  4828  2627   326 |  2341   520   843    14    17    16     - |   940   111   219 |  6265   516   540   461 24219
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |  32000 |  7781 24219 |  2655  1927   826  1859   515 |  4828  2627   326 |  2392   473   844    14    17    15     - |   940   111   219 |  6264   516   540   461 24219
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        COLD           |  32000 |  7781 24219 |  2682  2082   642  1789   587 |  4828  2627   326 |  2508   357   843    14    17    12     - |   940   111   219 |  6264   516   540   461 24219
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:202:11)
+
+  console.log
+      By Rainfall  (45 combos per row, 10 runs each)
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:203:11)
+
+  console.log
+        RAIN           |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:204:11)
+
+  console.log
+        DRY            |  32000 |  7781 24219 |  2647  1885   875  1844   530 |  4828  2627   326 |  2184   270   843    14     6    16     - |   940   111   219 |  6265   516   540   461 24219
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        STANDARD       |  32000 |  7781 24219 |  2660  1955   793  1844   530 |  4828  2627   326 |  2415   450   843    14    15    15     - |   940   111   219 |  6265   516   540   461 24219
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+        WET            |  32000 |  7781 24219 |  2673  2026   708  1844   530 |  4828  2627   326 |  2642   631   843    14    30    13     - |   940   111   219 |  6265   516   540   461 24219
+
+      at printPivot (src/app/services/map-generator.report.spec.ts:207:13)
+
+  console.log
+
+
+      at src/app/services/map-generator.report.spec.ts:272:13
+
+  console.log
+    ==================== GLOBAL: averaged across all settings, per MapSize ====================
+
+      at src/app/services/map-generator.report.spec.ts:273:13
+
+  console.log
+
+
+      at src/app/services/map-generator.report.spec.ts:274:13
+
+  console.log
+        MAPSIZE        |  TILES |   LND   SEA |   GRS   PLN   DST   TUN   SNW |   FLT   HLS   MTN |   WDS   RFR   ICE   REF   MRS   OAS   FLP |   BNS   STR   LUX |   CNT   ISL   ARC   POL   OCN
+
+      at src/app/services/map-generator.report.spec.ts:275:13
+
+  console.log
+        DUEL           |   1144 |   331   813 |    82    63    23    62   101 |   239    84     9 |    81    19   108     2     1     -     - |    29    13     7 |   188    39     6    95   816
+
+      at src/app/services/map-generator.report.spec.ts:278:15
+
+  console.log
+        TINY           |   2280 |   628  1652 |   156   121    55   145   151 |   433   179    17 |   166    34   146     5     2     1     - |    63    20    14 |   396    38    58   137  1652
+
+      at src/app/services/map-generator.report.spec.ts:278:15
+
+  console.log
+        SMALL          |   3404 |   895  2509 |   225   201    83   190   196 |   606   263    25 |   246    58   178     4     3     1     - |    93    27    21 |   595    81    47   171  2509
+
+      at src/app/services/map-generator.report.spec.ts:278:15
+
+  console.log
+        STANDARD       |   4536 |  1139  3397 |   310   237    99   275   219 |   761   342    36 |   324    65   210     4     4     2     - |   122    41    28 |   789    92    66   192  3397
+
+      at src/app/services/map-generator.report.spec.ts:278:15
+
+  console.log
+        LARGE          |   5760 |  1431  4329 |   410   323   134   307   257 |   941   440    50 |   410    86   319     6     5     2     - |   157    55    36 |  1007   115    88   221  4329
+
+      at src/app/services/map-generator.report.spec.ts:278:15
+
+  console.log
+        HUGE           |   6996 |  1715  5281 |   507   361   151   418   278 |  1125   535    55 |   512    96   356     7     6     3     - |   190    69    43 |  1223   127   121   244  5281
+
+      at src/app/services/map-generator.report.spec.ts:278:15
+
+  console.log
+        GIANT          |  15000 |  3668 11332 |  1126   873   398   876   396 |  2341  1188   138 |  1110   228   500    10    10     7     - |   431    83    99 |  2804   248   265   350 11332
+
+      at src/app/services/map-generator.report.spec.ts:278:15
+
+  console.log
+        MAX            |  32000 |  7781 24219 |  2660  1956   792  1844   530 |  4828  2627   326 |  2414   450   843    14    17    14     - |   940   111   219 |  6265   516   540   461 24219
+
+      at src/app/services/map-generator.report.spec.ts:278:15
+
+  console.log
+
+
+      at src/app/services/map-generator.report.spec.ts:280:13
+
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        1012.631 s
+Ran all test suites matching src/app/services/map-generator.report.spec.ts.

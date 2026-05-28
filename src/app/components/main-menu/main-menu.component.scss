@@ -41,7 +41,7 @@
   .secondary-menu {
     left: calc(50% + #{math.div($in-game-menu-button-width, 2)} + #{math.div($in-game-menu-button-height, 2)});
     opacity: 0;
-    &.active{
+    &.active {
       left: calc(50% + #{math.div($in-game-menu-button-height, 2)});
       opacity: 1;
     }

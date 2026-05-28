@@ -29,6 +29,15 @@ interface Plate {
   isContinent: boolean;
   isArchipelago: boolean;
   parentPlateId: number;
+  playerCount: number;
+}
+
+interface PlateGrowthShape {
+  angle: number;
+  axisA: number;
+  axisB: number;
+  shear: number;
+  chaosScale: number;
 }
 
 interface MapGenContext {
@@ -59,8 +68,9 @@ interface MapGenContext {
   polarMargin: number;
   polarRowCount: number;
   continentLand: number;
-  islandLandTotal: number;
   equatorY: number;
+  minContinentGap: number;
+  playersMax: number;
 }
 
 const LAND_PCT_BY_LANDMASS: { [k in LandmassAmountId]: number } = {
@@ -106,14 +116,6 @@ const FOREST_MULT_BY_AGE: { [k in WorldAgeId]: number } = {
   [WorldAgeId.OLD]: 1.2,
 };
 
-const DEBUG_FOOD_BY_INDEX: TerrainResourceId[] = [
-  TerrainResourceId.WHEAT,
-  TerrainResourceId.RICE,
-  TerrainResourceId.CATTLE,
-  TerrainResourceId.SHEEP,
-  TerrainResourceId.BANANAS,
-  TerrainResourceId.FISH,
-];
 
 const FLAT_TO_HILLS: { [k: number]: TerrainBaseId } = {
   [TerrainBaseId.GRASSLAND_FLAT]: TerrainBaseId.GRASSLAND_HILLS,
@@ -198,51 +200,59 @@ export class MapGeneratorService {
   public generateNewGameMap(settings: MapGeneratorSettings): Map {
     const ctx = this.initContext(settings);
 
-    this.seedContinents(ctx);
-    this.growContinentPlates(ctx);
-    this.carveContinentBays(ctx);
-
+    // Ice caps
     this.placeIcecapSnow(ctx);
     this.placeIcecapIceBelt(ctx);
 
+    // Continents
+    this.seedContinents(ctx);
+    this.growContinentPlates(ctx);
+    this.fillInlandOcean(ctx);
+
+    // Islands
+    this.seedIslands(ctx);
+    this.growIslandPlates(ctx);
+
+    // Cleanup noise before adding archipelagos
+    this.clearNoiseRelatedIslands(ctx);
+
+    // Archipelagos
+    this.seedArchipelagos(ctx);
+    this.growArchipelagoPlates(ctx);
+
+    // Coast
+    this.applyCoastBand(ctx);
+
+    // Biome
     this.computeElevation(ctx);
     this.computeTemperature(ctx);
     this.computeMoisture(ctx);
     this.paintInitialBiomes(ctx);
-
-    this.seedIslands(ctx);
-    this.growIslandPlates(ctx);
-
-    this.seedArchipelagos(ctx);
-    this.growArchipelagoPlates(ctx);
-
-    this.detectInlandLakes(ctx);
-    this.applyCoastBand(ctx);
-
-    this.resetLandAndClearFeatures(ctx);
-
     this.paintLatitudeBiomes(ctx);
     this.smoothBiomes(ctx);
-    this.promoteHighLatitudeTundraToSnow(ctx);
-    this.intrudeTundraWithFingers(ctx);
-    this.speckleTundraNearEquator(ctx);
+
+    // Fine-tuning:
     this.convertGrasslandToPlains(ctx);
     this.mixPlainsAndGrassland(ctx);
-    this.lockArchipelagoTemperatureFamily(ctx);
-    this.removeIceNextToTundra(ctx);
+    this.speckleTundraNearEquator(ctx);
+    this.intrudeTundraWithFingers(ctx);
+    this.promoteHighLatitudeTundraToSnow(ctx);
 
+    // Elevation
     this.promoteFlatToHills(ctx);
     this.promoteRidgeHillsToMountain(ctx);
     this.removeIsolatedMountains(ctx);
     this.linkNearbyMountains(ctx);
     this.extendSmallMountainClusters(ctx);
 
+    // Features and resources
     this.clearAllResources(ctx);
     this.addTerrainFeatures(ctx);
     this.sanityLandCleanup(ctx);
     this.addMainResources(ctx);
     this.addExtraFood(ctx);
 
+    // Finalize
     return this.materializeMap(ctx);
   }
 
@@ -285,9 +295,13 @@ export class MapGeneratorService {
     };
 
     const landPct = LAND_PCT_BY_LANDMASS[settings.landmass];
-    const totalLandTarget = Math.floor(width * height * landPct);
-    const continentLand = Math.floor(totalLandTarget * 0.85);
-    const islandLandTotal = totalLandTarget - continentLand;
+    const continentLand = Math.floor(width * height * landPct);
+
+    const mapArea = width * height;
+    const smallestMapArea = 44 * 26;
+    const largestMapArea = 200 * 160;
+    const mapSizeT = Math.max(0, Math.min(1, (mapArea - smallestMapArea) / (largestMapArea - smallestMapArea)));
+    const minContinentGap = Math.round(3 + mapSizeT * 7);
 
     const cells: Cell[] = new Array(width * height);
     for (let x = 0; x < width; x++) {
@@ -295,6 +309,10 @@ export class MapGeneratorService {
         cells[idx(x, y)] = { x, y, plateId: -1, isLand: false, elevation: 0, temperature: 0, moisture: 0 };
       }
     }
+
+    const polarRowCount = Math.max(3, Math.min(5, 3 + Math.round(((height - 26) * 2) / (160 - 26))));
+    const polarMargin = polarRowCount + 1;
+    const playersMax = this.getPlayersMaxForMapSize(width, height);
 
     return {
       width,
@@ -321,11 +339,12 @@ export class MapGeneratorService {
       continentCount: Math.max(1, settings.continents),
       islandCount: Math.max(0, settings.islands),
       archipelagoCount: Math.max(0, settings.archipelagos),
-      polarMargin: Math.max(1, Math.floor(height * 0.08)),
-      polarRowCount: Math.max(3, Math.min(5, 3 + Math.round(((height - 26) * 2) / (160 - 26)))),
+      polarRowCount,
+      polarMargin,
       continentLand,
-      islandLandTotal,
       equatorY: (height - 1) / 2,
+      minContinentGap,
+      playersMax,
     };
   }
 
@@ -334,92 +353,160 @@ export class MapGeneratorService {
   // ============================================================================
 
   private seedContinents(ctx: MapGenContext): void {
-    const { width, height, rnd, continentCount, continentLand, plates } = ctx;
-    const bandMin = Math.floor(height * 0.2);
-    const bandMax = Math.floor(height * 0.8);
-    const minSpacing = Math.max(4, Math.floor(width / (continentCount + 1)));
+    const { width, height, rnd, continentCount, continentLand, plates, polarMargin, playersMax, equatorY } = ctx;
+    const bandMin = polarMargin + Math.floor(height * 0.05);
+    const bandMax = height - polarMargin - Math.floor(height * 0.05);
+    const bandHeight = Math.max(1, bandMax - bandMin);
 
-    const weights: number[] = [];
-    for (let i = 0; i < continentCount; i++) weights.push(0.3 + rnd() * 2.0);
-    const totalWeight = weights.reduce((s, w) => s + w, 0);
+    const cols = Math.max(1, Math.round(Math.sqrt(continentCount * width / bandHeight)));
+    const rows = Math.ceil(continentCount / cols);
+    const cellW = width / cols;
+    const cellH = bandHeight / rows;
 
+    const safePlayersMax = Math.max(continentCount, playersMax);
+    const landPerPlayer = continentLand / safePlayersMax;
+    const playerCounts: number[] = new Array(continentCount).fill(1);
+    for (let i = 0; i < safePlayersMax - continentCount; i++) {
+      playerCounts[Math.floor(rnd() * continentCount)] += 1;
+    }
+    this.shuffleInPlace(playerCounts, rnd);
+
+    const slots: [number, number][] = [];
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) slots.push([c, r]);
+    }
+    this.shuffleInPlace(slots, rnd);
+
+    interface ContinentPlan {
+      sx: number;
+      primaryY: number;
+      estimatedRadius: number;
+      safeSeedMin: number;
+      safeSeedMax: number;
+      subPlateCount: number;
+      subTarget: number;
+      seedOffsetRange: number;
+      playerCount: number;
+    }
+
+    const firstThirdCount = Math.ceil(continentCount / 3);
+    const secondThirdCount = Math.ceil((continentCount - firstThirdCount) / 2);
+
+    const plans: ContinentPlan[] = [];
     for (let i = 0; i < continentCount; i++) {
-      let sx = 0;
-      let sy = 0;
-      let placed = false;
-      for (let attempt = 0; attempt < 30 && !placed; attempt++) {
+      const jitter = 0.95 + rnd() * 0.10;
+      const totalTarget = Math.max(8, Math.floor(playerCounts[i] * landPerPlayer * jitter));
+      const estimatedRadius = Math.ceil(Math.sqrt(totalTarget / 3));
+      const safeSeedMin = Math.max(bandMin, polarMargin + estimatedRadius);
+      const safeSeedMax = Math.min(bandMax - 1, height - polarMargin - estimatedRadius - 1);
+
+      let sx: number;
+      let primaryY: number;
+      if (i < firstThirdCount) {
+        const [c, r] = slots[i];
+        sx = ((Math.floor(c * cellW + cellW * 0.1 + rnd() * cellW * 0.8) % width) + width) % width;
+        primaryY = Math.min(safeSeedMax, Math.max(safeSeedMin, Math.floor(bandMin + r * cellH + cellH * 0.1 + rnd() * cellH * 0.8)));
+      } else if (i < firstThirdCount + secondThirdCount) {
         sx = Math.floor(rnd() * width);
-        sy = bandMin + Math.floor(rnd() * Math.max(1, bandMax - bandMin));
-        placed = true;
-        for (const p of plates) {
-          if (!p.isContinent) continue;
-          let dx = Math.abs(p.seedX - sx);
-          if (dx > width / 2) dx = width - dx;
-          const dy = Math.abs(p.seedY - sy);
-          if (dx < minSpacing && dy < minSpacing) {
-            placed = false;
-            break;
-          }
-        }
+        primaryY = Math.min(safeSeedMax, Math.max(safeSeedMin, Math.floor(bandMin + rnd() * bandHeight)));
+      } else {
+        const anchor = plans[Math.floor(rnd() * plans.length)];
+        const angle = rnd() * Math.PI * 2;
+        const dist = (anchor.estimatedRadius + estimatedRadius) * 0.85;
+        sx = ((Math.round(anchor.sx + dist * Math.cos(angle)) % width) + width) % width;
+        primaryY = Math.min(safeSeedMax, Math.max(safeSeedMin, Math.round(anchor.primaryY + dist * Math.sin(angle))));
       }
-      const id = plates.length;
-      plates.push({
-        id,
-        seedX: sx,
-        seedY: sy,
-        target: Math.max(8, Math.floor((continentLand * weights[i]) / totalWeight)),
-        grown: 0,
-        isContinent: true,
-        isArchipelago: false,
-        parentPlateId: id,
-      });
+
+      const subPlateRoll = rnd();
+      const subPlateCount = subPlateRoll < 0.35 ? 3 : subPlateRoll < 0.56 ? 2 : subPlateRoll < 0.75 ? 4 : subPlateRoll < 0.87 ? 5 : subPlateRoll < 0.94 ? 6 : 7;
+      const subTarget = Math.max(4, Math.floor(totalTarget / subPlateCount));
+      const seedOffsetRange = Math.max(1, Math.floor(estimatedRadius * 0.2));
+      plans.push({ sx, primaryY, estimatedRadius, safeSeedMin, safeSeedMax, subPlateCount, subTarget, seedOffsetRange, playerCount: playerCounts[i] });
+    }
+
+    const latTolerance = Math.round((height - 1) / 12);
+    const avgPrimaryY = plans.reduce((sum, p) => sum + p.primaryY, 0) / plans.length;
+    if (Math.abs(avgPrimaryY - equatorY) > latTolerance) {
+      const shift = Math.round(equatorY - avgPrimaryY);
+      for (const plan of plans) {
+        plan.primaryY = Math.min(plan.safeSeedMax, Math.max(plan.safeSeedMin, plan.primaryY + shift));
+      }
+    }
+
+    for (const plan of plans) {
+      const { sx, primaryY, safeSeedMin, safeSeedMax, subPlateCount, subTarget, seedOffsetRange, playerCount } = plan;
+      const primaryId = plates.length;
+      let prevSeedX = sx;
+      let prevSeedY = primaryY;
+      for (let s = 0; s < subPlateCount; s++) {
+        const seedX = s === 0 ? sx : ((prevSeedX + Math.round((rnd() * 2 - 1) * seedOffsetRange)) % width + width) % width;
+        const seedY = s === 0 ? primaryY : Math.min(safeSeedMax, Math.max(safeSeedMin, prevSeedY + Math.round((rnd() * 2 - 1) * seedOffsetRange)));
+        prevSeedX = seedX;
+        prevSeedY = seedY;
+        plates.push({
+          id: plates.length,
+          seedX,
+          seedY,
+          target: subTarget,
+          grown: 0,
+          isContinent: true,
+          isArchipelago: false,
+          parentPlateId: primaryId,
+          playerCount: s === 0 ? playerCount : 0,
+        });
+      }
     }
   }
 
   private growContinentPlates(ctx: MapGenContext): void {
+    const { rnd } = ctx;
     const continents = ctx.plates.filter(p => p.isContinent);
-    this.growPlates(ctx, continents, ctx.continentLand, 5.5);
+    const groups = this.buildContinentGroups(ctx);
+    const ownPlateIdsFor = (plate: Plate): Set<number> => groups.get(plate.parentPlateId) ?? new Set([plate.id]);
+
+    const mainShapeFor = (plate: Plate): PlateGrowthShape => {
+      const angle = rnd() * Math.PI * 2;
+      const axisB = 0.5 + rnd() * 1.5;
+      const axisA = 0.64 / axisB;
+      if (plate.parentPlateId === plate.id) return { angle, axisA, axisB, shear: (rnd() - 0.5) * 0.6, chaosScale: 0.6 + rnd() * 0.8 };
+      return { angle, axisA, axisB, shear: (rnd() - 0.5) * 0.2, chaosScale: 0.2 + rnd() * 0.2 };
+    };
+    this.growPlates(ctx, continents, Math.floor(ctx.continentLand * 0.8), 3, ownPlateIdsFor, mainShapeFor, 0);
+
+    const fringeShapeFor = (plate: Plate): PlateGrowthShape => {
+      const axisB = 0.7 + rnd();
+      const isPrimary = plate.parentPlateId === plate.id;
+      return { angle: rnd() * Math.PI * 2, axisA: 0.64 / axisB, axisB, shear: (rnd() - 0.5) * (isPrimary ? 1.2 : 0.2), chaosScale: isPrimary ? 1.4 + rnd() * 0.6 : 0.2 + rnd() * 0.2 };
+    };
+    this.growPlates(ctx, continents, Math.floor(ctx.continentLand * 0.03), 9.0, ownPlateIdsFor, fringeShapeFor, 0);
   }
 
-  private carveContinentBays(ctx: MapGenContext): void {
-    const { rnd, idx, cells, neighbors, baseAssignment, resourceAssignment } = ctx;
-    const continents = ctx.plates.filter(p => p.isContinent);
-    const distToOcean = this.bfsDistance(ctx, i => !cells[i].isLand);
-
-    for (const plate of continents) {
-      const interior: Cell[] = [];
-      for (const c of cells) {
-        if (c.plateId === plate.id && c.isLand && distToOcean[idx(c.x, c.y)] >= 2) interior.push(c);
-      }
-      if (interior.length < 4) continue;
-
-      const numBays = 4 + Math.floor(rnd() * 5);
-      for (let i = 0; i < numBays; i++) {
-        let current = interior[Math.floor(rnd() * interior.length)];
-        const maxSteps = 5 + Math.floor(rnd() * 8);
-        for (let s = 0; s < maxSteps; s++) {
-          if (!current.isLand) break;
-          const ci = idx(current.x, current.y);
-          current.isLand = false;
-          current.plateId = -1;
-          baseAssignment[ci] = TerrainBaseId.OCEAN;
-          resourceAssignment[ci] = TerrainResourceId.NONE;
-
-          const landNbs: Cell[] = [];
-          for (const n of neighbors(current.x, current.y)) {
-            const nc = cells[idx(n.x, n.y)];
-            if (nc.isLand) landNbs.push(nc);
-          }
-          if (landNbs.length === 0) break;
-          if (rnd() < 0.6) {
-            landNbs.sort((a, b) => distToOcean[idx(a.x, a.y)] - distToOcean[idx(b.x, b.y)]);
-            current = landNbs[0];
-          } else {
-            current = landNbs[Math.floor(rnd() * landNbs.length)];
-          }
+  private fillInlandOcean(ctx: MapGenContext): void {
+    const { idx, cells, neighbors, baseAssignment } = ctx;
+    const isOuterOcean = this.markOuterOcean(ctx);
+    for (let i = 0; i < cells.length; i++) {
+      if (baseAssignment[i] !== TerrainBaseId.OCEAN || isOuterOcean[i]) continue;
+      baseAssignment[i] = TerrainBaseId.PLAINS_FLAT;
+      cells[i].isLand = true;
+      for (const n of neighbors(cells[i].x, cells[i].y)) {
+        const nc = cells[idx(n.x, n.y)];
+        if (nc.isLand && nc.plateId >= 0) {
+          cells[i].plateId = nc.plateId;
+          break;
         }
       }
     }
+  }
+
+  private buildContinentGroups(ctx: MapGenContext) {
+    const groups = new Map<number, Set<number>>();
+    for (const p of ctx.plates) {
+      if (!p.isContinent) continue;
+      let plateIds = groups.get(p.parentPlateId);
+      if (!plateIds) { plateIds = new Set(); groups.set(p.parentPlateId, plateIds); }
+      plateIds.add(p.id);
+    }
+    return groups;
   }
 
   // ============================================================================
@@ -427,13 +514,12 @@ export class MapGeneratorService {
   // ============================================================================
 
   private detectInlandLakes(ctx: MapGenContext): void {
-    const { idx, cells, neighbors, baseAssignment, featureAssignment, resourceAssignment, height, polarRowCount } = ctx;
+    const { idx, cells, neighbors, baseAssignment, featureAssignment } = ctx;
+    const isOuterOcean = this.markOuterOcean(ctx);
     const visited = new Array<boolean>(cells.length).fill(false);
-    const isPolar = (y: number): boolean => y < polarRowCount || y >= height - polarRowCount;
 
     for (let i = 0; i < cells.length; i++) {
-      if (baseAssignment[i] !== TerrainBaseId.OCEAN || visited[i]) continue;
-      if (isPolar(cells[i].y)) continue;
+      if (baseAssignment[i] !== TerrainBaseId.OCEAN || isOuterOcean[i] || visited[i]) continue;
       const comp: number[] = [];
       const stack = [i];
       visited[i] = true;
@@ -442,9 +528,8 @@ export class MapGeneratorService {
         comp.push(cur);
         const cc = cells[cur];
         for (const n of neighbors(cc.x, cc.y)) {
-          if (isPolar(n.y)) continue;
           const ni = idx(n.x, n.y);
-          if (baseAssignment[ni] === TerrainBaseId.OCEAN && !visited[ni]) {
+          if (baseAssignment[ni] === TerrainBaseId.OCEAN && !isOuterOcean[ni] && !visited[ni]) {
             visited[ni] = true;
             stack.push(ni);
           }
@@ -454,7 +539,6 @@ export class MapGeneratorService {
       for (const cIdx of comp) {
         baseAssignment[cIdx] = TerrainBaseId.LAKE;
         if (featureAssignment[cIdx] === TerrainFeatureId.ICE) featureAssignment[cIdx] = TerrainFeatureId.NONE;
-        resourceAssignment[cIdx] = TerrainResourceId.FISH;
       }
     }
   }
@@ -464,15 +548,12 @@ export class MapGeneratorService {
   // ============================================================================
 
   private placeIcecapSnow(ctx: MapGenContext): void {
-    const { width, height, rnd, idx, neighbors, cells, baseAssignment, featureAssignment, resourceAssignment, polarRowCount } = ctx;
+    const { width, height, rnd, idx, neighbors, cells, baseAssignment, featureAssignment, polarRowCount } = ctx;
 
     const placeSnowOrIce = (i: number): void => {
       if (rnd() < 0.25) {
-        baseAssignment[i] = TerrainBaseId.OCEAN;
+        this.claimCellAsOcean(i, ctx);
         featureAssignment[i] = TerrainFeatureId.ICE;
-        cells[i].isLand = false;
-        cells[i].plateId = -1;
-        resourceAssignment[i] = TerrainResourceId.NONE;
       } else {
         baseAssignment[i] = TerrainBaseId.SNOW_FLAT;
       }
@@ -534,11 +615,8 @@ export class MapGeneratorService {
     for (let i = 0; i < cells.length; i++) {
       if (baseAssignment[i] !== TerrainBaseId.SNOW_FLAT) continue;
       if (reachesEdge[i]) continue;
-      baseAssignment[i] = TerrainBaseId.OCEAN;
+      this.claimCellAsOcean(i, ctx);
       featureAssignment[i] = TerrainFeatureId.ICE;
-      cells[i].isLand = false;
-      cells[i].plateId = -1;
-      resourceAssignment[i] = TerrainResourceId.NONE;
     }
   }
 
@@ -576,21 +654,35 @@ export class MapGeneratorService {
   // ============================================================================
 
   private computeElevation(ctx: MapGenContext): void {
-    const { rnd, noise, idx, cells, neighbors } = ctx;
+    const { rnd, noise, idx, cells, neighbors, plates } = ctx;
+
+    const groupIdByPlateId = new Map<number, number>();
+    for (const p of plates) {
+      if (p.isContinent || p.isArchipelago) groupIdByPlateId.set(p.id, p.parentPlateId);
+    }
+
+    const cellGroupId = new Array<number>(cells.length);
+    for (let i = 0; i < cells.length; i++) {
+      const pid = cells[i].plateId;
+      cellGroupId[i] = groupIdByPlateId.get(pid) ?? pid;
+    }
+
     for (const cell of cells) {
       if (!cell.isLand) {
         cell.elevation = 0;
         continue;
       }
+      const cellIdx = idx(cell.x, cell.y);
       let e = 0.35 + rnd() * 0.2;
       e += ridge(noise, cell.x, cell.y, 0.14, 333, 777) * 0.35;
       e += (noise(cell.x * 0.08 + 51, cell.y * 0.08 + 19) - 0.5) * 0.3;
       let touchesOtherPlate = false;
       let touchesOcean = false;
+      const myGroup = cellGroupId[cellIdx];
       for (const n of neighbors(cell.x, cell.y)) {
-        const nc = cells[idx(n.x, n.y)];
-        if (!nc.isLand) touchesOcean = true;
-        else if (nc.plateId !== cell.plateId) touchesOtherPlate = true;
+        const ni = idx(n.x, n.y);
+        if (!cells[ni].isLand) touchesOcean = true;
+        else if (cellGroupId[ni] !== myGroup) touchesOtherPlate = true;
       }
       if (touchesOtherPlate) e += 0.35 + rnd() * 0.35;
       if (touchesOcean) e -= 0.2;
@@ -677,7 +769,7 @@ export class MapGeneratorService {
   }
 
   private applyCoastBand(ctx: MapGenContext): void {
-    const { width, idx, cells, neighbors, baseAssignment, featureAssignment, resourceAssignment, height, polarRowCount, polarMargin } = ctx;
+    const { width, idx, cells, neighbors, baseAssignment, featureAssignment, height, polarRowCount, polarMargin } = ctx;
     const isIcecapContinent = (y: number, base: TerrainBaseId): boolean =>
       base === TerrainBaseId.SNOW_FLAT && (y < polarMargin || y >= height - polarMargin);
     const innermostTopY = polarRowCount - 1;
@@ -686,11 +778,8 @@ export class MapGeneratorService {
       for (const y of [innermostTopY, innermostBottomY]) {
         const i = idx(x, y);
         if (!cells[i].isLand) continue;
-        baseAssignment[i] = TerrainBaseId.OCEAN;
+        this.claimCellAsOcean(i, ctx);
         featureAssignment[i] = TerrainFeatureId.NONE;
-        cells[i].isLand = false;
-        cells[i].plateId = -1;
-        resourceAssignment[i] = TerrainResourceId.NONE;
       }
     }
     for (const cell of cells) {
@@ -713,114 +802,471 @@ export class MapGeneratorService {
   // ============================================================================
 
   private seedIslands(ctx: MapGenContext): void {
-    const { width, height, rnd, idx, cells, neighbors, islandCount, islandLandTotal, polarMargin, plates, baseAssignment } = ctx;
+    const { height, rnd, idx, cells, neighbors, islandCount, polarMargin, plates, baseAssignment } = ctx;
 
     const actualCount = Math.max(0, islandCount);
     if (actualCount === 0) return;
-    const meanSize = Math.max(1, islandLandTotal / actualCount);
-    const rawTargets: number[] = [];
-    for (let i = 0; i < actualCount; i++) {
-      rawTargets.push(Math.max(1, Math.round(-Math.log(Math.max(0.0001, rnd())) * meanSize * 0.6 + 1)));
-    }
-    const rawSum = rawTargets.reduce((s, w) => s + w, 0);
-    const factor = rawSum > 0 ? islandLandTotal / rawSum : 1;
-    const normalized = factor < 0.9 || factor > 1.1 ? rawTargets.map(t => Math.max(1, Math.round(t * factor))) : rawTargets;
-    const avgContinentSize = ctx.continentLand / Math.max(1, ctx.continentCount);
-    const maxIslandSize = Math.max(1, Math.floor(avgContinentSize * 0.35));
-    const islandTargets = normalized.map(t => Math.min(t, maxIslandSize));
 
-    const continentsExist = cells.some(c => c.isLand && c.plateId >= 0);
+    const continentGrownById = new Map<number, number>();
+    for (const p of plates) if (p.isContinent) continentGrownById.set(p.id, p.grown);
+    if (continentGrownById.size === 0) return;
+
     const distToLand: number[] = new Array(cells.length).fill(99);
-    const nearestContinent: number[] = new Array(cells.length).fill(-1);
-    const seedCandidates: number[] = [];
-
-    if (continentsExist) {
-      const dq: number[] = [];
-      for (let i = 0; i < cells.length; i++) {
-        if (baseAssignment[i] !== TerrainBaseId.OCEAN) {
-          distToLand[i] = 0;
-          dq.push(i);
-        }
+    const dq: number[] = [];
+    for (let i = 0; i < cells.length; i++) {
+      if (baseAssignment[i] !== TerrainBaseId.OCEAN) {
+        distToLand[i] = 0;
+        dq.push(i);
       }
-      let head = 0;
-      while (head < dq.length) {
-        const cur = dq[head++];
-        const next = distToLand[cur] + 1;
-        if (next > 7) continue;
-        const cc = cells[cur];
-        for (const nb of neighbors(cc.x, cc.y)) {
-          const ni = idx(nb.x, nb.y);
-          if (distToLand[ni] > next) {
-            distToLand[ni] = next;
-            dq.push(ni);
-          }
+    }
+    let head = 0;
+    while (head < dq.length) {
+      const cur = dq[head++];
+      const next = distToLand[cur] + 1;
+      if (next > 30) continue;
+      const cc = cells[cur];
+      for (const nb of neighbors(cc.x, cc.y)) {
+        const ni = idx(nb.x, nb.y);
+        if (distToLand[ni] > next) {
+          distToLand[ni] = next;
+          dq.push(ni);
         }
-      }
-
-      const dq2: number[] = [];
-      const ncDist = new Array(cells.length).fill(99);
-      for (let i = 0; i < cells.length; i++) {
-        if (cells[i].isLand && cells[i].plateId >= 0) {
-          ncDist[i] = 0;
-          nearestContinent[i] = cells[i].plateId;
-          dq2.push(i);
-        }
-      }
-      let head2 = 0;
-      while (head2 < dq2.length) {
-        const cur = dq2[head2++];
-        const next = ncDist[cur] + 1;
-        if (next > 12) continue;
-        const cc = cells[cur];
-        for (const nb of neighbors(cc.x, cc.y)) {
-          const ni = idx(nb.x, nb.y);
-          if (ncDist[ni] > next) {
-            ncDist[ni] = next;
-            nearestContinent[ni] = nearestContinent[cur];
-            dq2.push(ni);
-          }
-        }
-      }
-
-      for (let i = 0; i < cells.length; i++) {
-        const c = cells[i];
-        if (baseAssignment[i] !== TerrainBaseId.OCEAN) continue;
-        if (c.y < polarMargin || c.y >= height - polarMargin) continue;
-        if (distToLand[i] >= 2 && distToLand[i] <= 6) seedCandidates.push(i);
       }
     }
 
-    for (let i = 0; i < actualCount; i++) {
-      let sx: number;
-      let sy: number;
-      let parentPlateId: number;
-      if (seedCandidates.length > 0) {
-        const seedIdx = seedCandidates[Math.floor(rnd() * seedCandidates.length)];
-        sx = cells[seedIdx].x;
-        sy = cells[seedIdx].y;
-        parentPlateId = nearestContinent[seedIdx];
-      } else {
-        sx = Math.floor(rnd() * width);
-        sy = polarMargin + Math.floor(rnd() * (height - polarMargin * 2));
-        parentPlateId = plates.length + i;
+    const nearestContinent: number[] = new Array(cells.length).fill(-1);
+    const ncDist = new Array(cells.length).fill(99);
+    const dq2: number[] = [];
+    for (let i = 0; i < cells.length; i++) {
+      if (cells[i].isLand && cells[i].plateId >= 0 && continentGrownById.has(cells[i].plateId)) {
+        ncDist[i] = 0;
+        nearestContinent[i] = cells[i].plateId;
+        dq2.push(i);
       }
-      const id = plates.length + i;
+    }
+    let head2 = 0;
+    while (head2 < dq2.length) {
+      const cur = dq2[head2++];
+      const next = ncDist[cur] + 1;
+      if (next > 30) continue;
+      const cc = cells[cur];
+      for (const nb of neighbors(cc.x, cc.y)) {
+        const ni = idx(nb.x, nb.y);
+        if (ncDist[ni] > next) {
+          ncDist[ni] = next;
+          nearestContinent[ni] = nearestContinent[cur];
+          dq2.push(ni);
+        }
+      }
+    }
+
+    const nearCandidates: number[] = [];
+    const farCandidates: number[] = [];
+    for (let i = 0; i < cells.length; i++) {
+      if (baseAssignment[i] !== TerrainBaseId.OCEAN) continue;
+      const c = cells[i];
+      if (c.y < polarMargin || c.y >= height - polarMargin) continue;
+      if (nearestContinent[i] < 0) continue;
+      const d = distToLand[i];
+      if (d < 5) continue;
+      if (d <= 8) nearCandidates.push(i);
+      else farCandidates.push(i);
+    }
+
+    const used = new Array<boolean>(cells.length).fill(false);
+    const markUsedRadius = (centerIdx: number, radius: number): void => {
+      used[centerIdx] = true;
+      const visited = new Set<number>([centerIdx]);
+      let frontier: number[] = [centerIdx];
+      for (let depth = 1; depth <= radius && frontier.length > 0; depth++) {
+        const nextLayer: number[] = [];
+        for (const cur of frontier) {
+          const cc = cells[cur];
+          for (const nb of neighbors(cc.x, cc.y)) {
+            const ni = idx(nb.x, nb.y);
+            if (visited.has(ni)) continue;
+            visited.add(ni);
+            used[ni] = true;
+            nextLayer.push(ni);
+          }
+        }
+        frontier = nextLayer;
+      }
+    };
+
+    const nearCount = Math.round(actualCount * 0.4);
+
+    for (let i = 0; i < actualCount; i++) {
+      const isNearIsland = i < nearCount;
+      const primaryPool = (isNearIsland ? nearCandidates : farCandidates).filter(c => !used[c]);
+      const pool = primaryPool.length > 0 ? primaryPool : nearCandidates.filter(c => !used[c]);
+      if (pool.length === 0) return;
+
+      let seedIdx = pool[Math.floor(rnd() * pool.length)];
+
+      const initialParentGrown = continentGrownById.get(nearestContinent[seedIdx]) ?? 0;
+      const estimatedTarget = Math.max(1, Math.round(initialParentGrown * 0.15));
+      const R = Math.ceil(Math.sqrt(estimatedTarget / Math.PI));
+      const polarBuffer = Math.ceil(1.1 * R);
+      const clearOfPoles = (c: number): boolean => cells[c].y >= polarBuffer && cells[c].y <= height - 1 - polarBuffer;
+
+      if (!isNearIsland) {
+        const minDist = 5 + Math.floor(rnd() * (2 * R + 1));
+        const distAndPolarQualified = primaryPool.filter(c => distToLand[c] >= minDist && clearOfPoles(c));
+        if (distAndPolarQualified.length > 0) {
+          seedIdx = distAndPolarQualified[Math.floor(rnd() * distAndPolarQualified.length)];
+        } else {
+          const polarQualified = primaryPool.filter(clearOfPoles);
+          if (polarQualified.length > 0) seedIdx = polarQualified[Math.floor(rnd() * polarQualified.length)];
+        }
+      } else {
+        const polarQualified = pool.filter(clearOfPoles);
+        if (polarQualified.length > 0) seedIdx = polarQualified[Math.floor(rnd() * polarQualified.length)];
+      }
+
+      if (baseAssignment[seedIdx] !== TerrainBaseId.OCEAN) continue;
+      const parentPlateId = nearestContinent[seedIdx];
+      const parentGrown = continentGrownById.get(parentPlateId) ?? 0;
+      const pct = 0.03 + ((rnd() + rnd()) / 2) * 0.27;
+      const target = Math.max(1, Math.round(parentGrown * pct * 1.1));
       plates.push({
-        id,
-        seedX: sx,
-        seedY: sy,
-        target: islandTargets[i],
+        id: plates.length,
+        seedX: cells[seedIdx].x,
+        seedY: cells[seedIdx].y,
+        target,
         grown: 0,
         isContinent: false,
         isArchipelago: false,
         parentPlateId,
+        playerCount: 0,
       });
+      markUsedRadius(seedIdx, 3);
     }
   }
 
   private growIslandPlates(ctx: MapGenContext): void {
-    const islands = ctx.plates.filter(p => !p.isContinent && !p.isArchipelago);
-    this.growPlates(ctx, islands, ctx.islandLandTotal, 7.0);
+    const { height, rnd, noise, idx, cells, neighbors, baseAssignment, featureAssignment, plates, polarMargin } = ctx;
+    const islands = plates.filter(p => !p.isContinent && !p.isArchipelago);
+    if (islands.length === 0) return;
+
+    const isSea = (i: number): boolean =>
+      cells[i].plateId === -1 &&
+      !cells[i].isLand &&
+      baseAssignment[i] === TerrainBaseId.OCEAN;
+
+    const inPolarMargin = (y: number): boolean => y < polarMargin || y >= height - polarMargin;
+
+    const claimAsIsland = (cellIdx: number, plate: Plate): void => {
+      cells[cellIdx].plateId = plate.id;
+      cells[cellIdx].isLand = true;
+      baseAssignment[cellIdx] = TerrainBaseId.PLAINS_FLAT;
+      featureAssignment[cellIdx] = TerrainFeatureId.NONE;
+      plate.grown += 1;
+    };
+
+    interface FrontierItem { cellIdx: number; priority: number; }
+
+    for (const plate of islands) {
+      const ownPlateIds = new Set([plate.id]);
+      const seedIdx = idx(plate.seedX, plate.seedY);
+      if (!isSea(seedIdx)) continue;
+      if (this.isAdjacentToForeignLand(ctx, plate.seedX, plate.seedY, ownPlateIds)) continue;
+
+      claimAsIsland(seedIdx, plate);
+
+      const chaos = (x: number, y: number): number => {
+        const low = noise(x * 0.17 + plate.id * 17.7, y * 0.17 + plate.id * 31.3);
+        const high = noise(x * 0.55 + plate.id * 7.3, y * 0.55 + plate.id * 13.1);
+        return low + high * 0.6;
+      };
+
+      const frontier: FrontierItem[] = [];
+      const enqueued = new Set<number>([seedIdx]);
+
+      const enqueueNeighbors = (fromIdx: number): void => {
+        const c = cells[fromIdx];
+        for (const n of neighbors(c.x, c.y)) {
+          const ni = idx(n.x, n.y);
+          if (enqueued.has(ni)) continue;
+          enqueued.add(ni);
+          if (inPolarMargin(n.y)) continue;
+          if (!isSea(ni)) continue;
+          if (this.isAdjacentToForeignLand(ctx, n.x, n.y, ownPlateIds)) continue;
+          const dx = n.x - plate.seedX;
+          const dy = n.y - plate.seedY;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const priority = dist + chaos(n.x, n.y) * 7.0 + (rnd() - 0.5) * 2.0;
+          this.insertSortedByPriority(frontier, { cellIdx: ni, priority });
+        }
+      };
+
+      enqueueNeighbors(seedIdx);
+
+      while (frontier.length > 0 && plate.grown < plate.target) {
+        const item = frontier.shift();
+        if (!item) break;
+        const ni = item.cellIdx;
+        if (!isSea(ni)) continue;
+        claimAsIsland(ni, plate);
+        enqueueNeighbors(ni);
+      }
+    }
+
+    this.detectInlandLakes(ctx);
+    this.reshapeIslands(ctx);
+  }
+
+  private clearNoiseRelatedIslands(ctx: MapGenContext): void {
+    const { idx, cells, neighbors, plates, baseAssignment, featureAssignment, resourceAssignment } = ctx;
+
+    const continentPlateIds = new Set<number>(plates.filter(p => p.isContinent).map(p => p.id));
+    const archipelagoPlateIds = new Set<number>(plates.filter(p => p.isArchipelago).map(p => p.id));
+
+    const visited = new Array<boolean>(cells.length).fill(false);
+
+    for (let i = 0; i < cells.length; i++) {
+      if (!cells[i].isLand || visited[i]) continue;
+
+      const component: number[] = [];
+      let hasContinent = false;
+      let hasArchipelago = false;
+      const queue = [i];
+      visited[i] = true;
+      let head = 0;
+      while (head < queue.length) {
+        const cur = queue[head++];
+        component.push(cur);
+        if (continentPlateIds.has(cells[cur].plateId)) hasContinent = true;
+        if (archipelagoPlateIds.has(cells[cur].plateId)) hasArchipelago = true;
+        for (const n of neighbors(cells[cur].x, cells[cur].y)) {
+          const ni = idx(n.x, n.y);
+          if (!visited[ni] && cells[ni].isLand) { visited[ni] = true; queue.push(ni); }
+        }
+      }
+
+      if (hasContinent || hasArchipelago || component.length >= 4) continue;
+
+      for (const ci of component) {
+        cells[ci].isLand = false;
+        cells[ci].plateId = -1;
+        baseAssignment[ci] = TerrainBaseId.OCEAN;
+      }
+    }
+  }
+
+  private reshapeIslands(ctx: MapGenContext): void {
+    const { height, rnd, idx, cells, neighbors, plates, baseAssignment, featureAssignment, resourceAssignment, polarMargin } = ctx;
+
+    const islandPlates = plates.filter(p => !p.isContinent && !p.isArchipelago && p.grown > 0);
+    if (islandPlates.length === 0) return;
+
+    const countLandNeighbors = (cellIdx: number): number => {
+      let count = 0;
+      for (const n of neighbors(cells[cellIdx].x, cells[cellIdx].y)) {
+        if (cells[idx(n.x, n.y)].isLand) count++;
+      }
+      return count;
+    };
+
+    const fillWithIslandLand = (cellIdx: number, plateId: number): void => {
+      cells[cellIdx].isLand = true;
+      cells[cellIdx].plateId = plateId;
+      baseAssignment[cellIdx] = TerrainBaseId.GRASSLAND_FLAT;
+      featureAssignment[cellIdx] = TerrainFeatureId.NONE;
+      resourceAssignment[cellIdx] = TerrainResourceId.NONE;
+    };
+
+    const removeIslandTile = (cellIdx: number): void => {
+      cells[cellIdx].isLand = false;
+      cells[cellIdx].plateId = -1;
+      baseAssignment[cellIdx] = TerrainBaseId.OCEAN;
+      featureAssignment[cellIdx] = TerrainFeatureId.NONE;
+      resourceAssignment[cellIdx] = TerrainResourceId.NONE;
+    };
+
+    const wouldConnectOtherLand = (cellIdx: number, plateId: number): boolean => {
+      for (const n of neighbors(cells[cellIdx].x, cells[cellIdx].y)) {
+        const ni = idx(n.x, n.y);
+        if (cells[ni].isLand && cells[ni].plateId !== plateId && cells[ni].plateId >= 0) return true;
+      }
+      return false;
+    };
+
+    const nearPolarThreshold = polarMargin * 2;
+
+    const axisNext: Array<(x: number, y: number) => { x: number; y: number }> = [
+      (x, y) => ({ x: x + 1, y }),
+      (x, y) => y % 2 === 0 ? { x, y: y - 1 } : { x: x + 1, y: y - 1 },
+      (x, y) => y % 2 === 0 ? { x: x - 1, y: y - 1 } : { x, y: y - 1 },
+    ];
+    const axisPrev: Array<(x: number, y: number) => { x: number; y: number }> = [
+      (x, y) => ({ x: x - 1, y }),
+      (x, y) => y % 2 === 0 ? { x: x - 1, y: y + 1 } : { x, y: y + 1 },
+      (x, y) => y % 2 === 0 ? { x, y: y + 1 } : { x: x + 1, y: y + 1 },
+    ];
+
+    for (const plate of islandPlates) {
+      const R = Math.ceil(Math.sqrt(plate.grown / Math.PI));
+      const seedIdx = idx(plate.seedX, plate.seedY);
+
+      const adjacentLakes = new Set<number>();
+      for (let i = 0; i < cells.length; i++) {
+        if (cells[i].plateId !== plate.id || !cells[i].isLand) continue;
+        for (const n of neighbors(cells[i].x, cells[i].y)) {
+          const ni = idx(n.x, n.y);
+          if (baseAssignment[ni] === TerrainBaseId.LAKE) adjacentLakes.add(ni);
+        }
+      }
+      for (const lakeIdx of adjacentLakes) {
+        if (!wouldConnectOtherLand(lakeIdx, plate.id)) fillWithIslandLand(lakeIdx, plate.id);
+      }
+
+      const canalSeeds: number[] = [];
+      for (let i = 0; i < cells.length; i++) {
+        if (cells[i].isLand) continue;
+        if (hexDistance(cells, ctx.width, i, seedIdx) >= R) continue;
+        if (countLandNeighbors(i) === 5) canalSeeds.push(i);
+      }
+
+      const canalTiles = new Set<number>(canalSeeds);
+      const bfsQueue = [...canalSeeds];
+      let head = 0;
+      while (head < bfsQueue.length) {
+        const cur = bfsQueue[head++];
+        for (const n of neighbors(cells[cur].x, cells[cur].y)) {
+          const ni = idx(n.x, n.y);
+          if (canalTiles.has(ni) || cells[ni].isLand) continue;
+          const lnCount = countLandNeighbors(ni);
+          if (lnCount === 3 || lnCount === 4) { canalTiles.add(ni); bfsQueue.push(ni); }
+        }
+      }
+
+      for (const canalIdx of canalTiles) {
+        if (!wouldConnectOtherLand(canalIdx, plate.id)) fillWithIslandLand(canalIdx, plate.id);
+      }
+
+      const narrowTileSet = new Set<number>();
+      for (let i = 0; i < cells.length; i++) {
+        if (cells[i].plateId !== plate.id || !cells[i].isLand) continue;
+        const lnc = countLandNeighbors(i);
+        if (lnc === 1 || lnc === 2) narrowTileSet.add(i);
+      }
+
+      const visitedNarrow = new Set<number>();
+      const peninsulas: number[][] = [];
+      for (const startIdx of narrowTileSet) {
+        if (visitedNarrow.has(startIdx)) continue;
+        const component: number[] = [];
+        let hasEnd = false;
+        const queue = [startIdx];
+        visitedNarrow.add(startIdx);
+        let bfsHead = 0;
+        while (bfsHead < queue.length) {
+          const cur = queue[bfsHead++];
+          if (countLandNeighbors(cur) === 1) hasEnd = true;
+          component.push(cur);
+          for (const n of neighbors(cells[cur].x, cells[cur].y)) {
+            const ni = idx(n.x, n.y);
+            if (!narrowTileSet.has(ni) || visitedNarrow.has(ni)) continue;
+            visitedNarrow.add(ni);
+            queue.push(ni);
+          }
+        }
+        if (hasEnd) peninsulas.push(component);
+      }
+
+      this.shuffleInPlace(peninsulas, rnd);
+      const peninsulaReplaceCount = Math.floor(peninsulas.length * 0.8);
+      for (let p = 0; p < peninsulaReplaceCount; p++) {
+        for (const tileIdx of peninsulas[p]) removeIslandTile(tileIdx);
+      }
+
+      let isNearPolar = false;
+      for (let i = 0; i < cells.length; i++) {
+        if (cells[i].plateId !== plate.id || !cells[i].isLand) continue;
+        if (cells[i].y < nearPolarThreshold || cells[i].y >= height - nearPolarThreshold) { isNearPolar = true; break; }
+      }
+      if (!isNearPolar) continue;
+
+      const coastalTiles = new Set<number>();
+      for (let i = 0; i < cells.length; i++) {
+        if (cells[i].plateId !== plate.id || !cells[i].isLand) continue;
+        for (const n of neighbors(cells[i].x, cells[i].y)) {
+          if (!cells[idx(n.x, n.y)].isLand) { coastalTiles.add(i); break; }
+        }
+      }
+
+      const expansionFrontier = new Set<number>();
+      for (const lt of coastalTiles) {
+        for (const n of neighbors(cells[lt].x, cells[lt].y)) {
+          const ni = idx(n.x, n.y);
+          if (!cells[ni].isLand && baseAssignment[ni] === TerrainBaseId.OCEAN && !wouldConnectOtherLand(ni, plate.id)) {
+            expansionFrontier.add(ni);
+          }
+        }
+      }
+
+      const seedCell = cells[seedIdx];
+
+      for (let axis = 0; axis < 3; axis++) {
+        const nextFn = axisNext[axis];
+        const prevFn = axisPrev[axis];
+        const visitedChain = new Set<number>();
+
+        for (const startCandidate of coastalTiles) {
+          if (visitedChain.has(startCandidate)) continue;
+          const sc = cells[startCandidate];
+          const prevCoord = prevFn(sc.x, sc.y);
+          if (prevCoord.y >= 0 && prevCoord.y < height && coastalTiles.has(idx(prevCoord.x, prevCoord.y))) {
+            visitedChain.add(startCandidate);
+            continue;
+          }
+
+          const chain: number[] = [startCandidate];
+          visitedChain.add(startCandidate);
+          let curCell = sc;
+          while (true) {
+            const nextCoord = nextFn(curCell.x, curCell.y);
+            if (nextCoord.y < 0 || nextCoord.y >= height) break;
+            const nextIdx = idx(nextCoord.x, nextCoord.y);
+            if (!coastalTiles.has(nextIdx) || visitedChain.has(nextIdx)) break;
+            chain.push(nextIdx);
+            visitedChain.add(nextIdx);
+            curCell = cells[nextIdx];
+          }
+
+          if (chain.length <= 4) continue;
+
+          for (let j = 1; j < chain.length - 1; j++) {
+            if (rnd() < 0.35) {
+              const removedCell = cells[chain[j]];
+              const rdx = removedCell.x - seedCell.x;
+              const rdy = removedCell.y - seedCell.y;
+
+              const otherSide = [...expansionFrontier].filter(ci => {
+                if (cells[ci].isLand) return false;
+                const cc = cells[ci];
+                return (cc.x - seedCell.x) * rdx + (cc.y - seedCell.y) * rdy < 0;
+              });
+              if (otherSide.length === 0) continue;
+
+              const targetIdx = otherSide[Math.floor(rnd() * otherSide.length)];
+              fillWithIslandLand(targetIdx, plate.id);
+              expansionFrontier.delete(targetIdx);
+              for (const n of neighbors(cells[targetIdx].x, cells[targetIdx].y)) {
+                const ni = idx(n.x, n.y);
+                if (!cells[ni].isLand && baseAssignment[ni] === TerrainBaseId.OCEAN && !wouldConnectOtherLand(ni, plate.id)) {
+                  expansionFrontier.add(ni);
+                }
+              }
+
+              removeIslandTile(chain[j]);
+              coastalTiles.delete(chain[j]);
+            }
+          }
+        }
+      }
+    }
   }
 
   // ============================================================================
@@ -828,7 +1274,7 @@ export class MapGeneratorService {
   // ============================================================================
 
   private seedArchipelagos(ctx: MapGenContext): void {
-    const { width, height, rnd, idx, cells, neighbors, polarMargin, plates, baseAssignment, archipelagoCount } = ctx;
+    const { width, height, rnd, idx, cells, polarMargin, plates, baseAssignment, archipelagoCount } = ctx;
     if (archipelagoCount <= 0) return;
 
     const distToLand = this.bfsDistance(ctx, i => baseAssignment[i] !== TerrainBaseId.OCEAN, 99, 30);
@@ -901,6 +1347,7 @@ export class MapGeneratorService {
           isContinent: false,
           isArchipelago: true,
           parentPlateId: clusterId,
+          playerCount: 0,
         });
       }
     }
@@ -910,27 +1357,26 @@ export class MapGeneratorService {
     const archipelagos = ctx.plates.filter(p => p.isArchipelago);
     if (archipelagos.length === 0) return;
     const totalLand = archipelagos.reduce((s, p) => s + p.target, 0);
-    this.growPlates(ctx, archipelagos, totalLand, 7.5);
+    const clusterPlateIds = new Map<number, Set<number>>();
+    for (const p of archipelagos) {
+      let set = clusterPlateIds.get(p.parentPlateId);
+      if (!set) {
+        set = new Set();
+        clusterPlateIds.set(p.parentPlateId, set);
+      }
+      set.add(p.id);
+    }
+    const ownPlateIdsFor = (plate: Plate): Set<number> => clusterPlateIds.get(plate.parentPlateId) ?? new Set([plate.id]);
+    this.growPlates(ctx, archipelagos, totalLand, 7.5, ownPlateIdsFor);
   }
 
   // ============================================================================
   // Shared plate growth
   // ============================================================================
 
-  private growPlates(ctx: MapGenContext, newPlates: Plate[], landBudget: number, chaosFactor: number): void {
-    const { width, height, rnd, noise, idx, cells, neighbors, polarMargin, baseAssignment, resourceAssignment, featureAssignment, plates } = ctx;
+  private growPlates(ctx: MapGenContext, newPlates: Plate[], landBudget: number, chaosFactor: number, ownPlateIdsFor: (plate: Plate) => Set<number>, shapeFor?: (plate: Plate) => PlateGrowthShape, foreignLandGap = 1): void {
+    const { width, height, rnd, noise, idx, cells, neighbors, polarMargin, baseAssignment, featureAssignment } = ctx;
 
-    const continentPlateIds = new Set<number>();
-    for (const p of plates) if (p.isContinent) continentPlateIds.add(p.id);
-    const adjacentToContinent = (x: number, y: number): boolean => {
-      for (const n of neighbors(x, y)) {
-        const pid = cells[idx(n.x, n.y)].plateId;
-        if (pid >= 0 && continentPlateIds.has(pid)) return true;
-      }
-      return false;
-    };
-
-    const debugFoodFor = (p: Plate): TerrainResourceId => DEBUG_FOOD_BY_INDEX[p.parentPlateId % DEBUG_FOOD_BY_INDEX.length];
     const plateChaos = (x: number, y: number, plateId: number): number => {
       const low = noise(x * 0.17 + plateId * 17.7, y * 0.17 + plateId * 31.3);
       const high = noise(x * 0.55 + plateId * 7.3, y * 0.55 + plateId * 13.1);
@@ -939,17 +1385,39 @@ export class MapGeneratorService {
 
     const plateById = new Map<number, Plate>();
     const plateAngleById = new Map<number, number>();
+    const plateAxisAById = new Map<number, number>();
+    const plateAxisBById = new Map<number, number>();
+    const plateShearById = new Map<number, number>();
+    const plateChaosScaleById = new Map<number, number>();
     for (const p of newPlates) {
       plateById.set(p.id, p);
-      plateAngleById.set(p.id, rnd() * Math.PI * 2);
+      if (shapeFor) {
+        const shape = shapeFor(p);
+        plateAngleById.set(p.id, shape.angle);
+        plateAxisAById.set(p.id, shape.axisA);
+        plateAxisBById.set(p.id, shape.axisB);
+        plateShearById.set(p.id, shape.shear);
+        plateChaosScaleById.set(p.id, shape.chaosScale);
+      } else {
+        plateAngleById.set(p.id, rnd() * Math.PI * 2);
+        const axisB = 0.5 + rnd() * 1.5;
+        plateAxisAById.set(p.id, 0.64 / axisB);
+        plateAxisBById.set(p.id, axisB);
+        plateShearById.set(p.id, (rnd() - 0.5) * 0.6);
+        plateChaosScaleById.set(p.id, 0.6 + rnd() * 0.8);
+      }
     }
     const stretchedDist = (plateId: number, dx: number, dy: number): number => {
       const ang = plateAngleById.get(plateId);
+      const axisA = plateAxisAById.get(plateId);
+      const axisB = plateAxisBById.get(plateId);
+      const shear = plateShearById.get(plateId);
       const cos = Math.cos(ang);
       const sin = Math.sin(ang);
       const xp = dx * cos + dy * sin;
       const yp = -dx * sin + dy * cos;
-      return Math.sqrt(xp * xp * 0.4 + yp * yp * 1.6);
+      const xps = xp + shear * yp;
+      return Math.sqrt(xps * xps * axisA + yp * yp * axisB);
     };
     const wrapDx = (dx: number): number => {
       if (dx > width / 2) return dx - width;
@@ -964,35 +1432,25 @@ export class MapGeneratorService {
 
     interface Frontier { cellIdx: number; plateId: number; priority: number; }
     const frontier: Frontier[] = [];
-    const insertFrontier = (item: Frontier): void => {
-      let lo = 0;
-      let hi = frontier.length;
-      while (lo < hi) {
-        const mid = (lo + hi) >>> 1;
-        if (frontier[mid].priority < item.priority) lo = mid + 1;
-        else hi = mid;
-      }
-      frontier.splice(lo, 0, item);
-    };
 
     let grown = 0;
     for (const plate of newPlates) {
       const seedIdx = idx(plate.seedX, plate.seedY);
       if (cells[seedIdx].plateId !== -1 || baseAssignment[seedIdx] !== TerrainBaseId.OCEAN) continue;
+      if (this.hasForeignLandWithinGap(ctx, plate.seedX, plate.seedY, ownPlateIdsFor(plate), foreignLandGap)) continue;
       cells[seedIdx].plateId = plate.id;
       cells[seedIdx].isLand = true;
       baseAssignment[seedIdx] = defaultBaseFor(plate);
-      if (!plate.isArchipelago) resourceAssignment[seedIdx] = debugFoodFor(plate);
       featureAssignment[seedIdx] = TerrainFeatureId.NONE;
       plate.grown += 1;
       grown += 1;
       for (const n of neighbors(plate.seedX, plate.seedY)) {
         const dx = wrapDx(n.x - plate.seedX);
         const dy = n.y - plate.seedY;
-        insertFrontier({
+        this.insertSortedByPriority(frontier, {
           cellIdx: idx(n.x, n.y),
           plateId: plate.id,
-          priority: stretchedDist(plate.id, dx, dy) + plateChaos(n.x, n.y, plate.id) * chaosFactor,
+          priority: stretchedDist(plate.id, dx, dy) + plateChaos(n.x, n.y, plate.id) * chaosFactor * plateChaosScaleById.get(plate.id),
         });
       }
     }
@@ -1003,15 +1461,12 @@ export class MapGeneratorService {
       if (cell.plateId !== -1 || baseAssignment[item.cellIdx] !== TerrainBaseId.OCEAN) continue;
       const plate = plateById.get(item.plateId);
       if (!plate || plate.grown >= plate.target) continue;
-      if (cell.y < polarMargin || cell.y >= height - polarMargin) {
-        if (rnd() > 0.15) continue;
-      }
-      if (plate.isArchipelago && adjacentToContinent(cell.x, cell.y)) continue;
+      if (cell.y < polarMargin || cell.y >= height - polarMargin) continue;
+      if (this.hasForeignLandWithinGap(ctx, cell.x, cell.y, ownPlateIdsFor(plate), foreignLandGap)) continue;
 
       cell.plateId = plate.id;
       cell.isLand = true;
       baseAssignment[item.cellIdx] = defaultBaseFor(plate);
-      if (!plate.isArchipelago) resourceAssignment[item.cellIdx] = debugFoodFor(plate);
       featureAssignment[item.cellIdx] = TerrainFeatureId.NONE;
       plate.grown += 1;
       grown += 1;
@@ -1021,10 +1476,10 @@ export class MapGeneratorService {
           const dx = wrapDx(n.x - plate.seedX);
           const dy = n.y - plate.seedY;
           const jitter = (rnd() - 0.5) * 2.0;
-          insertFrontier({
+          this.insertSortedByPriority(frontier, {
             cellIdx: ni,
             plateId: plate.id,
-            priority: stretchedDist(plate.id, dx, dy) + plateChaos(n.x, n.y, plate.id) * chaosFactor + jitter,
+            priority: stretchedDist(plate.id, dx, dy) + plateChaos(n.x, n.y, plate.id) * chaosFactor * plateChaosScaleById.get(plate.id) + jitter,
           });
         }
       }
@@ -1174,7 +1629,7 @@ export class MapGeneratorService {
   }
 
   private lockArchipelagoTemperatureFamily(ctx: MapGenContext): void {
-    const { idx, cells, baseAssignment, plates, equatorY } = ctx;
+    const { idx, cells, plates } = ctx;
     const archipelagoPlatesById = new Map<number, Plate>();
     for (const p of plates) if (p.isArchipelago) archipelagoPlatesById.set(p.id, p);
     if (archipelagoPlatesById.size === 0) return;
@@ -1184,30 +1639,26 @@ export class MapGeneratorService {
       const p = archipelagoPlatesById.get(cell.plateId);
       if (!p) continue;
       let list = clusterCells.get(p.parentPlateId);
-      if (!list) {
-        list = [];
-        clusterCells.set(p.parentPlateId, list);
-      }
+      if (!list) { list = []; clusterCells.set(p.parentPlateId, list); }
       list.push(idx(cell.x, cell.y));
     }
-    for (const cellIdxs of clusterCells.values()) {
-      let hasDesert = false;
-      let hasCold = false;
-      let latSum = 0;
-      for (const cIdx of cellIdxs) {
-        const b = baseAssignment[cIdx];
-        if (b === TerrainBaseId.DESERT_FLAT) hasDesert = true;
-        if (b === TerrainBaseId.TUNDRA_FLAT || b === TerrainBaseId.SNOW_FLAT) hasCold = true;
-        latSum += Math.abs(cells[cIdx].y - equatorY) / equatorY;
-      }
-      if (!hasDesert || !hasCold) continue;
-      const keepCold = latSum / cellIdxs.length >= 0.5;
-      for (const cIdx of cellIdxs) {
-        const b = baseAssignment[cIdx];
-        if (keepCold && b === TerrainBaseId.DESERT_FLAT) baseAssignment[cIdx] = TerrainBaseId.TUNDRA_FLAT;
-        else if (!keepCold && (b === TerrainBaseId.TUNDRA_FLAT || b === TerrainBaseId.SNOW_FLAT)) baseAssignment[cIdx] = TerrainBaseId.DESERT_FLAT;
-      }
+    this.lockTemperatureFamilyForGroups(clusterCells, ctx);
+  }
+
+  private lockIslandTemperatureFamily(ctx: MapGenContext): void {
+    const { idx, cells, plates } = ctx;
+    const islandPlateIds = new Set<number>();
+    for (const p of plates) if (!p.isContinent && !p.isArchipelago) islandPlateIds.add(p.id);
+    if (islandPlateIds.size === 0) return;
+
+    const islandCells = new Map<number, number[]>();
+    for (const cell of cells) {
+      if (!islandPlateIds.has(cell.plateId)) continue;
+      let list = islandCells.get(cell.plateId);
+      if (!list) { list = []; islandCells.set(cell.plateId, list); }
+      list.push(idx(cell.x, cell.y));
     }
+    this.lockTemperatureFamilyForGroups(islandCells, ctx);
   }
 
   private removeIceNextToTundra(ctx: MapGenContext): void {
@@ -1281,8 +1732,7 @@ export class MapGeneratorService {
   }
 
   private linkNearbyMountains(ctx: MapGenContext): void {
-    const { width, height, idx, cells, baseAssignment, resourceAssignment, polarMargin } = ctx;
-    const isPolarCap = (y: number): boolean => y < polarMargin || y >= height - polarMargin;
+    const { width, height, idx, cells, baseAssignment, resourceAssignment } = ctx;
     const snapshot = baseAssignment.slice();
 
     for (let mIdx = 0; mIdx < cells.length; mIdx++) {
@@ -1306,7 +1756,7 @@ export class MapGeneratorService {
             const [rx, , rz] = cubeRound(mcx + (ncx - mcx) * t, mcy + (ncy - mcy) * t, mcz + (ncz - mcz) * t);
             const [col, row] = cubeToOffset(rx, rz);
             if (row < 0 || row >= height) continue;
-            if (isPolarCap(row)) continue;
+            if (this.inPolarRow(row, ctx)) continue;
             const wrappedCol = ((col % width) + width) % width;
             const fillIdx = idx(wrappedCol, row);
             const cur = baseAssignment[fillIdx];
@@ -1325,9 +1775,7 @@ export class MapGeneratorService {
   }
 
   private extendSmallMountainClusters(ctx: MapGenContext): void {
-    const { height, rnd, idx, cells, neighbors, baseAssignment, resourceAssignment, polarMargin } = ctx;
-    const isPolarCap = (y: number): boolean => y < polarMargin || y >= height - polarMargin;
-
+    const { rnd, idx, cells, neighbors, baseAssignment, resourceAssignment } = ctx;
     const snapshot = baseAssignment.slice();
     const visited = new Array<boolean>(cells.length).fill(false);
 
@@ -1354,7 +1802,7 @@ export class MapGeneratorService {
       const perimeter = cluster.filter(cIdx => {
         const c = cells[cIdx];
         for (const n of neighbors(c.x, c.y)) {
-          if (isPolarCap(n.y)) continue;
+          if (this.inPolarRow(n.y, ctx)) continue;
           const nb = baseAssignment[idx(n.x, n.y)];
           if (isFlatLand(nb) || isHillsLand(nb)) return true;
         }
@@ -1370,7 +1818,7 @@ export class MapGeneratorService {
       for (let step = 0; step < extendCount; step++) {
         const walkCandidates: Cell[] = [];
         for (const n of neighbors(current.x, current.y)) {
-          if (isPolarCap(n.y)) continue;
+          if (this.inPolarRow(n.y, ctx)) continue;
           const ni = idx(n.x, n.y);
           if (isMountainLand(baseAssignment[ni])) continue;
           const cur = baseAssignment[ni];
@@ -1468,12 +1916,7 @@ export class MapGeneratorService {
       }
       const candidates = Array.from(candidateSet);
       if (candidates.length === 0) continue;
-      for (let k = candidates.length - 1; k > 0; k--) {
-        const j = Math.floor(rnd() * (k + 1));
-        const tmp = candidates[k];
-        candidates[k] = candidates[j];
-        candidates[j] = tmp;
-      }
+      this.shuffleInPlace(candidates, rnd);
       const r = rnd();
       const target = r < 0.15 ? 0 : r < 0.5 ? 1 : r < 0.85 ? 2 : 3;
       const place = Math.min(target, candidates.length);
@@ -1484,7 +1927,7 @@ export class MapGeneratorService {
   }
 
   private sanityLandCleanup(ctx: MapGenContext): void {
-    const { idx, cells, neighbors, baseAssignment, featureAssignment, resourceAssignment, equatorY, polarMargin, height } = ctx;
+    const { idx, cells, neighbors, baseAssignment, featureAssignment, equatorY } = ctx;
 
     const isSnow = (b: TerrainBaseId): boolean =>
       b === TerrainBaseId.SNOW_FLAT || b === TerrainBaseId.SNOW_HILLS || b === TerrainBaseId.SNOW_MOUNTAIN;
@@ -1505,7 +1948,6 @@ export class MapGeneratorService {
           return b;
       }
     };
-    const isPolarMargin = (y: number): boolean => y < polarMargin || y >= height - polarMargin;
 
     for (const cell of cells) {
       const i = idx(cell.x, cell.y);
@@ -1530,41 +1972,30 @@ export class MapGeneratorService {
     }
 
     for (const cell of cells) {
-      if (!isPolarMargin(cell.y)) continue;
+      if (!this.inPolarRow(cell.y, ctx)) continue;
       const i = idx(cell.x, cell.y);
       if (baseAssignment[i] !== TerrainBaseId.SNOW_FLAT) continue;
       let touchesContinentSnow = false;
       for (const n of neighbors(cell.x, cell.y)) {
-        if (isPolarMargin(n.y)) continue;
+        if (this.inPolarRow(n.y, ctx)) continue;
         if (isSnow(baseAssignment[idx(n.x, n.y)])) {
           touchesContinentSnow = true;
           break;
         }
       }
       if (touchesContinentSnow) {
-        baseAssignment[i] = TerrainBaseId.OCEAN;
+        this.claimCellAsOcean(i, ctx);
         featureAssignment[i] = TerrainFeatureId.ICE;
-        cells[i].isLand = false;
-        cells[i].plateId = -1;
-        resourceAssignment[i] = TerrainResourceId.NONE;
       }
     }
   }
 
   private addMainResources(ctx: MapGenContext): void {
-    const { width, height, rnd, cells, baseAssignment, featureAssignment, resourceAssignment, polarMargin } = ctx;
+    const { height, rnd, cells, resourceAssignment, polarMargin } = ctx;
     resourceAssignment.fill(TerrainResourceId.NONE);
 
     const players = this.getPlayersForMapSize(ctx.width, ctx.height);
     const distToLand = this.bfsDistance(ctx, i => cells[i].isLand, 99, 4);
-    const tileFits = (cellIdx: number, suitable: { baseId?: TerrainBaseId; featureId?: TerrainFeatureId }[]): boolean => {
-      const base = baseAssignment[cellIdx];
-      const feat = featureAssignment[cellIdx];
-      for (const st of suitable) {
-        if ((st.baseId === undefined || st.baseId === base) && (st.featureId === undefined || st.featureId === feat)) return true;
-      }
-      return false;
-    };
 
     const resourcesByType = new Map<TerrainResourceTypeId, typeof TERRAIN_RESOURCE_LIST>();
     for (const r of TERRAIN_RESOURCE_LIST) {
@@ -1598,45 +2029,28 @@ export class MapGeneratorService {
         if (distToLand[i] > 3) continue;
         if (resourceAssignment[i] !== TerrainResourceId.NONE) continue;
         for (const r of typeResources) {
-          if (tileFits(i, r.suitableTerrain)) {
+          if (this.cellFitsTerrain(i, r.suitableTerrain, ctx)) {
             candidates.push(i);
             break;
           }
         }
       }
-      for (let i = candidates.length - 1; i > 0; i--) {
-        const j = Math.floor(rnd() * (i + 1));
-        const tmp = candidates[i];
-        candidates[i] = candidates[j];
-        candidates[j] = tmp;
-      }
+      this.shuffleInPlace(candidates, rnd);
 
       const samePlaced = placedByType.get(type);
-      let placed = 0;
-      for (const cIdx of candidates) {
-        if (placed >= target) break;
-        let tooClose = false;
-        for (const p of samePlaced) {
-          if (hexDistance(cells, width, cIdx, p) < MIN_SAME) {
-            tooClose = true;
-            break;
-          }
-        }
-        if (tooClose) continue;
-        for (const p of allPlaced) {
-          if (hexDistance(cells, width, cIdx, p) < MIN_ANY) {
-            tooClose = true;
-            break;
-          }
-        }
-        if (tooClose) continue;
-        const fitting = typeResources.filter(r => tileFits(cIdx, r.suitableTerrain));
-        if (fitting.length === 0) continue;
-        resourceAssignment[cIdx] = fitting[Math.floor(rnd() * fitting.length)].id;
-        samePlaced.push(cIdx);
-        allPlaced.push(cIdx);
-        placed += 1;
-      }
+      this.placeResourceCandidates(
+        candidates,
+        target,
+        cIdx => {
+          const fitting = typeResources.filter(r => this.cellFitsTerrain(cIdx, r.suitableTerrain, ctx));
+          return fitting.length > 0 ? fitting[Math.floor(rnd() * fitting.length)].id : null;
+        },
+        samePlaced,
+        allPlaced,
+        MIN_SAME,
+        MIN_ANY,
+        ctx
+      );
     }
 
     const strategicTargets = new Map<TerrainResourceId, number>([
@@ -1657,47 +2071,18 @@ export class MapGeneratorService {
         if (cells[i].y < polarMargin || cells[i].y >= height - polarMargin) continue;
         if (distToLand[i] > 3) continue;
         if (resourceAssignment[i] !== TerrainResourceId.NONE) continue;
-        if (tileFits(i, resource.suitableTerrain)) candidates.push(i);
+        if (this.cellFitsTerrain(i, resource.suitableTerrain, ctx)) candidates.push(i);
       }
-      for (let i = candidates.length - 1; i > 0; i--) {
-        const j = Math.floor(rnd() * (i + 1));
-        const tmp = candidates[i];
-        candidates[i] = candidates[j];
-        candidates[j] = tmp;
-      }
+      this.shuffleInPlace(candidates, rnd);
 
       const samePlaced: number[] = [];
-      let placed = 0;
-      for (const cIdx of candidates) {
-        if (placed >= target) break;
-        let tooClose = false;
-        for (const p of samePlaced) {
-          if (hexDistance(cells, width, cIdx, p) < MIN_SAME) { tooClose = true; break; }
-        }
-        if (tooClose) continue;
-        for (const p of allPlaced) {
-          if (hexDistance(cells, width, cIdx, p) < MIN_ANY) { tooClose = true; break; }
-        }
-        if (tooClose) continue;
-        resourceAssignment[cIdx] = resource.id;
-        samePlaced.push(cIdx);
-        allPlaced.push(cIdx);
-        placed += 1;
-      }
+      this.placeResourceCandidates(candidates, target, () => resource.id, samePlaced, allPlaced, MIN_SAME, MIN_ANY, ctx);
     }
   }
 
   private addExtraFood(ctx: MapGenContext): void {
-    const { rnd, idx, cells, neighbors, baseAssignment, featureAssignment, resourceAssignment } = ctx;
+    const { rnd, idx, cells, neighbors, resourceAssignment } = ctx;
     const distToLand = this.bfsDistance(ctx, i => cells[i].isLand, 99, 4);
-    const tileFits = (cellIdx: number, suitable: { baseId?: TerrainBaseId; featureId?: TerrainFeatureId }[]): boolean => {
-      const base = baseAssignment[cellIdx];
-      const feat = featureAssignment[cellIdx];
-      for (const st of suitable) {
-        if ((st.baseId === undefined || st.baseId === base) && (st.featureId === undefined || st.featureId === feat)) return true;
-      }
-      return false;
-    };
     const fishResource = TERRAIN_RESOURCE_LIST.find(r => r.id === TerrainResourceId.FISH);
     const totalLand = cells.filter(c => c.isLand).length;
     const target = Math.floor(totalLand * 0.09);
@@ -1707,14 +2092,9 @@ export class MapGeneratorService {
     for (let i = 0; i < cells.length; i++) {
       if (distToLand[i] > 3) continue;
       if (resourceAssignment[i] !== TerrainResourceId.NONE) continue;
-      if (tileFits(i, fishResource.suitableTerrain)) candidates.push(i);
+      if (this.cellFitsTerrain(i, fishResource.suitableTerrain, ctx)) candidates.push(i);
     }
-    for (let i = candidates.length - 1; i > 0; i--) {
-      const j = Math.floor(rnd() * (i + 1));
-      const tmp = candidates[i];
-      candidates[i] = candidates[j];
-      candidates[j] = tmp;
-    }
+    this.shuffleInPlace(candidates, rnd);
     let placed = 0;
     for (const cIdx of candidates) {
       if (placed >= target) break;
@@ -1743,10 +2123,13 @@ export class MapGeneratorService {
     let nextContinent = 1;
     let nextIsland = 100;
     let nextArchipelago = 200;
+    const continentGroupLandmass = new Map<number, number>();
     const archCluster = new Map<number, number>();
     for (const p of plates) {
       if (p.isContinent) {
-        plateIdToLandmass.set(p.id, nextContinent++);
+        let landmass = continentGroupLandmass.get(p.parentPlateId);
+        if (landmass === undefined) { landmass = nextContinent++; continentGroupLandmass.set(p.parentPlateId, landmass); }
+        plateIdToLandmass.set(p.id, landmass);
       } else if (p.isArchipelago) {
         let clusterLandmass = archCluster.get(p.parentPlateId);
         if (clusterLandmass === undefined) {
@@ -1814,6 +2197,80 @@ export class MapGeneratorService {
     return closest.players;
   }
 
+  private getPlayersMaxForMapSize(width: number, height: number): number {
+    const area = width * height;
+    const sizes = MAP_SIZE_SETTINGS_LIST;
+    if (area <= sizes[0].width * sizes[0].height) return sizes[0].playersMax;
+    if (area >= sizes[sizes.length - 1].width * sizes[sizes.length - 1].height) return sizes[sizes.length - 1].playersMax;
+    for (let i = 0; i < sizes.length - 1; i++) {
+      const areaA = sizes[i].width * sizes[i].height;
+      const areaB = sizes[i + 1].width * sizes[i + 1].height;
+      if (area >= areaA && area <= areaB) {
+        const t = (area - areaA) / (areaB - areaA);
+        return Math.round(sizes[i].playersMax + t * (sizes[i + 1].playersMax - sizes[i].playersMax));
+      }
+    }
+    return sizes[sizes.length - 1].playersMax;
+  }
+
+  private markOuterOcean(ctx: MapGenContext): boolean[] {
+    const { idx, cells, neighbors, baseAssignment, width, height } = ctx;
+    const isOuter = new Array<boolean>(cells.length).fill(false);
+    const queue: number[] = [];
+    for (let x = 0; x < width; x++) {
+      for (const y of [0, height - 1]) {
+        const i = idx(x, y);
+        if (baseAssignment[i] === TerrainBaseId.OCEAN && !isOuter[i]) {
+          isOuter[i] = true;
+          queue.push(i);
+        }
+      }
+    }
+    let head = 0;
+    while (head < queue.length) {
+      const cur = queue[head++];
+      for (const n of neighbors(cells[cur].x, cells[cur].y)) {
+        const ni = idx(n.x, n.y);
+        if (!isOuter[ni] && baseAssignment[ni] === TerrainBaseId.OCEAN) {
+          isOuter[ni] = true;
+          queue.push(ni);
+        }
+      }
+    }
+    return isOuter;
+  }
+
+  private isAdjacentToForeignLand(ctx: MapGenContext, x: number, y: number, ownPlateIds: Set<number>): boolean {
+    for (const n of ctx.neighbors(x, y)) {
+      const nc = ctx.cells[ctx.idx(n.x, n.y)];
+      if (nc.isLand && nc.plateId >= 0 && !ownPlateIds.has(nc.plateId)) return true;
+    }
+    return false;
+  }
+
+  private hasForeignLandWithinGap(ctx: MapGenContext, x: number, y: number, ownPlateIds: Set<number>, gap: number): boolean {
+    const { idx, cells, neighbors } = ctx;
+    const startIdx = idx(x, y);
+    const visited = new Set<number>([startIdx]);
+    let frontier: number[] = [startIdx];
+    for (let depth = 1; depth <= gap; depth++) {
+      const next: number[] = [];
+      for (const cur of frontier) {
+        const cc = cells[cur];
+        for (const n of neighbors(cc.x, cc.y)) {
+          const ni = idx(n.x, n.y);
+          if (visited.has(ni)) continue;
+          visited.add(ni);
+          const nc = cells[ni];
+          if (nc.isLand && nc.plateId >= 0 && !ownPlateIds.has(nc.plateId)) return true;
+          if (!nc.isLand) next.push(ni);
+        }
+      }
+      frontier = next;
+    }
+    return false;
+  }
+
   private bfsDistance(ctx: MapGenContext, isSource: (i: number) => boolean, fillWith: number = 99, maxDist: number = Infinity): number[] {
     const { idx, cells, neighbors } = ctx;
     const dist: number[] = new Array(cells.length).fill(fillWith);
@@ -1839,5 +2296,96 @@ export class MapGeneratorService {
       }
     }
     return dist;
+  }
+
+  private shuffleInPlace<T>(arr: T[], rnd: () => number): void {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(rnd() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+  }
+
+  private insertSortedByPriority<T extends { priority: number }>(arr: T[], item: T): void {
+    let lo = 0;
+    let hi = arr.length;
+    while (lo < hi) {
+      const mid = (lo + hi) >>> 1;
+      if (arr[mid].priority < item.priority) lo = mid + 1;
+      else hi = mid;
+    }
+    arr.splice(lo, 0, item);
+  }
+
+  private inPolarRow(y: number, ctx: MapGenContext): boolean {
+    return y < ctx.polarMargin || y >= ctx.height - ctx.polarMargin;
+  }
+
+  private claimCellAsOcean(cellIdx: number, ctx: MapGenContext): void {
+    ctx.cells[cellIdx].isLand = false;
+    ctx.cells[cellIdx].plateId = -1;
+    ctx.baseAssignment[cellIdx] = TerrainBaseId.OCEAN;
+    ctx.resourceAssignment[cellIdx] = TerrainResourceId.NONE;
+  }
+
+  private cellFitsTerrain(cellIdx: number, suitable: { baseId?: TerrainBaseId; featureId?: TerrainFeatureId }[], ctx: MapGenContext): boolean {
+    const base = ctx.baseAssignment[cellIdx];
+    const feat = ctx.featureAssignment[cellIdx];
+    for (const st of suitable) {
+      if ((st.baseId === undefined || st.baseId === base) && (st.featureId === undefined || st.featureId === feat)) return true;
+    }
+    return false;
+  }
+
+  private lockTemperatureFamilyForGroups(cellGroups: globalThis.Map<number, number[]>, ctx: MapGenContext): void {
+    const { cells, baseAssignment, equatorY } = ctx;
+    for (const cellIdxs of cellGroups.values()) {
+      let hasDesert = false;
+      let hasCold = false;
+      let latSum = 0;
+      for (const cIdx of cellIdxs) {
+        const b = baseAssignment[cIdx];
+        if (b === TerrainBaseId.DESERT_FLAT) hasDesert = true;
+        if (b === TerrainBaseId.TUNDRA_FLAT || b === TerrainBaseId.SNOW_FLAT) hasCold = true;
+        latSum += Math.abs(cells[cIdx].y - equatorY) / equatorY;
+      }
+      if (!hasDesert || !hasCold) continue;
+      const keepCold = latSum / cellIdxs.length >= 0.5;
+      for (const cIdx of cellIdxs) {
+        const b = baseAssignment[cIdx];
+        if (keepCold && b === TerrainBaseId.DESERT_FLAT) baseAssignment[cIdx] = TerrainBaseId.TUNDRA_FLAT;
+        else if (!keepCold && (b === TerrainBaseId.TUNDRA_FLAT || b === TerrainBaseId.SNOW_FLAT)) baseAssignment[cIdx] = TerrainBaseId.DESERT_FLAT;
+      }
+    }
+  }
+
+  private placeResourceCandidates(
+    candidates: number[],
+    target: number,
+    resourceFor: (cellIdx: number) => TerrainResourceId | null,
+    samePlaced: number[],
+    allPlaced: number[],
+    minSame: number,
+    minAny: number,
+    ctx: MapGenContext
+  ): void {
+    let placed = 0;
+    for (const cIdx of candidates) {
+      if (placed >= target) break;
+      let tooClose = false;
+      for (const p of samePlaced) {
+        if (hexDistance(ctx.cells, ctx.width, cIdx, p) < minSame) { tooClose = true; break; }
+      }
+      if (tooClose) continue;
+      for (const p of allPlaced) {
+        if (hexDistance(ctx.cells, ctx.width, cIdx, p) < minAny) { tooClose = true; break; }
+      }
+      if (tooClose) continue;
+      const resource = resourceFor(cIdx);
+      if (resource === null) continue;
+      ctx.resourceAssignment[cIdx] = resource;
+      samePlaced.push(cIdx);
+      allPlaced.push(cIdx);
+      placed += 1;
+    }
   }
 }
