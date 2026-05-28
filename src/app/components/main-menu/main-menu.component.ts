@@ -91,7 +91,7 @@ export class MainMenuComponent implements OnInit {
   }
 
   onPlayNowClick(): void {
-    const defaultMapSizeSettings = MAP_SIZE_SETTINGS_LIST.find(mss => mss.id === MapSizeId.MAX);
+    const defaultMapSizeSettings = MAP_SIZE_SETTINGS_LIST.find(mss => mss.id === MapSizeId.STANDARD);
     const mapGeneratorSetting: MapGeneratorSettings = {
       width: defaultMapSizeSettings.width,
       height: defaultMapSizeSettings.height,
