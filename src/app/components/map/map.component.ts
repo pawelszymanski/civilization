@@ -248,26 +248,3 @@ export class MapComponent {
     ); // tile overlay of any kind
   }
 }
-
-// onDblclick(event: MouseEvent) {
-//   const tile = this.mouseEventToTile(event);
-//
-//   if (this.ui.sidebar !== SidebarId.WORLD_BUILDER) {
-//     const currentTranslate = this.camera.translate;
-//     const mapCoordsAtScreenCenter = this.cameraService.mapCoordsAtScreenCenter(currentTranslate);
-//     const centerOfClickedTile = this.cameraService.centerOfTheTileCoords(tile); // TODO removed, use tile coords + .5 width and height
-//
-//     // The vector we need to apply to translation to move to desired position
-//     const translateVector: Coords = {
-//       x: mapCoordsAtScreenCenter.x - centerOfClickedTile.x,
-//       y: mapCoordsAtScreenCenter.y - centerOfClickedTile.y
-//     }
-//
-//     // Calculate new translate, normalize it and use
-//     const newTranslate = {
-//       x: currentTranslate.x + translateVector.x,
-//       y: currentTranslate.y + translateVector.y
-//     }
-//     this.cameraStore.setTranslate(normalizedTranslate);
-//   }
-// }
