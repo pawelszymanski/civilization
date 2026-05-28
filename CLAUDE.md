@@ -1,3 +1,4 @@
+CODE:
 - always use major.minor.patch version of npm packages, never allow ~ or ^
 - do not add inline comments
 - use human-readable and describing syntax and naming

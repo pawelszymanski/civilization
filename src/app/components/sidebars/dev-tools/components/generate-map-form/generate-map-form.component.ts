@@ -19,11 +19,11 @@ import { MapStore } from '../../../../../stores/map.store';
 export class GenerateMapFormComponent {
   readonly MAP_SEED_RANGE = MAP_SEED_RANGE;
   readonly MAP_SIZE_SETTINGS_LIST = MAP_SIZE_SETTINGS_LIST;
-  readonly DEFAULT_MAP_SIZE_SETTINGS = MAP_SIZE_SETTINGS_LIST[MapSizeId.HUGE];
+  readonly DEFAULT_MAP_SIZE_SETTINGS = MAP_SIZE_SETTINGS_LIST[MapSizeId.STANDARD];
 
   mapSizeId: MapSizeId = this.DEFAULT_MAP_SIZE_SETTINGS.id;
   mapGeneratorSettings: MapGeneratorSettings = {
-    seed: 1234567, // TODO
+    seed: Math.floor(MAP_SEED_RANGE * Math.random()),
     width: this.DEFAULT_MAP_SIZE_SETTINGS.width,
     height: this.DEFAULT_MAP_SIZE_SETTINGS.height,
     landmass: LandmassAmountId.STANDARD,
