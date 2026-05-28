@@ -6,7 +6,7 @@ import { KEY_MODIFIER_ALT, KEY_MODIFIER_CTRL, KEY_MODIFIER_NONE, KEY_MODIFIER_SH
 
 @Injectable({ providedIn: 'root' })
 export class KeyboardService {
-  public keyBindingFromEvent(event: KeyboardEvent): KeyBinding {
+  public keyBindingFromEvent(event: KeyboardEvent): KeyBinding | undefined {
     const keyCode = event.code as KeyCodeId;
 
     let modifiers = KEY_MODIFIER_NONE;

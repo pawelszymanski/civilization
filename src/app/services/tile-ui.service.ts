@@ -81,8 +81,8 @@ export class TileUiService {
   }
 
   private areGridCoordsValid(gridCoords: Coords): boolean {
-    const isYok = gridCoords.x >= 0 && gridCoords.x < this.map.width;
-    const isXok = gridCoords.y >= 0 && gridCoords.y < this.map.height;
+    const isXok = gridCoords.x >= 0 && gridCoords.x < this.map.width;
+    const isYok = gridCoords.y >= 0 && gridCoords.y < this.map.height;
     return isXok && isYok;
   }
 
@@ -90,7 +90,7 @@ export class TileUiService {
   private mapCoordsPxToGridCoords(mapCoords: Coords): Coords | null {
     // Candidate Y coordinate
     const y = Math.floor(mapCoords.y / this.size.row.height);
-    if (y < 0 || y > this.map.height) {
+    if (y < 0 || y >= this.map.height) {
       return null;
     } // clicked above or bellow the map, no need to continue
 

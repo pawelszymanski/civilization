@@ -18,7 +18,6 @@ export class SaveHeadersStore {
 
   constructor(
     private localStorageService: LocalStorageService,
-    private tileYieldService: TileYieldService,
     private zipService: ZipService
   ) {
     this.getLocalSaveHeaders();
