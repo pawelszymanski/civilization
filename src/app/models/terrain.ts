@@ -81,7 +81,7 @@ export enum TerrainResourceId {
 }
 
 export enum OffMapResourceId {
-  CINNAMON, // None must be 0
+  CINNAMON,
   CLOVES,
   COSMETICS,
   JEANS,
