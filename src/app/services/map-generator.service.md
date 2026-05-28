@@ -16,7 +16,7 @@ This doc is the **only** documentation for the generator — the service file it
 | **Island** | A small plate placed near continents. `isContinent = false`, `isArchipelago = false`. `parentPlateId` = nearest continent plate id. |
 | **Archipelago** | A cluster of 2–5 tiny sub-island plates in deep ocean. `isArchipelago = true`. Sub-islands share `parentPlateId`. |
 | **Ice cap** | Top and bottom polar rows. SNOW_FLAT land plus an ICE feature belt on adjacent ocean. Row count scales linearly with map height: 3 rows (Duel, h=26) to 5 rows (Max, h=160). Stored as `polarRowCount`. |
-| **Lake** | An inland water body ≤ 6 tiles, converted from isolated ocean to LAKE terrain. |
+| **Lake** | A small inland water body ≤ 6 tiles. Produced two ways: (a) isolated ocean pockets inside islands converted to LAKE in `detectInlandLakes`, (b) land tiles carved into water in `addLakes`. |
 | **Biome** | A flat/hills/mountain variant of GRASSLAND / PLAINS / DESERT / TUNDRA / SNOW. |
 | **Equator** | Center latitude (normalized ~0.5). DESERT and PLAINS biomes concentrated here. |
 | **Poles** | Top and bottom polar margin rows (`y < polarMargin` and `y ≥ height − polarMargin`). Covered by SNOW_FLAT and ICE. |
@@ -78,58 +78,60 @@ Each step is a private method called from `generateNewGameMap`. Steps share stat
 | 11 | `seedArchipelagos` | Cluster centers chosen from ocean ≥3 hex from land, weighted by dist². Each cluster: 2–5 sub-islands placed within ~4 hex of center, each with exponential-distribution target (mostly 1–10 tiles). |
 | 12 | `growArchipelagoPlates` | Shared `growPlates` with chaos 7.5; no-touch gap from continents enforced. |
 
-### 5. Coast
+### 5. Coast and lakes
 
 | Step | Method | What it does |
 |------|--------|--------------|
 | 13 | `applyCoastBand` | Pre-step: land tiles on the innermost polar row → OCEAN (clean buffer). Main: every OCEAN tile adjacent to non-ocean/non-coast/non-lake land → COAST. Skips polar margin and icecap-continent snow boundaries. |
+| 14 | `addLakes` | Carves 1.5–2.5% of total land into LAKE tiles. Lake size 1–6 tiles, weighted toward 2–3 (10/30/30/15/10/5%). Seeds picked from interior land tiles (no ocean/coast/lake neighbor), favoring continents (~80% of seeds) with the rest on islands; archipelagos excluded. Growth refuses to step into any tile whose other neighbors include water, so lakes never merge with each other or the sea. Converted tiles get `isLand=false`, `plateId=-1`, base LAKE, no feature, no resource. |
 
 ### 6. Biomes
 
 | Step | Method | What it does |
 |------|--------|--------------|
-| 14 | `computeElevation` | Ridge + rolling-hills noise + plate-boundary bonus (not counting sub-plates), one smoothing pass. |
-| 15 | `computeTemperature` | Latitude − elevation + noise jitter. |
-| 16 | `computeMoisture` | Latitude curve + westerly rain shadow (4-step westward moisture bleed). |
-| 17 | `paintInitialBiomes` | Assigns flat/hills/mountain biome per cell from temperature × moisture × elevation. Skips SNOW_FLAT (icecaps survive). |
-| 18 | `paintLatitudeBiomes` | Per-cell weighted-noise biome pick using `isBiomePaintable`: DESERT (bell center 0, σ 0.12), PLAINS (center 0.13, σ 0.10), GRASSLAND (center 0.28, σ 0.12), TUNDRA (linear ramp above lat 0.35). Uses `noise()` for spatial stability. |
-| 19 | `smoothBiomes` | 3 iterations of majority-vote cellular automaton (self + 6 neighbors). Skips non-paintable tiles (water, snow). |
+| 15 | `computeElevation` | Ridge + rolling-hills noise + plate-boundary bonus (not counting sub-plates), one smoothing pass. |
+| 16 | `computeTemperature` | Latitude − elevation + noise jitter. |
+| 17 | `computeMoisture` | Latitude curve + westerly rain shadow (4-step westward moisture bleed). |
+| 18 | `paintInitialBiomes` | Assigns flat/hills/mountain biome per cell from temperature × moisture × elevation. Preserves SNOW_FLAT, COAST, and LAKE bases (icecaps, coast band, and inland lakes survive). |
+| 19 | `paintLatitudeBiomes` | Per-cell weighted-noise biome pick using `isBiomePaintable`: DESERT (bell center 0, σ 0.12), PLAINS (center 0.13, σ 0.10), GRASSLAND (center 0.28, σ 0.12), TUNDRA (linear ramp above lat 0.35). Uses `noise()` for spatial stability. |
+| 20 | `smoothBiomes` | 3 iterations of majority-vote cellular automaton (self + 6 neighbors). Skips non-paintable tiles (water, snow). |
 
 ### 7. Biome fine-tuning
 
 | Step | Method | What it does |
 |------|--------|--------------|
-| 20 | `convertGrasslandToPlains` | ~20% of GRASSLAND → PLAINS via mid-frequency noise. |
-| 21 | `mixPlainsAndGrassland` | ~10% high-frequency PLAINS↔GRASSLAND swap for micro-texture. |
-| 22 | `speckleTundraNearEquator` | Equatorial TUNDRA tiles → PLAINS or GRASSLAND based on noise. |
-| 23 | `intrudeTundraWithFingers` | Warm-edge TUNDRA tiles where intrusion noise exceeds proximity factor → PLAINS or GRASSLAND fingers. |
-| 24 | `promoteHighLatitudeTundraToSnow` | High-lat TUNDRA where `latFactor + noise > 0.65` → SNOW_FLAT. |
+| 21 | `convertGrasslandToPlains` | ~20% of GRASSLAND → PLAINS via mid-frequency noise. |
+| 22 | `mixPlainsAndGrassland` | ~10% high-frequency PLAINS↔GRASSLAND swap for micro-texture. |
+| 23 | `speckleTundraNearEquator` | Equatorial TUNDRA tiles → PLAINS or GRASSLAND based on noise. |
+| 24 | `intrudeTundraWithFingers` | Warm-edge TUNDRA tiles where intrusion noise exceeds proximity factor → PLAINS or GRASSLAND fingers. |
+| 25 | `promoteHighLatitudeTundraToSnow` | High-lat TUNDRA where `latFactor + noise > 0.65` → SNOW_FLAT. |
 
 ### 8. Elevation
 
 | Step | Method | What it does |
 |------|--------|--------------|
-| 25 | `promoteFlatToHills` | Ridge noise (main + cross spines) + rolling-hill blobs → HILLS. Polar margin excluded. |
-| 26 | `promoteRidgeHillsToMountain` | HILLS on strong ridges (rMain < 0.06) → MOUNTAINS. Sparse foothill mountains where `rMain < 0.18 AND speck > 0.92`. |
-| 27 | `removeIsolatedMountains` | Any mountain with no mountain neighbors → demoted to HILLS. |
-| 28 | `linkNearbyMountains` | For each mountain pair at hex-distance 3, fills the 2 intermediate tiles with mountain. Bridged cells get IRON resource. |
-| 29 | `extendSmallMountainClusters` | Clusters < 4 tiles: random-walk 1–5 steps from one perimeter tile (MERCURY) into surrounding land (URANIUM). |
+| 26 | `promoteFlatToHills` | Ridge noise (main + cross spines) + rolling-hill blobs → HILLS. Polar margin excluded. |
+| 27 | `promoteRidgeHillsToMountain` | HILLS on strong ridges (rMain < 0.06) → MOUNTAINS. Sparse foothill mountains where `rMain < 0.18 AND speck > 0.92`. |
+| 28 | `removeIsolatedMountains` | Any mountain with no mountain neighbors → demoted to HILLS. |
+| 29 | `linkNearbyMountains` | For each mountain pair at hex-distance 3, fills the 2 intermediate tiles with mountain. Bridged cells get IRON resource. |
+| 30 | `extendSmallMountainClusters` | Clusters < 4 tiles: random-walk 1–5 steps from one perimeter tile (MERCURY) into surrounding land (URANIUM). |
 
 ### 9. Features and resources
 
 | Step | Method | What it does |
 |------|--------|--------------|
-| 30 | `clearAllResources` | Wipes all resource assignments (removes any temporary IRON/MERCURY/URANIUM from mountain passes). |
-| 31 | `addTerrainFeatures` | Sub-polar ICE, equatorial REEF (ocean adjacent to coast, lat < 0.3), RAINFOREST (hot+wet), MARSH, OASIS, WOODS (noise-clustered). Archipelago clusters each get 0–3 bonus REEFs on surrounding ocean. |
-| 32 | `sanityLandCleanup` | (a) RAINFOREST adjacent to SNOW/TUNDRA/ICE: if cell is in warm zone, warm the cold neighbor; else remove the rainforest feature. (b) Polar-cap SNOW_FLAT touching continent snow outside polar margin → OCEAN+ICE. |
-| 33 | `addMainResources` | BONUS (4% of land) and LUXURY (3%) placed with Poisson-disk spacing: min 4 hex same-type, 2 hex any-type. STRATEGIC resources placed per-type at `players−1` or `players+2` count. |
-| 34 | `addExtraFood` | Extra FISH on ocean/coast within 3 hex of land, targeting 9% of land count. No two FISH adjacent. |
+| 31 | `clearAllResources` | Wipes all resource assignments (removes any temporary IRON/MERCURY/URANIUM from mountain passes). |
+| 32 | `addTerrainFeatures` | Sub-polar ICE, equatorial REEF (ocean adjacent to coast, lat < 50° from equator, rate `0.011 × (1 − lat/50°)` so density peaks at the equator and tapers to zero at the cutoff), RAINFOREST (hot+wet), MARSH, OASIS, WOODS (noise-clustered). Archipelago clusters each get 0–3 bonus REEFs on surrounding ocean. |
+| 33 | `sanityLandCleanup` | (a) RAINFOREST adjacent to SNOW/TUNDRA/ICE: if cell is in warm zone, warm the cold neighbor; else remove the rainforest feature. (b) Polar-cap SNOW_FLAT touching continent snow outside polar margin → OCEAN+ICE. |
+| 34 | `addMainResources` | BONUS (4% of land) and LUXURY (3%) placed with Poisson-disk spacing: min 4 hex same-type, 2 hex any-type. STRATEGIC resources placed per-type at `players−1` or `players+2` count. |
+| 35 | `addExtraFood` | (a) Extra FISH on ocean/coast within 3 hex of land, targeting 9% of land count, no two FISH adjacent. (b) Extra SHEEP, CATTLE, and WHEAT on each landmass — 2 of each per continent, 1 of each per island; archipelagos excluded. Placements skip tiles that already carry a main resource. |
+| 36 | `moveNeighbouringResources` | Scans for adjacent same-resource pairs (created by `addExtraFood`, which doesn't enforce spacing). For each conflict, BFS from one of the two tiles up to depth 12 for the closest empty tile that fits the resource and has no same-resource neighbor; if found, move the resource there. Runs up to 4 passes to resolve transitive clusters; if no suitable destination exists, the resource stays put. |
 
 ### 10. Finalize
 
 | Step | Method | What it does |
 |------|--------|--------------|
-| 35 | `materializeMap` | Builds `Tile[]`. Assigns `landmass` id per scheme below. Calls `TileYieldService.updateTileYield` per tile. |
+| 37 | `materializeMap` | Builds `Tile[]`. Assigns `landmass` id per scheme below. Calls `TileYieldService.updateTileYield` per tile. |
 
 ---
 
@@ -208,6 +210,9 @@ Two random sources, both deterministic for a given `settings.seed`:
 | Straight polar coastlines | straight-coast threshold (currently > 4 tiles) and move probability (0.35) | `reshapeIslands` |
 | Noise speck islands | minimum component size (currently < 4) | `clearNoiseRelatedIslands` |
 | Too many tiny lakes | size cap in `detectInlandLakes` (currently ≤ 6) | `detectInlandLakes` |
+| Too many / too few inland lakes | land-share range `0.015 + rnd() * 0.01` (1.5–2.5%) in `addLakes` | `addLakes` |
+| Lakes too small / too big | size CDF in `pickLakeSize` (10/30/30/15/10/5%) | `addLakes` |
+| Lakes too clustered on islands vs continents | island-preference probability (currently 0.2) | `addLakes` |
 | Icecaps too much/little snow | tier probabilities in `placeIcecapSnow` (75%/50%/5-10%) | `placeIcecapSnow` |
 | Sub-polar ice belt density | `beltProbs` in `placeIcecapIceBelt` (30/20/10/5) | `placeIcecapIceBelt` |
 | Polar belt too thick/thin | `polarRowCount` formula in `initContext` (3..5 lerped on height 26..160) | `initContext` |
@@ -216,6 +221,8 @@ Two random sources, both deterministic for a given `settings.seed`:
 | Mountain ranges too short | link distance (currently 3 hex) | `linkNearbyMountains` |
 | Too many forests | WOODS slope (`0.234 + moisture × 0.39`) | `addTerrainFeatures` |
 | Resource clusters | min-distance gates (4 same-type, 2 any) | `addMainResources` |
+| Reef density / extent | peak rate (0.011) and latitude cutoff (50° from equator) | `addTerrainFeatures` |
+| Same-resource neighbors leaking through | BFS depth cap (12) and pass count (4) | `moveNeighbouringResources` |
 
 ---
 
@@ -225,6 +232,8 @@ Two random sources, both deterministic for a given `settings.seed`:
 - **Polar caps (SNOW_FLAT in polar margin) survive every downstream pass.** Biome paint, hills promotion, etc. all check and skip them.
 - **`fillInlandOcean` fills with PLAINS_FLAT** for continents. Inland fills from islands (in `reshapeIslands`) use GRASSLAND_FLAT.
 - **`detectInlandLakes` is called from inside `growIslandPlates`**, not from the top-level pipeline. It detects isolated ocean ≤ 6 tiles and marks them LAKE.
+- **`addLakes` carves new lakes from land** (the other lake source). Runs right after `applyCoastBand` and before climate, so lake tiles look like flat water to every downstream pass. Seeds require no existing water neighbor, and growth refuses any tile whose non-lake neighbors include water — lakes never merge with the sea or each other.
+- **`paintInitialBiomes` preserves COAST and LAKE bases** (along with SNOW_FLAT). Without that guard, the coast band and lakes would be overwritten back to OCEAN — every non-land cell would be flattened to ocean otherwise.
 - **`clearNoiseRelatedIslands` removes any land component** that has no continent or archipelago tiles and is smaller than 4 tiles, replacing it with OCEAN+ICE.
 - **`growContinentPlates` merges the old fringe pass** — two calls to `growPlates` with different shape functions produce the main body (80%) and the fringe (3%).
 - **Elevation plate boundaries** skip sub-plates of the same continent group when computing `touchesOtherPlate` (to avoid internal mountains within a continent).

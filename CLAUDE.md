@@ -6,4 +6,6 @@ CODE:
 - do not run TSC, I will recompile / transpile myself
 - avoid hacks or big cognitive loads
 - do switch statements for clarity of the flow
+- ViewEncapsulation.None in components is ok
+- .class-name selectors for components are ok
 - 

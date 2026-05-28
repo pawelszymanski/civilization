@@ -5,13 +5,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { SaveHeader, SaveSortOrderId } from '../../../../models/saves';
 import { Uuid } from '../../../../models/utils';
 import { ModalId, ScreenId } from '../../../../models/ui';
-
-import { GeneratorService } from '../../../../services/generator.service';
 import { SaveService } from '../../../../services/save.service';
-
-import { CameraStore } from '../../../../stores/camera.store';
-import { MapStore } from '../../../../stores/map.store';
-import { GameplayUiStore } from '../../../../stores/gameplay-ui.store';
 import { SaveHeadersStore } from '../../../../stores/save-headers.store';
 import { UiStore } from '../../../../stores/ui.store';
 
@@ -36,11 +30,7 @@ export class LoadGameComponent implements OnInit {
 
   constructor(
     private destroyRef: DestroyRef,
-    private generatorService: GeneratorService,
     private saveService: SaveService,
-    private cameraStore: CameraStore,
-    private mapStore: MapStore,
-    private gameplayUiStore: GameplayUiStore,
     private saveHeadersStore: SaveHeadersStore,
     private uiStore: UiStore
   ) {}

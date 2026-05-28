@@ -93,6 +93,7 @@ export class MapComponent {
 
   ngOnDestroy(): void {
     this.cancelAnimationFrame();
+    this.stopDrag();
   }
 
   initContext(): void {

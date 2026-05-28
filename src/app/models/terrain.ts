@@ -20,7 +20,7 @@ export enum TerrainBaseId {
 }
 
 export enum TerrainFeatureId {
-  NONE,
+  NONE, // None must be 0
   FLOODPLAINS,
   ICE,
   MARSH,
@@ -31,7 +31,7 @@ export enum TerrainFeatureId {
 }
 
 export enum TerrainResourceId {
-  NONE,
+  NONE, // None must be 0
   // FOOD
   BANANAS,
   CATTLE,
@@ -90,7 +90,7 @@ export enum OffMapResourceId {
 }
 
 export enum TerrainImprovementId {
-  NONE,
+  NONE, // None must be 0
   AIRSTRIP,
   CAMP,
   FARM,

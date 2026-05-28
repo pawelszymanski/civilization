@@ -221,8 +221,9 @@ export class MapGeneratorService {
     this.seedArchipelagos(ctx);
     this.growArchipelagoPlates(ctx);
 
-    // Coast
+    // Coast and lakes
     this.applyCoastBand(ctx);
+    this.addLakes(ctx);
 
     // Biome
     this.computeElevation(ctx);
@@ -252,6 +253,7 @@ export class MapGeneratorService {
     this.sanityLandCleanup(ctx);
     this.addMainResources(ctx);
     this.addExtraFood(ctx);
+    this.moveNeighbouringResources(ctx);
 
     // Finalize
     return this.materializeMap(ctx);
@@ -730,7 +732,8 @@ export class MapGeneratorService {
     };
     for (const cell of cells) {
       const i = idx(cell.x, cell.y);
-      if (baseAssignment[i] === TerrainBaseId.SNOW_FLAT) continue;
+      const base = baseAssignment[i];
+      if (base === TerrainBaseId.SNOW_FLAT || base === TerrainBaseId.COAST || base === TerrainBaseId.LAKE) continue;
       baseAssignment[i] = cell.isLand ? pickLand(cell) : TerrainBaseId.OCEAN;
     }
   }
@@ -760,6 +763,113 @@ export class MapGeneratorService {
           baseAssignment[i] = TerrainBaseId.COAST;
           break;
         }
+      }
+    }
+  }
+
+  // ============================================================================
+  // Lakes
+  // ============================================================================
+
+  private addLakes(ctx: MapGenContext): void {
+    const { rnd, idx, cells, neighbors, plates, baseAssignment, featureAssignment, resourceAssignment } = ctx;
+
+    const totalLand = cells.filter(c => c.isLand).length;
+    if (totalLand === 0) return;
+    const targetLakeTiles = Math.round(totalLand * (0.015 + rnd() * 0.01));
+    if (targetLakeTiles === 0) return;
+
+    const continentPlateIds = new Set<number>(plates.filter(p => p.isContinent).map(p => p.id));
+    const islandPlateIds = new Set<number>(plates.filter(p => !p.isContinent && !p.isArchipelago).map(p => p.id));
+
+    const isWaterBase = (b: TerrainBaseId): boolean =>
+      b === TerrainBaseId.OCEAN || b === TerrainBaseId.COAST || b === TerrainBaseId.LAKE;
+
+    const hasOuterWaterNeighbor = (cIdx: number, lakeTiles: Set<number>): boolean => {
+      for (const n of neighbors(cells[cIdx].x, cells[cIdx].y)) {
+        const ni = idx(n.x, n.y);
+        if (lakeTiles.has(ni)) continue;
+        if (isWaterBase(baseAssignment[ni])) return true;
+      }
+      return false;
+    };
+
+    const pickLakeSize = (): number => {
+      const r = rnd();
+      switch (true) {
+        case r < 0.10: return 1;
+        case r < 0.40: return 2;
+        case r < 0.70: return 3;
+        case r < 0.85: return 4;
+        case r < 0.95: return 5;
+        default: return 6;
+      }
+    };
+
+    const convertToLake = (cIdx: number): void => {
+      cells[cIdx].isLand = false;
+      cells[cIdx].plateId = -1;
+      baseAssignment[cIdx] = TerrainBaseId.LAKE;
+      featureAssignment[cIdx] = TerrainFeatureId.NONE;
+      resourceAssignment[cIdx] = TerrainResourceId.NONE;
+    };
+
+    const collectInteriorLand = (plateIds: Set<number>): number[] => {
+      const result: number[] = [];
+      const empty = new Set<number>();
+      for (let i = 0; i < cells.length; i++) {
+        if (!cells[i].isLand) continue;
+        if (!plateIds.has(cells[i].plateId)) continue;
+        if (hasOuterWaterNeighbor(i, empty)) continue;
+        result.push(i);
+      }
+      this.shuffleInPlace(result, rnd);
+      return result;
+    };
+
+    const continentSeeds = collectInteriorLand(continentPlateIds);
+    const islandSeeds = collectInteriorLand(islandPlateIds);
+
+    const popValidSeed = (pool: number[]): number => {
+      const empty = new Set<number>();
+      while (pool.length > 0) {
+        const c = pool.pop();
+        if (cells[c].isLand && !hasOuterWaterNeighbor(c, empty)) return c;
+      }
+      return -1;
+    };
+
+    let placed = 0;
+    while (placed < targetLakeTiles) {
+      const preferIsland = rnd() < 0.2 && islandSeeds.length > 0;
+      const primaryPool = preferIsland ? islandSeeds : continentSeeds;
+      const fallbackPool = preferIsland ? continentSeeds : islandSeeds;
+
+      let seedIdx = popValidSeed(primaryPool);
+      if (seedIdx < 0) seedIdx = popValidSeed(fallbackPool);
+      if (seedIdx < 0) break;
+
+      const desiredSize = Math.min(pickLakeSize(), targetLakeTiles - placed);
+      const lakeTiles = new Set<number>([seedIdx]);
+      convertToLake(seedIdx);
+      placed += 1;
+
+      while (lakeTiles.size < desiredSize && placed < targetLakeTiles) {
+        const candidates: number[] = [];
+        for (const lt of lakeTiles) {
+          for (const n of neighbors(cells[lt].x, cells[lt].y)) {
+            const ni = idx(n.x, n.y);
+            if (lakeTiles.has(ni)) continue;
+            if (!cells[ni].isLand) continue;
+            if (hasOuterWaterNeighbor(ni, lakeTiles)) continue;
+            candidates.push(ni);
+          }
+        }
+        if (candidates.length === 0) break;
+        const next = candidates[Math.floor(rnd() * candidates.length)];
+        convertToLake(next);
+        lakeTiles.add(next);
+        placed += 1;
       }
     }
   }
@@ -1784,7 +1894,7 @@ export class MapGeneratorService {
       const distFromPole = Math.min(cell.y, height - 1 - cell.y);
       if ((base === TerrainBaseId.COAST || base === TerrainBaseId.OCEAN) && featureSupports(TerrainFeatureId.ICE, base) && distFromPole < polarRowCount) {
         if (distFromPole === 0 || rnd() < 1 - distFromPole / polarRowCount) featureAssignment[i] = TerrainFeatureId.ICE;
-      } else if (base === TerrainBaseId.OCEAN && featureSupports(TerrainFeatureId.REEF, base) && latNorm < 0.3 && hasCoastNeighbor(cell.x, cell.y) && rnd() < 0.015) {
+      } else if (base === TerrainBaseId.OCEAN && featureSupports(TerrainFeatureId.REEF, base) && latNorm < 50 / 90 && hasCoastNeighbor(cell.x, cell.y) && rnd() < 0.011 * (1 - latNorm * 90 / 50)) {
         featureAssignment[i] = TerrainFeatureId.REEF;
       } else if (
         featureSupports(TerrainFeatureId.RAINFOREST, base) &&
@@ -1999,34 +2109,144 @@ export class MapGeneratorService {
   }
 
   private addExtraFood(ctx: MapGenContext): void {
-    const { rnd, idx, cells, neighbors, resourceAssignment } = ctx;
+    const { rnd, idx, cells, neighbors, plates, resourceAssignment } = ctx;
     const distToLand = this.bfsDistance(ctx, i => cells[i].isLand, 99, 4);
     const fishResource = TERRAIN_RESOURCE_LIST.find(r => r.id === TerrainResourceId.FISH);
     const totalLand = cells.filter(c => c.isLand).length;
-    const target = Math.floor(totalLand * 0.09);
-    if (!fishResource || target === 0) return;
+    const fishTarget = Math.floor(totalLand * 0.09);
 
-    const candidates: number[] = [];
-    for (let i = 0; i < cells.length; i++) {
-      if (distToLand[i] > 3) continue;
-      if (resourceAssignment[i] !== TerrainResourceId.NONE) continue;
-      if (this.cellFitsTerrain(i, fishResource.suitableTerrain, ctx)) candidates.push(i);
-    }
-    this.shuffleInPlace(candidates, rnd);
-    let placed = 0;
-    for (const cIdx of candidates) {
-      if (placed >= target) break;
-      const c = cells[cIdx];
-      let neighborFish = false;
-      for (const n of neighbors(c.x, c.y)) {
-        if (resourceAssignment[idx(n.x, n.y)] === TerrainResourceId.FISH) {
-          neighborFish = true;
-          break;
-        }
+    if (fishResource && fishTarget > 0) {
+      const candidates: number[] = [];
+      for (let i = 0; i < cells.length; i++) {
+        if (distToLand[i] > 3) continue;
+        if (resourceAssignment[i] !== TerrainResourceId.NONE) continue;
+        if (this.cellFitsTerrain(i, fishResource.suitableTerrain, ctx)) candidates.push(i);
       }
-      if (neighborFish) continue;
-      resourceAssignment[cIdx] = TerrainResourceId.FISH;
-      placed += 1;
+      this.shuffleInPlace(candidates, rnd);
+      let placed = 0;
+      for (const cIdx of candidates) {
+        if (placed >= fishTarget) break;
+        const c = cells[cIdx];
+        let neighborFish = false;
+        for (const n of neighbors(c.x, c.y)) {
+          if (resourceAssignment[idx(n.x, n.y)] === TerrainResourceId.FISH) {
+            neighborFish = true;
+            break;
+          }
+        }
+        if (neighborFish) continue;
+        resourceAssignment[cIdx] = TerrainResourceId.FISH;
+        placed += 1;
+      }
+    }
+
+    const landmassIdByPlateId = new Map<number, number>();
+    const continentLandmassIds = new Set<number>();
+    const islandLandmassIds = new Set<number>();
+    for (const p of plates) {
+      if (p.isContinent) {
+        landmassIdByPlateId.set(p.id, p.parentPlateId);
+        continentLandmassIds.add(p.parentPlateId);
+      } else if (!p.isArchipelago) {
+        landmassIdByPlateId.set(p.id, p.id);
+        islandLandmassIds.add(p.id);
+      }
+    }
+
+    const tilesByLandmass = new Map<number, number[]>();
+    for (let i = 0; i < cells.length; i++) {
+      if (!cells[i].isLand) continue;
+      const lid = landmassIdByPlateId.get(cells[i].plateId);
+      if (lid === undefined) continue;
+      let list = tilesByLandmass.get(lid);
+      if (!list) { list = []; tilesByLandmass.set(lid, list); }
+      list.push(i);
+    }
+
+    const extraResourceIds = [TerrainResourceId.SHEEP, TerrainResourceId.CATTLE, TerrainResourceId.WHEAT];
+    for (const [lid, tiles] of tilesByLandmass) {
+      let perResource: number;
+      switch (true) {
+        case continentLandmassIds.has(lid): perResource = 2; break;
+        case islandLandmassIds.has(lid): perResource = 1; break;
+        default: continue;
+      }
+      for (const resourceId of extraResourceIds) {
+        const resource = TERRAIN_RESOURCE_LIST.find(r => r.id === resourceId);
+        if (!resource) continue;
+        const candidates = tiles.filter(i => resourceAssignment[i] === TerrainResourceId.NONE && this.cellFitsTerrain(i, resource.suitableTerrain, ctx));
+        this.shuffleInPlace(candidates, rnd);
+        const placeCount = Math.min(perResource, candidates.length);
+        for (let k = 0; k < placeCount; k++) resourceAssignment[candidates[k]] = resourceId;
+      }
+    }
+  }
+
+  private moveNeighbouringResources(ctx: MapGenContext): void {
+    const { idx, cells, neighbors, baseAssignment, featureAssignment, resourceAssignment } = ctx;
+
+    const suitableByResource = new Map<TerrainResourceId, { baseId?: TerrainBaseId; featureId?: TerrainFeatureId }[]>();
+    for (const r of TERRAIN_RESOURCE_LIST) suitableByResource.set(r.id, r.suitableTerrain);
+
+    const fitsResource = (cIdx: number, resourceId: TerrainResourceId): boolean => {
+      const suitable = suitableByResource.get(resourceId);
+      if (!suitable) return false;
+      const base = baseAssignment[cIdx];
+      const feat = featureAssignment[cIdx];
+      for (const st of suitable) {
+        if ((st.baseId === undefined || st.baseId === base) && (st.featureId === undefined || st.featureId === feat)) return true;
+      }
+      return false;
+    };
+
+    const hasSameResourceNeighbor = (cIdx: number, resourceId: TerrainResourceId): boolean => {
+      for (const n of neighbors(cells[cIdx].x, cells[cIdx].y)) {
+        if (resourceAssignment[idx(n.x, n.y)] === resourceId) return true;
+      }
+      return false;
+    };
+
+    const findClosestSuitable = (fromIdx: number, resourceId: TerrainResourceId): number => {
+      const visited = new Set<number>([fromIdx]);
+      let frontier: number[] = [fromIdx];
+      for (let depth = 1; depth <= 12; depth++) {
+        const next: number[] = [];
+        for (const cur of frontier) {
+          for (const n of neighbors(cells[cur].x, cells[cur].y)) {
+            const ni = idx(n.x, n.y);
+            if (visited.has(ni)) continue;
+            visited.add(ni);
+            next.push(ni);
+            if (resourceAssignment[ni] !== TerrainResourceId.NONE) continue;
+            if (!fitsResource(ni, resourceId)) continue;
+            if (hasSameResourceNeighbor(ni, resourceId)) continue;
+            return ni;
+          }
+        }
+        if (next.length === 0) break;
+        frontier = next;
+      }
+      return -1;
+    };
+
+    for (let pass = 0; pass < 4; pass++) {
+      let movedCount = 0;
+      for (let i = 0; i < cells.length; i++) {
+        const rid = resourceAssignment[i];
+        if (rid === TerrainResourceId.NONE) continue;
+        let conflictIdx = -1;
+        for (const n of neighbors(cells[i].x, cells[i].y)) {
+          const ni = idx(n.x, n.y);
+          if (resourceAssignment[ni] === rid) { conflictIdx = ni; break; }
+        }
+        if (conflictIdx < 0) continue;
+        const target = findClosestSuitable(conflictIdx, rid);
+        if (target < 0) continue;
+        resourceAssignment[target] = rid;
+        resourceAssignment[conflictIdx] = TerrainResourceId.NONE;
+        movedCount += 1;
+      }
+      if (movedCount === 0) break;
     }
   }
 

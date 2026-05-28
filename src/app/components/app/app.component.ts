@@ -90,8 +90,7 @@ export class AppComponent implements OnInit {
       this.gameplayUiStore.toggleTileResourceOverlay(TileResourceOverlayId.ALL);
     } else if (userActionId === UserActionId.TOGGLE_MINIMAP) {
       this.gameplayUiStore.toggleMinimap();
-    }
-    if (userActionId === UserActionId.TOGGLE_GRID) {
+    } else if (userActionId === UserActionId.TOGGLE_GRID) {
       this.gameplayUiStore.toggleGrid();
     }
   }
